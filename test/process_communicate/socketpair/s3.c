@@ -4,6 +4,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/**
+   再打开一个终端查看进程：ps  -A 查看socketpair的pid为6065
+  cd /proc/6065
+  ls task
+ * 
+ */
 static const size_t SOCKET_BUFFER_SIZE = 32 * 1024;
 
 //线程函数
@@ -28,12 +34,15 @@ void *pthread_1(void *arg)
 //主函数
 int main()
 {
-   int sockets[2];
+    int sockets[2];
     pthread_t thread_id;
     if (socketpair(AF_UNIX, SOCK_SEQPACKET, 0, sockets)) {
         printf("socketpair error\n");
         return -1;
     }
+    //输出当前进程
+    printf("current process is %d\n", getpid());
+
     int bufferSize = SOCKET_BUFFER_SIZE;
     /* 创建4个buff, sockets[0]的发送buff和接收buff; sockets[1]的发送buff和接收buff*/
     setsockopt(sockets[0], SOL_SOCKET, SO_SNDBUF, &bufferSize, sizeof(bufferSize));
