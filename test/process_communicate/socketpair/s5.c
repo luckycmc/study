@@ -10,9 +10,9 @@ struct pipe_rw
 {
    int fd_r;  //读管道
    int fd_w;  //写管道
-}
+};
 //线程函数
-void *thread_handle(void *)
+void *thread_handle(void *arg)
 {
     //实例化指针结构体
     struct pipe_rw *pPipeRw = (struct pipe_rw *)arg;
@@ -26,7 +26,7 @@ void *thread_handle(void *)
           buf[len] = '\0';
           printf("%s\n",buf);
           //格式化数据处理
-          len = sprintf(buffer,"hello my father");
+          len = sprintf(buf,"hello my father");
           buf[len] = '\0';
           //写入写管道
           write(pPipeRw->fd_w,buf,len);
