@@ -225,6 +225,7 @@ static int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
             reactor->onBegin(reactor);
         }
         msec = reactor->timeout_msec;
+        //获取就绪的IO事件
         n = epoll_wait(epoll_fd, events, max_event_num, msec);
         if (n < 0)
         {
@@ -257,7 +258,7 @@ static int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
             if ((events[i].events & EPOLLIN) && !event.socket->removed)
             {
                 handle = swReactor_getHandle(reactor, SW_EVENT_READ, event.type);
-                ret = handle(reactor, &event);
+                ret = handle(reactor, &event);   //执行对应的回调函数
                 if (ret < 0)
                 {
                     swSysError("EPOLLIN handle failed. fd=%d.", event.fd);

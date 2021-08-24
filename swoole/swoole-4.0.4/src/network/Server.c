@@ -397,6 +397,7 @@ static int swServer_start_proxy(swServer *serv)
      */
     main_reactor->id = serv->reactor_num;
     main_reactor->ptr = serv;
+    // SW_FD_LISTEN 设置对应的回调函数
     main_reactor->setHandle(main_reactor, SW_FD_LISTEN, swServer_master_onAccept);
 
     if (serv->hooks[SW_SERVER_HOOK_MASTER_START])

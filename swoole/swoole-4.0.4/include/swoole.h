@@ -1800,7 +1800,7 @@ static sw_inline int swReactor_remove_read_event(swReactor *reactor, int fd)
         return reactor->del(reactor, fd);
     }
 }
-
+//返回对应的回调函数
 static sw_inline swReactor_handle swReactor_getHandle(swReactor *reactor, int event_type, int fdtype)
 {
     if (event_type == SW_EVENT_WRITE)

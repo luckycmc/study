@@ -1171,14 +1171,22 @@ int swReactorThread_create(swServer *serv)
     }
     return SW_OK;
 }
-
+/**
+ * 
+ * 
+ *
+   swReactorThread_start 创建 reactor 线程
+ * @param serv 
+ * @param main_reactor_ptr 
+ * @return int 
+ */
 int swReactorThread_start(swServer *serv, swReactor *main_reactor_ptr)
 {
     swThreadParam *param;
     swReactorThread *thread;
     pthread_t pidt;
     int i;
-
+    // swServer_store_listen_socket 函数用于将监控的 socket 存放于 connection_list 中
     swServer_store_listen_socket(serv);
 
 #ifdef HAVE_REUSEPORT
@@ -1213,7 +1221,7 @@ int swReactorThread_start(swServer *serv, swReactor *main_reactor_ptr)
 
         param->object = serv;
         param->pti = i;
-
+        //创建reactor 线程事件循环
         if (pthread_create(&pidt, NULL, (void * (*)(void *)) swReactorThread_loop, (void *) param) < 0)
         {
             swError("pthread_create[tcp_reactor] failed. Error: %s[%d]", strerror(errno), errno);
