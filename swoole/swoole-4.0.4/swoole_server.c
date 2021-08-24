@@ -530,7 +530,13 @@ static zval* php_swoole_server_add_port(swServer *serv, swListenPort *port TSRML
 
     return port_object;
 }
-
+/**
+ * 服务启动之前创建  创建 reactor 线程池对象与 work 进程池对象 可以理解为 PHP属性的
+ * 初始化
+ * 
+ * @param serv 
+ * @param TSRMLS_DC 
+ */
 void php_swoole_server_before_start(swServer *serv, zval *zobject TSRMLS_DC)
 {
     /**
@@ -630,7 +636,11 @@ void php_swoole_server_before_start(swServer *serv, zval *zobject TSRMLS_DC)
         }
     }
 }
-
+/**
+ * 注册对应的回调函数
+ * 
+ * @param serv 
+ */
 void php_swoole_register_callback(swServer *serv)
 {
     /*
@@ -1238,12 +1248,12 @@ static int php_swoole_onFinish(swServer *serv, swEventData *req)
     }
     return SW_OK;
 }
-
+//master 进程启动的时候
 static void php_swoole_onStart(swServer *serv)
 {
     SwooleG.lock.lock(&SwooleG.lock);
     SWOOLE_GET_TSRMLS;
-
+  
     zval *zserv = (zval *) serv->ptr2;
     zval **args[1];
     zval *retval = NULL;
@@ -1269,7 +1279,7 @@ static void php_swoole_onStart(swServer *serv)
     }
     SwooleG.lock.unlock(&SwooleG.lock);
 }
-
+//管理进程启动
 static void php_swoole_onManagerStart(swServer *serv)
 {
     SWOOLE_GET_TSRMLS;
@@ -1298,7 +1308,7 @@ static void php_swoole_onManagerStart(swServer *serv)
         sw_zval_ptr_dtor(&retval);
     }
 }
-
+//管理进程停止
 static void php_swoole_onManagerStop(swServer *serv)
 {
     SWOOLE_GET_TSRMLS;
@@ -1350,7 +1360,7 @@ static void php_swoole_onShutdown(swServer *serv)
     }
     SwooleG.lock.unlock(&SwooleG.lock);
 }
-
+//进程启动的时候启动协成
 static void php_swoole_onWorkerStart_coroutine(zval *zserv, zval *zworker_id)
 {
     zval *retval = NULL;
@@ -1526,7 +1536,7 @@ static void php_swoole_onWorkerExit(swServer *serv, int worker_id)
         sw_zval_ptr_dtor(&retval);
     }
 }
-
+//进程开启
 static void php_swoole_onUserWorkerStart(swServer *serv, swWorker *worker)
 {
     SWOOLE_GET_TSRMLS;
@@ -1540,7 +1550,7 @@ static void php_swoole_onUserWorkerStart(swServer *serv, swWorker *worker)
 
     php_swoole_process_start(worker, object TSRMLS_CC);
 }
-
+//进程发生错误
 static void php_swoole_onWorkerError(swServer *serv, int worker_id, pid_t worker_pid, int exit_code, int signo)
 {
     zval *zobject = (zval *) serv->ptr2;
@@ -1965,14 +1975,14 @@ void php_swoole_onBufferEmpty(swServer *serv, swDataHead *info)
         sw_zval_ptr_dtor(&retval);
     }
 }
-
+// swoole server 构造方法 服务器启动
 PHP_METHOD(swoole_server, __construct)
 {
     zend_size_t host_len = 0;
     char *serv_host;
-    long sock_type = SW_SOCK_TCP;
+    long sock_type = SW_SOCK_TCP;     //默认TCP 服务器
     long serv_port = 0;
-    long serv_mode = SW_MODE_PROCESS;
+    long serv_mode = SW_MODE_PROCESS;  // PROCESS 模式
 
     //only cli env
     if (strcasecmp("cli", sapi_module.name) != 0)
@@ -2105,7 +2115,7 @@ PHP_METHOD(swoole_server, __destruct)
     server_port_list.zports = NULL;
 #endif
 }
-
+// swoole 设置配置文件
 PHP_METHOD(swoole_server, set)
 {
     zval *zset = NULL;
@@ -2113,7 +2123,7 @@ PHP_METHOD(swoole_server, set)
     HashTable *vht;
 
     zval *v;
-
+    //余下是解析对应set函数中的参数
     swServer *serv = swoole_get_object(zobject);
     if (serv->gs->start > 0)
     {
@@ -2559,7 +2569,7 @@ PHP_METHOD(swoole_server, set)
 
     RETURN_TRUE;
 }
-
+// PHP 应用成设置的回调函数
 PHP_METHOD(swoole_server, on)
 {
     zval *name;
@@ -2588,7 +2598,7 @@ PHP_METHOD(swoole_server, on)
     efree(func_name);
 
     convert_to_string(name);
-
+    //回调函数的个数
     char *callback_name[PHP_SERVER_CALLBACK_NUM] = {
         "Connect",
         "Receive",
@@ -2656,7 +2666,7 @@ PHP_METHOD(swoole_server, on)
         RETURN_TRUE;
     }
 }
-
+//额外的监听事件
 PHP_METHOD(swoole_server, listen)
 {
     char *host;
@@ -2685,7 +2695,7 @@ PHP_METHOD(swoole_server, listen)
     zval *port_object = php_swoole_server_add_port(serv, ls TSRMLS_CC);
     RETURN_ZVAL(port_object, 1, NULL);
 }
-
+//增加额外的进程
 PHP_METHOD(swoole_server, addProcess)
 {
     swServer *serv = swoole_get_object(getThis());
@@ -2741,7 +2751,7 @@ PHP_METHOD(swoole_server, addProcess)
 /**
  * 
  * 
- * swoole server 启动
+ * swoole server 启动  对应swoole的start 函数
  * @brief Construct a new php method object
  * 
  */
@@ -2767,9 +2777,9 @@ PHP_METHOD(swoole_server, start)
     //-------------------------------------------------------------
     serv->onReceive = php_swoole_onReceive; //设置接收数据的回调函数
   
-    //启动之前检测服务器
+    //启php_swoole_server_before_start 创建 swReactorThread 数组对象、workers 进程池对象//
     php_swoole_server_before_start(serv, zobject TSRMLS_CC);
-    //启动服务器
+    //启动服务器 swServer_start  函数创建 reactor 线程，work、manager 等进程，开启事件循环
     ret = swServer_start(serv);
     if (ret < 0)
     {

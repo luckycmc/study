@@ -66,7 +66,7 @@ int swFactoryThread_create(swFactory *factory, int worker_num)
     for (i = 0; i < serv->reactor_num; i++)
     {
         thread = swServer_get_thread(serv, i);
-        swMutex_create(&thread->lock, 0);
+        swMutex_create(&thread->lock, 0);   //初始化锁
     }
 
     object->worker_num = worker_num;

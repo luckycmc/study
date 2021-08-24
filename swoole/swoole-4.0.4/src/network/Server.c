@@ -623,12 +623,12 @@ void swServer_reopen_log_file(swServer *serv)
         swoole_redirect_stdout(SwooleG.log_fd);
     }
 }
-
+// swServer_start 函数是启动整个 swoole 的关键
 int swServer_start(swServer *serv)
 {
     swFactory *factory = &serv->factory;
     int ret;
-
+    // swServer_start_check 函数用于检查各种回调函数已经被正确设置
     ret = swServer_start_check(serv);
     if (ret < 0)
     {
@@ -649,7 +649,7 @@ int swServer_start(swServer *serv)
     {
         swLog_init(SwooleG.log_file);
     }
-    //run as daemon
+    //run as daemon  守护进程模式启动
     if (serv->daemonize > 0)
     {
         /**
@@ -850,7 +850,11 @@ void swServer_init(swServer *serv)
 
     SwooleG.serv = serv;
 }
-
+/**
+   swServer_create 函数主要任务是 swReactorThread_create 创建 reactor 多线程 
+ * @param serv 
+ * @return int 
+ */
 int swServer_create(swServer *serv)
 {
     if (SwooleG.main_reactor)
@@ -874,14 +878,14 @@ int swServer_create(swServer *serv)
         return SW_ERR;
     }
 #endif
-
-    if (serv->factory_mode == SW_MODE_SINGLE)
+    
+    if (serv->factory_mode == SW_MODE_SINGLE)  //Base 模式创建进程池
     {
         return swReactorProcess_create(serv);
     }
     else
     {
-        return swReactorThread_create(serv);
+        return swReactorThread_create(serv);  //rocess 模式创建 reactor 线程
     }
 }
 

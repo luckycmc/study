@@ -1103,7 +1103,12 @@ static int swReactorThread_onWrite(swReactor *reactor, swEvent *ev)
     }
     return SW_OK;
 }
-
+/**
+ * 
+   swReactorThread_create 创建线程池对象
+ * @param serv 
+ * @return int 
+ */
 int swReactorThread_create(swServer *serv)
 {
     int ret = 0;
@@ -1142,7 +1147,8 @@ int swReactorThread_create(swServer *serv)
             swError("Fatal Error: serv->worker_num < 1");
             return SW_ERR;
         }
-        ret = swFactoryThread_create(&(serv->factory), serv->worker_num);
+        //其实也就是线程的初始化 对应内存的申请和各种回调函数的设置
+        ret = swFactoryThread_create(&(serv->factory), serv->worker_num); //线程的创建
     }
     else if (serv->factory_mode == SW_MODE_PROCESS)
     {
