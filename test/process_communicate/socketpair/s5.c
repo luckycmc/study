@@ -51,7 +51,7 @@ int main()
     pthread_t thread; //线程id 变量
 
     struct pipe_rw pipe_arg;  //创建结构体
-
+    //应该把fd[1] 和fd2[0]给关闭最为合理
     pipe_arg.fd_r = fd[0];   //读管道
     pipe_arg.fd_w = fd2[1];  //写管道
     //创建对应的线程
