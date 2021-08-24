@@ -683,7 +683,7 @@ int swServer_start(swServer *serv)
 
     //master pid
     serv->gs->master_pid = getpid();
-    serv->gs->now = serv->stats->start_time = time(NULL);
+    serv->gs->now = serv->stats->start_time = time(NULL);  //记录服务器启动时间
 
     if (serv->dispatch_mode == SW_DISPATCH_STREAM)
     {
@@ -769,12 +769,12 @@ int swServer_start(swServer *serv)
         }
     }
 
-    //factory start
+    //factory start   factory->start(factory) 启动创建 manager、worker、task_worker、user_task_worker 进程
     if (factory->start(factory) < 0)
     {
         return SW_ERR;
     }
-    //signal Init
+    //signal Init  swServer_signal_init 进行信号初始化
     swServer_signal_init(serv);
 
     //write PID file
@@ -789,7 +789,7 @@ int swServer_start(swServer *serv)
     }
     else
     {
-        ret = swServer_start_proxy(serv);
+        ret = swServer_start_proxy(serv);  //swServer_start_proxy 创建 reactor 多线程，开启事件循环
     }
     swServer_free(serv);
     serv->gs->start = 0;

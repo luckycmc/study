@@ -29,7 +29,12 @@ static int swWorker_onStreamRead(swReactor *reactor, swEvent *event);
 static int swWorker_onStreamPackage(swConnection *conn, char *data, uint32_t length);
 static int swWorker_onStreamClose(swReactor *reactor, swEvent *event);
 static void swWorker_stop();
-
+/**
+ *   worker 进程初始化
+ * 
+ * @param worker 
+ * @return int 
+ */
 int swWorker_create(swWorker *worker)
 {
     /**
@@ -743,7 +748,7 @@ int swWorker_loop(swFactory *factory, int worker_id)
 
     //worker_id
     SwooleWG.id = worker_id;
-    SwooleG.pid = getpid();
+    SwooleG.pid = getpid();  
 
     swWorker *worker = swServer_get_worker(serv, worker_id);
     swServer_worker_init(serv, worker);
@@ -763,8 +768,8 @@ int swWorker_loop(swFactory *factory, int worker_id)
     
     worker->status = SW_WORKER_IDLE;
 
-    int pipe_worker = worker->pipe_worker;
-
+    int pipe_worker = worker->pipe_worker;   //获取当前的fd 
+    //printf("pipe_worker fd is %d\n", pipe_worker);
     swSetNonBlock(pipe_worker);
     SwooleG.main_reactor->ptr = serv;
     //注册对应的fd 到epoll 中
@@ -787,8 +792,8 @@ int swWorker_loop(swFactory *factory, int worker_id)
         pipe_socket = swReactor_get(SwooleG.main_reactor, worker->pipe_worker);
         pipe_socket->buffer_size = SW_MAX_INT;
     }
-
-    if (serv->dispatch_mode == SW_DISPATCH_STREAM)
+    
+    if (serv->dispatch_mode == SW_DISPATCH_STREAM)  // 空闲的 Worker 会 accept 连接，并接受 Reactor 的新请求
     {
         SwooleG.main_reactor->add(SwooleG.main_reactor, serv->stream_fd, SW_FD_LISTEN | SW_EVENT_READ);
         SwooleG.main_reactor->setHandle(SwooleG.main_reactor, SW_FD_LISTEN, swWorker_onStreamAccept);
@@ -799,7 +804,7 @@ int swWorker_loop(swFactory *factory, int worker_id)
         serv->buffer_pool = swLinkedList_new(0, NULL);
     }
 
-    swWorker_onStart(serv);  //出发进程启动函数
+    swWorker_onStart(serv);  //触发进程启动函数
 
 #ifdef HAVE_SIGNALFD
     if (SwooleG.use_signalfd)
@@ -807,7 +812,7 @@ int swWorker_loop(swFactory *factory, int worker_id)
         swSignalfd_setup(SwooleG.main_reactor);
     }
 #endif
-    //main loop
+    //main loop  主进程进入事件循环
     SwooleG.main_reactor->wait(SwooleG.main_reactor, NULL);
     //clear pipe buffer
     swWorker_clean();

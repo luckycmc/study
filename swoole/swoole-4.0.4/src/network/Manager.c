@@ -51,7 +51,9 @@ int swManager_start(swFactory *factory)
         return SW_ERR;
     }
 
-    //worker进程的pipes
+    //worker进程的pipes  首先需要准备好 pipes 作为 master 进程与 worker 进行的通讯管道
+    // 设置每个 worker 进程的 pipe_master(master 进程向 worker 进程传递消息)、
+    // pipe_worker(worker 进程向 master 进程传递消息)
     for (i = 0; i < serv->worker_num; i++)
     {
         if (swPipeUnsock_create(&object->pipes[i], 1, SOCK_DGRAM) < 0)
@@ -61,6 +63,8 @@ int swManager_start(swFactory *factory)
         serv->workers[i].pipe_master = object->pipes[i].getFd(&object->pipes[i], SW_PIPE_MASTER);
         serv->workers[i].pipe_worker = object->pipes[i].getFd(&object->pipes[i], SW_PIPE_WORKER);
         serv->workers[i].pipe_object = &object->pipes[i];
+        //printf("serv->workers[i].pipe_master is %d\n",serv->workers[i].pipe_master);
+        //printf("serv->workers[i].pipe_work is %d\n", serv->workers[i].pipe_worker);
         swServer_store_pipe_fd(serv, serv->workers[i].pipe_object);
     }
     // task process
@@ -128,7 +132,7 @@ int swManager_start(swFactory *factory)
         {
             return SW_OK;
         }
-        swServer_close_listen_port(serv);
+        swServer_close_listen_port(serv);  //在 manager 进程中，调用 swServer_close_listen_port 关闭监听的 socket
 
         /**
          * create task worker process
@@ -175,7 +179,7 @@ int swManager_start(swFactory *factory)
 
         SwooleG.process_type = SW_PROCESS_MANAGER;
         SwooleG.pid = getpid();
-        exit(swManager_loop(factory));
+        exit(swManager_loop(factory));  //管理进程进入事件循环
         break;
 
         //master process
@@ -200,7 +204,12 @@ static void swManager_check_exit_status(swServer *serv, int worker_id, pid_t pid
         }
     }
 }
-
+/**
+ * 管理进程重启 拉起 等 功能
+ * 
+ * @param factory 
+ * @return int 
+ */
 static int swManager_loop(swFactory *factory)
 {
     int pid, new_pid;
@@ -492,7 +501,7 @@ static pid_t swManager_spawn_worker(swFactory *factory, int worker_id)
     pid_t pid;
     int ret;
 
-    pid = fork();
+    pid = fork();  // 创建进程
 
     //fork() failed
     if (pid < 0)
@@ -514,7 +523,7 @@ static pid_t swManager_spawn_worker(swFactory *factory, int worker_id)
         return pid;
     }
 }
-
+// 进程的信号注册
 static void swManager_signal_handle(int sig)
 {
     switch (sig)
@@ -573,7 +582,7 @@ int swManager_wait_user_worker(swProcessPool *pool, pid_t pid, int status)
         return SW_ERR;
     }
 }
-
+// 关闭所有的进程
 void swManager_kill_user_worker(swServer *serv)
 {
     if (!serv->user_worker_map)

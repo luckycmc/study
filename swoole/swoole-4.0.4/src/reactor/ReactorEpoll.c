@@ -27,7 +27,7 @@
 #endif
 
 typedef struct swReactorEpoll_s swReactorEpoll;
-
+// swFd 和对应的事件类型 以及后续的操作
 typedef struct _swFd
 {
     uint32_t fd;
@@ -39,7 +39,7 @@ static int swReactorEpoll_set(swReactor *reactor, int fd, int fdtype);
 static int swReactorEpoll_del(swReactor *reactor, int fd);
 static int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo);
 static void swReactorEpoll_free(swReactor *reactor);
-
+//获取设置的事件类型
 static sw_inline int swReactorEpoll_event_set(int fdtype)
 {
     uint32_t flag = 0;
@@ -62,7 +62,7 @@ static sw_inline int swReactorEpoll_event_set(int fdtype)
     }
     return flag;
 }
-
+//recactor 结构体的封装
 struct swReactorEpoll_s
 {
     int epfd;
@@ -131,16 +131,17 @@ static int swReactorEpoll_add(swReactor *reactor, int fd, int fdtype)
     
     
     memcpy(&(e.data.u64), &fd_, sizeof(fd_));
+    // 加入到epoll 管理中
     if (epoll_ctl(object->epfd, EPOLL_CTL_ADD, fd, &e) < 0)
     {
         swSysError("add events[fd=%d#%d, type=%d, events=%d] failed.", fd, reactor->id, fd_.fdtype, e.events);
-        swReactor_del(reactor, fd);
+        swReactor_del(reactor, fd);  //删除红黑树节点
         return SW_ERR;
     }
 
     swTraceLog(SW_TRACE_EVENT, "add event[reactor_id=%d, fd=%d, events=%d]", reactor->id, fd, swReactor_events(fdtype));
     reactor->event_num++;
-
+    //printf("add events[fd=%d#%d, type=%d, events=%d] \n", fd, reactor->id, fd_.fdtype, e.events);
     return SW_OK;
 }
 

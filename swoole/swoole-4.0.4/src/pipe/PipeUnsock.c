@@ -83,7 +83,14 @@ int swPipeUnsock_close_ext(swPipe *p, int which)
 
     return 0 - ret1 - ret2;
 }
-
+/**
+ * PipeUnsock 通讯管道的创建
+ * 
+ * @param p 
+ * @param blocking 
+ * @param protocol 
+ * @return int 
+ */
 int swPipeUnsock_create(swPipe *p, int blocking, int protocol)
 {
     int ret;
