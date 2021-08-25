@@ -827,6 +827,9 @@ int swReactorThread_send(swSendData *_send)
 }
 
 /**
+ * 
+ * 
+ *woker 进程中管道额数据可以写了
  * [ReactorThread] worker pipe can write.
  */
 static int swReactorThread_onPipeWrite(swReactor *reactor, swEvent *ev)
@@ -902,7 +905,7 @@ static int swReactorThread_onPipeWrite(swReactor *reactor, swEvent *ev)
         }
         else
         {
-            ret = reactor->del(reactor, ev->fd);
+            ret = reactor->del(reactor, ev->fd); //数据读完 删除对应的fd
         }
         if (ret < 0)
         {
@@ -1240,6 +1243,7 @@ int swReactorThread_start(swServer *serv, swReactor *main_reactor_ptr)
 
 /**
  * ReactorThread main Loop
+ * 开启reactor 事件循环
  */
 static int swReactorThread_loop(swThreadParam *param)
 {
@@ -1296,7 +1300,7 @@ static int swReactorThread_loop(swThreadParam *param)
         }
     }
 #endif
-
+    // reactor 线程创建reactor
     ret = swReactor_create(reactor, SW_REACTOR_MAXEVENTS);
     if (ret < 0)
     {
@@ -1313,12 +1317,12 @@ static int swReactorThread_loop(swThreadParam *param)
 
     reactor->onFinish = NULL;
     reactor->onTimeout = NULL;
-    reactor->close = swReactorThread_close;
-
+    reactor->close = swReactorThread_close;  //reactor 关闭函数
+    /****************注册对应的回调函数 start*********************/
     reactor->setHandle(reactor, SW_FD_CLOSE, swReactorThread_onClose);
-    reactor->setHandle(reactor, SW_FD_PIPE | SW_EVENT_READ, swReactorThread_onPipeReceive);
-    reactor->setHandle(reactor, SW_FD_PIPE | SW_EVENT_WRITE, swReactorThread_onPipeWrite);
-
+    reactor->setHandle(reactor, SW_FD_PIPE | SW_EVENT_READ, swReactorThread_onPipeReceive); // fd 可读事件
+    reactor->setHandle(reactor, SW_FD_PIPE | SW_EVENT_WRITE, swReactorThread_onPipeWrite); // fd 可写
+    /****************注册对应的回调函数 end*********************/
     //listen UDP
     if (serv->have_udp_sock == 1)
     {
