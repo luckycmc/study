@@ -7,6 +7,8 @@
 
 /****
  * 创建多进程管理
+ * 
+ * wait、waitpid 一次调用，回收一个子进程。想回收多个。while
  * */
 pid_t worker_pid[3];
 
