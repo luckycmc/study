@@ -1685,7 +1685,7 @@ static sw_inline int swReactor_event_error(int fdtype)
 {
     return fdtype & SW_EVENT_ERROR;
 }
-
+//获取对应的事件类型
 static sw_inline int swReactor_fdtype(int fdtype)
 {
     return fdtype & (~SW_EVENT_READ) & (~SW_EVENT_WRITE) & (~SW_EVENT_ERROR);

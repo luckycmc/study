@@ -107,7 +107,12 @@ void swServer_close_port(swServer *serv, enum swBool_type only_stream_port)
         close(ls->sock);
     }
 }
-
+/**
+ * 接受来自客户端的请求
+ * @param reactor 
+ * @param event 
+ * @return int 
+ */
 int swServer_master_onAccept(swReactor *reactor, swEvent *event)
 {
     swServer *serv = reactor->ptr;
@@ -147,12 +152,14 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
 #ifndef HAVE_ACCEPT4
         else
         {
-            swoole_fcntl_set_option(new_fd, 1, 1);
+            swoole_fcntl_set_option(new_fd, 1, 1);  //设置对应new_fd的属性
         }
 #endif
 
         swTrace("[Master] Accept new connection. maxfd=%d|reactor_id=%d|conn=%d", swServer_get_maxfd(serv), reactor->id, new_fd);
-
+        //打印查看对应的请求数据
+        //printf("[Master] Accept new connection. maxfd=%d|reactor_id=%d|conn=%d\n", swServer_get_maxfd(serv), reactor->id, new_fd);
+        //printf("currrnt self thread_id is %lu\n",pthread_self());
         //too many connection
         if (new_fd >= serv->max_connection)
         {
@@ -167,13 +174,13 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
         }
         else
         {
-            reactor_id = new_fd % serv->reactor_num;
+            reactor_id = new_fd % serv->reactor_num;  //取模获取 对应的处理 reactor_id
         }
 
-        //add to connection_list
+        //add to connection_list   //添加新的连接对象
         swConnection *conn = swServer_connection_new(serv, listen_host, new_fd, event->fd, reactor_id);
         memcpy(&conn->info.addr, &client_addr, sizeof(client_addr));
-        sub_reactor = &serv->reactor_threads[reactor_id].reactor;
+        sub_reactor = &serv->reactor_threads[reactor_id].reactor;   //获取对应的reactor 线程处理连接请求
         conn->socket_type = listen_host->type;
 
 #ifdef SW_USE_OPENSSL
@@ -190,11 +197,13 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
         {
             conn->ssl = NULL;
         }
-#endif
+#endif  
+        //printf("accept new_fd is %d\n", new_fd);
         /*
          * [!!!] new_connection function must before reactor->add
          */
         conn->connect_notify = 1;
+        // new_fd 加入到对应的epoll 中  new_fd 和对应的数据类型
         if (sub_reactor->add(sub_reactor, new_fd, SW_FD_TCP | SW_EVENT_WRITE) < 0)
         {
             bzero(conn, sizeof(swConnection));
@@ -370,6 +379,9 @@ static int swServer_start_proxy(swServer *serv)
 
 #ifndef SW_USE_TIMEWHEEL
     /**
+     * 
+     * 
+     * 心跳检测线程
      * heartbeat thread
      */
     if (serv->heartbeat_check_interval >= 1 && serv->heartbeat_check_interval <= serv->heartbeat_idle_time)
@@ -424,7 +436,7 @@ static int swServer_start_proxy(swServer *serv)
     {
         serv->onStart(serv);
     }
-
+    //主进程 也就是主线程进入事件循环等待
     return main_reactor->wait(main_reactor, NULL);
 }
 
@@ -1780,6 +1792,15 @@ static void swHeartbeatThread_loop(swThreadParam *param)
 #endif
 
 /**
+ * 
+ * @brief 
+ *  swServer_connection_new 创建新的连接对象
+ * @param serv 
+ * @param ls 
+ * @param fd 
+ * @param from_fd 
+ * @param reactor_id 
+ * @return * new* 
  * new connection
  */
 static swConnection* swServer_connection_new(swServer *serv, swListenPort *ls, int fd, int from_fd, int reactor_id)
