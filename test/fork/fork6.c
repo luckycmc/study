@@ -18,13 +18,21 @@ int main()
          {
             break;
          }
+
+         if (pid < 0 ) //进程创建有误
+         {   
+              printf("create process failed\n");
+              exit(1);
+         }
+         
          
      }
      // 进程创建完毕 回收子进程
      if (i == 5)
-     {
-          
-            while ((wpid = waitpid(-1, NULL, WNOHANG)) != -1){  //使用非阻塞的方式回收子进程
+     {      
+            // //使用非阻塞的方式回收子进程
+            while ((wpid = waitpid(-1, NULL, WNOHANG)) != -1)
+            {  
                    
                     if (wpid > 0) {  // wpid 返回的当前回收进程的pid
 
@@ -35,6 +43,7 @@ int main()
                       continue;
                     }
             }
+
      }else{ //打印创建的子进程
          
           sleep(i);

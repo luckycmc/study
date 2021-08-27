@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-
+/** 
+ *  1.进程的概念
+ *  2.进程的创建
+ *  3.进程的通讯
+ *  4.进程的信号
+ *  5.守护进程
+ * */
 void process_children();
 void process_mansger();
 int main()
