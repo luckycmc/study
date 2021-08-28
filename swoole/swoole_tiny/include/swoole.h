@@ -118,6 +118,7 @@ typedef struct _swEventData
 	int from_id; //Reactor Id
 	char data[SW_BUFFER_SIZE];
 } swEventData;
+
 //发送数据结构体
 typedef struct _swSendData
 {
