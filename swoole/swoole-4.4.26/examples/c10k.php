@@ -1,6 +1,6 @@
 <?php
 $clients = array();
-for($j = 0; $j < 2; $j++)
+for($j = 0; $j < 1; $j++)
 {
 	$pid = pcntl_fork();
 	if($pid > 0)
@@ -26,3 +26,4 @@ for($j = 0; $j < 2; $j++)
 	}
 }
 sleep(1000);
+

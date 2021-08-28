@@ -17,133 +17,127 @@
 #ifndef SW_HTTP_H_
 #define SW_HTTP_H_
 
-#include "swoole.h"
-
-SW_EXTERN_C_BEGIN
-
-enum swHttp_version
+#ifdef __cplusplus
+extern "C"
 {
-    SW_HTTP_VERSION_10 = 1,
-    SW_HTTP_VERSION_11,
+#endif
+
+#include <sys/types.h>
+#include <stdint.h>
+
+
+/**
+ * Compile with -DHTTP_PARSER_STRICT=0 to make less checks, but run faster
+ */
+#ifndef HTTP_PARSER_STRICT
+# define HTTP_PARSER_STRICT 1
+#else
+# define HTTP_PARSER_STRICT 0
+#endif
+
+/* Maximium header size allowed */
+#define HTTP_MAX_HEADER_SIZE (80*1024)
+
+typedef struct http_parser http_parser;
+typedef struct http_parser_settings http_parser_settings;
+
+/* Callbacks should return non-zero to indicate an error. The parser will
+ * then halt execution.
+ *
+ * The one exception is on_headers_complete. In a HTTP_RESPONSE parser
+ * returning '1' from on_headers_complete will tell the parser that it
+ * should not expect a body. This is used when receiving a response to a
+ * HEAD request which may contain 'Content-Length' or 'Transfer-Encoding:
+ * chunked' headers that indicate the presence of a body.
+ *
+ * http_data_cb does not return data chunks. It will be call arbitrarally
+ * many times for each string. E.G. you might get 10 callbacks for "on_path"
+ * each providing just a few characters more data.
+ */
+typedef int (*http_data_cb)(http_parser *, const char *at, size_t length);
+typedef int (*http_cb)(http_parser *);
+
+/* Request Methods */
+enum http_method
+{
+	HTTP_DELETE = 0, HTTP_GET, HTTP_HEAD, HTTP_POST, HTTP_PUT
+	/* pathological */
+	, HTTP_CONNECT, HTTP_OPTIONS, HTTP_TRACE
+	/* webdav */
+	, HTTP_COPY, HTTP_LOCK, HTTP_MKCOL, HTTP_MOVE, HTTP_PROPFIND, HTTP_PROPPATCH, HTTP_UNLOCK
+	/* subversion */
+	, HTTP_REPORT, HTTP_MKACTIVITY, HTTP_CHECKOUT, HTTP_MERGE
+	/* upnp */
+	, HTTP_MSEARCH, HTTP_NOTIFY, HTTP_SUBSCRIBE, HTTP_UNSUBSCRIBE
 };
 
-enum swHttp_method
+enum http_parser_type
 {
-    SW_HTTP_DELETE = 1, SW_HTTP_GET, SW_HTTP_HEAD, SW_HTTP_POST, SW_HTTP_PUT, SW_HTTP_PATCH,
-    /* pathological */
-    SW_HTTP_CONNECT, SW_HTTP_OPTIONS, SW_HTTP_TRACE,
-    /* webdav */
-    SW_HTTP_COPY, SW_HTTP_LOCK, SW_HTTP_MKCOL, SW_HTTP_MOVE, SW_HTTP_PROPFIND, SW_HTTP_PROPPATCH, SW_HTTP_UNLOCK,
-    /* subversion */
-    SW_HTTP_REPORT, SW_HTTP_MKACTIVITY, SW_HTTP_CHECKOUT, SW_HTTP_MERGE,
-    /* upnp */
-    SW_HTTP_MSEARCH, SW_HTTP_NOTIFY, SW_HTTP_SUBSCRIBE, SW_HTTP_UNSUBSCRIBE,
-    /* proxy */
-    SW_HTTP_PURGE,
-    /* Http2 */
-    SW_HTTP_PRI,
+	HTTP_REQUEST, HTTP_RESPONSE, HTTP_BOTH
 };
 
-enum swHttp_status_code
+struct http_parser
 {
-    SW_HTTP_CONTINUE = 100,
-    SW_HTTP_SWITCHING_PROTOCOLS = 101,
-    SW_HTTP_PROCESSING = 102,
+	/** PRIVATE **/
+	unsigned char type :2;
+	unsigned char flags :6;
+	unsigned char state;
+	unsigned char header_state;
+	unsigned char index;
 
-    SW_HTTP_OK = 200,
-    SW_HTTP_CREATED = 201,
-    SW_HTTP_ACCEPTED = 202,
-    SW_HTTP_NO_CONTENT = 204,
-    SW_HTTP_PARTIAL_CONTENT = 206,
+	uint32_t nread;
+	int64_t content_length;
 
-    SW_HTTP_SPECIAL_RESPONSE = 300,
-    SW_HTTP_MOVED_PERMANENTLY = 301,
-    SW_HTTP_MOVED_TEMPORARILY = 302,
-    SW_HTTP_SEE_OTHER = 303,
-    SW_HTTP_NOT_MODIFIED = 304,
-    SW_HTTP_TEMPORARY_REDIRECT = 307,
-    SW_HTTP_PERMANENT_REDIRECT = 308,
+	/** READ-ONLY **/
+	unsigned short http_major;
+	unsigned short http_minor;
+	unsigned short status_code; /* responses only */
+	unsigned char method; /* requests only */
 
-    SW_HTTP_BAD_REQUEST = 400,
-    SW_HTTP_UNAUTHORIZED = 401,
-    SW_HTTP_FORBIDDEN = 403,
-    SW_HTTP_NOT_FOUND = 404,
-    SW_HTTP_NOT_ALLOWED = 405,
-    SW_HTTP_REQUEST_TIME_OUT = 408,
-    SW_HTTP_CONFLICT = 409,
-    SW_HTTP_LENGTH_REQUIRED = 411,
-    SW_HTTP_PRECONDITION_FAILED = 412,
-    SW_HTTP_REQUEST_ENTITY_TOO_LARGE = 413,
-    SW_HTTP_REQUEST_URI_TOO_LARGE = 414,
-    SW_HTTP_UNSUPPORTED_MEDIA_TYPE = 415,
-    SW_HTTP_RANGE_NOT_SATISFIABLE = 416,
-    SW_HTTP_MISDIRECTED_REQUEST = 421,
-    SW_HTTP_TOO_MANY_REQUESTS = 429,
+	/* 1 = Upgrade header was present and the parser has exited because of that.
+	 * 0 = No upgrade header present.
+	 * Should be checked when http_parser_execute() returns in addition to
+	 * error checking.
+	 */
+	char upgrade;
 
-    SW_HTTP_INTERNAL_SERVER_ERROR = 500,
-    SW_HTTP_NOT_IMPLEMENTED = 501,
-    SW_HTTP_BAD_GATEWAY = 502,
-    SW_HTTP_SERVICE_UNAVAILABLE = 503,
-    SW_HTTP_GATEWAY_TIME_OUT = 504,
-    SW_HTTP_VERSION_NOT_SUPPORTED = 505,
-    SW_HTTP_INSUFFICIENT_STORAGE = 507
+	/** PUBLIC **/
+	void *data; /* A pointer to get hook to the "connection" or "socket" object */
 };
 
-typedef struct _swHttpRequest
+struct http_parser_settings
 {
-    uint8_t method;
-    uint8_t version;
-    uchar excepted :1;
+	http_cb on_message_begin;
+	http_data_cb on_path;
+	http_data_cb on_query_string;
+	http_data_cb on_url;
+	http_data_cb on_fragment;
+	http_data_cb on_header_field;
+	http_data_cb on_header_value;
+	http_cb on_headers_complete;
+	http_data_cb on_body;
+	http_cb on_message_complete;
+};
 
-    uchar header_parsed :1;
-    uchar tried_to_dispatch :1;
+void http_parser_init(http_parser *parser, enum http_parser_type type);
 
-    uchar known_length :1;
-    uchar keep_alive :1;
-    uchar chunked :1;
-    uchar nobody_chunked :1;
+size_t http_parser_execute(http_parser *parser, const http_parser_settings *settings, const char *data, size_t len);
 
-    uint32_t url_offset;
-    uint32_t url_length;
+/* If http_should_keep_alive() in the on_headers_complete or
+ * on_message_complete callback returns true, then this will be should be
+ * the last message on the connection.
+ * If you are the server, respond with the "Connection: close" header.
+ * If you are the client, close the connection.
+ */
+int http_should_keep_alive(http_parser *parser);
 
-    uint32_t request_line_length; /* without \r\n  */
-    uint32_t header_length; /* include request_line_length + \r\n */
-    uint32_t content_length;
+/* Returns a string version of the HTTP method. */
+const char *http_method_str(enum http_method);
 
-    swString *buffer;
-} swHttpRequest;
+int http_parser_has_error(http_parser *parser);
 
-int swHttp_get_method(const char *method_str, size_t method_len);
-const char* swHttp_get_method_string(int method);
-const char *swHttp_get_status_message(int code);
-
-size_t swHttp_url_decode(char *str, size_t len);
-char* swHttp_url_encode(char const *str, size_t len);
-
-int swHttpRequest_get_protocol(swHttpRequest *request);
-int swHttpRequest_get_header_length(swHttpRequest *request);
-int swHttpRequest_get_chunked_body_length(swHttpRequest *request);
-void swHttpRequest_parse_header_info(swHttpRequest *request);
-void swHttpRequest_free(swConnection *conn);
-
-static inline void swHttpRequest_clean(swHttpRequest *request)
-{
-    memset(request, 0, offsetof(swHttpRequest, buffer));
+#ifdef __cplusplus
 }
-
-int swHttp_static_handler(swServer *serv, swHttpRequest *request, swConnection *conn);
-int swHttp_static_handler_add_location(swServer *serv, const char *location, size_t length);
-
-#ifdef SW_HTTP_100_CONTINUE
-int swHttpRequest_has_expect_header(swHttpRequest *request);
 #endif
-
-#ifdef SW_USE_HTTP2
-ssize_t swHttpMix_get_package_length(swProtocol *protocol, swSocket *conn, char *data, uint32_t length);
-uint8_t swHttpMix_get_package_length_size(swSocket *conn);
-int swHttpMix_dispatch_frame(swProtocol *protocol, swSocket *conn, char *data, uint32_t length);
-#endif
-
-SW_EXTERN_C_END
 
 #endif /* SW_HTTP_H_ */

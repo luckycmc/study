@@ -1,288 +1,408 @@
 /*
- +----------------------------------------------------------------------+
- | Swoole                                                               |
- +----------------------------------------------------------------------+
- | Copyright (c) 2012-2015 The Swoole Group                             |
- +----------------------------------------------------------------------+
- | This source file is subject to version 2.0 of the Apache license,    |
- | that is bundled with this package in the file LICENSE, and is        |
- | available through the world-wide-web at the following url:           |
- | http://www.apache.org/licenses/LICENSE-2.0.html                      |
- | If you did not receive a copy of the Apache2.0 license and are unable|
- | to obtain it through the world-wide-web, please send a note to       |
- | license@swoole.com so we can mail you a copy immediately.            |
- +----------------------------------------------------------------------+
- | Author: Tianfeng Han  <mikan.tenny@gmail.com>                        |
- +----------------------------------------------------------------------+
- */
+  +----------------------------------------------------------------------+
+  | Swoole                                                               |
+  +----------------------------------------------------------------------+
+  | This source file is subject to version 2.0 of the Apache license,    |
+  | that is bundled with this package in the file LICENSE, and is        |
+  | available through the world-wide-web at the following url:           |
+  | http://www.apache.org/licenses/LICENSE-2.0.html                      |
+  | If you did not receive a copy of the Apache2.0 license and are unable|
+  | to obtain it through the world-wide-web, please send a note to       |
+  | license@php.net so we can mail you a copy immediately.               |
+  +----------------------------------------------------------------------+
+  | Author: Tianfeng Han  <mikan.tenny@gmail.com>                        |
+  +----------------------------------------------------------------------+
+*/
+#include "swoole.h"
+#include "Server.h"
+#include "Connection.h"
 
-#include "server.h"
-
+#include <sys/poll.h>
 #include <sys/stat.h>
 
 #ifndef MSG_NOSIGNAL
 #define MSG_NOSIGNAL        0
 #endif
 
-int swConnection_onSendfile(swSocket *conn, swBuffer_chunk *chunk)
+int swConnection_send_blocking(int fd, void *data, int length, int timeout)
 {
-    int ret;
-    swTask_sendfile *task = chunk->store.ptr;
+	int ret, n, writen = length;
+	struct pollfd event;
+	event.fd = fd;
+	event.events = POLLOUT;
 
-#ifdef HAVE_TCP_NOPUSH
-    if (task->offset == 0 && conn->tcp_nopush == 0)
-    {
-        /**
-         * disable tcp_nodelay
-         */
-        if (conn->tcp_nodelay)
-        {
-            int tcp_nodelay = 0;
-            if (setsockopt(conn->fd, IPPROTO_TCP, TCP_NODELAY, (const void *) &tcp_nodelay, sizeof(int)) != 0)
-            {
-                swSysWarn("setsockopt(TCP_NODELAY) failed");
-            }
-        }
-        /**
-         * enable tcp_nopush
-         */
-        if (swSocket_tcp_nopush(conn->fd, 1) == -1)
-        {
-            swSysWarn("swSocket_tcp_nopush() failed");
-        }
-        conn->tcp_nopush = 1;
-    }
-#endif
+	while(writen > 0)
+	{
+		ret = poll(&event, 1, timeout);
+		if (ret == 0)
+		{
+			return SW_ERR;
+		}
+		else if (ret > 0)
+		{
+			n = send(fd, data, writen, MSG_NOSIGNAL | MSG_DONTWAIT);
+			if (n < 0)
+			{
+				swWarn("send() failed. Error: %s[%d]", strerror(errno), errno);
+				return SW_ERR;
+			}
+			else
+			{
+				writen -= n;
+				continue;
+			}
+		}
+		else
+		{
+			swWarn("poll() failed. Error: %s[%d]", strerror(errno), errno);
+			return SW_ERR;
+		}
+	}
+	return 0;
+}
 
-    int sendn = (task->length - task->offset > SW_SENDFILE_CHUNK_SIZE) ? SW_SENDFILE_CHUNK_SIZE : task->length - task->offset;
+int swConnection_sendfile_blocking(int fd, char *filename, int timeout)
+{
+	int file_fd = open(filename, O_RDONLY);
+	if (file_fd < 0)
+	{
+		swWarn("open file[%s] failed. Error: %s[%d]", filename, strerror(errno), errno);
+		return SW_ERR;
+	}
 
-#ifdef SW_USE_OPENSSL
-    if (conn->ssl)
-    {
-        ret = swSSL_sendfile(conn, task->fd, &task->offset, sendn);
-    }
-    else
-#endif
-    {
-        ret = swoole_sendfile(conn->fd, task->fd, &task->offset, sendn);
-    }
+	struct stat file_stat;
+	if (fstat(file_fd, &file_stat) < 0)
+	{
+		swWarn("fstat() failed. Error: %s[%d]", strerror(errno), errno);
+		return SW_ERR;
+	}
 
-    swTrace("ret=%d|task->offset=%ld|sendn=%d|filesize=%ld", ret, (long)task->offset, sendn, task->length);
+	int n, ret, sendn;
+	off_t offset = 0;
+	struct pollfd event;
+	event.fd = fd;
+	event.events = POLLOUT;
+	size_t file_size = file_stat.st_size;
 
-    if (ret <= 0)
-    {
-        switch (swConnection_error(errno))
-        {
-        case SW_ERROR:
-            swSysWarn("sendfile(%s, %ld, %d) failed", task->filename, (long)task->offset, sendn);
-            swBuffer_pop_chunk(conn->out_buffer, chunk);
-            return SW_OK;
-        case SW_CLOSE:
-            conn->close_wait = 1;
-            return SW_ERR;
-        case SW_WAIT:
-            conn->send_wait = 1;
-            return SW_ERR;
-        default:
-            break;
-        }
-    }
-
-    //sendfile finish
-    if (task->offset >= task->length)
-    {
-        swBuffer_pop_chunk(conn->out_buffer, chunk);
-
-#ifdef HAVE_TCP_NOPUSH
-        /**
-         * disable tcp_nopush
-         */
-        if (swSocket_tcp_nopush(conn->fd, 0) == -1)
-        {
-            swSysWarn("swSocket_tcp_nopush() failed");
-        }
-        conn->tcp_nopush = 0;
-
-        /**
-         * enable tcp_nodelay
-         */
-        if (conn->tcp_nodelay)
-        {
-            int value = 1;
-            if (setsockopt(conn->fd, IPPROTO_TCP, TCP_NODELAY, (const void *) &value, sizeof(int)) != 0)
-            {
-                swSysWarn("setsockopt(TCP_NODELAY) failed");
-            }
-        }
-#endif
-    }
-    return SW_OK;
+	while (offset < file_size)
+	{
+		ret = poll(&event, 1, timeout);
+		if (ret == 0)
+		{
+			return SW_ERR;
+		}
+		else if (ret > 0)
+		{
+			sendn = (file_size - offset > SW_SENDFILE_TRUNK) ? SW_SENDFILE_TRUNK : file_size - offset;
+			n = swoole_sendfile(fd, file_fd, &offset, sendn);
+			if (n <= 0)
+			{
+				return SW_ERR;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		else
+		{
+			swWarn("poll() failed. Error: %s[%d]", strerror(errno), errno);
+			return SW_ERR;
+		}
+	}
+	return 0;
 }
 
 /**
  * send buffer to client
  */
-int swConnection_buffer_send(swSocket *conn)
+int swConnection_buffer_send(swConnection *conn)
 {
-    int ret, sendn;
+	int ret, sendn;
+	swBuffer *buffer = conn->out_buffer;
+	swBuffer_trunk *trunk = swBuffer_get_trunk(buffer);
+	sendn = trunk->length - trunk->offset;
 
-    swBuffer *buffer = conn->out_buffer;
-    swBuffer_chunk *chunk = swBuffer_get_chunk(buffer);
-    sendn = chunk->length - chunk->offset;
-
-    if (sendn == 0)
-    {
-        swBuffer_pop_chunk(buffer, chunk);
-        return SW_OK;
-    }
-
-    ret = swConnection_send(conn, (char*) chunk->store.ptr + chunk->offset, sendn, 0);
-    if (ret < 0)
-    {
-        switch (swConnection_error(errno))
-        {
-        case SW_ERROR:
-            swSysWarn("send to fd[%d] failed", conn->fd);
-            break;
-        case SW_CLOSE:
-            conn->close_wait = 1;
-            return SW_ERR;
-        case SW_WAIT:
-            conn->send_wait = 1;
-            return SW_ERR;
-        default:
-            break;
-        }
-        return SW_OK;
-    }
-    //chunk full send
-    else if (ret == sendn || sendn == 0)
-    {
-        swBuffer_pop_chunk(buffer, chunk);
-    }
-    else
-    {
-        chunk->offset += ret;
-    }
-    return SW_OK;
+	if (sendn == 0)
+	{
+		swBuffer_pop_trunk(buffer, trunk);
+		return SW_CONTINUE;
+	}
+	ret = swConnection_send(conn, trunk->store.ptr + trunk->offset, sendn, 0);
+	//printf("BufferOut: reactor=%d|sendn=%d|ret=%d|trunk->offset=%d|trunk_len=%d\n", reactor->id, sendn, ret, trunk->offset, trunk->length);
+	if (ret < 0)
+	{
+		switch (swConnection_error(errno))
+		{
+		case SW_ERROR:
+			swWarn("send to fd[%d] failed. Error: %s[%d]", conn->fd, strerror(errno), errno);
+			return SW_OK;
+		case SW_CLOSE:
+			return SW_CLOSE;
+		case SW_WAIT:
+			return SW_WAIT;
+		default:
+			return SW_CONTINUE;
+		}
+	}
+	//trunk full send
+	else if(ret == sendn || sendn == 0)
+	{
+		swBuffer_pop_trunk(buffer, trunk);
+	}
+	else
+	{
+		trunk->offset += ret;
+	}
+	return SW_CONTINUE;
 }
 
-static char tmp_address[INET6_ADDRSTRLEN];
-
-const char* swConnection_get_ip(enum swSocket_type socket_type, swSocketAddress *info)
+swString* swConnection_get_string_buffer(swConnection *conn)
 {
-    if (socket_type == SW_SOCK_TCP || socket_type == SW_SOCK_UDP)
-    {
-        return inet_ntoa(info->addr.inet_v4.sin_addr);
-    }
-    else if (socket_type == SW_SOCK_TCP6 || socket_type == SW_SOCK_UDP6)
-    {
-        if (inet_ntop(AF_INET6, &info->addr.inet_v6.sin6_addr, tmp_address, sizeof(tmp_address)))
-        {
-            return tmp_address;
-        }
-    }
-    else if (socket_type == SW_SOCK_UNIX_STREAM || socket_type == SW_SOCK_UNIX_DGRAM)
-    {
-        return info->addr.un.sun_path;
-    }
-    return "unknown";
+	swString *buffer = conn->object;
+	if (buffer == NULL)
+	{
+		return swString_new(SW_BUFFER_SIZE);
+	}
+	else
+	{
+		return buffer;
+	}
 }
 
-int swConnection_get_port(enum swSocket_type socket_type, swSocketAddress *info)
+int swConnection_send_string_buffer(swConnection *conn)
 {
-    if (socket_type == SW_SOCK_TCP)
-    {
-        return ntohs(info->addr.inet_v4.sin_port);
-    }
-    else
-    {
-        return ntohs(info->addr.inet_v6.sin6_port);
-    }
+	int ret;
+	swString *buffer = conn->object;
+	swFactory *factory = SwooleG.factory;
+	swEventData _send;
+
+	_send.info.fd = conn->fd;
+	_send.info.from_id = conn->from_id;
+
+#ifdef SW_USE_RINGBUFFER
+	swServer *serv = SwooleG.serv;
+	swMemoryPool *pool = serv->reactor_threads[conn->from_id].pool;
+	swPackage package;
+
+	package.length = buffer->length;
+	while (1)
+	{
+		package.data = pool->alloc(pool, buffer->length);
+		if (package.data == NULL)
+		{
+			swYield();
+			swWarn("reactor memory pool full.");
+			continue;
+		}
+		break;
+	}
+	_send.info.type = SW_EVENT_PACKAGE;
+	_send.info.len = sizeof(package);
+	memcpy(package.data, buffer->str, buffer->length);
+	memcpy(_send.data, &package, sizeof(package));
+
+	//swoole_dump_bin(package.data, 's', buffer->length);
+
+	ret = factory->dispatch(factory, &_send);
+#else
+	int send_n = buffer->length;
+	_send.info.type = SW_EVENT_PACKAGE_START;
+
+	/**
+	 * lock target
+	 */
+	SwooleTG.factory_lock_target = 1;
+
+	void *send_ptr = buffer->str;
+	do
+	{
+		if (send_n > SW_BUFFER_SIZE)
+		{
+			_send.info.len = SW_BUFFER_SIZE;
+			memcpy(_send.data, send_ptr, SW_BUFFER_SIZE);
+		}
+		else
+		{
+			_send.info.type = SW_EVENT_PACKAGE_END;
+			_send.info.len = send_n;
+			memcpy(_send.data, send_ptr, send_n);
+		}
+
+		swTrace("dispatch, type=%d|len=%d\n", _send.info.type, _send.info.len);
+
+		ret = factory->dispatch(factory, &_send);
+		//TODO: 处理数据失败，数据将丢失
+		if (ret < 0)
+		{
+			swWarn("factory->dispatch failed.");
+		}
+		send_n -= _send.info.len;
+		send_ptr += _send.info.len;
+	}
+	while (send_n > 0);
+
+	/**
+	 * unlock
+	 */
+	SwooleTG.factory_target_worker = -1;
+	SwooleTG.factory_lock_target = 0;
+
+#endif
+	return ret;
 }
 
-void swConnection_sendfile_destructor(swBuffer_chunk *chunk)
+void swConnection_clear_string_buffer(swConnection *conn)
 {
-    swTask_sendfile *task = chunk->store.ptr;
-    close(task->fd);
-    sw_free(task->filename);
-    sw_free(task);
+	swString *buffer = conn->object;
+	if (buffer != NULL)
+	{
+		swString_free(buffer);
+		conn->object = NULL;
+	}
 }
 
-int swConnection_sendfile(swSocket *conn, const char *filename, off_t offset, size_t length)
+int swConnection_send_in_buffer(swConnection *conn)
 {
-    int file_fd = open(filename, O_RDONLY);
-    if (file_fd < 0)
-    {
-        swSysWarn("open(%s) failed", filename);
-        return SW_OK;
-    }
+	swFactory *factory = SwooleG.factory;
+	swEventData _send;
 
-    struct stat file_stat;
-    if (fstat(file_fd, &file_stat) < 0)
-    {
-        swSysWarn("fstat(%s) failed", filename);
-        close(file_fd);
-        return SW_ERR;
-    }
+	_send.info.fd = conn->fd;
+	_send.info.from_id = conn->from_id;
 
-    if (file_stat.st_size == 0)
-    {
-        swWarn("empty file[%s]", filename);
-        close(file_fd);
-        return SW_ERR;
-    }
+	swBuffer *buffer = conn->in_buffer;
+	swBuffer_trunk *trunk = swBuffer_get_trunk(buffer);
 
-    if (conn->out_buffer == NULL)
-    {
-        conn->out_buffer = swBuffer_new(SW_SEND_BUFFER_SIZE);
-        if (conn->out_buffer == NULL)
-        {
-            return SW_ERR;
-        }
-    }
+#ifdef SW_USE_RINGBUFFER
 
-    swBuffer_chunk error_chunk;
-    swTask_sendfile *task = sw_malloc(sizeof(swTask_sendfile));
-    if (task == NULL)
-    {
-        swWarn("malloc for swTask_sendfile failed");
-        return SW_ERR;
-    }
-    bzero(task, sizeof(swTask_sendfile));
+	swServer *serv = SwooleG.serv;
+	swMemoryPool *pool = serv->reactor_threads[conn->from_id].pool;
+	swPackage package;
 
-    task->filename = sw_strdup(filename);
-    task->fd = file_fd;
-    task->offset = offset;
+	package.length = 0;
+	while (1)
+	{
+		package.data = pool->alloc(pool, buffer->length);
+		if (package.data == NULL)
+		{
+			swYield();
+			swWarn("reactor memory pool full.");
+			continue;
+		}
+		break;
+	}
+	_send.info.type = SW_EVENT_PACKAGE;
 
-    if (offset < 0 || (length + offset > file_stat.st_size))
-    {
-        swoole_error_log(SW_LOG_WARNING, SW_ERROR_INVALID_PARAMS, "length or offset is invalid");
-        error_chunk.store.ptr = task;
-        swConnection_sendfile_destructor(&error_chunk);
-        return SW_OK;
-    }
-    if (length == 0)
-    {
-        task->length = file_stat.st_size;
-    }
-    else
-    {
-        task->length = length + offset;
-    }
+	while (trunk != NULL)
+	{
+		_send.info.len = trunk->length;
+		memcpy(package.data + package.length , trunk->store.ptr, trunk->length);
+		package.length += trunk->length;
 
-    swBuffer_chunk *chunk = swBuffer_new_chunk(conn->out_buffer, SW_CHUNK_SENDFILE, 0);
-    if (chunk == NULL)
-    {
-        swWarn("get out_buffer chunk failed");
-        error_chunk.store.ptr = task;
-        swConnection_sendfile_destructor(&error_chunk);
-        return SW_ERR;
-    }
+		swBuffer_pop_trunk(buffer, trunk);
+		trunk = swBuffer_get_trunk(buffer);
+	}
+	_send.info.len = sizeof(package);
+	memcpy(_send.data, &package, sizeof(package));
+	//swWarn("[ReactorThread] copy_n=%d", package.length);
+	return factory->dispatch(factory, &_send);
 
-    chunk->store.ptr = (void *) task;
-    chunk->destroy = swConnection_sendfile_destructor;
+#else
 
-    return SW_OK;
+	int ret;
+	_send.info.type = SW_EVENT_PACKAGE_START;
+
+	/**
+	 * lock target
+	 */
+	SwooleTG.factory_lock_target = 1;
+
+	while (trunk != NULL)
+	{
+		_send.info.len = trunk->length;
+		memcpy(_send.data, trunk->store.ptr, _send.info.len);
+		//package end
+		if (trunk->next == NULL)
+		{
+			_send.info.type = SW_EVENT_PACKAGE_END;
+		}
+		ret = factory->dispatch(factory, &_send);
+		//TODO: 处理数据失败，数据将丢失
+		if (ret < 0)
+		{
+			swWarn("factory->dispatch failed.");
+		}
+		swBuffer_pop_trunk(buffer, trunk);
+		trunk = swBuffer_get_trunk(buffer);
+
+		swTrace("send2worker[trunk_num=%d][type=%d]\n", buffer->trunk_num, _send.info.type);
+	}
+	/**
+	 * unlock
+	 */
+	SwooleTG.factory_target_worker = -1;
+	SwooleTG.factory_lock_target = 0;
+
+#endif
+	return SW_OK;
 }
 
+volatile swBuffer_trunk* swConnection_get_in_buffer(swConnection *conn)
+{
+	volatile swBuffer_trunk *trunk = NULL;
+	swBuffer *buffer;
+
+	if (conn->in_buffer == NULL)
+	{
+		buffer = swBuffer_new(SW_BUFFER_SIZE);
+		//buffer create failed
+		if (buffer == NULL)
+		{
+			return NULL;
+		}
+		//new trunk
+		trunk = swBuffer_new_trunk(buffer, SW_TRUNK_DATA, buffer->trunk_size);
+		if (trunk == NULL)
+		{
+			sw_free(buffer);
+			return NULL;
+		}
+		conn->in_buffer = buffer;
+	}
+	else
+	{
+		buffer = conn->in_buffer;
+		trunk = buffer->tail;
+		if (trunk == NULL || trunk->length == buffer->trunk_size)
+		{
+			trunk = swBuffer_new_trunk(buffer, SW_TRUNK_DATA, buffer->trunk_size);
+		}
+	}
+	return trunk;
+}
+
+volatile swBuffer_trunk* swConnection_get_out_buffer(swConnection *conn, uint32_t type)
+{
+	volatile swBuffer_trunk *trunk;
+	if (conn->out_buffer == NULL)
+	{
+		conn->out_buffer = swBuffer_new(SW_BUFFER_SIZE);
+		if (conn->out_buffer == NULL)
+		{
+			return NULL;
+		}
+	}
+	if (type == SW_TRUNK_SENDFILE)
+	{
+		trunk = swBuffer_new_trunk(conn->out_buffer, SW_TRUNK_SENDFILE, 0);
+	}
+	else
+	{
+		trunk = swBuffer_get_trunk(conn->out_buffer);
+		if (trunk == NULL)
+		{
+			trunk = swBuffer_new_trunk(conn->out_buffer, SW_TRUNK_DATA, conn->out_buffer->trunk_size);
+		}
+	}
+	return trunk;
+}

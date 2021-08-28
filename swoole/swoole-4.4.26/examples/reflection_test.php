@@ -10,3 +10,4 @@ foreach($methods as $method) {
     $params = $method->getParameters();
     print_r($params);
 }
+

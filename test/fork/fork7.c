@@ -36,6 +36,7 @@ int main()
         //父进程关闭读段
         close(fd[0]);
         sleep(3);
+        
         write(fd[1],str,strlen(str));
         //关闭写段
         close(fd[1]);

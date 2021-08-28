@@ -1,49 +1,44 @@
 <?php
-$serv = new swoole_http_server("127.0.0.1", 9500);
-
+$serv = new swoole_server("127.0.0.1", 9508);
 $serv->set(array(
-    'worker_num' => 100,
-    'task_worker_num' => 20, //database connection pool
-    'db_uri' => 'mysql:host=127.0.0.1;dbname=test',
-    'db_user' => 'root',
-    'db_passwd' => 'root',
+    'worker_num' => 2,
+    'task_worker_num' => 10, //database connection pool
 ));
 
-function my_onRequest_sync($req, $resp)
+function my_onReceive($serv, $fd, $from_id, $data)
 {
-    global $serv;
     $result = $serv->taskwait("show tables");
-    if ($result !== false)
-    {
-        $resp->end(var_export($result['data'], true));
+    if ($result !== false) {
+        list($status, $db_res) = explode(':', $result, 2);
+        if ($status == 'OK') {
+            $serv->send($fd, var_export(unserialize($db_res), true) . "\n");
+        } else {
+            $serv->send($fd, $db_res);
+        }
         return;
-    }
-    else
-    {
-        $resp->status(500);
-        $resp->end("Server Error, Timeout\n");
+    } else {
+        $serv->send($fd, "Error. Task timeout\n");
     }
 }
 
-function my_onTask($serv, $task_id, $reactor_id, $sql)
+function my_onTask($serv, $task_id, $from_id, $sql)
 {
     static $link = null;
-    if ($link == null)
-    {
-        $link = new PDO($serv->setting['db_uri'], $serv->setting['db_user'], $serv->setting['db_passwd']);;
-        if (!$link)
-        {
+    if ($link == null) {
+        $link = mysqli_connect("127.0.0.1", "root", "root", "test");
+        if (!$link) {
             $link = null;
-            return array("data" => '', 'error' => "connect database failed.");
+            $serv->finish("ER:" . mysqli_error($link));
+            return;
         }
     }
     $result = $link->query($sql);
-    if (!$result)
-    {
-        return array("data" => '', 'error' => "query error");
+    if (!$result) {
+        $serv->finish("ER:" . mysqli_error($link));
+        return;
     }
-    $data = $result->fetchAll();
-    return array("data" => $data);
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    $serv->finish("OK:" . serialize($data));
 }
 
 function my_onFinish($serv, $data)
@@ -51,8 +46,8 @@ function my_onFinish($serv, $data)
     echo "AsyncTask Finish:Connect.PID=" . posix_getpid() . PHP_EOL;
 }
 
-$serv->on('Request', 'my_onRequest_sync');
+$serv->on('Receive', 'my_onReceive');
 $serv->on('Task', 'my_onTask');
 $serv->on('Finish', 'my_onFinish');
-
 $serv->start();
+

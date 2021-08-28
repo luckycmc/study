@@ -1,8 +1,6 @@
 <?php
-swoole_process::daemon();
+var_dump($argv);
+$stdin = fopen("php://stdin", 'r');
+echo "Master: ".fgets($stdin)."\n";
 
-while (1)
-{
-    echo "hello";
-    sleep(1);
-}
+sleep(1);
