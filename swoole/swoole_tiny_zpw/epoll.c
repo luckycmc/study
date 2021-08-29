@@ -1,34 +1,55 @@
 #include "swoole_tiny_zpw.h"
 
-#define BUFFER_LENGTH		1024
+typedef struct swReactorEpoll_s swReactorEpoll;
+//fd 对应的事件类型
+typedef struct _swFd
+{
+   
+     uint32_t fd;      //文件描述符
+     uint32_t fdtype;  // 对应的事件
 
-/*对应的函数*/
-static int recv_cb(int fd, int events, void *arg);
-static int send_cb(int fd, int events, void *arg);
-static int accept_cb(int fd, int events, void *arg);
+}swFd;
+// reactor 句柄
+struct swReactorEpoll_s
+{
+     int epfd;// 红黑树根节点
+     int event_max ;  //事件最大个数
+     struct epoll_event *events ;   //对应的事件指针
+}
 
-//保存Io状态
-struct socketitem {
+/*******************reactor 对应的操作事件 start**************************/
+int swReactorEpoll_add(swReactor *reactor,int fd,int fdtype);
+int swReactorEpoll_del(swReactor *reactor,int fd);
+int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo);
+int swReactorEpoll_del(swReactor *reactor);
+/*******************reactor 对应的操作事件 end**************************/
 
-      int unsigned socket_fd;  //对应的fd
-      //设置对应的回调函数
-      int(* callback)(int fd,int events,void *arg);
+//reactor 的创建
+int swReactorEpoll_create(swReactor *reactor, int max_event_num)
+{
+     //创建reactor
+     swReactorEpoll *reactor_object = sw_malloc(sizeof(swReactorEpoll));
+     if(swReactorEpoll == NULL){
+          
+           swTrace("[swReactorEpollCreate] malloc[0] fail\n");
+		 return -1;
+     }
+     reactor->object = reactor_object;
+     reactor_object->events = sw_calloc(max_event_num,sizeof(struct epoll_event));
+     if(reactor_object->events == NULL){
+         
+            swTrace("[swReactorEpollCreate] malloc[0] fail\n");
+		   return -1;
+     }
+     //创建epoll
+     reactor_object->event_max = 0;
+     reactor_object->epfd = epoll_create(512);
+     //创建失败
+     if (reactor_object->epfd < 0)
+	{
+		swTrace("[swReactorEpollCreate] epoll_create[0] fail\n");
+		return SW_ERR;
+	}
+     //绑定对应的函数
 
-      char recvbuffer[BUFFER_LENGTH]; //接受缓冲区的长度
-	  char sendbuffer[BUFFER_LENGTH]; // 发送宋缓冲区的长度
-
-	  int rlength;
-	  int slength;
-};
-
-// 保存所有IO的全局变量
-// mainloop / eventloop --> epoll -->  
-struct reactor {
-      
-        int epfd; //红黑树的根节点
-        struct epoll_event events[512];//对应的事件
-};
-
-
-struct reactor *eventloop = NULL;
-
+}// func end
