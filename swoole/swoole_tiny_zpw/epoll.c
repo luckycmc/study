@@ -51,5 +51,16 @@ int swReactorEpoll_create(swReactor *reactor, int max_event_num)
 		return SW_ERR;
 	}
      //绑定对应的函数
-
+     reacto->add   = swReactorEpoll_add;
+     reactor->del  = swReactorEpoll_del;
+     reactor->free = swReactorEpoll_free;
+     reactor->wait = swReactorEpoll_wait;
+	reactor->setHandle = swReactor_setHandle; // 对应的处理函数 也就是回调函数
+     return 1;
 }// func end
+
+//添加reactor
+int swReactorEpoll_add(swReactor *reactor,int fd,int fdtype)
+{
+     
+}
