@@ -44,6 +44,7 @@
 #endif
 #define SW_MAX_FDTYPE          32  //32 kinds of event 32个事件
 #define SW_PORT                8080  //对应的端口
+#define SW_BUFFER_SIZE         1024
 /****************************打印对应的调试信息 end*****************************/
 /*****************内存信息宏定义 start****************/
 #define sw_malloc              malloc
@@ -111,6 +112,7 @@ typedef void (*swSignalFunc)(int);
 typedef void (*swCallback)(void *); //回调函数
 typedef struct swReactor_s swReactor;
 typedef int (*swReactor_handle)(swReactor *reactor, swEvent *event);
+
 // 管道 
 typedef struct _swPipe
 {
@@ -121,6 +123,22 @@ typedef struct _swPipe
 	int (*getFd)(struct _swPipe *, int isWriteFd);
 	void (*close)(struct _swPipe *);
 } swPipe;
+/*********************进程结构体 start *************************************/
+typedef struct _swFactory 
+{
+	void *object;
+	int id; //Factory ID
+	int running;   //是否运行
+	int max_request; //worker进程最大请求数量
+	void *ptr; //server object
+	swReactor *reactor; //reserve for reactor
+
+	int (*start)(struct _swFactory *);   //进程启动
+	int (*dispatch)(struct _swFactory *, swEventData *); //进程分发
+	int (*finish)(struct _swFactory *, swSendData *);   //完成
+
+} swFactory;
+/*********************进程结构体end *************************************/
 
 //reactor  结构体
 struct swReactor_s
@@ -139,6 +157,8 @@ struct swReactor_s
 	void (*free)(swReactor *);  //释放
 	int (*setHandle)(swReactor *, int, swReactor_handle); //设置手柄
 };
+
+
 /***********************创建服务结构体 start********************************/ 
 typedef struct swServer_s swServer;
 
@@ -177,21 +197,5 @@ int swServer_close(swServer *factory, swEvent *event);   //服务关闭
 
 /***********************创建服务结构体 end********************************/ 
 
-/*********************进程结构体 start *************************************/
-typedef struct _swFactory 
-{
-	void *object;
-	int id; //Factory ID
-	int running;   //是否运行
-	int max_request; //worker进程最大请求数量
-	void *ptr; //server object
-	swReactor *reactor; //reserve for reactor
 
-	int (*start)(struct _swFactory *);   //进程启动
-	int (*shutdown)(struct _swFactory *);  //进程关闭
-	int (*dispatch)(struct _swFactory *, swEventData *); //进程分发
-	int (*finish)(struct _swFactory *, swSendData *);   //完成
-
-} swFactory;
-/*********************进程结构体end *************************************/
 #endif
