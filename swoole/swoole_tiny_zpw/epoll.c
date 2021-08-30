@@ -1,66 +1,203 @@
-#include "swoole_tiny_zpw.h"
+#include "./include/swoole_tiny_zpw.h"
 
-typedef struct swReactorEpoll_s swReactorEpoll;
-//fd 对应的事件类型
-typedef struct _swFd
-{
-   
-     uint32_t fd;      //文件描述符
-     uint32_t fdtype;  // 对应的事件
+struct sockitem { //
+	int sockfd; // 
+	int (*callback)(int fd, int events, void *arg);
 
-}swFd;
-// reactor 句柄
-struct swReactorEpoll_s
+	char recvbuffer[1024]; //
+	char sendbuffer[1024]; //
+
+};
+
+// mainloop / eventloop --> epoll -->  
+struct reactor {
+
+	int epfd;
+	struct epoll_event events[512];
+};
+//线程epoll
+void *worker_thread(void *arg);
+int recv_cb(int fd, int events, void *arg);
+int recv_cb(int fd, int events, void *arg);
+int accept_cb(int fd, int events, void *arg);
+
+struct reactor *eventloop = NULL;
+
+int send_cb(int fd, int events, void *arg) 
 {
-     int epfd;// 红黑树根节点
-     int event_max ;  //事件最大个数
-     struct epoll_event *events ;   //对应的事件指针
+
+	struct sockitem *si = (struct sockitem*)arg;
+
+	send(fd, "hello\n", 6, 0); //
+
+	struct epoll_event ev;
+	ev.events = EPOLLIN | EPOLLET;
+	//ev.data.fd = clientfd;
+	si->sockfd = fd;
+	si->callback = recv_cb;
+	ev.data.ptr = si;
+
+	epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
+     //回调onFinish();函数
+      onFinish();
 }
 
-/*******************reactor 对应的操作事件 start**************************/
-int swReactorEpoll_add(swReactor *reactor,int fd,int fdtype);
-int swReactorEpoll_del(swReactor *reactor,int fd);
-int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo);
-int swReactorEpoll_del(swReactor *reactor);
-/*******************reactor 对应的操作事件 end**************************/
+//  ./epoll 8080
 
-//reactor 的创建
-int swReactorEpoll_create(swReactor *reactor, int max_event_num)
+int recv_cb(int fd, int events, void *arg) 
 {
-     //创建reactor
-     swReactorEpoll *reactor_object = sw_malloc(sizeof(swReactorEpoll));
-     if(swReactorEpoll == NULL){
-          
-           swTrace("[swReactorEpollCreate] malloc[0] fail\n");
-		 return -1;
-     }
-     reactor->object = reactor_object;
-     reactor_object->events = sw_calloc(max_event_num,sizeof(struct epoll_event));
-     if(reactor_object->events == NULL){
-         
-            swTrace("[swReactorEpollCreate] malloc[0] fail\n");
-		   return -1;
-     }
-     //创建epoll
-     reactor_object->event_max = 0;
-     reactor_object->epfd = epoll_create(512);
-     //创建失败
-     if (reactor_object->epfd < 0)
-	{
-		swTrace("[swReactorEpollCreate] epoll_create[0] fail\n");
-		return SW_ERR;
+
+	//int clientfd = events[i].data.fd;
+	struct sockitem *si = (struct sockitem*)arg;
+	struct epoll_event ev;
+
+	char buffer[1024] = {0};
+	int ret = recv(fd, buffer, 1024, 0);
+	if (ret < 0) {
+
+		if (errno == EAGAIN || errno == EWOULDBLOCK) { //
+			return -1;
+		} else {
+			
+		}
+
+		ev.events = EPOLLIN;
+		//ev.data.fd = fd;
+		epoll_ctl(eventloop->epfd, EPOLL_CTL_DEL, fd, &ev);
+
+		close(fd);
+
+		free(si);
+	
+	} else if (ret == 0) { //
+
+		// 
+		printf("disconnect %d\n", fd);
+
+		ev.events = EPOLLIN;
+		//ev.data.fd = fd;
+		epoll_ctl(eventloop->epfd, EPOLL_CTL_DEL, fd, &ev);
+
+		close(fd);
+		free(si);
+
+          onClose();
+		
+	} else {
+
+		printf("Recv: %s, %d Bytes\n", buffer, ret);
+
+		struct epoll_event ev;
+		ev.events = EPOLLOUT | EPOLLET;
+		//ev.data.fd = clientfd;
+		si->sockfd = fd;
+		si->callback = send_cb;
+		ev.data.ptr = si;
+		epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
+          onReceive();
 	}
-     //绑定对应的函数
-     reacto->add   = swReactorEpoll_add;
-     reactor->del  = swReactorEpoll_del;
-     reactor->free = swReactorEpoll_free;
-     reactor->wait = swReactorEpoll_wait;
-	reactor->setHandle = swReactor_setHandle; // 对应的处理函数 也就是回调函数
-     return 1;
-}// func end
 
-//添加reactor
-int swReactorEpoll_add(swReactor *reactor,int fd,int fdtype)
+}
+
+
+int accept_cb(int fd, int events, void *arg) 
 {
+
+	struct sockaddr_in client_addr;
+	memset(&client_addr, 0, sizeof(struct sockaddr_in));
+	socklen_t client_len = sizeof(client_addr);
+	
+	int clientfd = accept(fd, (struct sockaddr*)&client_addr, &client_len);
+	if (clientfd <= 0) return -1;
+
+	char str[INET_ADDRSTRLEN] = {0};
+	printf("recv from %s at port %d\n", inet_ntop(AF_INET, &client_addr.sin_addr, str, sizeof(str)),
+		ntohs(client_addr.sin_port));
+
+	struct epoll_event ev;
+	ev.events = EPOLLIN | EPOLLET;
+	//ev.data.fd = clientfd;
+
+	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
+	si->sockfd = clientfd;
+	si->callback = recv_cb;
+	ev.data.ptr = si;
+	
+	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
+	// 出发回调函数
+     onConnect();
+	return clientfd;
+}
+
+
+//启动一个线程
+void *worker_thread(void *arg) 
+{
+
+	while (1) 
+     {
+		int nready = epoll_wait(eventloop->epfd, eventloop->events, 512, -1);
+
+		if (nready < -1) {
+			break;
+		}else if (nready == 0)
+          {
+              continue;  //进入下一轮事件循环
+          }
+          
+		int i = 0;
+          //处理完善的IO
+		for (i = 0;i < nready;i ++) 
+          {
+
+			if (eventloop->events[i].events & EPOLLIN) {
+				//printf("sockitem\n");
+				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
+				si->callback(si->sockfd, eventloop->events[i].events, si);
+			}
+
+			if (eventloop->events[i].events & EPOLLOUT) {
+
+				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
+				si->callback(si->sockfd, eventloop->events[i].events, si);
+			}
+		}
+	}
+}
+
+int main(int argc, char *argv[]) 
+{
+
+	int sockfd = listenFd();
      
+	printf("server is starting\n");
+
+	eventloop = (struct reactor*)malloc(sizeof(struct reactor));
+	// epoll opera
+
+	eventloop->epfd = epoll_create(1);
+
+
+	struct epoll_event ev;
+	ev.events = EPOLLIN;
+	//ev.data.fd = sockfd; //int idx = 2000;
+	
+
+	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
+	si->sockfd = sockfd;
+	si->callback = accept_cb;
+	ev.data.ptr = si;
+	
+	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, sockfd, &ev);
+
+	pthread_t id;
+	pthread_create(&id, NULL, worker_thread, NULL);
+	
+	//pthread_cond_waittime();
+	while(1) {
+
+		
+
+	}
+	
 }
