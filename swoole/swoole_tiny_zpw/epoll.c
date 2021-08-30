@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 {
 
 	int sockfd = listenFd();
-     
+
 	printf("server is starting\n");
 
 	eventloop = (struct reactor*)malloc(sizeof(struct reactor));
@@ -182,7 +182,6 @@ int main(int argc, char *argv[])
 	ev.events = EPOLLIN;
 	//ev.data.fd = sockfd; //int idx = 2000;
 	
-
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
 	si->sockfd = sockfd;
 	si->callback = accept_cb;
