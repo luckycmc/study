@@ -108,7 +108,7 @@ void swServer_close_port(swServer *serv, enum swBool_type only_stream_port)
     }
 }
 /**
- * 接受来自客户端的请求
+ * 接受来自客户端的请求 主要是数据可写了
  * @param reactor 
  * @param event 
  * @return int 
@@ -131,7 +131,7 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
 #else
         new_fd = accept(event->fd, (struct sockaddr *) &client_addr, &client_addrlen);
 #endif
-        if (new_fd < 0)
+        if (new_fd < 0)   // new_fd 出现错误了
         {
             switch (errno)
             {
@@ -168,7 +168,7 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
             return SW_OK;
         }
 
-        if (serv->factory_mode == SW_MODE_SINGLE)
+        if (serv->factory_mode == SW_MODE_SINGLE)  //分发模式
         {
             reactor_id = 0;
         }
@@ -203,7 +203,7 @@ int swServer_master_onAccept(swReactor *reactor, swEvent *event)
          * [!!!] new_connection function must before reactor->add
          */
         conn->connect_notify = 1;
-        // new_fd 加入到对应的epoll 中  new_fd 和对应的数据类型
+        // new_fd 加入到对应的epoll 中  new_fd 和对应的数据类型 可写事件
         if (sub_reactor->add(sub_reactor, new_fd, SW_FD_TCP | SW_EVENT_WRITE) < 0)
         {
             bzero(conn, sizeof(swConnection));
@@ -1793,7 +1793,7 @@ static void swHeartbeatThread_loop(swThreadParam *param)
 
 /**
  * 
- * @brief 
+ * 
  *  swServer_connection_new 创建新的连接对象
  * @param serv 
  * @param ls 

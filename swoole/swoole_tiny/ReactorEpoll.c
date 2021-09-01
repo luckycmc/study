@@ -159,7 +159,9 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 			}
 			//epoll out 事件
 			if (this->events[i].events & EPOLLOUT)
-			{
+			{   
+				  //触发对应的回调函数
+				 ret = reactor->handle[ev.type](reactor, &ev);
                  swTrace("[THREAD #%ld]event epoll_out.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
 			}
 		}

@@ -140,7 +140,7 @@ typedef struct _swEventClose
 	int from_id; //Reactor Id
 	int fd;
 } swEventClose;
-//连接事件截水沟头
+//连接事件结构体
 typedef struct _swEventConnect
 {
 	int from_id; //Reactor Id

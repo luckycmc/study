@@ -52,5 +52,6 @@ int listenFd()
 	if (listen(sockfd, 5) < 0) {
 		return -3;
 	}
+	//注册connect 连接回调函数的
     return sockfd;
 }

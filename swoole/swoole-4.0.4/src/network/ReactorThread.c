@@ -23,7 +23,7 @@ static int swReactorThread_loop(swThreadParam *param);
 static int swReactorThread_onPipeWrite(swReactor *reactor, swEvent *ev);
 static int swReactorThread_onPipeReceive(swReactor *reactor, swEvent *ev);
 
-static int swReactorThread_onRead(swReactor *reactor, swEvent *ev);
+static int swReactorThread_onRead(swReactor *reactor, swEvent *ev);  //读就绪事件回调
 static int swReactorThread_onWrite(swReactor *reactor, swEvent *ev);
 static int swReactorThread_onPackage(swReactor *reactor, swEvent *event);
 static void swReactorThread_onStreamResponse(swStream *stream, char *data, uint32_t length);
@@ -976,7 +976,9 @@ static int swReactorThread_onRead(swReactor *reactor, swEvent *event)
 
     return port->onRead(reactor, port, event);
 }
-
+/***
+ * 写事件回调
+ * */
 static int swReactorThread_onWrite(swReactor *reactor, swEvent *ev)
 {
     int ret;
@@ -1278,7 +1280,7 @@ static int swReactorThread_loop(swThreadParam *param)
 
     SwooleTG.reactor = reactor;
 
-#ifdef HAVE_CPU_AFFINITY
+#ifdef HAVE_CPU_AFFINITY     // cpu 亲和力 也就是绑定对应的cpu
     //cpu affinity setting
     if (serv->open_cpu_affinity)
     {
@@ -1300,7 +1302,7 @@ static int swReactorThread_loop(swThreadParam *param)
         }
     }
 #endif
-    // reactor 线程创建reactor
+    // reactor 线程中创建reactor
     ret = swReactor_create(reactor, SW_REACTOR_MAXEVENTS);
     if (ret < 0)
     {
@@ -1351,7 +1353,12 @@ static int swReactorThread_loop(swThreadParam *param)
             }
         }
     }
-
+    /**
+     * 
+      swReactorThread_set_protocol 用于设置 TCP、UDP 的读写回调函数:
+       swReactorThread_onPackage、swReactorThread_onWrite、swReactorThread_onRead 
+      用来接收客户端传输的信息，并且设置监听 socket 的 onRead 函数、onPackage 函数
+     */
     //set protocol function point
     swReactorThread_set_protocol(serv, reactor);
 
@@ -1388,8 +1395,8 @@ static int swReactorThread_loop(swThreadParam *param)
 
                 //for response
                 swSetNonBlock(pipe_fd);
-                reactor->add(reactor, pipe_fd, SW_FD_PIPE);
-
+                reactor->add(reactor, pipe_fd, SW_FD_PIPE);  //注册reactor
+ 
                 if (thread->notify_pipe == 0)
                 {
                     thread->notify_pipe = serv->workers[i].pipe_worker;
@@ -1464,11 +1471,18 @@ static int swReactorThread_loop(swThreadParam *param)
 #endif
 
     swString_free(SwooleTG.buffer_stack);
-    pthread_exit(0);
+    pthread_exit(0);  //回收子线程
     return SW_OK;
 }
 
 /**
+ * @brief 
+ * swReactorThread_dispatch 函数负责向 worker 进程投递消息
+ * @param conn 
+ * @param data 
+ * @param length 
+ * @return * dispatch[only data frame] 
+ *
  * dispatch request data [only data frame]
  */
 int swReactorThread_dispatch(swConnection *conn, char *data, uint32_t length)

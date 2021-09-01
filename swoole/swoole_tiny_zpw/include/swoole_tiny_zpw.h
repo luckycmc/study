@@ -155,7 +155,7 @@ struct swReactor_s
 	int (*del)(swReactor *, int);         // 删除
 	int (*wait)(swReactor *, struct timeval *); // 等待
 	void (*free)(swReactor *);  //释放
-	int (*setHandle)(swReactor *, int, swReactor_handle); //设置手柄
+	int (*setHandle)(swReactor *, int, swReactor_handle); //设置回调函数
 };
 
 
@@ -165,7 +165,7 @@ typedef struct swServer_s swServer;
 struct swServer_s
 {
     int backlog;
-	int factory_mode;
+	int factory_mode;    // 分发模式
 	int worker_num;
 	int max_conn;
 	int max_request;
@@ -174,7 +174,7 @@ struct swServer_s
 	char open_cpu_affinity; //是否设置CPU亲和性
 
 	swPipe main_pipe;         //管道       用于通讯
-	swReactor reactor;        // reactor  结构体
+	swReactor reactor;        // reactor  结构体  主reactor 结构体
 
 	void *ptr; //reserve
 	void *ptr2; //reserve

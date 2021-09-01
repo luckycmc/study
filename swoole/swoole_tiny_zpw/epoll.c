@@ -20,6 +20,8 @@ void *worker_thread(void *arg);
 int recv_cb(int fd, int events, void *arg);
 int recv_cb(int fd, int events, void *arg);
 int accept_cb(int fd, int events, void *arg);
+//创建reactor
+int reactor_cteate();
 
 struct reactor *eventloop = NULL;
 
@@ -39,7 +41,7 @@ int send_cb(int fd, int events, void *arg)
 
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
      //回调onFinish();函数
-      onFinish();
+    onFinish();
 }
 
 //  ./epoll 8080
@@ -94,7 +96,7 @@ int recv_cb(int fd, int events, void *arg)
 		si->callback = send_cb;
 		ev.data.ptr = si;
 		epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
-          onReceive();
+       
 	}
 
 }
@@ -124,8 +126,8 @@ int accept_cb(int fd, int events, void *arg)
 	ev.data.ptr = si;
 	
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
-	// 出发回调函数
-     onConnect();
+	//接受数据回调函数
+	 onReceive();
 	return clientfd;
 }
 
@@ -146,7 +148,7 @@ void *worker_thread(void *arg)
           }
           
 		int i = 0;
-          //处理完善的IO
+          //处理准备就绪的io的IO
 		for (i = 0;i < nready;i ++) 
           {
 
@@ -163,20 +165,33 @@ void *worker_thread(void *arg)
 			}
 		}
 	}
+	//回收子线程
+	pthread_exit(NULL);
 }
-
-int main(int argc, char *argv[]) 
+//创建对应的reactor
+int reactor_cteate()
 {
-
-	int sockfd = listenFd();
-
-	printf("server is starting\n");
-
-	eventloop = (struct reactor*)malloc(sizeof(struct reactor));
+     eventloop = (struct reactor*)malloc(sizeof(struct reactor));
 	// epoll opera
 
 	eventloop->epfd = epoll_create(1);
+	if (eventloop->epfd < -1)
+	{
+		return -1;
+	}
+	return eventloop->epfd;
+	
+}
+//主函数
+int main(int argc, char *argv[]) 
+{
+    int epfd ;
+	int sockfd = listenFd();   // listen fd
 
+	printf("server is starting\n");
+
+	
+    epfd = reactor_cteate();
 
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
@@ -184,19 +199,15 @@ int main(int argc, char *argv[])
 	
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
 	si->sockfd = sockfd;
-	si->callback = accept_cb;
+	si->callback = accept_cb;   //注册对应的回调函数
 	ev.data.ptr = si;
 	
-	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, sockfd, &ev);
+	epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &ev);
 
 	pthread_t id;
 	pthread_create(&id, NULL, worker_thread, NULL);
 	
 	//pthread_cond_waittime();
-	while(1) {
-
-		
-
-	}
+    return 0;
 	
 }
