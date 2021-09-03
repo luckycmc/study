@@ -20,6 +20,7 @@ struct swReactorEpoll_s
 	struct epoll_event *events;
 };
 /**
+ * 相等于PHP 中的构造方法 初始化话属性和对应的方法 
   reactor  的创建
 */
 int swReactorEpoll_create(swReactor *reactor, int max_event_num)
@@ -49,7 +50,7 @@ int swReactorEpoll_create(swReactor *reactor, int max_event_num)
 		return SW_ERR;
 	}
 	//binding method
-	/*绑定对应的操作时间 添加 删除 等待返回 */
+	/*绑定对应的操作事件 添加 删除 等待返回 */
 	reactor->add = swReactorEpoll_add;
 	reactor->del = swReactorEpoll_del;
 	reactor->wait = swReactorEpoll_wait;
@@ -61,16 +62,16 @@ int swReactorEpoll_create(swReactor *reactor, int max_event_num)
 void swReactorEpoll_free(swReactor *reactor)
 {
 	swReactorEpoll *this = reactor->object;
-	close(this->epfd);
-	sw_free(this->events);
-	sw_free(this);
+	close(this->epfd);  //关闭 跟节点
+	sw_free(this->events); // 释放内存
+	sw_free(this);     //释放内存
 }
 //reactor 添加对应的fd
 int swReactorEpoll_add(swReactor *reactor, int fd, int fdtype)
 {  
 	
 	swReactorEpoll *this = reactor->object;
-	struct epoll_event e;
+	struct epoll_event e; //实例化事件结构体
 	swFd fd_;
 	int ret;
 	bzero(&e, sizeof(struct epoll_event));
@@ -79,11 +80,13 @@ int swReactorEpoll_add(swReactor *reactor, int fd, int fdtype)
 	fd_.fdtype = fdtype;
 	//e.data.u64 = 0;
 	//e.events = EPOLLIN | EPOLLOUT;
-	e.events = EPOLLIN | EPOLLET;
+	e.events = EPOLLIN | EPOLLET; //边缘出发 写事件
+	// e.data 主要用于保存 应用程序的关联数据  怎么设置的到时候怎么取出来 绑定对应的回调函数
+	//  C 库函数 void *memcpy(void *str1, const void *str2, size_t n) 从存储区 str2 复制 n 个字节到存储区 str1
 	memcpy(&(e.data.u64), &fd_, sizeof(fd_));
 
 	swTrace("[THREAD #%ld]EP=%d|FD=%d\n", pthread_self(), this->epfd, fd);
-	//把当前的fd添加到对应的 红黑树种
+	//把当前的fd添加到对应的 红黑树种 什么操作 那个io 处理也就是fd  &e 绑定对应的关联事件
 	ret = epoll_ctl(this->epfd, EPOLL_CTL_ADD, fd, &e);
 	if (ret < 0)
 	{
@@ -99,7 +102,7 @@ int swReactorEpoll_del(swReactor *reactor, int fd)
 	swReactorEpoll *this = reactor->object;
 	struct epoll_event e;
 	int ret;
-	e.data.fd = fd;
+	e.data.fd = fd;   // 只设置了fd 没有设置其他额外的参数
 	//e.data.u64 = 0;
 	//e.events = EPOLLIN | EPOLLOUT;
 	e.events = EPOLLIN | EPOLLET;
@@ -112,7 +115,7 @@ int swReactorEpoll_del(swReactor *reactor, int fd)
 	this->event_max--;
 	return SW_OK;
 }
-//epoll_wait等待就绪的IO
+//epoll_wait等待就绪的IO  IO处理器   等待各种IO事件的到来
 int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 {
 	swEvent ev;
@@ -145,7 +148,7 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 		{  
 			
 			//printf("event coming.Ep=%d|fd=%d\n", this->epfd, this->events[i].data.fd);
-			if (this->events[i].events & EPOLLIN)
+			if (this->events[i].events & EPOLLIN) //可写事件
 			{
 				swTrace("event coming.Ep=%d|fd=%d\n", this->epfd, this->events[i].data.fd);
 
@@ -153,16 +156,24 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 				ev.fd = fd_.fd;
 				ev.from_id = reactor->id;
 				ev.type = fd_.fdtype;
-				//触发对应的回调函数
-				ret = reactor->handle[ev.type](reactor, &ev);
+				//触发对应的回调函数  事件分发器 对应的事件由对应的回调函数处理handle()回调函数处理
+				reactor->handle[ev.type](reactor, &ev); //通过对应的ev.type 获取对应的回调函数 然后执行对应的
+				//的回调函数
 				swTrace("[THREAD #%ld]event finish.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
 			}
 			//epoll out 事件
-			if (this->events[i].events & EPOLLOUT)
+			if (this->events[i].events & EPOLLOUT)// 可读事件
 			{   
+				
+				swTrace("event coming.Ep=%d|fd=%d\n", this->epfd, this->events[i].data.fd);
+
+				memcpy(&fd_, &(this->events[i].data.u64), sizeof(fd_));
+				ev.fd = fd_.fd;
+				ev.from_id = reactor->id;
+				ev.type = fd_.fdtype;
 				  //触发对应的回调函数
-				 ret = reactor->handle[ev.type](reactor, &ev);
-                 swTrace("[THREAD #%ld]event epoll_out.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
+				reactor->handle[ev.type](reactor, &ev);
+                swTrace("[THREAD #%ld]event epoll_out.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
 			}
 		}
 	}

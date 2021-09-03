@@ -239,6 +239,7 @@ int swServer_start(swServer *serv)
 	}
 	main_reactor.ptr = serv;
 	main_reactor.id = 0;
+	//  fd  ----->fdtype -----> 根据fdtype触发对应的回调函数reactor->handle[fdtype]();  
 	/******************设置对应的回调函数 start*****************************/
 	main_reactor.setHandle(&main_reactor, SW_EVENT_CLOSE, swServer_onClose);
 	main_reactor.setHandle(&main_reactor, SW_EVENT_CONNECT, swServer_onAccept);
@@ -741,7 +742,7 @@ static int swServer_listen(swServer *serv, swReactor *reactor)
 		//TCP
 		else
 		{   
-			//注册连接事件回调函数  吧对应的listenfd  注册进去
+			//注册listfd 的回调函数 对应的事件为 SW_EVENT_CONNECT 然后回调对应的函数
 			reactor->add(reactor, sock, SW_EVENT_CONNECT);
 		}
 		listen_host->sock = sock;

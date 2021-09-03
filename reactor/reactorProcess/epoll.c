@@ -18,7 +18,8 @@ struct sockitem { //
 	int (*callback)(int fd, int events, void *arg);
 
 	char recvbuffer[1024]; //
-	char sendbuffer[1024]; //
+	char sendbuffer[1024]; //
+
 
 	// 
 

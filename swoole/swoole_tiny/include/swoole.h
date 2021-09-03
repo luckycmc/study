@@ -134,7 +134,7 @@ typedef struct _swEvent
 	int fd;
 	int type;
 } swEvent;
-//关闭实践结构体
+//关闭事件结构体
 typedef struct _swEventClose
 {
 	int from_id; //Reactor Id
@@ -156,12 +156,14 @@ typedef struct _swHashTable_FdInfo
 	int key;
 	UT_hash_handle hh;
 } swHashTable_FdInfo;
-
-typedef int (*swHandle)(swEventData *buf);
+/**********函数指针 start**********/
+typedef int (*swHandle)(swEventData *buf);   
 typedef void (*swSignalFunc)(int);
 typedef void (*swCallback)(void *); //回调函数
 typedef struct swReactor_s swReactor;
 typedef int (*swReactor_handle)(swReactor *reactor, swEvent *event);
+/**********函数指针 end**********/
+
 //进程结构体
 typedef struct _swFactory 
 {
@@ -207,14 +209,14 @@ struct swReactor_s
 	int id; //Reactor ID
 	int running;
 
-	swReactor_handle handle[SW_MAX_FDTYPE];
+	swReactor_handle handle[SW_MAX_FDTYPE];     //函数指针数据
 	swFactory *factory;
 
 	int (*add)(swReactor *, int, int);    //添加
 	int (*del)(swReactor *, int);         // 删除
 	int (*wait)(swReactor *, struct timeval *); // 等待
 	void (*free)(swReactor *);  //释放
-	int (*setHandle)(swReactor *, int, swReactor_handle); //设置手柄
+	int (*setHandle)(swReactor *, int, swReactor_handle); //设置对应的回调函数
 };
 //写线程
 typedef struct _swThreadWriter
