@@ -25,7 +25,7 @@ typedef struct _swThreadPoll
 //监听者节点
 typedef struct _swListenList_node
 {
-	struct _swListenList_node *next, *prev;
+	struct _swListenList_node *next, *prev;  //双向链表节点
 	int type;
 	int port;
 	int sock;

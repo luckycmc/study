@@ -585,7 +585,7 @@ static int swServer_poll_loop(swThreadParam *param)
 	//Thread mode must copy the data.
 	//will free after onFinish
 
-	reactor->setHandle(reactor, SW_FD_TCP, swServer_poll_onReceive);
+	reactor->setHandle(reactor, SW_FD_TCP, swServer_poll_onReceive);  
 	reactor->setHandle(reactor, SW_FD_UDP, swServer_poll_onPackage);
 
 	//main loop

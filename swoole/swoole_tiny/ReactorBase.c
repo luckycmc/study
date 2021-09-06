@@ -1,6 +1,6 @@
 #include "./include/swoole.h"
 
-//接受客户端连接
+//接受客户端连接产生对应的fd
 int swReactor_accept(swReactor *reactor, swEvent *event)
 {  
 
@@ -16,8 +16,10 @@ int swReactor_accept(swReactor *reactor, swEvent *event)
 		swTrace("[swReactorEpollWait]accept fail\n");
 		return -1;
 	}
-	swSetNonBlock(conn_ev.conn_fd);
+	swSetNonBlock(conn_ev.conn_fd); //设置对应的fd
+	//注册对应的连接fd 和对应的回调函数标识 
 	reactor->add(reactor, conn_ev.conn_fd, SW_FD_TCP);
+
 	return conn_ev.conn_fd;
 }
 // server  出现错误
@@ -37,7 +39,7 @@ int swReactor_close(swReactor *reactor, swEvent *event)
 	//close_ev.fd = event->fd;
 	//close_ev.from_id = event->fd;
 
-	close(event->fd);
+	close(event->fd);  //关闭对应的fd节点
 	reactor->del(reactor, event->fd);// 从reactor 也就是红黑树中 删除对应的fd
 	return 0;
 }
@@ -66,7 +68,7 @@ int swReactor_receive(swReactor *reactor, swEvent *event)
 	ret = swRead(event->fd, data.data, SW_BUFFER_SIZE);
 	printf("[ReadThread]recv: %s|fd=%d|ret=%d|errno=%d\n", data.data, event->fd, ret, errno);
 
-	if (ret == 0)
+	if (ret == 0) //数据不同的阶段注册不同的回调函数   客户端关闭我们出发对应的关闭函数
 	{
 		//fd close
 		event->type = SW_FD_CLOSE;
@@ -74,7 +76,7 @@ int swReactor_receive(swReactor *reactor, swEvent *event)
 	}
 	else if (ret > 0)
 	{
-		return reactor->handle[SW_FD_TCP](reactor, event);
+		return reactor->handle[SW_FD_TCP](reactor, event); //正常接收数据触发对应的接受数据函数
 	}
 	else
 	{

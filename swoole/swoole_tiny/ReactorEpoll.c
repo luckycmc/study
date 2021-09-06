@@ -151,7 +151,8 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 			if (this->events[i].events & EPOLLIN) //可写事件
 			{
 				swTrace("event coming.Ep=%d|fd=%d\n", this->epfd, this->events[i].data.fd);
-
+                /****真个服务器的核心就在这 reactor 反应锥 start***/
+				//有IO到来就出发对应的回调函数 像反映堆一样出发对应的回调函数
 				memcpy(&fd_, &(this->events[i].data.u64), sizeof(fd_));
 				ev.fd = fd_.fd;
 				ev.from_id = reactor->id;
@@ -159,10 +160,11 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 				//触发对应的回调函数  事件分发器 对应的事件由对应的回调函数处理handle()回调函数处理
 				reactor->handle[ev.type](reactor, &ev); //通过对应的ev.type 获取对应的回调函数 然后执行对应的
 				//的回调函数
+				 /****真个服务器的核心就在这 reactor 反应锥 end***/
 				swTrace("[THREAD #%ld]event finish.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
 			}
 			//epoll out 事件
-			if (this->events[i].events & EPOLLOUT)// 可读事件
+			if (this->events[i].events & EPOLLOUT)// 可写事件
 			{   
 				
 				swTrace("event coming.Ep=%d|fd=%d\n", this->epfd, this->events[i].data.fd);
@@ -172,7 +174,7 @@ int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 				ev.from_id = reactor->id;
 				ev.type = fd_.fdtype;
 				  //触发对应的回调函数
-				reactor->handle[ev.type](reactor, &ev);
+				reactor->handle[ev.type](reactor, &ev);//像reactor反应堆 一样触发对应的回调函数
                 swTrace("[THREAD #%ld]event epoll_out.Ep=%d|ret=%d\n", pthread_self(), this->epfd, ret);
 			}
 		}
