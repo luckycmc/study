@@ -7,7 +7,47 @@
 #include<sys/wait.h>//waitpid();
 
 #define BUFFER_SIZE 1024
- 
+/**************
+ * 1.父进程最大文件描述个数(父进程中需要close关闭accept返回的新文件描述符)
+    系统内创建进程个数(与内存大小相关)
+    进程创建过多是否降低整体服务性能(进程调度)
+
+   2.使用多进程的方式, 解决服务器处理多连接的问题：
+      （1）共享
+       读时共享, 写时复制
+       文件描述符
+       内存映射区 -- mmap
+
+     （2）父进程 的角色是什么?
+
+     等待接受客户端连接 -- accept 产生clienfd
+
+     有链接 到来:
+       创建一个子进程 fork()
+       将通信的文件描述符关闭
+
+    （3）子进程的角色是什么?
+        1）通信
+
+         使用accept返回值 - fd
+         2）关掉监听的文件描述符
+    
+      浪费资源
+    （4）创建的进程的个数有限制吗?
+          受硬件限制
+          文件描述符默认也是有上限的1024
+    （5）子进程资源回收
+
+      1）wait/waitpid
+     2）使用信号回收
+
+      信号捕捉
+           signal
+
+           sigaction - 推荐
+
+        捕捉信号: SIGCHL  
+ * */
 int main() 
 {
 
@@ -60,7 +100,7 @@ int main()
     {
 
         addr_size = sizeof(client_addr);
-
+        //accept connection在主进程中 accept  fd
         client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
         printf("%d 连接成功\n", client_socket);
@@ -75,7 +115,7 @@ int main()
 
             sleep(1);//父进程,进行下次循环,读取客户端连接事件
             //回收子进程的状态
-            waitpid(-1, &status, WNOHANG | WUNTRACED | WCONTINUED);
+            waitpid(-1, &status, WNOHANG | WUNTRACED | WCONTINUED); //回收子进程的的异常问题
 
             if (WIFEXITED(status)) {
 

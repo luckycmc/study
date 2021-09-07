@@ -18,8 +18,10 @@ struct reactor {
 //线程epoll
 void *worker_thread(void *arg);
 int recv_cb(int fd, int events, void *arg);
-int recv_cb(int fd, int events, void *arg);
+int send_cb(int fd, int events, void *arg);
 int accept_cb(int fd, int events, void *arg);
+//注册关闭的回调函数
+int close_cb(int fd, int events, void *arg);
 //创建reactor
 int reactor_cteate();
 
@@ -30,7 +32,7 @@ int send_cb(int fd, int events, void *arg)
 
 	struct sockitem *si = (struct sockitem*)arg;
 
-	send(fd, "hello\n", 6, 0); //
+	send(fd, "hello world\n", 6, 0); //  发送给用户数据
 
 	struct epoll_event ev;
 	ev.events = EPOLLIN | EPOLLET;
@@ -55,7 +57,7 @@ int recv_cb(int fd, int events, void *arg)
 
 	char buffer[1024] = {0};
 	int ret = recv(fd, buffer, 1024, 0);
-	if (ret < 0) {
+	if (ret < 0) {  //出现错误
 
 		if (errno == EAGAIN || errno == EWOULDBLOCK) { //
 			return -1;
@@ -74,16 +76,16 @@ int recv_cb(int fd, int events, void *arg)
 	} else if (ret == 0) { //
 
 		// 
-		printf("disconnect %d\n", fd);
-
-		ev.events = EPOLLIN;
+		ev.events = EPOLLIN|EPOLLET;
+		si->sockfd = fd;
+		si->callback = close_cb;
+		ev.data.ptr = si;
 		//ev.data.fd = fd;
-		epoll_ctl(eventloop->epfd, EPOLL_CTL_DEL, fd, &ev);
+		epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);  //EPOLL_CTL_DEL
 
-		close(fd);
-		free(si);
-
-          onClose();
+		/*  close(fd);
+		 free(si);
+         onClose(); */
 		
 	} else {
 
@@ -128,10 +130,22 @@ int accept_cb(int fd, int events, void *arg)
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
 	//接受数据回调函数
 	 onReceive();
-	return clientfd;
+	 return clientfd;
 }
-
-
+//关闭事件的处理函数
+int close_cb(int fd, int events, void *arg)
+{
+     printf("closing connection %d\n", fd);
+	 struct sockitem *si = (struct sockitem*)arg;
+	 struct epoll_event ev;
+	 ev.events = EPOLLIN;
+	 //需要删除对应的fd 节点
+	 epoll_ctl(eventloop->epfd,EPOLL_CTL_DEL, fd, &ev);
+	 close(fd);
+	 free(si);
+	 //回调对应的回调函数
+	 onClose();
+}
 //启动一个线程
 void *worker_thread(void *arg) 
 {
@@ -206,7 +220,8 @@ int main(int argc, char *argv[])
 
 	pthread_t id;
 	pthread_create(&id, NULL, worker_thread, NULL);
-	
+	//回收线程退出
+	pthread_exit(NULL);
 	//pthread_cond_waittime();
     return 0;
 	

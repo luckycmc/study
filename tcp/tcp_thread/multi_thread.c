@@ -95,7 +95,7 @@ void master_thread()
         fprintf(stderr,"Listen error:%s\n\a",strerror(errno));
         exit(1);
     }
-    //接受客户端连接
+    //接受客户端连接，listenfd 中的半连接中有就绪的队列
     while(1)
     {
            /*服务器阻塞，直到客户程序建立连接*/
@@ -108,9 +108,10 @@ void master_thread()
            }
             printf("current fd is %d\n",new_fd);
             pconnsocke = (int *) malloc(sizeof(int));
-           *pconnsocke = new_fd;  //转换成对应的参数
 
-           //子线程进程处理
+           *pconnsocke = new_fd;  //转换成对应的参数类型  对应的fd 读写数据处理交给子线程去处理
+
+           //子线程进程处理数据的读写请求
            ret = pthread_create(&tid,NULL,rec_func,(void *)pconnsocke);
 
            //判断线程是否创建成功
