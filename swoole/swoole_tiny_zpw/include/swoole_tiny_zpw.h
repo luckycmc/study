@@ -83,10 +83,10 @@ typedef struct _swSendData
 	char *data;
 
 } swSendData; 
-//事件结构体
+//事件结构体   __目前先试用对应的事件结构体
 typedef struct _swEvent
 {
-	int from_id; //Reactor Id
+	//int from_id; //Reactor Id
 	int fd;
 	int type;
 } swEvent;
@@ -149,7 +149,7 @@ struct swReactor_s
 	int running;
 
 	swReactor_handle handle[SW_MAX_FDTYPE];
-	swFactory *factory;
+	//swFactory *factory;
 
 	int (*add)(swReactor *, int, int);    //添加
 	int (*del)(swReactor *, int);         // 删除
