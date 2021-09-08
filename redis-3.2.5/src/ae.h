@@ -39,12 +39,12 @@
 #define AE_ERR -1
 
 #define AE_NONE 0
-#define AE_READABLE 1
-#define AE_WRITABLE 2
+#define AE_READABLE 1    //设置读事件
+#define AE_WRITABLE 2    //设置写事件
 
 #define AE_FILE_EVENTS 1
 #define AE_TIME_EVENTS 2
-#define AE_ALL_EVENTS (AE_FILE_EVENTS|AE_TIME_EVENTS)
+#define AE_ALL_EVENTS (AE_FILE_EVENTS|AE_TIME_EVENTS)   //读写事件同时监控
 #define AE_DONT_WAIT 4
 
 #define AE_NOMORE -1
@@ -61,40 +61,43 @@ typedef int aeTimeProc(struct aeEventLoop *eventLoop, long long id, void *client
 typedef void aeEventFinalizerProc(struct aeEventLoop *eventLoop, void *clientData);
 typedef void aeBeforeSleepProc(struct aeEventLoop *eventLoop);
 
+// Redis中的事件驱动库只关注网络IO，以及定时器。该事件库处理下面两类事件：
 /* File event structure */
-typedef struct aeFileEvent {
-    int mask; /* one of AE_(READABLE|WRITABLE) */
-    aeFileProc *rfileProc;
+// 文件事件(file  event)：用于处理 Redis 服务器和客户端之间的网络IO
+typedef struct aeFileEvent {   //文件结构体
+    int mask; /* one of AE_(READABLE|WRITABLE) */    //需要监控的读写标志位
+    aeFileProc *rfileProc;      //读写事件处理函数
     aeFileProc *wfileProc;
-    void *clientData;
+    void *clientData;          //事件参数指针
 } aeFileEvent;
-
-/* Time event structure */
+//时间事件(time  eveat)：Redis 服务器中的一些操作（比如serverCron函数）
+// 需要在给定的时间点执行，而时间事件就是处理这类定时操作的。
+/* Time event structure */   //定时器
 typedef struct aeTimeEvent {
-    long long id; /* time event identifier. */
-    long when_sec; /* seconds */
-    long when_ms; /* milliseconds */
+    long long id; /* time event identifier. */   /*定时器事件的ID*/
+    long when_sec; /* seconds */                 /*触发的秒*/
+    long when_ms; /* milliseconds */           /*触发的毫秒*/  
     aeTimeProc *timeProc;
-    aeEventFinalizerProc *finalizerProc;
+    aeEventFinalizerProc *finalizerProc; /*// 定时事件清理函数，当删除定时事件的时候会被调用*/
     void *clientData;
-    struct aeTimeEvent *next;
+    struct aeTimeEvent *next;  /*下一个定时器对象，整体采用链表维护，作者好像知道链表维护的效率不是很高，推荐使用跳表，为啥不推荐使用红黑树嘞。*/
 } aeTimeEvent;
 
 /* A fired event */
-typedef struct aeFiredEvent {
+typedef struct aeFiredEvent {   //就绪事件
     int fd;
     int mask;
 } aeFiredEvent;
 
 /* State of an event based program */
 typedef struct aeEventLoop {
-    int maxfd;   /* highest file descriptor currently registered */
+    int maxfd;   /* highest file descriptor currently registered */ /*事件管理器能管理的文件描述符的最大值*/
     int setsize; /* max number of file descriptors tracked */
     long long timeEventNextId;
     time_t lastTime;     /* Used to detect system clock skew */
     aeFileEvent *events; /* Registered events */
-    aeFiredEvent *fired; /* Fired events */
-    aeTimeEvent *timeEventHead;
+    aeFiredEvent *fired; /* Fired events */ /*触发事件数组，这里面放的是经过系统判断，有对应事件发生的文件描述符的存放数组，和上面一样，都采用数组维护*/
+    aeTimeEvent *timeEventHead;   //时间事件
     int stop;
     void *apidata; /* This is used for polling API specific data */
     aeBeforeSleepProc *beforesleep;

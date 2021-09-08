@@ -60,12 +60,15 @@
     #endif
 #endif
 
+/*创建一个事件管理器，需要初始化文件事件，触发事件，定时器事件等，
+stop值默认为0，最大文件描述符值为-1，并将所有的文件描述符的监控事件类型设置为NULL。 */
+
 aeEventLoop *aeCreateEventLoop(int setsize) {
     aeEventLoop *eventLoop;
     int i;
 
     if ((eventLoop = zmalloc(sizeof(*eventLoop))) == NULL) goto err;
-    eventLoop->events = zmalloc(sizeof(aeFileEvent)*setsize);
+    eventLoop->events = zmalloc(sizeof(aeFileEvent)*setsize);   /*给文件事件申请空间*/
     eventLoop->fired = zmalloc(sizeof(aeFiredEvent)*setsize);
     if (eventLoop->events == NULL || eventLoop->fired == NULL) goto err;
     eventLoop->setsize = setsize;
@@ -79,7 +82,7 @@ aeEventLoop *aeCreateEventLoop(int setsize) {
     /* Events with mask == AE_NONE are not set. So let's initialize the
      * vector with it. */
     for (i = 0; i < setsize; i++)
-        eventLoop->events[i].mask = AE_NONE;
+        eventLoop->events[i].mask = AE_NONE;   /*AE_NONE代表这个事件没有启用*/
     return eventLoop;
 
 err:
@@ -91,7 +94,7 @@ err:
     return NULL;
 }
 
-/* Return the current set size. */
+/* Return the current set size. */  /*返回管理器能管理的事件的个数*/
 int aeGetSetSize(aeEventLoop *eventLoop) {
     return eventLoop->setsize;
 }
@@ -103,6 +106,7 @@ int aeGetSetSize(aeEventLoop *eventLoop) {
  * performed at all.
  *
  * Otherwise AE_OK is returned and the operation is successful. */
+/*重置管理器能管理的事件个数*/
 int aeResizeSetSize(aeEventLoop *eventLoop, int setsize) {
     int i;
 
@@ -120,9 +124,11 @@ int aeResizeSetSize(aeEventLoop *eventLoop, int setsize) {
         eventLoop->events[i].mask = AE_NONE;
     return AE_OK;
 }
-
+ /*删除事件控制器*/
 void aeDeleteEventLoop(aeEventLoop *eventLoop) {
+    /*调用封装好的删除事件函数*/
     aeApiFree(eventLoop);
+    /*释放对应的内存*/
     zfree(eventLoop->events);
     zfree(eventLoop->fired);
     zfree(eventLoop);
@@ -446,7 +452,7 @@ int aeWait(int fd, int mask, long long milliseconds) {
         return retval;
     }
 }
-
+/*事件管理器总函数，没啥可说的*/
 void aeMain(aeEventLoop *eventLoop) {
     eventLoop->stop = 0;
     while (!eventLoop->stop) {
