@@ -830,3 +830,468 @@ ngx_debug_accepted_connection(ngx_event_conf_t *ecf, ngx_connection_t *c)
 }
 
 #endif
+].reuseport) {
+            if (ngx_add_event(rev, NGX_READ_EVENT, 0) == NGX_ERROR) {
+                return NGX_ERROR;
+            }
+
+            continue;
+        }
+
+#endif
+
+        if (ngx_use_accept_mutex) {
+            continue;
+        }
+
+#if (NGX_HAVE_EPOLLEXCLUSIVE)
+
+        if ((ngx_event_flags & NGX_USE_EPOLL_EVENT)
+            && ccf->worker_processes > 1)
+        {
+            if (ngx_add_event(rev, NGX_READ_EVENT, NGX_EXCLUSIVE_EVENT)
+                == NGX_ERROR)
+            {
+                return NGX_ERROR;
+            }
+
+            continue;
+        }
+
+#endif
+
+        if (ngx_add_event(rev, NGX_READ_EVENT, 0) == NGX_ERROR) {
+            return NGX_ERROR;
+        }
+
+#endif
+
+    }
+
+    return NGX_OK;
+}
+
+
+ngx_int_t
+ngx_send_lowat(ngx_connection_t *c, size_t lowat)
+{
+    int  sndlowat;
+
+#if (NGX_HAVE_LOWAT_EVENT)
+
+    if (ngx_event_flags & NGX_USE_KQUEUE_EVENT) {
+        c->write->available = lowat;
+        return NGX_OK;
+    }
+
+#endif
+
+    if (lowat == 0 || c->sndlowat) {
+        return NGX_OK;
+    }
+
+    sndlowat = (int) lowat;
+
+    if (setsockopt(c->fd, SOL_SOCKET, SO_SNDLOWAT,
+                   (const void *) &sndlowat, sizeof(int))
+        == -1)
+    {
+        ngx_connection_error(c, ngx_socket_errno,
+                             "setsockopt(SO_SNDLOWAT) failed");
+        return NGX_ERROR;
+    }
+
+    c->sndlowat = 1;
+
+    return NGX_OK;
+}
+
+
+static char *
+ngx_events_block(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char                 *rv;
+    void               ***ctx;
+    ngx_uint_t            i;
+    ngx_conf_t            pcf;
+    ngx_event_module_t   *m;
+
+    if (*(void **) conf) {
+        return "is duplicate";
+    }
+
+    /* count the number of the event modules and set up their indices */
+
+    ngx_event_max_module = ngx_count_modules(cf->cycle, NGX_EVENT_MODULE);
+
+    ctx = ngx_pcalloc(cf->pool, sizeof(void *));
+    if (ctx == NULL) {
+        return NGX_CONF_ERROR;
+    }
+
+    *ctx = ngx_pcalloc(cf->pool, ngx_event_max_module * sizeof(void *));
+    if (*ctx == NULL) {
+        return NGX_CONF_ERROR;
+    }
+
+    *(void **) conf = ctx;
+
+    for (i = 0; cf->cycle->modules[i]; i++) {
+        if (cf->cycle->modules[i]->type != NGX_EVENT_MODULE) {
+            continue;
+        }
+
+        m = cf->cycle->modules[i]->ctx;
+
+        if (m->create_conf) {
+            (*ctx)[cf->cycle->modules[i]->ctx_index] =
+                                                     m->create_conf(cf->cycle);
+            if ((*ctx)[cf->cycle->modules[i]->ctx_index] == NULL) {
+                return NGX_CONF_ERROR;
+            }
+        }
+    }
+
+    pcf = *cf;
+    cf->ctx = ctx;
+    cf->module_type = NGX_EVENT_MODULE;
+    cf->cmd_type = NGX_EVENT_CONF;
+
+    rv = ngx_conf_parse(cf, NULL);
+
+    *cf = pcf;
+
+    if (rv != NGX_CONF_OK) {
+        return rv;
+    }
+
+    for (i = 0; cf->cycle->modules[i]; i++) {
+        if (cf->cycle->modules[i]->type != NGX_EVENT_MODULE) {
+            continue;
+        }
+
+        m = cf->cycle->modules[i]->ctx;
+
+        if (m->init_conf) {
+            rv = m->init_conf(cf->cycle,
+                              (*ctx)[cf->cycle->modules[i]->ctx_index]);
+            if (rv != NGX_CONF_OK) {
+                return rv;
+            }
+        }
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+static char *
+ngx_event_connections(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    ngx_event_conf_t  *ecf = conf;
+
+    ngx_str_t  *value;
+
+    if (ecf->connections != NGX_CONF_UNSET_UINT) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+    ecf->connections = ngx_atoi(value[1].data, value[1].len);
+    if (ecf->connections == (ngx_uint_t) NGX_ERROR) {
+        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                           "invalid number \"%V\"", &value[1]);
+
+        return NGX_CONF_ERROR;
+    }
+
+    cf->cycle->connection_n = ecf->connections;
+
+    return NGX_CONF_OK;
+}
+
+
+static char *
+ngx_event_use(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    ngx_event_conf_t  *ecf = conf;
+
+    ngx_int_t             m;
+    ngx_str_t            *value;
+    ngx_event_conf_t     *old_ecf;
+    ngx_event_module_t   *module;
+
+    if (ecf->use != NGX_CONF_UNSET_UINT) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    if (cf->cycle->old_cycle->conf_ctx) {
+        old_ecf = ngx_event_get_conf(cf->cycle->old_cycle->conf_ctx,
+                                     ngx_event_core_module);
+    } else {
+        old_ecf = NULL;
+    }
+
+
+    for (m = 0; cf->cycle->modules[m]; m++) {
+        if (cf->cycle->modules[m]->type != NGX_EVENT_MODULE) {
+            continue;
+        }
+
+        module = cf->cycle->modules[m]->ctx;
+        if (module->name->len == value[1].len) {
+            if (ngx_strcmp(module->name->data, value[1].data) == 0) {
+                ecf->use = cf->cycle->modules[m]->ctx_index;
+                ecf->name = module->name->data;
+
+                if (ngx_process == NGX_PROCESS_SINGLE
+                    && old_ecf
+                    && old_ecf->use != ecf->use)
+                {
+                    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                               "when the server runs without a master process "
+                               "the \"%V\" event type must be the same as "
+                               "in previous configuration - \"%s\" "
+                               "and it cannot be changed on the fly, "
+                               "to change it you need to stop server "
+                               "and start it again",
+                               &value[1], old_ecf->name);
+
+                    return NGX_CONF_ERROR;
+                }
+
+                return NGX_CONF_OK;
+            }
+        }
+    }
+
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                       "invalid event type \"%V\"", &value[1]);
+
+    return NGX_CONF_ERROR;
+}
+
+
+static char *
+ngx_event_debug_connection(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+#if (NGX_DEBUG)
+    ngx_event_conf_t  *ecf = conf;
+
+    ngx_int_t             rc;
+    ngx_str_t            *value;
+    ngx_url_t             u;
+    ngx_cidr_t            c, *cidr;
+    ngx_uint_t            i;
+    struct sockaddr_in   *sin;
+#if (NGX_HAVE_INET6)
+    struct sockaddr_in6  *sin6;
+#endif
+
+    value = cf->args->elts;
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+
+    if (ngx_strcmp(value[1].data, "unix:") == 0) {
+        cidr = ngx_array_push(&ecf->debug_connection);
+        if (cidr == NULL) {
+            return NGX_CONF_ERROR;
+        }
+
+        cidr->family = AF_UNIX;
+        return NGX_CONF_OK;
+    }
+
+#endif
+
+    rc = ngx_ptocidr(&value[1], &c);
+
+    if (rc != NGX_ERROR) {
+        if (rc == NGX_DONE) {
+            ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                               "low address bits of %V are meaningless",
+                               &value[1]);
+        }
+
+        cidr = ngx_array_push(&ecf->debug_connection);
+        if (cidr == NULL) {
+            return NGX_CONF_ERROR;
+        }
+
+        *cidr = c;
+
+        return NGX_CONF_OK;
+    }
+
+    ngx_memzero(&u, sizeof(ngx_url_t));
+    u.host = value[1];
+
+    if (ngx_inet_resolve_host(cf->pool, &u) != NGX_OK) {
+        if (u.err) {
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                               "%s in debug_connection \"%V\"",
+                               u.err, &u.host);
+        }
+
+        return NGX_CONF_ERROR;
+    }
+
+    cidr = ngx_array_push_n(&ecf->debug_connection, u.naddrs);
+    if (cidr == NULL) {
+        return NGX_CONF_ERROR;
+    }
+
+    ngx_memzero(cidr, u.naddrs * sizeof(ngx_cidr_t));
+
+    for (i = 0; i < u.naddrs; i++) {
+        cidr[i].family = u.addrs[i].sockaddr->sa_family;
+
+        switch (cidr[i].family) {
+
+#if (NGX_HAVE_INET6)
+        case AF_INET6:
+            sin6 = (struct sockaddr_in6 *) u.addrs[i].sockaddr;
+            cidr[i].u.in6.addr = sin6->sin6_addr;
+            ngx_memset(cidr[i].u.in6.mask.s6_addr, 0xff, 16);
+            break;
+#endif
+
+        default: /* AF_INET */
+            sin = (struct sockaddr_in *) u.addrs[i].sockaddr;
+            cidr[i].u.in.addr = sin->sin_addr.s_addr;
+            cidr[i].u.in.mask = 0xffffffff;
+            break;
+        }
+    }
+
+#else
+
+    ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                       "\"debug_connection\" is ignored, you need to rebuild "
+                       "nginx using --with-debug option to enable it");
+
+#endif
+
+    return NGX_CONF_OK;
+}
+
+
+static void *
+ngx_event_core_create_conf(ngx_cycle_t *cycle)
+{
+    ngx_event_conf_t  *ecf;
+
+    ecf = ngx_palloc(cycle->pool, sizeof(ngx_event_conf_t));
+    if (ecf == NULL) {
+        return NULL;
+    }
+
+    ecf->connections = NGX_CONF_UNSET_UINT;
+    ecf->use = NGX_CONF_UNSET_UINT;
+    ecf->multi_accept = NGX_CONF_UNSET;
+    ecf->accept_mutex = NGX_CONF_UNSET;
+    ecf->accept_mutex_delay = NGX_CONF_UNSET_MSEC;
+    ecf->name = (void *) NGX_CONF_UNSET;
+
+#if (NGX_DEBUG)
+
+    if (ngx_array_init(&ecf->debug_connection, cycle->pool, 4,
+                       sizeof(ngx_cidr_t)) == NGX_ERROR)
+    {
+        return NULL;
+    }
+
+#endif
+
+    return ecf;
+}
+
+
+static char *
+ngx_event_core_init_conf(ngx_cycle_t *cycle, void *conf)
+{
+    ngx_event_conf_t  *ecf = conf;
+
+#if (NGX_HAVE_EPOLL) && !(NGX_TEST_BUILD_EPOLL)
+    int                  fd;
+#endif
+    ngx_int_t            i;
+    ngx_module_t        *module;
+    ngx_event_module_t  *event_module;
+
+    module = NULL;
+
+#if (NGX_HAVE_EPOLL) && !(NGX_TEST_BUILD_EPOLL)
+
+    fd = epoll_create(100);
+
+    if (fd != -1) {
+        (void) close(fd);
+        module = &ngx_epoll_module;
+
+    } else if (ngx_errno != NGX_ENOSYS) {
+        module = &ngx_epoll_module;
+    }
+
+#endif
+
+#if (NGX_HAVE_DEVPOLL) && !(NGX_TEST_BUILD_DEVPOLL)
+
+    module = &ngx_devpoll_module;
+
+#endif
+
+#if (NGX_HAVE_KQUEUE)
+
+    module = &ngx_kqueue_module;
+
+#endif
+
+#if (NGX_HAVE_SELECT)
+
+    if (module == NULL) {
+        module = &ngx_select_module;
+    }
+
+#endif
+
+    if (module == NULL) {
+        for (i = 0; cycle->modules[i]; i++) {
+
+            if (cycle->modules[i]->type != NGX_EVENT_MODULE) {
+                continue;
+            }
+
+            event_module = cycle->modules[i]->ctx;
+
+            if (ngx_strcmp(event_module->name->data, event_core_name.data) == 0)
+            {
+                continue;
+            }
+
+            module = cycle->modules[i];
+            break;
+        }
+    }
+
+    if (module == NULL) {
+        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0, "no events module found");
+        return NGX_CONF_ERROR;
+    }
+
+    ngx_conf_init_uint_value(ecf->connections, DEFAULT_CONNECTIONS);
+    cycle->connection_n = ecf->connections;
+
+    ngx_conf_init_uint_value(ecf->use, module->ctx_index);
+
+    event_module = module->ctx;
+    ngx_conf_init_ptr_value(ecf->name, event_module->name->data);
+
+    ngx_conf_init_value(ecf->multi_accept, 0);
+    ngx_conf_init_value(ecf->accept_mutex, 0);
+    ngx_conf_init_msec_value(ecf->accept_mutex_delay, 500);
+
+    return NGX_CONF_OK;
+}

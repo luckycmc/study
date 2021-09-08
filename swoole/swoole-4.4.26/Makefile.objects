@@ -1,0 +1,276 @@
+php_swoole_cxx.lo: /data/C_study/swoole/swoole-4.4.26/php_swoole_cxx.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/php_swoole_cxx.cc -o php_swoole_cxx.lo 
+src/core/array.lo: /data/C_study/swoole/swoole-4.4.26/src/core/array.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/array.c -o src/core/array.lo 
+src/core/base.lo: /data/C_study/swoole/swoole-4.4.26/src/core/base.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/base.c -o src/core/base.lo 
+src/core/channel.lo: /data/C_study/swoole/swoole-4.4.26/src/core/channel.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/channel.c -o src/core/channel.lo 
+src/core/error.lo: /data/C_study/swoole/swoole-4.4.26/src/core/error.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/error.cc -o src/core/error.lo 
+src/core/hashmap.lo: /data/C_study/swoole/swoole-4.4.26/src/core/hashmap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/hashmap.c -o src/core/hashmap.lo 
+src/core/heap.lo: /data/C_study/swoole/swoole-4.4.26/src/core/heap.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/heap.c -o src/core/heap.lo 
+src/core/list.lo: /data/C_study/swoole/swoole-4.4.26/src/core/list.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/list.c -o src/core/list.lo 
+src/core/log.lo: /data/C_study/swoole/swoole-4.4.26/src/core/log.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/log.c -o src/core/log.lo 
+src/core/rbtree.lo: /data/C_study/swoole/swoole-4.4.26/src/core/rbtree.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/rbtree.c -o src/core/rbtree.lo 
+src/core/ring_queue.lo: /data/C_study/swoole/swoole-4.4.26/src/core/ring_queue.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/ring_queue.c -o src/core/ring_queue.lo 
+src/core/socket.lo: /data/C_study/swoole/swoole-4.4.26/src/core/socket.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/socket.c -o src/core/socket.lo 
+src/core/string.lo: /data/C_study/swoole/swoole-4.4.26/src/core/string.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/core/string.c -o src/core/string.lo 
+src/coroutine/base.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/base.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/base.cc -o src/coroutine/base.lo 
+src/coroutine/channel.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/channel.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/channel.cc -o src/coroutine/channel.lo 
+src/coroutine/context.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/context.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/context.cc -o src/coroutine/context.lo 
+src/coroutine/file_lock.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/file_lock.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/file_lock.cc -o src/coroutine/file_lock.lo 
+src/coroutine/hook.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/hook.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/hook.cc -o src/coroutine/hook.lo 
+src/coroutine/socket.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/socket.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/socket.cc -o src/coroutine/socket.lo 
+src/coroutine/system.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/system.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/system.cc -o src/coroutine/system.lo 
+src/coroutine/thread_context.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/thread_context.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/thread_context.cc -o src/coroutine/thread_context.lo 
+src/coroutine/ucontext.lo: /data/C_study/swoole/swoole-4.4.26/src/coroutine/ucontext.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/coroutine/ucontext.cc -o src/coroutine/ucontext.lo 
+src/lock/atomic.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/atomic.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/atomic.c -o src/lock/atomic.lo 
+src/lock/cond.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/cond.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/cond.c -o src/lock/cond.lo 
+src/lock/file_lock.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/file_lock.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/file_lock.c -o src/lock/file_lock.lo 
+src/lock/mutex.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/mutex.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/mutex.c -o src/lock/mutex.lo 
+src/lock/rw_lock.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/rw_lock.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/rw_lock.c -o src/lock/rw_lock.lo 
+src/lock/semaphore.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/semaphore.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/semaphore.c -o src/lock/semaphore.lo 
+src/lock/spin_lock.lo: /data/C_study/swoole/swoole-4.4.26/src/lock/spin_lock.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/lock/spin_lock.c -o src/lock/spin_lock.lo 
+src/memory/buffer.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/buffer.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/buffer.c -o src/memory/buffer.lo 
+src/memory/fixed_pool.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/fixed_pool.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/fixed_pool.c -o src/memory/fixed_pool.lo 
+src/memory/global_memory.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/global_memory.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/global_memory.c -o src/memory/global_memory.lo 
+src/memory/malloc.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/malloc.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/malloc.c -o src/memory/malloc.lo 
+src/memory/ring_buffer.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/ring_buffer.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/ring_buffer.c -o src/memory/ring_buffer.lo 
+src/memory/shared_memory.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/shared_memory.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/shared_memory.c -o src/memory/shared_memory.lo 
+src/memory/table.lo: /data/C_study/swoole/swoole-4.4.26/src/memory/table.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/memory/table.c -o src/memory/table.lo 
+src/network/client.lo: /data/C_study/swoole/swoole-4.4.26/src/network/client.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/client.c -o src/network/client.lo 
+src/network/connection.lo: /data/C_study/swoole/swoole-4.4.26/src/network/connection.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/connection.c -o src/network/connection.lo 
+src/network/dns.lo: /data/C_study/swoole/swoole-4.4.26/src/network/dns.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/dns.cc -o src/network/dns.lo 
+src/network/process_pool.lo: /data/C_study/swoole/swoole-4.4.26/src/network/process_pool.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/process_pool.c -o src/network/process_pool.lo 
+src/network/stream.lo: /data/C_study/swoole/swoole-4.4.26/src/network/stream.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/stream.c -o src/network/stream.lo 
+src/network/thread_pool.lo: /data/C_study/swoole/swoole-4.4.26/src/network/thread_pool.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/thread_pool.c -o src/network/thread_pool.lo 
+src/network/timer.lo: /data/C_study/swoole/swoole-4.4.26/src/network/timer.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/network/timer.c -o src/network/timer.lo 
+src/os/async_thread.lo: /data/C_study/swoole/swoole-4.4.26/src/os/async_thread.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/async_thread.cc -o src/os/async_thread.lo 
+src/os/base.lo: /data/C_study/swoole/swoole-4.4.26/src/os/base.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/base.c -o src/os/base.lo 
+src/os/msg_queue.lo: /data/C_study/swoole/swoole-4.4.26/src/os/msg_queue.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/msg_queue.c -o src/os/msg_queue.lo 
+src/os/sendfile.lo: /data/C_study/swoole/swoole-4.4.26/src/os/sendfile.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/sendfile.c -o src/os/sendfile.lo 
+src/os/signal.lo: /data/C_study/swoole/swoole-4.4.26/src/os/signal.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/signal.c -o src/os/signal.lo 
+src/os/timer.lo: /data/C_study/swoole/swoole-4.4.26/src/os/timer.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/timer.c -o src/os/timer.lo 
+src/os/wait.lo: /data/C_study/swoole/swoole-4.4.26/src/os/wait.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/os/wait.cc -o src/os/wait.lo 
+src/pipe/base.lo: /data/C_study/swoole/swoole-4.4.26/src/pipe/base.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/pipe/base.c -o src/pipe/base.lo 
+src/pipe/eventfd.lo: /data/C_study/swoole/swoole-4.4.26/src/pipe/eventfd.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/pipe/eventfd.c -o src/pipe/eventfd.lo 
+src/pipe/unix_socket.lo: /data/C_study/swoole/swoole-4.4.26/src/pipe/unix_socket.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/pipe/unix_socket.c -o src/pipe/unix_socket.lo 
+src/protocol/base.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/base.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/base.cc -o src/protocol/base.lo 
+src/protocol/base64.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/base64.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/base64.c -o src/protocol/base64.lo 
+src/protocol/http.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/http.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/http.c -o src/protocol/http.lo 
+src/protocol/http2.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/http2.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/http2.c -o src/protocol/http2.lo 
+src/protocol/mime_types.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/mime_types.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/mime_types.cc -o src/protocol/mime_types.lo 
+src/protocol/mqtt.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/mqtt.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/mqtt.c -o src/protocol/mqtt.lo 
+src/protocol/redis.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/redis.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/redis.c -o src/protocol/redis.lo 
+src/protocol/sha1.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/sha1.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/sha1.c -o src/protocol/sha1.lo 
+src/protocol/socks5.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/socks5.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/socks5.c -o src/protocol/socks5.lo 
+src/protocol/ssl.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/ssl.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/ssl.c -o src/protocol/ssl.lo 
+src/protocol/websocket.lo: /data/C_study/swoole/swoole-4.4.26/src/protocol/websocket.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/protocol/websocket.c -o src/protocol/websocket.lo 
+src/reactor/base.lo: /data/C_study/swoole/swoole-4.4.26/src/reactor/base.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/reactor/base.cc -o src/reactor/base.lo 
+src/reactor/epoll.lo: /data/C_study/swoole/swoole-4.4.26/src/reactor/epoll.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/reactor/epoll.cc -o src/reactor/epoll.lo 
+src/reactor/kqueue.lo: /data/C_study/swoole/swoole-4.4.26/src/reactor/kqueue.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/reactor/kqueue.c -o src/reactor/kqueue.lo 
+src/reactor/poll.lo: /data/C_study/swoole/swoole-4.4.26/src/reactor/poll.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/reactor/poll.c -o src/reactor/poll.lo 
+src/reactor/select.lo: /data/C_study/swoole/swoole-4.4.26/src/reactor/select.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/reactor/select.c -o src/reactor/select.lo 
+src/server/base.lo: /data/C_study/swoole/swoole-4.4.26/src/server/base.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/base.c -o src/server/base.lo 
+src/server/manager.lo: /data/C_study/swoole/swoole-4.4.26/src/server/manager.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/manager.cc -o src/server/manager.lo 
+src/server/master.lo: /data/C_study/swoole/swoole-4.4.26/src/server/master.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/master.cc -o src/server/master.lo 
+src/server/port.lo: /data/C_study/swoole/swoole-4.4.26/src/server/port.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/port.cc -o src/server/port.lo 
+src/server/process.lo: /data/C_study/swoole/swoole-4.4.26/src/server/process.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/process.cc -o src/server/process.lo 
+src/server/reactor_process.lo: /data/C_study/swoole/swoole-4.4.26/src/server/reactor_process.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/reactor_process.cc -o src/server/reactor_process.lo 
+src/server/reactor_thread.lo: /data/C_study/swoole/swoole-4.4.26/src/server/reactor_thread.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/reactor_thread.cc -o src/server/reactor_thread.lo 
+src/server/static_handler.lo: /data/C_study/swoole/swoole-4.4.26/src/server/static_handler.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/static_handler.cc -o src/server/static_handler.lo 
+src/server/task_worker.lo: /data/C_study/swoole/swoole-4.4.26/src/server/task_worker.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/task_worker.cc -o src/server/task_worker.lo 
+src/server/worker.lo: /data/C_study/swoole/swoole-4.4.26/src/server/worker.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/server/worker.cc -o src/server/worker.lo 
+src/wrapper/event.lo: /data/C_study/swoole/swoole-4.4.26/src/wrapper/event.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/wrapper/event.cc -o src/wrapper/event.lo 
+src/wrapper/server.lo: /data/C_study/swoole/swoole-4.4.26/src/wrapper/server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/wrapper/server.cc -o src/wrapper/server.lo 
+src/wrapper/timer.lo: /data/C_study/swoole/swoole-4.4.26/src/wrapper/timer.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/src/wrapper/timer.cc -o src/wrapper/timer.lo 
+swoole.lo: /data/C_study/swoole/swoole-4.4.26/swoole.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole.cc -o swoole.lo 
+swoole_async_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_async_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_async_coro.cc -o swoole_async_coro.lo 
+swoole_atomic.lo: /data/C_study/swoole/swoole-4.4.26/swoole_atomic.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_atomic.cc -o swoole_atomic.lo 
+swoole_buffer.lo: /data/C_study/swoole/swoole-4.4.26/swoole_buffer.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_buffer.c -o swoole_buffer.lo 
+swoole_channel_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_channel_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_channel_coro.cc -o swoole_channel_coro.lo 
+swoole_client.lo: /data/C_study/swoole/swoole-4.4.26/swoole_client.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_client.cc -o swoole_client.lo 
+swoole_client_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_client_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_client_coro.cc -o swoole_client_coro.lo 
+swoole_coroutine.lo: /data/C_study/swoole/swoole-4.4.26/swoole_coroutine.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_coroutine.cc -o swoole_coroutine.lo 
+swoole_coroutine_scheduler.lo: /data/C_study/swoole/swoole-4.4.26/swoole_coroutine_scheduler.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_coroutine_scheduler.cc -o swoole_coroutine_scheduler.lo 
+swoole_coroutine_system.lo: /data/C_study/swoole/swoole-4.4.26/swoole_coroutine_system.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_coroutine_system.cc -o swoole_coroutine_system.lo 
+swoole_event.lo: /data/C_study/swoole/swoole-4.4.26/swoole_event.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_event.cc -o swoole_event.lo 
+swoole_http2_client_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http2_client_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http2_client_coro.cc -o swoole_http2_client_coro.lo 
+swoole_http2_server.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http2_server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http2_server.cc -o swoole_http2_server.lo 
+swoole_http_client_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http_client_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http_client_coro.cc -o swoole_http_client_coro.lo 
+swoole_http_request.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http_request.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http_request.cc -o swoole_http_request.lo 
+swoole_http_response.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http_response.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http_response.cc -o swoole_http_response.lo 
+swoole_http_server.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http_server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http_server.cc -o swoole_http_server.lo 
+swoole_http_server_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_http_server_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_http_server_coro.cc -o swoole_http_server_coro.lo 
+swoole_lock.lo: /data/C_study/swoole/swoole-4.4.26/swoole_lock.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_lock.cc -o swoole_lock.lo 
+swoole_mysql_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_mysql_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_mysql_coro.cc -o swoole_mysql_coro.lo 
+swoole_mysql_proto.lo: /data/C_study/swoole/swoole-4.4.26/swoole_mysql_proto.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_mysql_proto.cc -o swoole_mysql_proto.lo 
+swoole_process.lo: /data/C_study/swoole/swoole-4.4.26/swoole_process.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_process.cc -o swoole_process.lo 
+swoole_process_pool.lo: /data/C_study/swoole/swoole-4.4.26/swoole_process_pool.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_process_pool.cc -o swoole_process_pool.lo 
+swoole_redis_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_redis_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_redis_coro.cc -o swoole_redis_coro.lo 
+swoole_redis_server.lo: /data/C_study/swoole/swoole-4.4.26/swoole_redis_server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_redis_server.cc -o swoole_redis_server.lo 
+swoole_runtime.lo: /data/C_study/swoole/swoole-4.4.26/swoole_runtime.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_runtime.cc -o swoole_runtime.lo 
+swoole_server.lo: /data/C_study/swoole/swoole-4.4.26/swoole_server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_server.cc -o swoole_server.lo 
+swoole_server_port.lo: /data/C_study/swoole/swoole-4.4.26/swoole_server_port.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_server_port.cc -o swoole_server_port.lo 
+swoole_socket_coro.lo: /data/C_study/swoole/swoole-4.4.26/swoole_socket_coro.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_socket_coro.cc -o swoole_socket_coro.lo 
+swoole_table.lo: /data/C_study/swoole/swoole-4.4.26/swoole_table.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_table.cc -o swoole_table.lo 
+swoole_timer.lo: /data/C_study/swoole/swoole-4.4.26/swoole_timer.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_timer.cc -o swoole_timer.lo 
+swoole_websocket_server.lo: /data/C_study/swoole/swoole-4.4.26/swoole_websocket_server.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/swoole_websocket_server.cc -o swoole_websocket_server.lo 
+thirdparty/php/sockets/multicast.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/multicast.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/multicast.cc -o thirdparty/php/sockets/multicast.lo 
+thirdparty/php/sockets/sendrecvmsg.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/sendrecvmsg.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/sendrecvmsg.cc -o thirdparty/php/sockets/sendrecvmsg.lo 
+thirdparty/php/sockets/conversions.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/conversions.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/conversions.cc -o thirdparty/php/sockets/conversions.lo 
+thirdparty/php/sockets/sockaddr_conv.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/sockaddr_conv.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/php/sockets/sockaddr_conv.cc -o thirdparty/php/sockets/sockaddr_conv.lo 
+thirdparty/php/standard/proc_open.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/php/standard/proc_open.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/php/standard/proc_open.cc -o thirdparty/php/standard/proc_open.lo 
+thirdparty/swoole_http_parser.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/swoole_http_parser.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/swoole_http_parser.c -o thirdparty/swoole_http_parser.lo 
+thirdparty/multipart_parser.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/multipart_parser.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/multipart_parser.c -o thirdparty/multipart_parser.lo 
+thirdparty/hiredis/async.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/async.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/async.c -o thirdparty/hiredis/async.lo 
+thirdparty/hiredis/hiredis.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/hiredis.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/hiredis.c -o thirdparty/hiredis/hiredis.lo 
+thirdparty/hiredis/net.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/net.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/net.c -o thirdparty/hiredis/net.lo 
+thirdparty/hiredis/read.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/read.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/read.c -o thirdparty/hiredis/read.lo 
+thirdparty/hiredis/sds.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/sds.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/hiredis/sds.c -o thirdparty/hiredis/sds.lo 
+thirdparty/nghttp2/nghttp2_hd.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd.c -o thirdparty/nghttp2/nghttp2_hd.lo 
+thirdparty/nghttp2/nghttp2_rcbuf.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_rcbuf.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_rcbuf.c -o thirdparty/nghttp2/nghttp2_rcbuf.lo 
+thirdparty/nghttp2/nghttp2_helper.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_helper.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_helper.c -o thirdparty/nghttp2/nghttp2_helper.lo 
+thirdparty/nghttp2/nghttp2_buf.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_buf.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_buf.c -o thirdparty/nghttp2/nghttp2_buf.lo 
+thirdparty/nghttp2/nghttp2_mem.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_mem.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_mem.c -o thirdparty/nghttp2/nghttp2_mem.lo 
+thirdparty/nghttp2/nghttp2_hd_huffman.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd_huffman.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd_huffman.c -o thirdparty/nghttp2/nghttp2_hd_huffman.lo 
+thirdparty/nghttp2/nghttp2_hd_huffman_data.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd_huffman_data.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/nghttp2/nghttp2_hd_huffman_data.c -o thirdparty/nghttp2/nghttp2_hd_huffman_data.lo 
+thirdparty/boost/asm/make_x86_64_sysv_elf_gas.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/boost/asm/make_x86_64_sysv_elf_gas.S
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/boost/asm/make_x86_64_sysv_elf_gas.S -o thirdparty/boost/asm/make_x86_64_sysv_elf_gas.lo 
+thirdparty/boost/asm/jump_x86_64_sysv_elf_gas.lo: /data/C_study/swoole/swoole-4.4.26/thirdparty/boost/asm/jump_x86_64_sysv_elf_gas.S
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/data/C_study/swoole/swoole-4.4.26 $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /data/C_study/swoole/swoole-4.4.26/thirdparty/boost/asm/jump_x86_64_sysv_elf_gas.S -o thirdparty/boost/asm/jump_x86_64_sysv_elf_gas.lo 
+$(phplibdir)/swoole.la: ./swoole.la
+	$(LIBTOOL) --mode=install cp ./swoole.la $(phplibdir)
+
+./swoole.la: $(shared_objects_swoole) $(SWOOLE_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CXX) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS)  -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_swoole) $(SWOOLE_SHARED_LIBADD)
+

@@ -5,163 +5,57 @@
  */
 
 
+#ifndef _NGX_PROCESS_CYCLE_H_INCLUDED_
+#define _NGX_PROCESS_CYCLE_H_INCLUDED_
+
+
 #include <ngx_config.h>
 #include <ngx_core.h>
-#include <ngx_event.h>
 
 
-ssize_t
-ngx_unix_recv(ngx_connection_t *c, u_char *buf, size_t size)
-{
-    ssize_t       n;
-    ngx_err_t     err;
-    ngx_event_t  *rev;
+#define NGX_CMD_OPEN_CHANNEL   1
+#define NGX_CMD_CLOSE_CHANNEL  2
+#define NGX_CMD_QUIT           3
+#define NGX_CMD_TERMINATE      4
+#define NGX_CMD_REOPEN         5
 
-    rev = c->read;
 
-#if (NGX_HAVE_KQUEUE)
+#define NGX_PROCESS_SINGLE     0
+#define NGX_PROCESS_MASTER     1
+#define NGX_PROCESS_SIGNALLER  2
+#define NGX_PROCESS_WORKER     3
+#define NGX_PROCESS_HELPER     4
 
-    if (ngx_event_flags & NGX_USE_KQUEUE_EVENT) {
-        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, c->log, 0,
-                       "recv: eof:%d, avail:%d, err:%d",
-                       rev->pending_eof, rev->available, rev->kq_errno);
 
-        if (rev->available == 0) {
-            if (rev->pending_eof) {
-                rev->ready = 0;
-                rev->eof = 1;
+typedef struct {
+    ngx_event_handler_pt       handler;
+    char                      *name;
+    ngx_msec_t                 delay;
+} ngx_cache_manager_ctx_t;
 
-                if (rev->kq_errno) {
-                    rev->error = 1;
-                    ngx_set_socket_errno(rev->kq_errno);
 
-                    return ngx_connection_error(c, rev->kq_errno,
-                               "kevent() reported about an closed connection");
-                }
+void ngx_master_process_cycle(ngx_cycle_t *cycle);
+void ngx_single_process_cycle(ngx_cycle_t *cycle);
 
-                return 0;
 
-            } else {
-                rev->ready = 0;
-                return NGX_AGAIN;
-            }
-        }
-    }
+extern ngx_uint_t      ngx_process;
+extern ngx_uint_t      ngx_worker;
+extern ngx_pid_t       ngx_pid;
+extern ngx_pid_t       ngx_new_binary;
+extern ngx_uint_t      ngx_inherited;
+extern ngx_uint_t      ngx_daemonized;
+extern ngx_uint_t      ngx_exiting;
 
-#endif
+extern sig_atomic_t    ngx_reap;
+extern sig_atomic_t    ngx_sigio;
+extern sig_atomic_t    ngx_sigalrm;
+extern sig_atomic_t    ngx_quit;
+extern sig_atomic_t    ngx_debug_quit;
+extern sig_atomic_t    ngx_terminate;
+extern sig_atomic_t    ngx_noaccept;
+extern sig_atomic_t    ngx_reconfigure;
+extern sig_atomic_t    ngx_reopen;
+extern sig_atomic_t    ngx_change_binary;
 
-#if (NGX_HAVE_EPOLLRDHUP)
 
-    if (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
-        ngx_log_debug2(NGX_LOG_DEBUG_EVENT, c->log, 0,
-                       "recv: eof:%d, avail:%d",
-                       rev->pending_eof, rev->available);
-
-        if (!rev->available && !rev->pending_eof) {
-            rev->ready = 0;
-            return NGX_AGAIN;
-        }
-    }
-
-#endif
-
-    do {
-        n = recv(c->fd, buf, size, 0);
-
-        ngx_log_debug3(NGX_LOG_DEBUG_EVENT, c->log, 0,
-                       "recv: fd:%d %z of %uz", c->fd, n, size);
-
-        if (n == 0) {
-            rev->ready = 0;
-            rev->eof = 1;
-
-#if (NGX_HAVE_KQUEUE)
-
-            /*
-             * on FreeBSD recv() may return 0 on closed socket
-             * even if kqueue reported about available data
-             */
-
-            if (ngx_event_flags & NGX_USE_KQUEUE_EVENT) {
-                rev->available = 0;
-            }
-
-#endif
-
-            return 0;
-        }
-
-        if (n > 0) {
-
-#if (NGX_HAVE_KQUEUE)
-
-            if (ngx_event_flags & NGX_USE_KQUEUE_EVENT) {
-                rev->available -= n;
-
-                /*
-                 * rev->available may be negative here because some additional
-                 * bytes may be received between kevent() and recv()
-                 */
-
-                if (rev->available <= 0) {
-                    if (!rev->pending_eof) {
-                        rev->ready = 0;
-                    }
-
-                    rev->available = 0;
-                }
-
-                return n;
-            }
-
-#endif
-
-#if (NGX_HAVE_EPOLLRDHUP)
-
-            if ((ngx_event_flags & NGX_USE_EPOLL_EVENT)
-                && ngx_use_epoll_rdhup)
-            {
-                if ((size_t) n < size) {
-                    if (!rev->pending_eof) {
-                        rev->ready = 0;
-                    }
-
-                    rev->available = 0;
-                }
-
-                return n;
-            }
-
-#endif
-
-            if ((size_t) n < size
-                && !(ngx_event_flags & NGX_USE_GREEDY_EVENT))
-            {
-                rev->ready = 0;
-            }
-
-            return n;
-        }
-
-        err = ngx_socket_errno;
-
-        if (err == NGX_EAGAIN || err == NGX_EINTR) {
-            ngx_log_debug0(NGX_LOG_DEBUG_EVENT, c->log, err,
-                           "recv() not ready");
-            n = NGX_AGAIN;
-
-        } else {
-            n = ngx_connection_error(c, err, "recv() failed");
-            break;
-        }
-
-    } while (err == NGX_EINTR);
-
-    rev->ready = 0;
-
-    if (n == NGX_ERROR) {
-        rev->error = 1;
-    }
-
-    return n;
-}
+#endif /* _NGX_PROCESS_CYCLE_H_INCLUDED_ */

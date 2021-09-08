@@ -1,23 +1,60 @@
 /*
-Copyright (c) 2003-2013, Troy D. Hanson     http://troydhanson.github.com/uthash/
-All rights reserved.
+ * tests.h
+ *
+ *  Created on: 2013-4-22
+ *      Author: htf
+ */
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+#ifndef SW_TESTS_H_
+#define SW_TESTS_H_
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+#define swUnitTest(x) int swUnitTest_##x(swUnitTest *object)
+#define swUnitTest_steup(x,n,t) _swUnitTest_setup(swUnitTest_##x, #x, n, t)
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
-OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+typedef struct _swUnitTest
+{
+	int argc;
+	char **argv;
+} swUnitTest;
+typedef int (*swUnitTest_Func)(swUnitTest *object);
+
+void _swUnitTest_setup(swUnitTest_Func func, char *func_name, int run_times, char *comment);
+int swUnitTest_run(swUnitTest *object);
+
+swUnitTest(mem_test1);
+swUnitTest(mem_test2);
+swUnitTest(mem_test3);
+swUnitTest(mem_test4);
+
+swUnitTest(client_test);
+swUnitTest(server_test);
+
+swUnitTest(hashmap_test1);
+swUnitTest(ds_test2);
+swUnitTest(ds_test1);
+
+swUnitTest(chan_test);
+
+swUnitTest(u1_test2);
+swUnitTest(u1_test1);
+swUnitTest(u1_test3);
+
+swUnitTest(http_test2);
+
+swUnitTest(type_test1);
+
+swUnitTest(aio_test);
+swUnitTest(aio_test2);
+
+swUnitTest(ws_test1);
+
+swUnitTest(rbtree_test);
+void p_str(void *str);
+
+swUnitTest(pool_thread);
+
+#endif /* SW_TESTS_H_ */
+R OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 

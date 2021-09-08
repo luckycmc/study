@@ -13,396 +13,350 @@
   | Author: Tianfeng Han  <mikan.tenny@gmail.com>                        |
   +----------------------------------------------------------------------+
 */
+
 #include "swoole.h"
-#include "Server.h"
-#include "Connection.h"
+#include "Client.h"
 
-#include <sys/poll.h>
-#include <sys/stat.h>
+static int swClient_inet_addr(swClient *cli, char *string);
+static int swClient_tcp_connect(swClient *cli, char *host, int port, double _timeout, int udp_connect);
+static int swClient_tcp_send_sync(swClient *cli, char *data, int length);
+static int swClient_tcp_send_async(swClient *cli, char *data, int length);
+static int swClient_tcp_recv(swClient *cli, char *data, int len, int waitall);
 
-#ifndef MSG_NOSIGNAL
-#define MSG_NOSIGNAL        0
-#endif
+static int swClient_udp_connect(swClient *cli, char *host, int port, double _timeout, int udp_connect);
+static int swClient_udp_send(swClient *cli, char *data, int length);
+static int swClient_udp_recv(swClient *cli, char *data, int len, int waitall);
 
-int swConnection_send_blocking(int fd, void *data, int length, int timeout)
+static swHashMap swoole_dns_cache = NULL;
+
+typedef struct
 {
-	int ret, n, writen = length;
-	struct pollfd event;
-	event.fd = fd;
-	event.events = POLLOUT;
+	int length;
+	char addr[0];
 
-	while(writen > 0)
+} swDNS_cache;
+
+int swClient_create(swClient *cli, int type, int async)
+{
+	int _domain;
+	int _type;
+	bzero(cli, sizeof(*cli));
+	switch (type)
 	{
-		ret = poll(&event, 1, timeout);
-		if (ret == 0)
-		{
-			return SW_ERR;
-		}
-		else if (ret > 0)
-		{
-			n = send(fd, data, writen, MSG_NOSIGNAL | MSG_DONTWAIT);
-			if (n < 0)
-			{
-				swWarn("send() failed. Error: %s[%d]", strerror(errno), errno);
-				return SW_ERR;
-			}
-			else
-			{
-				writen -= n;
-				continue;
-			}
-		}
-		else
-		{
-			swWarn("poll() failed. Error: %s[%d]", strerror(errno), errno);
-			return SW_ERR;
-		}
+	case SW_SOCK_TCP:
+		_domain = AF_INET;
+		_type = SOCK_STREAM;
+		break;
+	case SW_SOCK_TCP6:
+		_domain = AF_INET6;
+		_type = SOCK_STREAM;
+		break;
+	case SW_SOCK_UDP:
+		_domain = AF_INET;
+		_type = SOCK_DGRAM;
+		break;
+	case SW_SOCK_UDP6:
+		_domain = AF_INET6;
+		_type = SOCK_DGRAM;
+		break;
+	default:
+		return SW_ERR;
 	}
-	return 0;
-}
-
-int swConnection_sendfile_blocking(int fd, char *filename, int timeout)
-{
-	int file_fd = open(filename, O_RDONLY);
-	if (file_fd < 0)
+	cli->connection.fd = socket(_domain, _type, 0);
+	if (cli->connection.fd < 0)
 	{
-		swWarn("open file[%s] failed. Error: %s[%d]", filename, strerror(errno), errno);
 		return SW_ERR;
 	}
 
-	struct stat file_stat;
-	if (fstat(file_fd, &file_stat) < 0)
+	if (type < SW_SOCK_UDP)
 	{
-		swWarn("fstat() failed. Error: %s[%d]", strerror(errno), errno);
-		return SW_ERR;
-	}
+		cli->connect = swClient_tcp_connect;
+		cli->recv = swClient_tcp_recv;
 
-	int n, ret, sendn;
-	off_t offset = 0;
-	struct pollfd event;
-	event.fd = fd;
-	event.events = POLLOUT;
-	size_t file_size = file_stat.st_size;
-
-	while (offset < file_size)
-	{
-		ret = poll(&event, 1, timeout);
-		if (ret == 0)
+		if (async)
 		{
-			return SW_ERR;
-		}
-		else if (ret > 0)
-		{
-			sendn = (file_size - offset > SW_SENDFILE_TRUNK) ? SW_SENDFILE_TRUNK : file_size - offset;
-			n = swoole_sendfile(fd, file_fd, &offset, sendn);
-			if (n <= 0)
-			{
-				return SW_ERR;
-			}
-			else
-			{
-				continue;
-			}
+			cli->send = swClient_tcp_send_async;
 		}
 		else
 		{
-			swWarn("poll() failed. Error: %s[%d]", strerror(errno), errno);
-			return SW_ERR;
+			cli->send = swClient_tcp_send_sync;
 		}
-	}
-	return 0;
-}
-
-/**
- * send buffer to client
- */
-int swConnection_buffer_send(swConnection *conn)
-{
-	int ret, sendn;
-	swBuffer *buffer = conn->out_buffer;
-	swBuffer_trunk *trunk = swBuffer_get_trunk(buffer);
-	sendn = trunk->length - trunk->offset;
-
-	if (sendn == 0)
-	{
-		swBuffer_pop_trunk(buffer, trunk);
-		return SW_CONTINUE;
-	}
-	ret = swConnection_send(conn, trunk->store.ptr + trunk->offset, sendn, 0);
-	//printf("BufferOut: reactor=%d|sendn=%d|ret=%d|trunk->offset=%d|trunk_len=%d\n", reactor->id, sendn, ret, trunk->offset, trunk->length);
-	if (ret < 0)
-	{
-		switch (swConnection_error(errno))
-		{
-		case SW_ERROR:
-			swWarn("send to fd[%d] failed. Error: %s[%d]", conn->fd, strerror(errno), errno);
-			return SW_OK;
-		case SW_CLOSE:
-			return SW_CLOSE;
-		case SW_WAIT:
-			return SW_WAIT;
-		default:
-			return SW_CONTINUE;
-		}
-	}
-	//trunk full send
-	else if(ret == sendn || sendn == 0)
-	{
-		swBuffer_pop_trunk(buffer, trunk);
 	}
 	else
 	{
-		trunk->offset += ret;
+		cli->connect = swClient_udp_connect;
+		cli->recv = swClient_udp_recv;
+		cli->send = swClient_udp_send;
 	}
-	return SW_CONTINUE;
-}
 
-swString* swConnection_get_string_buffer(swConnection *conn)
-{
-	swString *buffer = conn->object;
-	if (buffer == NULL)
-	{
-		return swString_new(SW_BUFFER_SIZE);
-	}
-	else
-	{
-		return buffer;
-	}
-}
-
-int swConnection_send_string_buffer(swConnection *conn)
-{
-	int ret;
-	swString *buffer = conn->object;
-	swFactory *factory = SwooleG.factory;
-	swEventData _send;
-
-	_send.info.fd = conn->fd;
-	_send.info.from_id = conn->from_id;
-
-#ifdef SW_USE_RINGBUFFER
-	swServer *serv = SwooleG.serv;
-	swMemoryPool *pool = serv->reactor_threads[conn->from_id].pool;
-	swPackage package;
-
-	package.length = buffer->length;
-	while (1)
-	{
-		package.data = pool->alloc(pool, buffer->length);
-		if (package.data == NULL)
-		{
-			swYield();
-			swWarn("reactor memory pool full.");
-			continue;
-		}
-		break;
-	}
-	_send.info.type = SW_EVENT_PACKAGE;
-	_send.info.len = sizeof(package);
-	memcpy(package.data, buffer->str, buffer->length);
-	memcpy(_send.data, &package, sizeof(package));
-
-	//swoole_dump_bin(package.data, 's', buffer->length);
-
-	ret = factory->dispatch(factory, &_send);
-#else
-	int send_n = buffer->length;
-	_send.info.type = SW_EVENT_PACKAGE_START;
-
-	/**
-	 * lock target
-	 */
-	SwooleTG.factory_lock_target = 1;
-
-	void *send_ptr = buffer->str;
-	do
-	{
-		if (send_n > SW_BUFFER_SIZE)
-		{
-			_send.info.len = SW_BUFFER_SIZE;
-			memcpy(_send.data, send_ptr, SW_BUFFER_SIZE);
-		}
-		else
-		{
-			_send.info.type = SW_EVENT_PACKAGE_END;
-			_send.info.len = send_n;
-			memcpy(_send.data, send_ptr, send_n);
-		}
-
-		swTrace("dispatch, type=%d|len=%d\n", _send.info.type, _send.info.len);
-
-		ret = factory->dispatch(factory, &_send);
-		//TODO: 处理数据失败，数据将丢失
-		if (ret < 0)
-		{
-			swWarn("factory->dispatch failed.");
-		}
-		send_n -= _send.info.len;
-		send_ptr += _send.info.len;
-	}
-	while (send_n > 0);
-
-	/**
-	 * unlock
-	 */
-	SwooleTG.factory_target_worker = -1;
-	SwooleTG.factory_lock_target = 0;
-
-#endif
-	return ret;
-}
-
-void swConnection_clear_string_buffer(swConnection *conn)
-{
-	swString *buffer = conn->object;
-	if (buffer != NULL)
-	{
-		swString_free(buffer);
-		conn->object = NULL;
-	}
-}
-
-int swConnection_send_in_buffer(swConnection *conn)
-{
-	swFactory *factory = SwooleG.factory;
-	swEventData _send;
-
-	_send.info.fd = conn->fd;
-	_send.info.from_id = conn->from_id;
-
-	swBuffer *buffer = conn->in_buffer;
-	swBuffer_trunk *trunk = swBuffer_get_trunk(buffer);
-
-#ifdef SW_USE_RINGBUFFER
-
-	swServer *serv = SwooleG.serv;
-	swMemoryPool *pool = serv->reactor_threads[conn->from_id].pool;
-	swPackage package;
-
-	package.length = 0;
-	while (1)
-	{
-		package.data = pool->alloc(pool, buffer->length);
-		if (package.data == NULL)
-		{
-			swYield();
-			swWarn("reactor memory pool full.");
-			continue;
-		}
-		break;
-	}
-	_send.info.type = SW_EVENT_PACKAGE;
-
-	while (trunk != NULL)
-	{
-		_send.info.len = trunk->length;
-		memcpy(package.data + package.length , trunk->store.ptr, trunk->length);
-		package.length += trunk->length;
-
-		swBuffer_pop_trunk(buffer, trunk);
-		trunk = swBuffer_get_trunk(buffer);
-	}
-	_send.info.len = sizeof(package);
-	memcpy(_send.data, &package, sizeof(package));
-	//swWarn("[ReactorThread] copy_n=%d", package.length);
-	return factory->dispatch(factory, &_send);
-
-#else
-
-	int ret;
-	_send.info.type = SW_EVENT_PACKAGE_START;
-
-	/**
-	 * lock target
-	 */
-	SwooleTG.factory_lock_target = 1;
-
-	while (trunk != NULL)
-	{
-		_send.info.len = trunk->length;
-		memcpy(_send.data, trunk->store.ptr, _send.info.len);
-		//package end
-		if (trunk->next == NULL)
-		{
-			_send.info.type = SW_EVENT_PACKAGE_END;
-		}
-		ret = factory->dispatch(factory, &_send);
-		//TODO: 处理数据失败，数据将丢失
-		if (ret < 0)
-		{
-			swWarn("factory->dispatch failed.");
-		}
-		swBuffer_pop_trunk(buffer, trunk);
-		trunk = swBuffer_get_trunk(buffer);
-
-		swTrace("send2worker[trunk_num=%d][type=%d]\n", buffer->trunk_num, _send.info.type);
-	}
-	/**
-	 * unlock
-	 */
-	SwooleTG.factory_target_worker = -1;
-	SwooleTG.factory_lock_target = 0;
-
-#endif
+	cli->close = swClient_close;
+	cli->sock_domain = _domain;
+	cli->sock_type = SOCK_DGRAM;
+	cli->type = type;
+	cli->async = async;
 	return SW_OK;
 }
 
-volatile swBuffer_trunk* swConnection_get_in_buffer(swConnection *conn)
+static int swClient_inet_addr(swClient *cli, char *string)
 {
-	volatile swBuffer_trunk *trunk = NULL;
-	swBuffer *buffer;
+	struct in_addr tmp;
+	struct hostent *host_entry;
+	struct sockaddr_in *sin = &cli->serv_addr;
 
-	if (conn->in_buffer == NULL)
+	if (inet_aton(string, &tmp))
 	{
-		buffer = swBuffer_new(SW_BUFFER_SIZE);
-		//buffer create failed
-		if (buffer == NULL)
-		{
-			return NULL;
-		}
-		//new trunk
-		trunk = swBuffer_new_trunk(buffer, SW_TRUNK_DATA, buffer->trunk_size);
-		if (trunk == NULL)
-		{
-			sw_free(buffer);
-			return NULL;
-		}
-		conn->in_buffer = buffer;
+		sin->sin_addr.s_addr = tmp.s_addr;
 	}
 	else
 	{
-		buffer = conn->in_buffer;
-		trunk = buffer->tail;
-		if (trunk == NULL || trunk->length == buffer->trunk_size)
+		swDNS_cache *cache = swHashMap_find(&swoole_dns_cache, string, strlen(string));
+	    if (cache == NULL)
 		{
-			trunk = swBuffer_new_trunk(buffer, SW_TRUNK_DATA, buffer->trunk_size);
+	    	if (cli->async)
+			{
+				swWarn("DNS lookup will block the process. Please use swoole_async_dns_lookup.");
+			}
+			if (!(host_entry = gethostbyname(string)))
+			{
+				swWarn("SwooleClient: Host lookup failed. Error: %s[%d] ", strerror(errno), errno);
+				return SW_ERR;
+			}
+			if (host_entry->h_addrtype != AF_INET)
+			{
+				swWarn("Host lookup failed: Non AF_INET domain returned on AF_INET socket.");
+				return 0;
+			}
+			cache = sw_malloc(sizeof(int) + host_entry->h_length);
+			if (cache == NULL)
+			{
+				swWarn("malloc() failed.");
+				memcpy(&(sin->sin_addr.s_addr), host_entry->h_addr_list[0], host_entry->h_length);
+				return SW_OK;
+			}
+			else
+			{
+				memcpy(cache->addr, host_entry->h_addr_list[0], host_entry->h_length);
+				cache->length = host_entry->h_length;
+			}
+			swHashMap_add(&swoole_dns_cache, string, strlen(string), cache);
 		}
+		memcpy(&(sin->sin_addr.s_addr), cache->addr, cache->length);
 	}
-	return trunk;
+	return SW_OK;
 }
 
-volatile swBuffer_trunk* swConnection_get_out_buffer(swConnection *conn, uint32_t type)
+int swClient_close(swClient *cli)
 {
-	volatile swBuffer_trunk *trunk;
-	if (conn->out_buffer == NULL)
+	int fd = cli->connection.fd;
+	cli->connection.fd = 0;
+	cli->connection.active = 0;
+	return close(fd);
+}
+
+int swClient_tcp_connect(swClient *cli, char *host, int port, double timeout, int nonblock)
+{
+	int ret;
+	cli->serv_addr.sin_family = cli->sock_domain;
+	cli->serv_addr.sin_port = htons(port);
+
+	if (swClient_inet_addr(cli, host) < 0)
 	{
-		conn->out_buffer = swBuffer_new(SW_BUFFER_SIZE);
-		if (conn->out_buffer == NULL)
-		{
-			return NULL;
-		}
+		return SW_ERR;
 	}
-	if (type == SW_TRUNK_SENDFILE)
+
+	cli->timeout = timeout;
+
+	if (nonblock == 1)
 	{
-		trunk = swBuffer_new_trunk(conn->out_buffer, SW_TRUNK_SENDFILE, 0);
+		swSetNonBlock(cli->connection.fd);
 	}
 	else
 	{
-		trunk = swBuffer_get_trunk(conn->out_buffer);
-		if (trunk == NULL)
+		if (cli->timeout > 0)
 		{
-			trunk = swBuffer_new_trunk(conn->out_buffer, SW_TRUNK_DATA, conn->out_buffer->trunk_size);
+			swSetTimeout(cli->connection.fd, timeout);
+		}
+		swSetBlock(cli->connection.fd);
+	}
+
+	while (1)
+	{
+		ret = connect(cli->connection.fd, (struct sockaddr *) (&cli->serv_addr), sizeof(cli->serv_addr));
+		if (ret < 0)
+		{
+			if (errno == EINTR)
+			{
+				continue;
+			}
+		}
+		break;
+	}
+	if (ret >= 0)
+	{
+		cli->connection.active = 1;
+	}
+	return ret;
+}
+
+int swClient_tcp_send_async(swClient *cli, char *data, int length)
+{
+	if (cli->connection.out_buffer == NULL)
+	{
+		cli->connection.out_buffer = swBuffer_new(SW_BUFFER_SIZE);
+		if (cli->connection.out_buffer == NULL)
+		{
+			return SW_ERR;
 		}
 	}
-	return trunk;
+
+	if (swBuffer_empty(cli->connection.out_buffer))
+	{
+		SwooleG.main_reactor->set(SwooleG.main_reactor, cli->connection.fd, cli->reactor_fdtype | SW_EVENT_READ | SW_EVENT_WRITE);
+	}
+
+	/**
+	 * append data to buffer
+	 */
+	if (swBuffer_append(cli->connection.out_buffer, data, length) < 0)
+	{
+		return SW_ERR;
+	}
+
+	return SW_OK;
+}
+
+int swClient_tcp_send_sync(swClient *cli, char *data, int length)
+{
+	int written = 0;
+	int n;
+
+	assert(length > 0);
+	assert(data != NULL);
+
+	while (written < length)
+	{
+		n = send(cli->connection.fd, data, length - written, 0);
+		if (n < 0)
+		{
+			//中断
+			if (errno == EINTR)
+			{
+				continue;
+			}
+			//让出
+			else if(errno == EAGAIN)
+			{
+				swYield();
+				continue;
+			}
+			else
+			{
+				return SW_ERR;
+			}
+		}
+		written += n;
+		data += n;
+	}
+	return written;
+}
+
+int swClient_tcp_recv(swClient *cli, char *data, int len, int waitall)
+{
+	int flag = 0, ret;
+	if (waitall == 1)
+	{
+		flag = MSG_WAITALL;
+	}
+
+	ret = recv(cli->connection.fd, data, len, flag);
+
+	if (ret < 0)
+	{
+		if (errno == EINTR)
+		{
+			ret = recv(cli->connection.fd, data, len, flag);
+		}
+		else
+		{
+			return SW_ERR;
+		}
+	}
+	return ret;
+}
+
+int swClient_udp_connect(swClient *cli, char *host, int port, double timeout, int udp_connect)
+{
+	char buf[1024];
+
+	cli->timeout = timeout;
+	if (timeout > 0)
+	{
+		swSetTimeout(cli->connection.fd, timeout);
+	}
+
+	cli->serv_addr.sin_family = cli->sock_domain;
+	cli->serv_addr.sin_port = htons(port);
+	cli->connection.active = 1;
+
+	if (swClient_inet_addr(cli, host) < 0)
+	{
+		return SW_ERR;
+	}
+
+	if (udp_connect != 1)
+	{
+		return SW_OK;
+	}
+
+	if (connect(cli->connection.fd, (struct sockaddr *) (&cli->serv_addr), sizeof(cli->serv_addr)) == 0)
+	{
+		//清理connect前的buffer数据遗留
+		while(recv(cli->connection.fd, buf, 1024 , MSG_DONTWAIT) > 0);
+		return SW_OK;
+	}
+	else
+	{
+		return SW_ERR;
+	}
+}
+
+int swClient_udp_send(swClient *cli, char *data, int len)
+{
+	int n;
+	n = sendto(cli->connection.fd, data, len , 0, (struct sockaddr *) (&cli->serv_addr), sizeof(struct sockaddr));
+	if(n < 0 || n < len)
+	{
+
+		return SW_ERR;
+	}
+	else
+	{
+		return n;
+	}
+}
+
+int swClient_udp_recv(swClient *cli, char *data, int length, int waitall)
+{
+	int flag = 0, ret;
+	socklen_t len;
+
+	if(waitall == 1)
+	{
+		flag = MSG_WAITALL;
+
+	}
+	len = sizeof(struct sockaddr);
+	ret = recvfrom(cli->connection.fd, data, length, flag, (struct sockaddr *) (&cli->remote_addr), &len);
+	if(ret < 0)
+	{
+		if(errno == EINTR)
+		{
+			ret = recvfrom(cli->connection.fd, data, length, flag, (struct sockaddr *) (&cli->remote_addr), &len);
+		}
+		else
+		{
+			return SW_ERR;
+		}
+	}
+	return ret;
 }

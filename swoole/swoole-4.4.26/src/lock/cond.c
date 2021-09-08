@@ -16,51 +16,54 @@
 
 #include "swoole.h"
 
-int swCond_create(swCond *cond)
+int swAtomicLock_create(swLock *lock, int spin)
 {
-	if (pthread_cond_init(&cond->cond, NULL) < 0)
-	{
-		swWarn("pthread_cond_init fail. Error: %s [%d]", strerror(errno), errno);
-		return SW_ERR;
-	}
-	if (swMutex_create(&cond->lock, 0) < 0)
-	{
-		return SW_ERR;
-	}
+	bzero(lock, sizeof(swLock));
+	lock->type = SW_ATOMLOCK;
+	lock->object.atomlock.spin = spin;
+	lock->lock = swAtomicLock_lock;
+	lock->unlock = swAtomicLock_unlock;
+	lock->trylock = swAtomicLock_trylock;
 	return SW_OK;
 }
 
-int swCond_notify(swCond *cond)
+int swAtomicLock_lock(swLock *lock)
 {
-	return pthread_cond_signal(&cond->cond);
+	atomic_t *atomic = &lock->object.atomlock.lock_t;
+	uint32_t i, n;
+	while (1)
+	{
+		if (*atomic == 0 && sw_atomic_cmp_set(atomic, 0, 1))
+		{
+			return SW_OK;
+		}
+		if (SW_CPU_NUM > 1)
+		{
+			for (n = 1; n < lock->object.atomlock.spin; n <<= 1)
+			{
+				for (i = 0; i < n; i++)
+				{
+					sw_atomic_cpu_pause();
+				}
+
+				if (*atomic == 0 && sw_atomic_cmp_set(atomic, 0, 1))
+				{
+					return SW_OK;
+				}
+			}
+		}
+		swYield();
+	}
+	return SW_ERR;
 }
 
-int swCond_broadcast(swCond *cond)
+int swAtomicLock_unlock(swLock *lock)
 {
-	return pthread_cond_broadcast(&cond->cond);
+	return lock->object.atomlock.lock_t = 0;
 }
 
-int swCond_timewait(swCond *cond, long sec, long nsec)
+int swAtomicLock_trylock(swLock *lock)
 {
-	int ret;
-	struct timespec timeo;
-
-	timeo.tv_sec = sec;
-	timeo.tv_nsec = nsec;
-
-	ret = pthread_cond_timedwait(&cond->cond, &cond->lock.object.mutex._lock, &timeo);
-	return ret;
-}
-
-int swCond_wait(swCond *cond)
-{
-	int ret;
-	ret = pthread_cond_wait(&cond->cond, &cond->lock.object.mutex._lock);
-	return ret;
-}
-
-void swCond_free(swCond *cond)
-{
-	pthread_cond_destroy(&cond->cond);
-	cond->lock.free(&cond->lock);
+	atomic_t *atomic = &lock->object.atomlock.lock_t;
+	return (*(atomic) == 0 && sw_atomic_cmp_set(atomic, 0, 1));
 }

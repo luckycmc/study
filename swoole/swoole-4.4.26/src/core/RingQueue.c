@@ -1,153 +1,390 @@
-/*
-  +----------------------------------------------------------------------+
-  | Swoole                                                               |
-  +----------------------------------------------------------------------+
-  | This source file is subject to version 2.0 of the Apache license,    |
-  | that is bundled with this package in the file LICENSE, and is        |
-  | available through the world-wide-web at the following url:           |
-  | http://www.apache.org/licenses/LICENSE-2.0.html                      |
-  | If you did not receive a copy of the Apache2.0 license and are unable|
-  | to obtain it through the world-wide-web, please send a note to       |
-  | license@php.net so we can mail you a copy immediately.               |
-  +----------------------------------------------------------------------+
-  | Author: Tianfeng Han  <mikan.tenny@gmail.com>                        |
-  +----------------------------------------------------------------------+
-*/
-#include <stdio.h>
 #include "swoole.h"
-#include "RingQueue.h"
+#include "rbtree.h"
 
-#ifdef SW_USE_RINGQUEUE_TS
+static inline void swRbtree_left_rotate(swRbtree_node **root, swRbtree_node *sentinel, swRbtree_node *node);
+static inline void swRbtree_right_rotate(swRbtree_node **root, swRbtree_node *sentinel, swRbtree_node *node);
+static inline void swRbtree_insert_value(swRbtree_node *temp, swRbtree_node *node, swRbtree_node *sentinel);
 
-int swRingQueue_init(swRingQueue *queue, int buffer_size)
+void swRbtree_insert_value(swRbtree_node *temp, swRbtree_node *node, swRbtree_node *sentinel)
 {
-	queue->size = buffer_size;
-	queue->flags = (char *)sw_malloc(queue->size);
-	if (queue->flags == NULL)
+	swRbtree_node **p;
+	while (1)
 	{
-		return -1;
+		p = (node->key < temp->key) ? &temp->left : &temp->right;
+		if (*p == sentinel)
+		{
+			break;
+		}
+		temp = *p;
 	}
-	queue->data = (void **)sw_calloc(queue->size, sizeof(void*));
-	if (queue->data == NULL)
-	{
-		return -1;
-	}
-	queue->head = 0;
-	queue->tail = 0;
-	memset(queue->flags, 0, queue->size);
-	memset(queue->data, 0, queue->size * sizeof(void*));
-	return 0;
+
+	*p = node;
+	node->parent = temp;
+	node->left = sentinel;
+	node->right = sentinel;
+	swRbtree_red(node);
 }
 
-int swRingQueue_push(swRingQueue *queue, void * ele)
+void swRbtree_insert(swRbtree *tree, uint32_t key, void *value)
 {
-	if (!(queue->num < queue->size))
+	swRbtree_node **root, *temp, *sentinel;
+
+	root = (swRbtree_node **) &tree->root;
+	sentinel = tree->sentinel;
+
+	swRbtree_node *node = (swRbtree_node *) malloc(sizeof(swRbtree_node));
+
+	node->value = value;
+	node->key = key;
+	if (*root == sentinel)
 	{
-		return -1;
+		node->parent = NULL;
+		node->left = sentinel;
+		node->right = sentinel;
+		swRbtree_black(node);
+		*root = node;
+		return;
 	}
-	int cur_tail_index = queue->tail;
-	char * cur_tail_flag_index = queue->flags + cur_tail_index;
-	//TODO Scheld
-	while (!sw_atomic_cmp_set(cur_tail_flag_index, 0, 1))
+
+	swRbtree_insert_value(*root, node, sentinel);
+
+	/* re-balance tree */
+
+	while (node != *root && swRbtree_is_red(node->parent))
 	{
-		cur_tail_index = queue->tail;
-		cur_tail_flag_index = queue->flags + cur_tail_index;
+		if (node->parent == node->parent->parent->left)
+		{
+			temp = node->parent->parent->right;
+			if (swRbtree_is_red(temp))
+			{
+				swRbtree_black(node->parent);
+				swRbtree_black(temp);
+				swRbtree_red(node->parent->parent);
+				node = node->parent->parent;
+			}
+			else
+			{
+				if (node == node->parent->right)
+				{
+					node = node->parent;
+					swRbtree_left_rotate(root, sentinel, node);
+				}
+
+				swRbtree_black(node->parent);
+				swRbtree_red(node->parent->parent);
+				swRbtree_right_rotate(root, sentinel, node->parent->parent);
+			}
+		}
+		else
+		{
+			temp = node->parent->parent->left;
+
+			if (swRbtree_is_red(temp))
+			{
+				swRbtree_black(node->parent);
+				swRbtree_black(temp);
+				swRbtree_red(node->parent->parent);
+				node = node->parent->parent;
+			}
+			else
+			{
+				if (node == node->parent->left)
+				{
+					node = node->parent;
+					swRbtree_right_rotate(root, sentinel, node);
+				}
+
+				swRbtree_black(node->parent);
+				swRbtree_red(node->parent->parent);
+				swRbtree_left_rotate(root, sentinel, node->parent->parent);
+			}
+		}
 	}
 
-	// 两个入队线程之间的同步
-	//TODO 取模操作可以优化
-	int update_tail_index = (cur_tail_index + 1) % queue->size;
-
-	// 如果已经被其他的线程更新过，则不需要更新；
-	// 否则，更新为 (cur_tail_index+1) % size;
-	sw_atomic_cmp_set(&queue->tail, cur_tail_index, update_tail_index);
-
-	// 申请到可用的存储空间
-	*(queue->data + cur_tail_index) = ele;
-
-	sw_atomic_fetch_add(cur_tail_flag_index, 1);
-	sw_atomic_fetch_add(&queue->num, 1);
-	return 0;
+	swRbtree_black(*root);
 }
 
-int swRingQueue_pop(swRingQueue *queue, void **ele)
+void swRbtree_delete(swRbtree *tree, uint32_t key)
 {
-	if (!(queue->num > 0))
-		return -1;
-	int cur_head_index = queue->head;
-	char * cur_head_flag_index = queue->flags + cur_head_index;
+	uint32_t red;
+	swRbtree_node find_node;
+	swRbtree_node **root, *sentinel, *subst, *temp, *w;
+	swRbtree_node *node = &find_node;
+	node->key = key;
 
-	while (!sw_atomic_cmp_set(cur_head_flag_index, 2, 3))
+	root = (swRbtree_node **) &tree->root;
+	sentinel = tree->sentinel;
+
+	if (node->left == sentinel)
 	{
-		cur_head_index = queue->head;
-		cur_head_flag_index = queue->flags + cur_head_index;
+		temp = node->right;
+		subst = node;
 	}
-	//TODO 取模操作可以优化
-	int update_head_index = (cur_head_index + 1) % queue->size;
-	sw_atomic_cmp_set(&queue->head, cur_head_index, update_head_index);
-	*ele = *(queue->data + cur_head_index);
+	else if (node->right == sentinel)
+	{
+		temp = node->left;
+		subst = node;
+	}
+	else
+	{
+		subst = swRbtree_min(node->right, sentinel);
 
-	sw_atomic_fetch_sub(cur_head_flag_index, 3);
-	sw_atomic_fetch_sub(&queue->num, 1);
-	return 0;
+		if (subst->left != sentinel)
+		{
+			temp = subst->left;
+		}
+		else
+		{
+			temp = subst->right;
+		}
+	}
+
+	if (subst == *root)
+	{
+		*root = temp;
+		swRbtree_black(temp);
+
+		/* DEBUG stuff */
+		node->left = NULL;
+		node->right = NULL;
+		node->parent = NULL;
+		node->key = 0;
+
+		return;
+	}
+
+	red = swRbtree_is_red(subst);
+
+	if (subst == subst->parent->left)
+	{
+		subst->parent->left = temp;
+	}
+	else
+	{
+		subst->parent->right = temp;
+	}
+
+	if (subst == node)
+	{
+		temp->parent = subst->parent;
+	}
+	else
+	{
+		if (subst->parent == node)
+		{
+			temp->parent = subst;
+		}
+		else
+		{
+			temp->parent = subst->parent;
+		}
+
+		subst->left = node->left;
+		subst->right = node->right;
+		subst->parent = node->parent;
+		swRbtree_copy_color(subst, node);
+
+		if (node == *root)
+		{
+			*root = subst;
+		}
+		else
+		{
+			if (node == node->parent->left)
+			{
+				node->parent->left = subst;
+			}
+			else
+			{
+				node->parent->right = subst;
+			}
+		}
+
+		if (subst->left != sentinel)
+		{
+			subst->left->parent = subst;
+		}
+
+		if (subst->right != sentinel)
+		{
+			subst->right->parent = subst;
+		}
+	}
+
+	if (red)
+	{
+		return;
+	}
+
+	/* a delete fixup */
+
+	while (temp != *root && swRbtree_is_black(temp))
+	{
+		if (temp == temp->parent->left)
+		{
+			w = temp->parent->right;
+
+			if (swRbtree_is_red(w))
+			{
+				swRbtree_black(w);
+				swRbtree_red(temp->parent);
+				swRbtree_left_rotate(root, sentinel, temp->parent);
+				w = temp->parent->right;
+			}
+
+			if (swRbtree_is_black(w->left) && swRbtree_is_black(w->right))
+			{
+				swRbtree_red(w);
+				temp = temp->parent;
+			}
+			else
+			{
+				if (swRbtree_is_black(w->right))
+				{
+					swRbtree_black(w->left);
+					swRbtree_red(w);
+					swRbtree_right_rotate(root, sentinel, w);
+					w = temp->parent->right;
+				}
+
+				swRbtree_copy_color(w, temp->parent);
+				swRbtree_black(temp->parent);
+				swRbtree_black(w->right);
+				swRbtree_left_rotate(root, sentinel, temp->parent);
+				temp = *root;
+			}
+		}
+		else
+		{
+			w = temp->parent->left;
+
+			if (swRbtree_is_red(w))
+			{
+				swRbtree_black(w);
+				swRbtree_red(temp->parent);
+				swRbtree_right_rotate(root, sentinel, temp->parent);
+				w = temp->parent->left;
+			}
+
+			if (swRbtree_is_black(w->left) && swRbtree_is_black(w->right))
+			{
+				swRbtree_red(w);
+				temp = temp->parent;
+			}
+			else
+			{
+				if (swRbtree_is_black(w->left))
+				{
+					swRbtree_black(w->right);
+					swRbtree_red(w);
+					swRbtree_left_rotate(root, sentinel, w);
+					w = temp->parent->left;
+				}
+
+				swRbtree_copy_color(w, temp->parent);
+				swRbtree_black(temp->parent);
+				swRbtree_black(w->left);
+				swRbtree_right_rotate(root, sentinel, temp->parent);
+				temp = *root;
+			}
+		}
+	}
+	swRbtree_black(temp);
 }
-#else
 
-int swRingQueue_init(swRingQueue *queue, int buffer_size)
+static inline void swRbtree_left_rotate(swRbtree_node **root, swRbtree_node *sentinel, swRbtree_node *node)
 {
-	queue->data = sw_calloc(buffer_size, sizeof(void*));
-	if(queue->data == NULL)
+	swRbtree_node *temp;
+
+	temp = node->right;
+	node->right = temp->left;
+
+	if (temp->left != sentinel)
 	{
-		swWarn("malloc failed.");
-		return -1;
+		temp->left->parent = node;
 	}
-	queue->size = buffer_size;
-	queue->head = 0;
-	queue->tail = 0;
-	queue->tag = 0;
-	return 0;
+
+	temp->parent = node->parent;
+
+	if (node == *root)
+	{
+		*root = temp;
+
+	}
+	else if (node == node->parent->left)
+	{
+		node->parent->left = temp;
+
+	}
+	else
+	{
+		node->parent->right = temp;
+	}
+
+	temp->left = node;
+	node->parent = temp;
 }
 
-void swRingQueue_free(swRingQueue *queue)
+static inline void swRbtree_right_rotate(swRbtree_node **root, swRbtree_node *sentinel, swRbtree_node *node)
 {
-	sw_free(queue->data);
-}
+	swRbtree_node *temp;
 
-int swRingQueue_push(swRingQueue *queue, void *push_data)
+	temp = node->left;
+	node->left = temp->right;
+
+	if (temp->right != sentinel)
+	{
+		temp->right->parent = node;
+	}
+
+	temp->parent = node->parent;
+
+	if (node == *root)
+	{
+		*root = temp;
+	}
+	else if (node == node->parent->right)
+	{
+		node->parent->right = temp;
+	}
+	else
+	{
+		node->parent->left = temp;
+	}
+
+	temp->right = node;
+	node->parent = temp;
+}
+struct TestNode
 {
-	if (swRingQueue_full(queue))
-	{
-		swTrace("queue full\n");
-		return -1;
-	}
+	swRbtree_node node;
+	int value;
+};
 
-	queue->data[queue->tail] = push_data;
-	queue->tail = (queue->tail + 1) % queue->size;
-
-	/* 这个时候一定队列满了*/
-	if (queue->tail == queue->head)
-	{
-		queue->tag = 1;
-	}
-	return queue->tag;
-}
-
-int swRingQueue_pop(swRingQueue *queue, void **pop_data)
+void *swRbtree_find(swRbtree *tree, uint32_t key)
 {
-	if (swRingQueue_empty(queue))
+	swRbtree_node *tmp = tree->root;
+	swRbtree_node *sentinel = tree->sentinel;
+	while (tmp != sentinel)
 	{
-		swTrace("queue empty\n");
-		return -1;
+		if (key != tmp->key)
+		{
+			tmp = (key < tmp->key) ? tmp->left : tmp->right;
+			continue;
+		}
+		return tmp->value;
 	}
-
-	*pop_data = queue->data[queue->head];
-	queue->head = (queue->head + 1) % queue->size;
-
-	/* 这个时候一定队列空了*/
-	if (queue->tail == queue->head)
-	{
-		queue->tag = 0;
-	}
-	return queue->tag;
+	return NULL;
 }
-#endif
+
+swRbtree* swRbtree_new()
+{
+	swRbtree *rbtree = malloc(sizeof(swRbtree));
+	swRbtree_node *sentinel = malloc(sizeof(swRbtree_node));
+
+	sentinel->color = 0;
+	rbtree->root = sentinel;
+	rbtree->sentinel = sentinel;
+	return rbtree;
+}
+

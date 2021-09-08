@@ -1,185 +1,181 @@
 #include "swoole.h"
 
-typedef struct _swRingBuffer
+typedef struct _swFixedPool_slice
 {
-	uint8_t shared;
-	size_t size;
-	volatile off_t alloc_offset;
-	volatile off_t collect_offset;
-	volatile uint32_t free_n;
+	uint8_t lock;
+	struct _swFixedPool_slice *next;
+	struct _swFixedPool_slice *pre;
+	char data[0];
+
+} swFixedPool_slice;
+
+typedef struct _swFixedPool
+{
 	void *memory;
+	size_t size;
 
-} swRingBuffer;
+	swFixedPool_slice *head;
+	swFixedPool_slice *tail;
 
-typedef struct _swRingBuffer_item
+	/**
+	 * total memory size
+	 */
+	uint32_t slice_num;
+
+	/**
+	 * memory usage
+	 */
+	uint32_t slice_use;
+
+	/**
+	 * Fixed slice size
+	 */
+	uint32_t slice_size;
+
+	/**
+	 * use shared memory
+	 */
+	uint8_t shared;
+
+} swFixedPool;
+
+static void swFixedPool_init(swFixedPool *object);
+static void* swFixedPool_alloc(swMemoryPool *pool, uint32_t size);
+static void swFixedPool_free(swMemoryPool *pool, void *ptr);
+static void swFixedPool_destroy(swMemoryPool *pool);
+
+void swFixedPool_debug_slice(swFixedPool_slice *slice);
+
+/**
+ * create new FixedPool, random alloc/free fixed size memory
+ */
+swMemoryPool* swFixedPool_new(uint32_t slice_num, uint32_t slice_size, uint8_t shared)
 {
-	volatile uint32_t lock;
-	volatile uint32_t length;
-} swRingBuffer_head;
+	size_t size = slice_size * slice_num;
+	size_t alloc_size = size + sizeof(swFixedPool) + sizeof(swMemoryPool);
+	void *memory = (shared == 1) ? sw_shm_malloc(alloc_size) : sw_malloc(alloc_size);
 
-static void swRingBuffer_destory(swMemoryPool *pool);
-static sw_inline void swRingBuffer_collect(swRingBuffer *object);
-static void* swRingBuffer_alloc(swMemoryPool *pool, uint32_t size);
-static void swRingBuffer_free(swMemoryPool *pool, void *ptr);
+	swFixedPool *object = memory;
+	memory += sizeof(swFixedPool);
+	bzero(object, sizeof(swFixedPool));
 
-swMemoryPool *swRingBuffer_new(size_t size, uint8_t shared)
-{
-	size_t malloc_size = size + sizeof(swRingBuffer) + sizeof(swMemoryPool);
-	void *mem = (shared == 1) ? sw_shm_malloc(malloc_size) : sw_malloc(malloc_size);
-	if (mem == NULL)
-	{
-		swWarn("malloc(%ld) failed.", size);
-		return NULL;
-	}
-	swRingBuffer *object = mem;
-	mem += sizeof(swRingBuffer);
-	bzero(object, sizeof(swRingBuffer));
-	object->size = size;
 	object->shared = shared;
+	object->slice_num = slice_num;
+	object->slice_size = slice_size;
+	object->size = size;
 
-	swMemoryPool *pool = mem;
-	mem += sizeof(swMemoryPool);
+	swMemoryPool *pool = memory;
+	memory += sizeof(swMemoryPool);
 	pool->object = object;
-	pool->destroy = swRingBuffer_destory;
-	pool->free = swRingBuffer_free;
-	pool->alloc = swRingBuffer_alloc;
+	pool->alloc = swFixedPool_alloc;
+	pool->free = swFixedPool_free;
+	pool->destroy = swFixedPool_destroy;
 
-	object->memory = mem;
+	object->memory = memory;
+
+	/**
+	 * init linked list
+	 */
+	swFixedPool_init(object);
+
 	return pool;
 }
 
-static sw_inline void swRingBuffer_collect(swRingBuffer *object)
+/**
+ * linked list
+ */
+static void swFixedPool_init(swFixedPool *object)
 {
-	int i;
-	swRingBuffer_head *item;
+	swFixedPool_slice *slice;
+	void *cur = object->memory;
+	void *max = object->memory + object->size;
 
-	swTraceLog(SW_TRACE_MEMORY, "collect_offset=%ld, free_n=%d", object->collect_offset, object->free_n);
-
-	for(i = 0; i<SW_RINGBUFFER_COLLECT_N; i++)
+	do
 	{
-		item = (swRingBuffer_head *) (object->memory + object->collect_offset);
+		slice = (swFixedPool_slice *) cur;
+		bzero(slice, sizeof(swFixedPool_slice));
 
-		swTraceLog(SW_TRACE_MEMORY, "collect_offset=%d, item_length=%d, lock=%d", object->collect_offset, item->length, item->lock);
-
-		//can collect
-		if (item->lock == 0)
+		if (object->head != NULL)
 		{
-			object->collect_offset += (sizeof(swRingBuffer_head) + item->length);
-			if (object->free_n > 0)
-			{
-				object->free_n --;
-			}
-			if (object->collect_offset >= object->size)
-			{
-				object->collect_offset = 0;
-			}
+			object->head->pre = slice;
+			slice->next = object->head;
 		}
 		else
 		{
-			break;
+			object->tail = slice;
 		}
-	}
+
+		object->head = slice;
+		cur += (sizeof(swFixedPool_slice) + object->slice_size);
+		slice->pre = (swFixedPool_slice *) cur;
+	} while (cur < max);
 }
 
-static void* swRingBuffer_alloc(swMemoryPool *pool, uint32_t size)
+static void* swFixedPool_alloc(swMemoryPool *pool, uint32_t size)
 {
-	swRingBuffer *object = pool->object;
-	swRingBuffer_head *item;
-	size_t n;
-	uint8_t try_collect = 0;
-	void *ret_mem = NULL;
+	swFixedPool *object = pool->object;
+	swFixedPool_slice *slice;
 
-	swTraceLog(SW_TRACE_MEMORY, "[0] alloc_offset=%ld|collect_offset=%ld", object->alloc_offset, object->collect_offset);
+	slice = object->head;
 
-	start_alloc:
-
-	if (object->alloc_offset < object->collect_offset)
+	if (slice->lock == 0)
 	{
-		head_alloc:
-		item = object->memory + object->alloc_offset;
+		slice->lock = 1;
 		/**
-		 * 剩余内存的长度
+		 * move next slice to head (idle list)
 		 */
-		n = object->collect_offset - object->alloc_offset;
-		/**
-		 * 剩余内存可供本次分配,必须是>size
+		object->head = slice->next;
+		slice->next->pre = NULL;
+
+		/*
+		 * move this slice to tail (busy list)
 		 */
-		if ((n - sizeof(swRingBuffer_head)) > size)
-		{
-			goto do_alloc;
-		}
-		/**
-		 * 内存不足,已尝试回收过
-		 */
-		else if (try_collect == 1)
-		{
-			swWarn("alloc_offset=%ld|collect_offset=%ld", object->alloc_offset, object->collect_offset);
-			return NULL;
-		}
-		//try collect memory, then try head_alloc
-		else
-		{
-			try_collect = 1;
-			swRingBuffer_collect(object);
-			goto start_alloc;
-		}
+		object->tail->next = slice;
+		slice->next = NULL;
+		slice->pre = object->tail;
+		object->tail = slice;
+
+		return slice->data;
 	}
 	else
 	{
-		//tail_alloc:
-		n = object->size - object->alloc_offset;
-		item = object->memory + object->alloc_offset;
-
-		swTraceLog(SW_TRACE_MEMORY, "[1] size=%ld, ac_size=%d, n_size=%ld", object->size, size, n);
-
-		if ((n - sizeof(swRingBuffer_head)) >= size)
-		{
-			goto do_alloc;
-		}
-		else
-		{
-			//unlock
-			item->lock = 0;
-			item->length = n - sizeof(swRingBuffer_head);
-
-			//goto head
-			object->alloc_offset = 0;
-
-			swTraceLog(SW_TRACE_MEMORY, "switch to head_alloc. ac_size=%d, n_size=%ld", size, n);
-
-			goto head_alloc;
-		}
+		return NULL;
 	}
+}
 
-	do_alloc:
-	item->lock = 1;
-	item->length = size;
-	ret_mem = (void*) (object->memory + object->alloc_offset + sizeof(swRingBuffer_head));
+static void swFixedPool_free(swMemoryPool *pool, void *ptr)
+{
+	swFixedPool *object = pool->object;
+	swFixedPool_slice *slice;
 
-	/**
-	 * 内存游标向后移动
-	 */
-	object->alloc_offset += size + sizeof(swRingBuffer_head);
+	slice = ptr - sizeof(swFixedPool_slice);
+	slice->lock = 0;
 
-	if (object->free_n > 0)
+	//list head, AB
+	if (slice->pre == NULL)
 	{
-		swRingBuffer_collect(object);
+		return;
 	}
-
-	return ret_mem;
+	//list tail, DE
+	if (slice->next == NULL)
+	{
+		slice->pre->next = NULL;
+	}
+	//middle BCD
+	else
+	{
+		slice->pre->next = slice->next;
+		slice->next->pre = slice->pre;
+	}
+	slice->pre = NULL;
+	slice->next = object->head;
+	object->head->pre = slice;
+	object->head = slice;
 }
 
-static void swRingBuffer_free(swMemoryPool *pool, void *ptr)
+static void swFixedPool_destroy(swMemoryPool *pool)
 {
-	swRingBuffer *object = pool->object;
-	swRingBuffer_head *item = ptr - sizeof(swRingBuffer_head);
-	item->lock = 0;
-	object->free_n ++;
-}
-
-static void swRingBuffer_destory(swMemoryPool *pool)
-{
-	swRingBuffer *object = pool->object;
+	swFixedPool *object = pool->object;
 	if (object->shared)
 	{
 		sw_shm_free(object);
@@ -188,4 +184,38 @@ static void swRingBuffer_destory(swMemoryPool *pool)
 	{
 		sw_free(object);
 	}
+}
+
+
+void swFixedPool_debug(swMemoryPool *pool)
+{
+	int line = 0;
+	swFixedPool *object = pool->object;
+	swFixedPool_slice *slice = object->head;
+
+	printf("===============================%s=================================\n", __FUNCTION__);
+	while (slice != NULL)
+	{
+		if (slice->next == slice)
+		{
+			printf("-------------------@@@@@@@@@@@@@@@@@@@@@@----------------\n");
+
+		}
+		printf("#%d\t", line);
+		swFixedPool_debug_slice(slice);
+
+		slice = slice->next;
+		line++;
+		if (line > 100)
+			break;
+	}
+}
+
+void swFixedPool_debug_slice(swFixedPool_slice *slice)
+{
+	printf("Slab[%p]\t", slice);
+	printf("pre=%p\t", slice->pre);
+	printf("next=%p\t", slice->next);
+	printf("tag=%d\t", slice->lock);
+	printf("data=%p\n", slice->data);
 }

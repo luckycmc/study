@@ -765,683 +765,617 @@ ngx_configure_listening_sockets(ngx_cycle_t *cycle)
                            (const void *) &ls[i].fastopen, sizeof(int))
                 == -1)
             {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(TCP_FASTOPEN, %d) %V failed, ignored",
-                              ls[i].fastopen, &ls[i].addr_text);
-            }
+                ngx_log_error(NGX_LOG_ALERT, cycle->log, nle);
+
+        if (rv != NGX_CONF_OK) {
+            break;
         }
-#endif
-
-#if 0
-        if (1) {
-            int tcp_nodelay = 1;
-
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_NODELAY,
-                       (const void *) &tcp_nodelay, sizeof(int))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(TCP_NODELAY) %V failed, ignored",
-                              &ls[i].addr_text);
-            }
-        }
-#endif
-
-        if (ls[i].listen) {
-
-            /* change backlog via listen() */
-
-            if (listen(ls[i].fd, ls[i].backlog) == -1) {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "listen() to %V, backlog %d failed, ignored",
-                              &ls[i].addr_text, ls[i].backlog);
-            }
-        }
-
-        /*
-         * setting deferred mode should be last operation on socket,
-         * because code may prematurely continue cycle on failure
-         */
-
-#if (NGX_HAVE_DEFERRED_ACCEPT)
-
-#ifdef SO_ACCEPTFILTER
-
-        if (ls[i].delete_deferred) {
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0)
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(SO_ACCEPTFILTER, NULL) "
-                              "for %V failed, ignored",
-                              &ls[i].addr_text);
-
-                if (ls[i].accept_filter) {
-                    ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
-                                  "could not change the accept filter "
-                                  "to \"%s\" for %V, ignored",
-                                  ls[i].accept_filter, &ls[i].addr_text);
-                }
-
-                continue;
-            }
-
-            ls[i].deferred_accept = 0;
-        }
-
-        if (ls[i].add_deferred) {
-            ngx_memzero(&af, sizeof(struct accept_filter_arg));
-            (void) ngx_cpystrn((u_char *) af.af_name,
-                               (u_char *) ls[i].accept_filter, 16);
-
-            if (setsockopt(ls[i].fd, SOL_SOCKET, SO_ACCEPTFILTER,
-                           &af, sizeof(struct accept_filter_arg))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(SO_ACCEPTFILTER, \"%s\") "
-                              "for %V failed, ignored",
-                              ls[i].accept_filter, &ls[i].addr_text);
-                continue;
-            }
-
-            ls[i].deferred_accept = 1;
-        }
-
-#endif
-
-#ifdef TCP_DEFER_ACCEPT
-
-        if (ls[i].add_deferred || ls[i].delete_deferred) {
-
-            if (ls[i].add_deferred) {
-                /*
-                 * There is no way to find out how long a connection was
-                 * in queue (and a connection may bypass deferred queue at all
-                 * if syncookies were used), hence we use 1 second timeout
-                 * here.
-                 */
-                value = 1;
-
-            } else {
-                value = 0;
-            }
-
-            if (setsockopt(ls[i].fd, IPPROTO_TCP, TCP_DEFER_ACCEPT,
-                           &value, sizeof(int))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(TCP_DEFER_ACCEPT, %d) for %V failed, "
-                              "ignored",
-                              value, &ls[i].addr_text);
-
-                continue;
-            }
-        }
-
-        if (ls[i].add_deferred) {
-            ls[i].deferred_accept = 1;
-        }
-
-#endif
-
-#endif /* NGX_HAVE_DEFERRED_ACCEPT */
-
-#if (NGX_HAVE_IP_RECVDSTADDR)
-
-        if (ls[i].wildcard
-            && ls[i].type == SOCK_DGRAM
-            && ls[i].sockaddr->sa_family == AF_INET)
-        {
-            value = 1;
-
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_RECVDSTADDR,
-                           (const void *) &value, sizeof(int))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(IP_RECVDSTADDR) "
-                              "for %V failed, ignored",
-                              &ls[i].addr_text);
-            }
-        }
-
-#elif (NGX_HAVE_IP_PKTINFO)
-
-        if (ls[i].wildcard
-            && ls[i].type == SOCK_DGRAM
-            && ls[i].sockaddr->sa_family == AF_INET)
-        {
-            value = 1;
-
-            if (setsockopt(ls[i].fd, IPPROTO_IP, IP_PKTINFO,
-                           (const void *) &value, sizeof(int))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(IP_PKTINFO) "
-                              "for %V failed, ignored",
-                              &ls[i].addr_text);
-            }
-        }
-
-#endif
-
-#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_RECVPKTINFO)
-
-        if (ls[i].wildcard
-            && ls[i].type == SOCK_DGRAM
-            && ls[i].sockaddr->sa_family == AF_INET6)
-        {
-            value = 1;
-
-            if (setsockopt(ls[i].fd, IPPROTO_IPV6, IPV6_RECVPKTINFO,
-                           (const void *) &value, sizeof(int))
-                == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_socket_errno,
-                              "setsockopt(IPV6_RECVPKTINFO) "
-                              "for %V failed, ignored",
-                              &ls[i].addr_text);
-            }
-        }
-
-#endif
     }
 
-    return;
+    ngx_close_glob(&gl);
+
+    return rv;
 }
 
 
-void
-ngx_close_listening_sockets(ngx_cycle_t *cycle)
+ngx_int_t
+ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name, ngx_uint_t conf_prefix)
 {
-    ngx_uint_t         i;
-    ngx_listening_t   *ls;
-    ngx_connection_t  *c;
+    ngx_str_t  *prefix;
 
-    if (ngx_event_flags & NGX_USE_IOCP_EVENT) {
-        return;
-    }
+    prefix = conf_prefix ? &cycle->conf_prefix : &cycle->prefix;
 
-    ngx_accept_mutex_held = 0;
-    ngx_use_accept_mutex = 0;
-
-    ls = cycle->listening.elts;
-    for (i = 0; i < cycle->listening.nelts; i++) {
-
-        c = ls[i].connection;
-
-        if (c) {
-            if (c->read->active) {
-                if (ngx_event_flags & NGX_USE_EPOLL_EVENT) {
-
-                    /*
-                     * it seems that Linux-2.6.x OpenVZ sends events
-                     * for closed shared listening sockets unless
-                     * the events was explicitly deleted
-                     */
-
-                    ngx_del_event(c->read, NGX_READ_EVENT, 0);
-
-                } else {
-                    ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
-                }
-            }
-
-            ngx_free_connection(c);
-
-            c->fd = (ngx_socket_t) -1;
-        }
-
-        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
-                       "close listening %V #%d ", &ls[i].addr_text, ls[i].fd);
-
-        if (ngx_close_socket(ls[i].fd) == -1) {
-            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
-                          ngx_close_socket_n " %V failed", &ls[i].addr_text);
-        }
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-
-        if (ls[i].sockaddr->sa_family == AF_UNIX
-            && ngx_process <= NGX_PROCESS_MASTER
-            && ngx_new_binary == 0)
-        {
-            u_char *name = ls[i].addr_text.data + sizeof("unix:") - 1;
-
-            if (ngx_delete_file(name) == NGX_FILE_ERROR) {
-                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_socket_errno,
-                              ngx_delete_file_n " %s failed", name);
-            }
-        }
-
-#endif
-
-        ls[i].fd = (ngx_socket_t) -1;
-    }
-
-    cycle->listening.nelts = 0;
+    return ngx_get_full_name(cycle->pool, prefix, name);
 }
 
 
-ngx_connection_t *
-ngx_get_connection(ngx_socket_t s, ngx_log_t *log)
+ngx_open_file_t *
+ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name)
 {
-    ngx_uint_t         instance;
-    ngx_event_t       *rev, *wev;
-    ngx_connection_t  *c;
+    ngx_str_t         full;
+    ngx_uint_t        i;
+    ngx_list_part_t  *part;
+    ngx_open_file_t  *file;
 
-    /* disable warning: Win32 SOCKET is u_int while UNIX socket is int */
+#if (NGX_SUPPRESS_WARN)
+    ngx_str_null(&full);
+#endif
 
-    if (ngx_cycle->files && (ngx_uint_t) s >= ngx_cycle->files_n) {
-        ngx_log_error(NGX_LOG_ALERT, log, 0,
-                      "the new socket has number %d, "
-                      "but only %ui files are available",
-                      s, ngx_cycle->files_n);
+    if (name->len) {
+        full = *name;
+
+        if (ngx_conf_full_name(cycle, &full, 0) != NGX_OK) {
+            return NULL;
+        }
+
+        part = &cycle->open_files.part;
+        file = part->elts;
+
+        for (i = 0; /* void */ ; i++) {
+
+            if (i >= part->nelts) {
+                if (part->next == NULL) {
+                    break;
+                }
+                part = part->next;
+                file = part->elts;
+                i = 0;
+            }
+
+            if (full.len != file[i].name.len) {
+                continue;
+            }
+
+            if (ngx_strcmp(full.data, file[i].name.data) == 0) {
+                return &file[i];
+            }
+        }
+    }
+
+    file = ngx_list_push(&cycle->open_files);
+    if (file == NULL) {
         return NULL;
     }
 
-    c = ngx_cycle->free_connections;
+    if (name->len) {
+        file->fd = NGX_INVALID_FILE;
+        file->name = full;
 
-    if (c == NULL) {
-        ngx_drain_connections((ngx_cycle_t *) ngx_cycle);
-        c = ngx_cycle->free_connections;
+    } else {
+        file->fd = ngx_stderr;
+        file->name = *name;
     }
 
-    if (c == NULL) {
-        ngx_log_error(NGX_LOG_ALERT, log, 0,
-                      "%ui worker_connections are not enough",
-                      ngx_cycle->connection_n);
+    file->flush = NULL;
+    file->data = NULL;
 
-        return NULL;
-    }
-
-    ngx_cycle->free_connections = c->data;
-    ngx_cycle->free_connection_n--;
-
-    if (ngx_cycle->files && ngx_cycle->files[s] == NULL) {
-        ngx_cycle->files[s] = c;
-    }
-
-    rev = c->read;
-    wev = c->write;
-
-    ngx_memzero(c, sizeof(ngx_connection_t));
-
-    c->read = rev;
-    c->write = wev;
-    c->fd = s;
-    c->log = log;
-
-    instance = rev->instance;
-
-    ngx_memzero(rev, sizeof(ngx_event_t));
-    ngx_memzero(wev, sizeof(ngx_event_t));
-
-    rev->instance = !instance;
-    wev->instance = !instance;
-
-    rev->index = NGX_INVALID_INDEX;
-    wev->index = NGX_INVALID_INDEX;
-
-    rev->data = c;
-    wev->data = c;
-
-    wev->write = 1;
-
-    return c;
-}
-
-
-void
-ngx_free_connection(ngx_connection_t *c)
-{
-    c->data = ngx_cycle->free_connections;
-    ngx_cycle->free_connections = c;
-    ngx_cycle->free_connection_n++;
-
-    if (ngx_cycle->files && ngx_cycle->files[c->fd] == c) {
-        ngx_cycle->files[c->fd] = NULL;
-    }
-}
-
-
-void
-ngx_close_connection(ngx_connection_t *c)
-{
-    ngx_err_t     err;
-    ngx_uint_t    log_error, level;
-    ngx_socket_t  fd;
-
-    if (c->fd == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, c->log, 0, "connection already closed");
-        return;
-    }
-
-    if (c->read->timer_set) {
-        ngx_del_timer(c->read);
-    }
-
-    if (c->write->timer_set) {
-        ngx_del_timer(c->write);
-    }
-
-    if (!c->shared) {
-        if (ngx_del_conn) {
-            ngx_del_conn(c, NGX_CLOSE_EVENT);
-
-        } else {
-            if (c->read->active || c->read->disabled) {
-                ngx_del_event(c->read, NGX_READ_EVENT, NGX_CLOSE_EVENT);
-            }
-
-            if (c->write->active || c->write->disabled) {
-                ngx_del_event(c->write, NGX_WRITE_EVENT, NGX_CLOSE_EVENT);
-            }
-        }
-    }
-
-    if (c->read->posted) {
-        ngx_delete_posted_event(c->read);
-    }
-
-    if (c->write->posted) {
-        ngx_delete_posted_event(c->write);
-    }
-
-    c->read->closed = 1;
-    c->write->closed = 1;
-
-    ngx_reusable_connection(c, 0);
-
-    log_error = c->log_error;
-
-    ngx_free_connection(c);
-
-    fd = c->fd;
-    c->fd = (ngx_socket_t) -1;
-
-    if (c->shared) {
-        return;
-    }
-
-    if (ngx_close_socket(fd) == -1) {
-
-        err = ngx_socket_errno;
-
-        if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
-
-            switch (log_error) {
-
-            case NGX_ERROR_INFO:
-                level = NGX_LOG_INFO;
-                break;
-
-            case NGX_ERROR_ERR:
-                level = NGX_LOG_ERR;
-                break;
-
-            default:
-                level = NGX_LOG_CRIT;
-            }
-
-        } else {
-            level = NGX_LOG_CRIT;
-        }
-
-        ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
-    }
-}
-
-
-void
-ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable)
-{
-    ngx_log_debug1(NGX_LOG_DEBUG_CORE, c->log, 0,
-                   "reusable connection: %ui", reusable);
-
-    if (c->reusable) {
-        ngx_queue_remove(&c->queue);
-        ngx_cycle->reusable_connections_n--;
-
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, -1);
-#endif
-    }
-
-    c->reusable = reusable;
-
-    if (reusable) {
-        /* need cast as ngx_cycle is volatile */
-
-        ngx_queue_insert_head(
-            (ngx_queue_t *) &ngx_cycle->reusable_connections_queue, &c->queue);
-        ngx_cycle->reusable_connections_n++;
-
-#if (NGX_STAT_STUB)
-        (void) ngx_atomic_fetch_add(ngx_stat_waiting, 1);
-#endif
-    }
+    return file;
 }
 
 
 static void
-ngx_drain_connections(ngx_cycle_t *cycle)
+ngx_conf_flush_files(ngx_cycle_t *cycle)
 {
-    ngx_uint_t         i, n;
-    ngx_queue_t       *q;
-    ngx_connection_t  *c;
+    ngx_uint_t        i;
+    ngx_list_part_t  *part;
+    ngx_open_file_t  *file;
 
-    n = ngx_max(ngx_min(32, cycle->reusable_connections_n / 8), 1);
+    ngx_log_debug0(NGX_LOG_DEBUG_CORE, cycle->log, 0, "flush files");
 
-    for (i = 0; i < n; i++) {
-        if (ngx_queue_empty(&cycle->reusable_connections_queue)) {
-            break;
+    part = &cycle->open_files.part;
+    file = part->elts;
+
+    for (i = 0; /* void */ ; i++) {
+
+        if (i >= part->nelts) {
+            if (part->next == NULL) {
+                break;
+            }
+            part = part->next;
+            file = part->elts;
+            i = 0;
         }
 
-        q = ngx_queue_last(&cycle->reusable_connections_queue);
-        c = ngx_queue_data(q, ngx_connection_t, queue);
-
-        ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0,
-                       "reusing connection");
-
-        c->close = 1;
-        c->read->handler(c->read);
-    }
-}
-
-
-void
-ngx_close_idle_connections(ngx_cycle_t *cycle)
-{
-    ngx_uint_t         i;
-    ngx_connection_t  *c;
-
-    c = cycle->connections;
-
-    for (i = 0; i < cycle->connection_n; i++) {
-
-        /* THREAD: lock */
-
-        if (c[i].fd != (ngx_socket_t) -1 && c[i].idle) {
-            c[i].close = 1;
-            c[i].read->handler(c[i].read);
+        if (file[i].flush) {
+            file[i].flush(&file[i], cycle->log);
         }
     }
 }
 
 
-ngx_int_t
-ngx_connection_local_sockaddr(ngx_connection_t *c, ngx_str_t *s,
-    ngx_uint_t port)
+void ngx_cdecl
+ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf, ngx_err_t err,
+    const char *fmt, ...)
 {
-    socklen_t             len;
-    ngx_uint_t            addr;
-    ngx_sockaddr_t        sa;
-    struct sockaddr_in   *sin;
-#if (NGX_HAVE_INET6)
-    ngx_uint_t            i;
-    struct sockaddr_in6  *sin6;
-#endif
+    u_char   errstr[NGX_MAX_CONF_ERRSTR], *p, *last;
+    va_list  args;
 
-    addr = 0;
+    last = errstr + NGX_MAX_CONF_ERRSTR;
 
-    if (c->local_socklen) {
-        switch (c->local_sockaddr->sa_family) {
+    va_start(args, fmt);
+    p = ngx_vslprintf(errstr, last, fmt, args);
+    va_end(args);
 
-#if (NGX_HAVE_INET6)
-        case AF_INET6:
-            sin6 = (struct sockaddr_in6 *) c->local_sockaddr;
+    if (err) {
+        p = ngx_log_errno(p, last, err);
+    }
 
-            for (i = 0; addr == 0 && i < 16; i++) {
-                addr |= sin6->sin6_addr.s6_addr[i];
+    if (cf->conf_file == NULL) {
+        ngx_log_error(level, cf->log, 0, "%*s", p - errstr, errstr);
+        return;
+    }
+
+    if (cf->conf_file->file.fd == NGX_INVALID_FILE) {
+        ngx_log_error(level, cf->log, 0, "%*s in command line",
+                      p - errstr, errstr);
+        return;
+    }
+
+    ngx_log_error(level, cf->log, 0, "%*s in %s:%ui",
+                  p - errstr, errstr,
+                  cf->conf_file->file.name.data, cf->conf_file->line);
+}
+
+
+char *
+ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_str_t        *value;
+    ngx_flag_t       *fp;
+    ngx_conf_post_t  *post;
+
+    fp = (ngx_flag_t *) (p + cmd->offset);
+
+    if (*fp != NGX_CONF_UNSET) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    if (ngx_strcasecmp(value[1].data, (u_char *) "on") == 0) {
+        *fp = 1;
+
+    } else if (ngx_strcasecmp(value[1].data, (u_char *) "off") == 0) {
+        *fp = 0;
+
+    } else {
+        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                     "invalid value \"%s\" in \"%s\" directive, "
+                     "it must be \"on\" or \"off\"",
+                     value[1].data, cmd->name.data);
+        return NGX_CONF_ERROR;
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, fp);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_str_t        *field, *value;
+    ngx_conf_post_t  *post;
+
+    field = (ngx_str_t *) (p + cmd->offset);
+
+    if (field->data) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    *field = value[1];
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, field);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_str_t         *value, *s;
+    ngx_array_t      **a;
+    ngx_conf_post_t   *post;
+
+    a = (ngx_array_t **) (p + cmd->offset);
+
+    if (*a == NGX_CONF_UNSET_PTR) {
+        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_str_t));
+        if (*a == NULL) {
+            return NGX_CONF_ERROR;
+        }
+    }
+
+    s = ngx_array_push(*a);
+    if (s == NULL) {
+        return NGX_CONF_ERROR;
+    }
+
+    value = cf->args->elts;
+
+    *s = value[1];
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, s);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_str_t         *value;
+    ngx_array_t      **a;
+    ngx_keyval_t      *kv;
+    ngx_conf_post_t   *post;
+
+    a = (ngx_array_t **) (p + cmd->offset);
+
+    if (*a == NULL) {
+        *a = ngx_array_create(cf->pool, 4, sizeof(ngx_keyval_t));
+        if (*a == NULL) {
+            return NGX_CONF_ERROR;
+        }
+    }
+
+    kv = ngx_array_push(*a);
+    if (kv == NULL) {
+        return NGX_CONF_ERROR;
+    }
+
+    value = cf->args->elts;
+
+    kv->key = value[1];
+    kv->value = value[2];
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, kv);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_int_t        *np;
+    ngx_str_t        *value;
+    ngx_conf_post_t  *post;
+
+
+    np = (ngx_int_t *) (p + cmd->offset);
+
+    if (*np != NGX_CONF_UNSET) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+    *np = ngx_atoi(value[1].data, value[1].len);
+    if (*np == NGX_ERROR) {
+        return "invalid number";
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, np);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    size_t           *sp;
+    ngx_str_t        *value;
+    ngx_conf_post_t  *post;
+
+
+    sp = (size_t *) (p + cmd->offset);
+    if (*sp != NGX_CONF_UNSET_SIZE) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    *sp = ngx_parse_size(&value[1]);
+    if (*sp == (size_t) NGX_ERROR) {
+        return "invalid value";
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, sp);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    off_t            *op;
+    ngx_str_t        *value;
+    ngx_conf_post_t  *post;
+
+
+    op = (off_t *) (p + cmd->offset);
+    if (*op != NGX_CONF_UNSET) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    *op = ngx_parse_offset(&value[1]);
+    if (*op == (off_t) NGX_ERROR) {
+        return "invalid value";
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, op);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_msec_t       *msp;
+    ngx_str_t        *value;
+    ngx_conf_post_t  *post;
+
+
+    msp = (ngx_msec_t *) (p + cmd->offset);
+    if (*msp != NGX_CONF_UNSET_MSEC) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    *msp = ngx_parse_time(&value[1], 0);
+    if (*msp == (ngx_msec_t) NGX_ERROR) {
+        return "invalid value";
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, msp);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    time_t           *sp;
+    ngx_str_t        *value;
+    ngx_conf_post_t  *post;
+
+
+    sp = (time_t *) (p + cmd->offset);
+    if (*sp != NGX_CONF_UNSET) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    *sp = ngx_parse_time(&value[1], 1);
+    if (*sp == (time_t) NGX_ERROR) {
+        return "invalid value";
+    }
+
+    if (cmd->post) {
+        post = cmd->post;
+        return post->post_handler(cf, post, sp);
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char *p = conf;
+
+    ngx_str_t   *value;
+    ngx_bufs_t  *bufs;
+
+
+    bufs = (ngx_bufs_t *) (p + cmd->offset);
+    if (bufs->num) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+
+    bufs->num = ngx_atoi(value[1].data, value[1].len);
+    if (bufs->num == NGX_ERROR || bufs->num == 0) {
+        return "invalid value";
+    }
+
+    bufs->size = ngx_parse_size(&value[2]);
+    if (bufs->size == (size_t) NGX_ERROR || bufs->size == 0) {
+        return "invalid value";
+    }
+
+    return NGX_CONF_OK;
+}
+
+
+char *
+ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_uint_t       *np, i;
+    ngx_str_t        *value;
+    ngx_conf_enum_t  *e;
+
+    np = (ngx_uint_t *) (p + cmd->offset);
+
+    if (*np != NGX_CONF_UNSET_UINT) {
+        return "is duplicate";
+    }
+
+    value = cf->args->elts;
+    e = cmd->post;
+
+    for (i = 0; e[i].name.len != 0; i++) {
+        if (e[i].name.len != value[1].len
+            || ngx_strcasecmp(e[i].name.data, value[1].data) != 0)
+        {
+            continue;
+        }
+
+        *np = e[i].value;
+
+        return NGX_CONF_OK;
+    }
+
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                       "invalid value \"%s\"", value[1].data);
+
+    return NGX_CONF_ERROR;
+}
+
+
+char *
+ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    char  *p = conf;
+
+    ngx_uint_t          *np, i, m;
+    ngx_str_t           *value;
+    ngx_conf_bitmask_t  *mask;
+
+
+    np = (ngx_uint_t *) (p + cmd->offset);
+    value = cf->args->elts;
+    mask = cmd->post;
+
+    for (i = 1; i < cf->args->nelts; i++) {
+        for (m = 0; mask[m].name.len != 0; m++) {
+
+            if (mask[m].name.len != value[i].len
+                || ngx_strcasecmp(mask[m].name.data, value[i].data) != 0)
+            {
+                continue;
+            }
+
+            if (*np & mask[m].mask) {
+                ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                                   "duplicate value \"%s\"", value[i].data);
+
+            } else {
+                *np |= mask[m].mask;
             }
 
             break;
-#endif
+        }
 
-#if (NGX_HAVE_UNIX_DOMAIN)
-        case AF_UNIX:
-            addr = 1;
-            break;
-#endif
+        if (mask[m].name.len == 0) {
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                               "invalid value \"%s\"", value[i].data);
 
-        default: /* AF_INET */
-            sin = (struct sockaddr_in *) c->local_sockaddr;
-            addr = sin->sin_addr.s_addr;
-            break;
+            return NGX_CONF_ERROR;
         }
     }
 
-    if (addr == 0) {
-
-        len = sizeof(ngx_sockaddr_t);
-
-        if (getsockname(c->fd, &sa.sockaddr, &len) == -1) {
-            ngx_connection_error(c, ngx_socket_errno, "getsockname() failed");
-            return NGX_ERROR;
-        }
-
-        c->local_sockaddr = ngx_palloc(c->pool, len);
-        if (c->local_sockaddr == NULL) {
-            return NGX_ERROR;
-        }
-
-        ngx_memcpy(c->local_sockaddr, &sa, len);
-
-        c->local_socklen = len;
-    }
-
-    if (s == NULL) {
-        return NGX_OK;
-    }
-
-    s->len = ngx_sock_ntop(c->local_sockaddr, c->local_socklen,
-                           s->data, s->len, port);
-
-    return NGX_OK;
+    return NGX_CONF_OK;
 }
 
 
-ngx_int_t
-ngx_tcp_nodelay(ngx_connection_t *c)
+#if 0
+
+char *
+ngx_conf_unsupported(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    int  tcp_nodelay;
+    return "unsupported on this platform";
+}
 
-    if (c->tcp_nodelay != NGX_TCP_NODELAY_UNSET) {
-        return NGX_OK;
-    }
-
-    ngx_log_debug0(NGX_LOG_DEBUG_CORE, c->log, 0, "tcp_nodelay");
-
-    tcp_nodelay = 1;
-
-    if (setsockopt(c->fd, IPPROTO_TCP, TCP_NODELAY,
-                   (const void *) &tcp_nodelay, sizeof(int))
-        == -1)
-    {
-#if (NGX_SOLARIS)
-        if (c->log_error == NGX_ERROR_INFO) {
-
-            /* Solaris returns EINVAL if a socket has been shut down */
-            c->log_error = NGX_ERROR_IGNORE_EINVAL;
-
-            ngx_connection_error(c, ngx_socket_errno,
-                                 "setsockopt(TCP_NODELAY) failed");
-
-            c->log_error = NGX_ERROR_INFO;
-
-            return NGX_ERROR;
-        }
 #endif
 
-        ngx_connection_error(c, ngx_socket_errno,
-                             "setsockopt(TCP_NODELAY) failed");
-        return NGX_ERROR;
-    }
 
-    c->tcp_nodelay = NGX_TCP_NODELAY_SET;
+char *
+ngx_conf_deprecated(ngx_conf_t *cf, void *post, void *data)
+{
+    ngx_conf_deprecated_t  *d = post;
 
-    return NGX_OK;
+    ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                       "the \"%s\" directive is deprecated, "
+                       "use the \"%s\" directive instead",
+                       d->old_name, d->new_name);
+
+    return NGX_CONF_OK;
 }
 
 
-ngx_int_t
-ngx_connection_error(ngx_connection_t *c, ngx_err_t err, char *text)
+char *
+ngx_conf_check_num_bounds(ngx_conf_t *cf, void *post, void *data)
 {
-    ngx_uint_t  level;
+    ngx_conf_num_bounds_t  *bounds = post;
+    ngx_int_t  *np = data;
 
-    /* Winsock may return NGX_ECONNABORTED instead of NGX_ECONNRESET */
-
-    if ((err == NGX_ECONNRESET
-#if (NGX_WIN32)
-         || err == NGX_ECONNABORTED
-#endif
-        ) && c->log_error == NGX_ERROR_IGNORE_ECONNRESET)
-    {
-        return 0;
-    }
-
-#if (NGX_SOLARIS)
-    if (err == NGX_EINVAL && c->log_error == NGX_ERROR_IGNORE_EINVAL) {
-        return 0;
-    }
-#endif
-
-    if (err == 0
-        || err == NGX_ECONNRESET
-#if (NGX_WIN32)
-        || err == NGX_ECONNABORTED
-#else
-        || err == NGX_EPIPE
-#endif
-        || err == NGX_ENOTCONN
-        || err == NGX_ETIMEDOUT
-        || err == NGX_ECONNREFUSED
-        || err == NGX_ENETDOWN
-        || err == NGX_ENETUNREACH
-        || err == NGX_EHOSTDOWN
-        || err == NGX_EHOSTUNREACH)
-    {
-        switch (c->log_error) {
-
-        case NGX_ERROR_IGNORE_EINVAL:
-        case NGX_ERROR_IGNORE_ECONNRESET:
-        case NGX_ERROR_INFO:
-            level = NGX_LOG_INFO;
-            break;
-
-        default:
-            level = NGX_LOG_ERR;
+    if (bounds->high == -1) {
+        if (*np >= bounds->low) {
+            return NGX_CONF_OK;
         }
 
-    } else {
-        level = NGX_LOG_ALERT;
+        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                           "value must be equal to or greater than %i",
+                           bounds->low);
+
+        return NGX_CONF_ERROR;
     }
 
-    ngx_log_error(level, c->log, err, text);
+    if (*np >= bounds->low && *np <= bounds->high) {
+        return NGX_CONF_OK;
+    }
 
-    return NGX_ERROR;
+    ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                       "value must be between %i and %i",
+                       bounds->low, bounds->high);
+
+    return NGX_CONF_ERROR;
 }

@@ -143,3 +143,54 @@ $serv->on('WorkerError', function($serv, $worker_id, $worker_pid, $exit_code) {
 });
 $serv->start();
 
+task_id, $data)
+{
+    echo "AsyncTask Finish: result={$data}. PID=".posix_getpid().PHP_EOL;
+}
+
+function my_onWorkerError(swoole_server $serv, $worker_id, $worker_pid, $exit_code)
+{
+    echo "worker abnormal exit. WorkerId=$worker_id|Pid=$worker_pid|ExitCode=$exit_code\n";
+}
+
+function broadcast($serv, $fd = 0, $data = "hello")
+{
+    $start_fd = 0;
+    echo "broadcast\n";
+    while(true)
+    {
+        $conn_list = $serv->connection_list($start_fd, 10);
+        if($conn_list === false)
+        {
+            break;
+        }
+        $start_fd = end($conn_list);
+        foreach($conn_list as $conn)
+        {
+            if($conn === $fd) continue;
+            sleep(5);
+            $ret1 = $serv->send($conn, $data);
+            var_dump($ret1);
+            $ret2 = $serv->close($conn);
+            var_dump($ret2);
+        }
+    }
+}
+
+$serv->on('Start', 'my_onStart');
+$serv->on('Connect', 'my_onConnect');
+$serv->on('Receive', 'my_onReceive');
+$serv->on('Close', 'my_onClose');
+$serv->on('Shutdown', 'my_onShutdown');
+$serv->on('Timer', 'my_onTimer');
+$serv->on('WorkerStart', 'my_onWorkerStart');
+$serv->on('WorkerStop', 'my_onWorkerStop');
+$serv->on('Task', 'my_onTask');
+$serv->on('Finish', 'my_onFinish');
+$serv->on('WorkerError', 'my_onWorkerError');
+$serv->on('ManagerStart', function($serv) {
+    global $argv;
+    swoole_set_process_name("php {$argv[0]}: manager");
+});
+$serv->start();
+

@@ -101,3 +101,26 @@ charset_map  koi8-r  windows-1251 {
     FE  D7 ; # capital CH
     FF  DA ; # capital hard sign
 }
+pital K
+    EC  D09B ;   # capital L
+    ED  D09C ;   # capital M
+    EE  D09D ;   # capital N
+    EF  D09E ;   # capital O
+
+    F0  D09F ;   # capital P
+    F1  D0AF ;   # capital YA
+    F2  D0A0 ;   # capital R
+    F3  D0A1 ;   # capital S
+    F4  D0A2 ;   # capital T
+    F5  D0A3 ;   # capital U
+    F6  D096 ;   # capital ZH
+    F7  D092 ;   # capital V
+    F8  D0AC ;   # capital soft sign
+    F9  D0AB ;   # capital Y
+    FA  D097 ;   # capital Z
+    FB  D0A8 ;   # capital SH
+    FC  D0AD ;   # capital E
+    FD  D0A9 ;   # capital SHCH
+    FE  D0A7 ;   # capital CH
+    FF  D0AA ;   # capital hard sign
+}

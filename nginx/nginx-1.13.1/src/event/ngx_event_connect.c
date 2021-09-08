@@ -5,406 +5,537 @@
  */
 
 
+#ifndef _NGX_EVENT_H_INCLUDED_
+#define _NGX_EVENT_H_INCLUDED_
+
+
 #include <ngx_config.h>
 #include <ngx_core.h>
-#include <ngx_event.h>
-#include <ngx_event_connect.h>
 
 
-#if (NGX_HAVE_TRANSPARENT_PROXY)
-static ngx_int_t ngx_event_connect_set_transparent(ngx_peer_connection_t *pc,
-    ngx_socket_t s);
-#endif
+#define NGX_INVALID_INDEX  0xd0d0d0d0
 
 
-ngx_int_t
-ngx_event_connect_peer(ngx_peer_connection_t *pc)
-{
-    int                rc, type;
-#if (NGX_HAVE_IP_BIND_ADDRESS_NO_PORT || NGX_LINUX)
-    in_port_t          port;
-#endif
-    ngx_int_t          event;
-    ngx_err_t          err;
-    ngx_uint_t         level;
-    ngx_socket_t       s;
-    ngx_event_t       *rev, *wev;
-    ngx_connection_t  *c;
+#if (NGX_HAVE_IOCP)
 
-    rc = pc->get(pc, pc->data);
-    if (rc != NGX_OK) {
-        return rc;
-    }
-
-    type = (pc->type ? pc->type : SOCK_STREAM);
-
-    s = ngx_socket(pc->sockaddr->sa_family, type, 0);
-
-    ngx_log_debug2(NGX_LOG_DEBUG_EVENT, pc->log, 0, "%s socket %d",
-                   (type == SOCK_STREAM) ? "stream" : "dgram", s);
-
-    if (s == (ngx_socket_t) -1) {
-        ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                      ngx_socket_n " failed");
-        return NGX_ERROR;
-    }
-
-
-    c = ngx_get_connection(s, pc->log);
-
-    if (c == NULL) {
-        if (ngx_close_socket(s) == -1) {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          ngx_close_socket_n "failed");
-        }
-
-        return NGX_ERROR;
-    }
-
-    c->type = type;
-
-    if (pc->rcvbuf) {
-        if (setsockopt(s, SOL_SOCKET, SO_RCVBUF,
-                       (const void *) &pc->rcvbuf, sizeof(int)) == -1)
-        {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          "setsockopt(SO_RCVBUF) failed");
-            goto failed;
-        }
-    }
-
-    if (ngx_nonblocking(s) == -1) {
-        ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                      ngx_nonblocking_n " failed");
-
-        goto failed;
-    }
-
-    if (pc->local) {
-
-#if (NGX_HAVE_TRANSPARENT_PROXY)
-        if (pc->transparent) {
-            if (ngx_event_connect_set_transparent(pc, s) != NGX_OK) {
-                goto failed;
-            }
-        }
-#endif
-
-#if (NGX_HAVE_IP_BIND_ADDRESS_NO_PORT || NGX_LINUX)
-        port = ngx_inet_get_port(pc->local->sockaddr);
-#endif
-
-#if (NGX_HAVE_IP_BIND_ADDRESS_NO_PORT)
-
-        if (pc->sockaddr->sa_family != AF_UNIX && port == 0) {
-            static int  bind_address_no_port = 1;
-
-            if (bind_address_no_port) {
-                if (setsockopt(s, IPPROTO_IP, IP_BIND_ADDRESS_NO_PORT,
-                               (const void *) &bind_address_no_port,
-                               sizeof(int)) == -1)
-                {
-                    err = ngx_socket_errno;
-
-                    if (err != NGX_EOPNOTSUPP && err != NGX_ENOPROTOOPT) {
-                        ngx_log_error(NGX_LOG_ALERT, pc->log, err,
-                                      "setsockopt(IP_BIND_ADDRESS_NO_PORT) "
-                                      "failed, ignored");
-
-                    } else {
-                        bind_address_no_port = 0;
-                    }
-                }
-            }
-        }
+typedef struct {
+    WSAOVERLAPPED    ovlp;
+    ngx_event_t     *event;
+    int              error;
+} ngx_event_ovlp_t;
 
 #endif
 
-#if (NGX_LINUX)
 
-        if (pc->type == SOCK_DGRAM && port != 0) {
-            int  reuse_addr = 1;
+struct ngx_event_s {
+    void            *data;
 
-            if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
-                           (const void *) &reuse_addr, sizeof(int))
-                 == -1)
-            {
-                ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                              "setsockopt(SO_REUSEADDR) failed");
-                goto failed;
-            }
-        }
+    unsigned         write:1;
 
+    unsigned         accept:1;
+
+    /* used to detect the stale events in kqueue and epoll */
+    unsigned         instance:1;
+
+    /*
+     * the event was passed or would be passed to a kernel;
+     * in aio mode - operation was posted.
+     */
+    unsigned         active:1;
+
+    unsigned         disabled:1;
+
+    /* the ready event; in aio mode 0 means that no operation can be posted */
+    unsigned         ready:1;
+
+    unsigned         oneshot:1;
+
+    /* aio operation is complete */
+    unsigned         complete:1;
+
+    unsigned         eof:1;
+    unsigned         error:1;
+
+    unsigned         timedout:1;
+    unsigned         timer_set:1;
+
+    unsigned         delayed:1;
+
+    unsigned         deferred_accept:1;
+
+    /* the pending eof reported by kqueue, epoll or in aio chain operation */
+    unsigned         pending_eof:1;
+
+    unsigned         posted:1;
+
+    unsigned         closed:1;
+
+    /* to test on worker exit */
+    unsigned         channel:1;
+    unsigned         resolver:1;
+
+    unsigned         cancelable:1;
+
+#if (NGX_HAVE_KQUEUE)
+    unsigned         kq_vnode:1;
+
+    /* the pending errno reported by kqueue */
+    int              kq_errno;
 #endif
 
-        if (bind(s, pc->local->sockaddr, pc->local->socklen) == -1) {
-            ngx_log_error(NGX_LOG_CRIT, pc->log, ngx_socket_errno,
-                          "bind(%V) failed", &pc->local->name);
+    /*
+     * kqueue only:
+     *   accept:     number of sockets that wait to be accepted
+     *   read:       bytes to read when event is ready
+     *               or lowat when event is set with NGX_LOWAT_EVENT flag
+     *   write:      available space in buffer when event is ready
+     *               or lowat when event is set with NGX_LOWAT_EVENT flag
+     *
+     * epoll with EPOLLRDHUP:
+     *   accept:     1 if accept many, 0 otherwise
+     *   read:       1 if there can be data to read, 0 otherwise
+     *
+     * iocp: TODO
+     *
+     * otherwise:
+     *   accept:     1 if accept many, 0 otherwise
+     */
 
-            goto failed;
-        }
-    }
-
-    if (type == SOCK_STREAM) {
-        c->recv = ngx_recv;
-        c->send = ngx_send;
-        c->recv_chain = ngx_recv_chain;
-        c->send_chain = ngx_send_chain;
-
-        c->sendfile = 1;
-
-        if (pc->sockaddr->sa_family == AF_UNIX) {
-            c->tcp_nopush = NGX_TCP_NOPUSH_DISABLED;
-            c->tcp_nodelay = NGX_TCP_NODELAY_DISABLED;
-
-#if (NGX_SOLARIS)
-            /* Solaris's sendfilev() supports AF_NCA, AF_INET, and AF_INET6 */
-            c->sendfile = 0;
-#endif
-        }
-
-    } else { /* type == SOCK_DGRAM */
-        c->recv = ngx_udp_recv;
-        c->send = ngx_send;
-        c->send_chain = ngx_udp_send_chain;
-    }
-
-    c->log_error = pc->log_error;
-
-    rev = c->read;
-    wev = c->write;
-
-    rev->log = pc->log;
-    wev->log = pc->log;
-
-    pc->connection = c;
-
-    c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
-
-    if (ngx_add_conn) {
-        if (ngx_add_conn(c) == NGX_ERROR) {
-            goto failed;
-        }
-    }
-
-    ngx_log_debug3(NGX_LOG_DEBUG_EVENT, pc->log, 0,
-                   "connect to %V, fd:%d #%uA", pc->name, s, c->number);
-
-    rc = connect(s, pc->sockaddr, pc->socklen);
-
-    if (rc == -1) {
-        err = ngx_socket_errno;
-
-
-        if (err != NGX_EINPROGRESS
-#if (NGX_WIN32)
-            /* Winsock returns WSAEWOULDBLOCK (NGX_EAGAIN) */
-            && err != NGX_EAGAIN
-#endif
-            )
-        {
-            if (err == NGX_ECONNREFUSED
-#if (NGX_LINUX)
-                /*
-                 * Linux returns EAGAIN instead of ECONNREFUSED
-                 * for unix sockets if listen queue is full
-                 */
-                || err == NGX_EAGAIN
-#endif
-                || err == NGX_ECONNRESET
-                || err == NGX_ENETDOWN
-                || err == NGX_ENETUNREACH
-                || err == NGX_EHOSTDOWN
-                || err == NGX_EHOSTUNREACH)
-            {
-                level = NGX_LOG_ERR;
-
-            } else {
-                level = NGX_LOG_CRIT;
-            }
-
-            ngx_log_error(level, c->log, err, "connect() to %V failed",
-                          pc->name);
-
-            ngx_close_connection(c);
-            pc->connection = NULL;
-
-            return NGX_DECLINED;
-        }
-    }
-
-    if (ngx_add_conn) {
-        if (rc == -1) {
-
-            /* NGX_EINPROGRESS */
-
-            return NGX_AGAIN;
-        }
-
-        ngx_log_debug0(NGX_LOG_DEBUG_EVENT, pc->log, 0, "connected");
-
-        wev->ready = 1;
-
-        return NGX_OK;
-    }
-
-    if (ngx_event_flags & NGX_USE_IOCP_EVENT) {
-
-        ngx_log_debug1(NGX_LOG_DEBUG_EVENT, pc->log, ngx_socket_errno,
-                       "connect(): %d", rc);
-
-        if (ngx_blocking(s) == -1) {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          ngx_blocking_n " failed");
-            goto failed;
-        }
-
-        /*
-         * FreeBSD's aio allows to post an operation on non-connected socket.
-         * NT does not support it.
-         *
-         * TODO: check in Win32, etc. As workaround we can use NGX_ONESHOT_EVENT
-         */
-
-        rev->ready = 1;
-        wev->ready = 1;
-
-        return NGX_OK;
-    }
-
-    if (ngx_event_flags & NGX_USE_CLEAR_EVENT) {
-
-        /* kqueue */
-
-        event = NGX_CLEAR_EVENT;
-
-    } else {
-
-        /* select, poll, /dev/poll */
-
-        event = NGX_LEVEL_EVENT;
-    }
-
-    if (ngx_add_event(rev, NGX_READ_EVENT, event) != NGX_OK) {
-        goto failed;
-    }
-
-    if (rc == -1) {
-
-        /* NGX_EINPROGRESS */
-
-        if (ngx_add_event(wev, NGX_WRITE_EVENT, event) != NGX_OK) {
-            goto failed;
-        }
-
-        return NGX_AGAIN;
-    }
-
-    ngx_log_debug0(NGX_LOG_DEBUG_EVENT, pc->log, 0, "connected");
-
-    wev->ready = 1;
-
-    return NGX_OK;
-
-failed:
-
-    ngx_close_connection(c);
-    pc->connection = NULL;
-
-    return NGX_ERROR;
-}
-
-
-#if (NGX_HAVE_TRANSPARENT_PROXY)
-
-static ngx_int_t
-ngx_event_connect_set_transparent(ngx_peer_connection_t *pc, ngx_socket_t s)
-{
-    int  value;
-
-    value = 1;
-
-#if defined(SO_BINDANY)
-
-    if (setsockopt(s, SOL_SOCKET, SO_BINDANY,
-                   (const void *) &value, sizeof(int)) == -1)
-    {
-        ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                      "setsockopt(SO_BINDANY) failed");
-        return NGX_ERROR;
-    }
-
+#if (NGX_HAVE_KQUEUE) || (NGX_HAVE_IOCP)
+    int              available;
 #else
+    unsigned         available:1;
+#endif
 
-    switch (pc->local->sockaddr->sa_family) {
+    ngx_event_handler_pt  handler;
 
-    case AF_INET:
 
-#if defined(IP_TRANSPARENT)
+#if (NGX_HAVE_IOCP)
+    ngx_event_ovlp_t ovlp;
+#endif
 
-        if (setsockopt(s, IPPROTO_IP, IP_TRANSPARENT,
-                       (const void *) &value, sizeof(int)) == -1)
-        {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          "setsockopt(IP_TRANSPARENT) failed");
-            return NGX_ERROR;
-        }
+    ngx_uint_t       index;
 
-#elif defined(IP_BINDANY)
+    ngx_log_t       *log;
 
-        if (setsockopt(s, IPPROTO_IP, IP_BINDANY,
-                       (const void *) &value, sizeof(int)) == -1)
-        {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          "setsockopt(IP_BINDANY) failed");
-            return NGX_ERROR;
-        }
+    ngx_rbtree_node_t   timer;
+
+    /* the posted queue */
+    ngx_queue_t      queue;
+
+#if 0
+
+    /* the threads support */
+
+    /*
+     * the event thread context, we store it here
+     * if $(CC) does not understand __thread declaration
+     * and pthread_getspecific() is too costly
+     */
+
+    void            *thr_ctx;
+
+#if (NGX_EVENT_T_PADDING)
+
+    /* event should not cross cache line in SMP */
+
+    uint32_t         padding[NGX_EVENT_T_PADDING];
+#endif
+#endif
+};
+
+
+#if (NGX_HAVE_FILE_AIO)
+
+struct ngx_event_aio_s {
+    void                      *data;
+    ngx_event_handler_pt       handler;
+    ngx_file_t                *file;
+
+#if (NGX_HAVE_AIO_SENDFILE || NGX_COMPAT)
+    ssize_t                  (*preload_handler)(ngx_buf_t *file);
+#endif
+
+    ngx_fd_t                   fd;
+
+#if (NGX_HAVE_EVENTFD)
+    int64_t                    res;
+#endif
+
+#if !(NGX_HAVE_EVENTFD) || (NGX_TEST_BUILD_EPOLL)
+    ngx_err_t                  err;
+    size_t                     nbytes;
+#endif
+
+    ngx_aiocb_t                aiocb;
+    ngx_event_t                event;
+};
 
 #endif
 
-        break;
 
-#if (NGX_HAVE_INET6)
+typedef struct {
+    ngx_int_t  (*add)(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags);
+    ngx_int_t  (*del)(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags);
 
-    case AF_INET6:
+    ngx_int_t  (*enable)(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags);
+    ngx_int_t  (*disable)(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags);
 
-#if defined(IPV6_TRANSPARENT)
+    ngx_int_t  (*add_conn)(ngx_connection_t *c);
+    ngx_int_t  (*del_conn)(ngx_connection_t *c, ngx_uint_t flags);
 
-        if (setsockopt(s, IPPROTO_IPV6, IPV6_TRANSPARENT,
-                       (const void *) &value, sizeof(int)) == -1)
-        {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          "setsockopt(IPV6_TRANSPARENT) failed");
-            return NGX_ERROR;
-        }
+    ngx_int_t  (*notify)(ngx_event_handler_pt handler);
 
-#elif defined(IPV6_BINDANY)
+    ngx_int_t  (*process_events)(ngx_cycle_t *cycle, ngx_msec_t timer,
+                                 ngx_uint_t flags);
 
-        if (setsockopt(s, IPPROTO_IPV6, IPV6_BINDANY,
-                       (const void *) &value, sizeof(int)) == -1)
-        {
-            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
-                          "setsockopt(IPV6_BINDANY) failed");
-            return NGX_ERROR;
-        }
+    ngx_int_t  (*init)(ngx_cycle_t *cycle, ngx_msec_t timer);
+    void       (*done)(ngx_cycle_t *cycle);
+} ngx_event_actions_t;
 
-#endif
-        break;
 
-#endif /* NGX_HAVE_INET6 */
-
-    }
-
-#endif /* SO_BINDANY */
-
-    return NGX_OK;
-}
-
+extern ngx_event_actions_t   ngx_event_actions;
+#if (NGX_HAVE_EPOLLRDHUP)
+extern ngx_uint_t            ngx_use_epoll_rdhup;
 #endif
 
 
-ngx_int_t
-ngx_event_get_peer(ngx_peer_connection_t *pc, void *data)
-{
-    return NGX_OK;
-}
+/*
+ * The event filter requires to read/write the whole data:
+ * select, poll, /dev/poll, kqueue, epoll.
+ */
+#define NGX_USE_LEVEL_EVENT      0x00000001
+
+/*
+ * The event filter is deleted after a notification without an additional
+ * syscall: kqueue, epoll.
+ */
+#define NGX_USE_ONESHOT_EVENT    0x00000002
+
+/*
+ * The event filter notifies only the changes and an initial level:
+ * kqueue, epoll.
+ */
+#define NGX_USE_CLEAR_EVENT      0x00000004
+
+/*
+ * The event filter has kqueue features: the eof flag, errno,
+ * available data, etc.
+ */
+#define NGX_USE_KQUEUE_EVENT     0x00000008
+
+/*
+ * The event filter supports low water mark: kqueue's NOTE_LOWAT.
+ * kqueue in FreeBSD 4.1-4.2 has no NOTE_LOWAT so we need a separate flag.
+ */
+#define NGX_USE_LOWAT_EVENT      0x00000010
+
+/*
+ * The event filter requires to do i/o operation until EAGAIN: epoll.
+ */
+#define NGX_USE_GREEDY_EVENT     0x00000020
+
+/*
+ * The event filter is epoll.
+ */
+#define NGX_USE_EPOLL_EVENT      0x00000040
+
+/*
+ * Obsolete.
+ */
+#define NGX_USE_RTSIG_EVENT      0x00000080
+
+/*
+ * Obsolete.
+ */
+#define NGX_USE_AIO_EVENT        0x00000100
+
+/*
+ * Need to add socket or handle only once: i/o completion port.
+ */
+#define NGX_USE_IOCP_EVENT       0x00000200
+
+/*
+ * The event filter has no opaque data and requires file descriptors table:
+ * poll, /dev/poll.
+ */
+#define NGX_USE_FD_EVENT         0x00000400
+
+/*
+ * The event module handles periodic or absolute timer event by itself:
+ * kqueue in FreeBSD 4.4, NetBSD 2.0, and MacOSX 10.4, Solaris 10's event ports.
+ */
+#define NGX_USE_TIMER_EVENT      0x00000800
+
+/*
+ * All event filters on file descriptor are deleted after a notification:
+ * Solaris 10's event ports.
+ */
+#define NGX_USE_EVENTPORT_EVENT  0x00001000
+
+/*
+ * The event filter support vnode notifications: kqueue.
+ */
+#define NGX_USE_VNODE_EVENT      0x00002000
+
+
+/*
+ * The event filter is deleted just before the closing file.
+ * Has no meaning for select and poll.
+ * kqueue, epoll, eventport:         allows to avoid explicit delete,
+ *                                   because filter automatically is deleted
+ *                                   on file close,
+ *
+ * /dev/poll:                        we need to flush POLLREMOVE event
+ *                                   before closing file.
+ */
+#define NGX_CLOSE_EVENT    1
+
+/*
+ * disable temporarily event filter, this may avoid locks
+ * in kernel malloc()/free(): kqueue.
+ */
+#define NGX_DISABLE_EVENT  2
+
+/*
+ * event must be passed to kernel right now, do not wait until batch processing.
+ */
+#define NGX_FLUSH_EVENT    4
+
+
+/* these flags have a meaning only for kqueue */
+#define NGX_LOWAT_EVENT    0
+#define NGX_VNODE_EVENT    0
+
+
+#if (NGX_HAVE_EPOLL) && !(NGX_HAVE_EPOLLRDHUP)
+#define EPOLLRDHUP         0
+#endif
+
+
+#if (NGX_HAVE_KQUEUE)
+
+#define NGX_READ_EVENT     EVFILT_READ
+#define NGX_WRITE_EVENT    EVFILT_WRITE
+
+#undef  NGX_VNODE_EVENT
+#define NGX_VNODE_EVENT    EVFILT_VNODE
+
+/*
+ * NGX_CLOSE_EVENT, NGX_LOWAT_EVENT, and NGX_FLUSH_EVENT are the module flags
+ * and they must not go into a kernel so we need to choose the value
+ * that must not interfere with any existent and future kqueue flags.
+ * kqueue has such values - EV_FLAG1, EV_EOF, and EV_ERROR:
+ * they are reserved and cleared on a kernel entrance.
+ */
+#undef  NGX_CLOSE_EVENT
+#define NGX_CLOSE_EVENT    EV_EOF
+
+#undef  NGX_LOWAT_EVENT
+#define NGX_LOWAT_EVENT    EV_FLAG1
+
+#undef  NGX_FLUSH_EVENT
+#define NGX_FLUSH_EVENT    EV_ERROR
+
+#define NGX_LEVEL_EVENT    0
+#define NGX_ONESHOT_EVENT  EV_ONESHOT
+#define NGX_CLEAR_EVENT    EV_CLEAR
+
+#undef  NGX_DISABLE_EVENT
+#define NGX_DISABLE_EVENT  EV_DISABLE
+
+
+#elif (NGX_HAVE_DEVPOLL && !(NGX_TEST_BUILD_DEVPOLL)) \
+      || (NGX_HAVE_EVENTPORT && !(NGX_TEST_BUILD_EVENTPORT))
+
+#define NGX_READ_EVENT     POLLIN
+#define NGX_WRITE_EVENT    POLLOUT
+
+#define NGX_LEVEL_EVENT    0
+#define NGX_ONESHOT_EVENT  1
+
+
+#elif (NGX_HAVE_EPOLL) && !(NGX_TEST_BUILD_EPOLL)
+
+#define NGX_READ_EVENT     (EPOLLIN|EPOLLRDHUP)
+#define NGX_WRITE_EVENT    EPOLLOUT
+
+#define NGX_LEVEL_EVENT    0
+#define NGX_CLEAR_EVENT    EPOLLET
+#define NGX_ONESHOT_EVENT  0x70000000
+#if 0
+#define NGX_ONESHOT_EVENT  EPOLLONESHOT
+#endif
+
+#if (NGX_HAVE_EPOLLEXCLUSIVE)
+#define NGX_EXCLUSIVE_EVENT  EPOLLEXCLUSIVE
+#endif
+
+#elif (NGX_HAVE_POLL)
+
+#define NGX_READ_EVENT     POLLIN
+#define NGX_WRITE_EVENT    POLLOUT
+
+#define NGX_LEVEL_EVENT    0
+#define NGX_ONESHOT_EVENT  1
+
+
+#else /* select */
+
+#define NGX_READ_EVENT     0
+#define NGX_WRITE_EVENT    1
+
+#define NGX_LEVEL_EVENT    0
+#define NGX_ONESHOT_EVENT  1
+
+#endif /* NGX_HAVE_KQUEUE */
+
+
+#if (NGX_HAVE_IOCP)
+#define NGX_IOCP_ACCEPT      0
+#define NGX_IOCP_IO          1
+#define NGX_IOCP_CONNECT     2
+#endif
+
+
+#if (NGX_TEST_BUILD_EPOLL)
+#define NGX_EXCLUSIVE_EVENT  0
+#endif
+
+
+#ifndef NGX_CLEAR_EVENT
+#define NGX_CLEAR_EVENT    0    /* dummy declaration */
+#endif
+
+
+#define ngx_process_events   ngx_event_actions.process_events
+#define ngx_done_events      ngx_event_actions.done
+
+#define ngx_add_event        ngx_event_actions.add
+#define ngx_del_event        ngx_event_actions.del
+#define ngx_add_conn         ngx_event_actions.add_conn
+#define ngx_del_conn         ngx_event_actions.del_conn
+
+#define ngx_notify           ngx_event_actions.notify
+
+#define ngx_add_timer        ngx_event_add_timer
+#define ngx_del_timer        ngx_event_del_timer
+
+
+extern ngx_os_io_t  ngx_io;
+
+#define ngx_recv             ngx_io.recv
+#define ngx_recv_chain       ngx_io.recv_chain
+#define ngx_udp_recv         ngx_io.udp_recv
+#define ngx_send             ngx_io.send
+#define ngx_send_chain       ngx_io.send_chain
+#define ngx_udp_send         ngx_io.udp_send
+#define ngx_udp_send_chain   ngx_io.udp_send_chain
+
+
+#define NGX_EVENT_MODULE      0x544E5645  /* "EVNT" */
+#define NGX_EVENT_CONF        0x02000000
+
+
+typedef struct {
+    ngx_uint_t    connections;
+    ngx_uint_t    use;
+
+    ngx_flag_t    multi_accept;
+    ngx_flag_t    accept_mutex;
+
+    ngx_msec_t    accept_mutex_delay;
+
+    u_char       *name;
+
+#if (NGX_DEBUG)
+    ngx_array_t   debug_connection;
+#endif
+} ngx_event_conf_t;
+
+
+typedef struct {
+    ngx_str_t              *name;
+
+    void                 *(*create_conf)(ngx_cycle_t *cycle);
+    char                 *(*init_conf)(ngx_cycle_t *cycle, void *conf);
+
+    ngx_event_actions_t     actions;
+} ngx_event_module_t;
+
+
+extern ngx_atomic_t          *ngx_connection_counter;
+
+extern ngx_atomic_t          *ngx_accept_mutex_ptr;
+extern ngx_shmtx_t            ngx_accept_mutex;
+extern ngx_uint_t             ngx_use_accept_mutex;
+extern ngx_uint_t             ngx_accept_events;
+extern ngx_uint_t             ngx_accept_mutex_held;
+extern ngx_msec_t             ngx_accept_mutex_delay;
+extern ngx_int_t              ngx_accept_disabled;
+
+
+#if (NGX_STAT_STUB)
+
+extern ngx_atomic_t  *ngx_stat_accepted;
+extern ngx_atomic_t  *ngx_stat_handled;
+extern ngx_atomic_t  *ngx_stat_requests;
+extern ngx_atomic_t  *ngx_stat_active;
+extern ngx_atomic_t  *ngx_stat_reading;
+extern ngx_atomic_t  *ngx_stat_writing;
+extern ngx_atomic_t  *ngx_stat_waiting;
+
+#endif
+
+
+#define NGX_UPDATE_TIME         1
+#define NGX_POST_EVENTS         2
+
+
+extern sig_atomic_t           ngx_event_timer_alarm;
+extern ngx_uint_t             ngx_event_flags;
+extern ngx_module_t           ngx_events_module;
+extern ngx_module_t           ngx_event_core_module;
+
+
+#define ngx_event_get_conf(conf_ctx, module)                                  \
+             (*(ngx_get_conf(conf_ctx, ngx_events_module))) [module.ctx_index];
+
+
+
+void ngx_event_accept(ngx_event_t *ev);
+#if !(NGX_WIN32)
+void ngx_event_recvmsg(ngx_event_t *ev);
+#endif
+ngx_int_t ngx_trylock_accept_mutex(ngx_cycle_t *cycle);
+u_char *ngx_accept_log_error(ngx_log_t *log, u_char *buf, size_t len);
+
+
+void ngx_process_events_and_timers(ngx_cycle_t *cycle);
+ngx_int_t ngx_handle_read_event(ngx_event_t *rev, ngx_uint_t flags);
+ngx_int_t ngx_handle_write_event(ngx_event_t *wev, size_t lowat);
+
+
+#if (NGX_WIN32)
+void ngx_event_acceptex(ngx_event_t *ev);
+ngx_int_t ngx_event_post_acceptex(ngx_listening_t *ls, ngx_uint_t n);
+u_char *ngx_acceptex_log_error(ngx_log_t *log, u_char *buf, size_t len);
+#endif
+
+
+ngx_int_t ngx_send_lowat(ngx_connection_t *c, size_t lowat);
+
+
+/* used in ngx_log_debugX() */
+#define ngx_event_ident(p)  ((ngx_connection_t *) (p))->fd
+
+
+#include <ngx_event_timer.h>
+#include <ngx_event_posted.h>
+
+#if (NGX_WIN32)
+#include <ngx_iocp_module.h>
+#endif
+
+
+#endif /* _NGX_EVENT_H_INCLUDED_ */

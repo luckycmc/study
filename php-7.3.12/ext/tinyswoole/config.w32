@@ -1,0 +1,7 @@
+ARG_ENABLE('tinyswoole', 'tinyswoole support', 'no');
+
+if (PHP_TINYSWOOLE != 'no') {
+	AC_DEFINE('HAVE_TINYSWOOLE', 1, 'tinyswoole support enabled');
+
+	EXTENSION('tinyswoole', 'tinyswoole.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}

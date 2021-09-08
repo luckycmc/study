@@ -10,3 +10,5 @@ pic_object='.libs/swoole_redis.o'
 # Name of the non-PIC object.
 non_pic_object=none
 
+_object=none
+

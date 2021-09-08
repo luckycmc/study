@@ -251,3 +251,70 @@ ngx_close_channel(ngx_fd_t *fd, ngx_log_t *log)
         ngx_log_error(NGX_LOG_ALERT, log, ngx_errno, "close() channel failed");
     }
 }
+nt64_t                     ngx_atomic_int_t;
+typedef uint64_t                    ngx_atomic_uint_t;
+#define NGX_ATOMIC_T_LEN            (sizeof("-9223372036854775808") - 1)
+
+#else
+
+typedef int32_t                     ngx_atomic_int_t;
+typedef uint32_t                    ngx_atomic_uint_t;
+#define NGX_ATOMIC_T_LEN            (sizeof("-2147483648") - 1)
+
+#endif
+
+typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
+
+
+#include "ngx_gcc_atomic_ppc.h"
+
+#endif
+
+
+#if !(NGX_HAVE_ATOMIC_OPS)
+
+#define NGX_HAVE_ATOMIC_OPS  0
+
+typedef int32_t                     ngx_atomic_int_t;
+typedef uint32_t                    ngx_atomic_uint_t;
+typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
+#define NGX_ATOMIC_T_LEN            (sizeof("-2147483648") - 1)
+
+
+static ngx_inline ngx_atomic_uint_t
+ngx_atomic_cmp_set(ngx_atomic_t *lock, ngx_atomic_uint_t old,
+    ngx_atomic_uint_t set)
+{
+    if (*lock == old) {
+        *lock = set;
+        return 1;
+    }
+
+    return 0;
+}
+
+
+static ngx_inline ngx_atomic_int_t
+ngx_atomic_fetch_add(ngx_atomic_t *value, ngx_atomic_int_t add)
+{
+    ngx_atomic_int_t  old;
+
+    old = *value;
+    *value += add;
+
+    return old;
+}
+
+#define ngx_memory_barrier()
+#define ngx_cpu_pause()
+
+#endif
+
+
+void ngx_spinlock(ngx_atomic_t *lock, ngx_atomic_int_t value, ngx_uint_t spin);
+
+#define ngx_trylock(lock)  (*(lock) == 0 && ngx_atomic_cmp_set(lock, 0, 1))
+#define ngx_unlock(lock)    *(lock) = 0
+
+
+#endif /* _NGX_ATOMIC_H_INCLUDED_ */

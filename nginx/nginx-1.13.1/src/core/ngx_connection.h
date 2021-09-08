@@ -223,3 +223,81 @@ void ngx_free_connection(ngx_connection_t *c);
 void ngx_reusable_connection(ngx_connection_t *c, ngx_uint_t reusable);
 
 #endif /* _NGX_CONNECTION_H_INCLUDED_ */
+  }
+
+#define ngx_conf_merge_msec_value(conf, prev, default)                       \
+    if (conf == NGX_CONF_UNSET_MSEC) {                                       \
+        conf = (prev == NGX_CONF_UNSET_MSEC) ? default : prev;               \
+    }
+
+#define ngx_conf_merge_sec_value(conf, prev, default)                        \
+    if (conf == NGX_CONF_UNSET) {                                            \
+        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+    }
+
+#define ngx_conf_merge_size_value(conf, prev, default)                       \
+    if (conf == NGX_CONF_UNSET_SIZE) {                                       \
+        conf = (prev == NGX_CONF_UNSET_SIZE) ? default : prev;               \
+    }
+
+#define ngx_conf_merge_off_value(conf, prev, default)                        \
+    if (conf == NGX_CONF_UNSET) {                                            \
+        conf = (prev == NGX_CONF_UNSET) ? default : prev;                    \
+    }
+
+#define ngx_conf_merge_str_value(conf, prev, default)                        \
+    if (conf.data == NULL) {                                                 \
+        if (prev.data) {                                                     \
+            conf.len = prev.len;                                             \
+            conf.data = prev.data;                                           \
+        } else {                                                             \
+            conf.len = sizeof(default) - 1;                                  \
+            conf.data = (u_char *) default;                                  \
+        }                                                                    \
+    }
+
+#define ngx_conf_merge_bufs_value(conf, prev, default_num, default_size)     \
+    if (conf.num == 0) {                                                     \
+        if (prev.num) {                                                      \
+            conf.num = prev.num;                                             \
+            conf.size = prev.size;                                           \
+        } else {                                                             \
+            conf.num = default_num;                                          \
+            conf.size = default_size;                                        \
+        }                                                                    \
+    }
+
+#define ngx_conf_merge_bitmask_value(conf, prev, default)                    \
+    if (conf == 0) {                                                         \
+        conf = (prev == 0) ? default : prev;                                 \
+    }
+
+
+char *ngx_conf_param(ngx_conf_t *cf);
+char *ngx_conf_parse(ngx_conf_t *cf, ngx_str_t *filename);
+char *ngx_conf_include(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+
+
+ngx_int_t ngx_conf_full_name(ngx_cycle_t *cycle, ngx_str_t *name,
+    ngx_uint_t conf_prefix);
+ngx_open_file_t *ngx_conf_open_file(ngx_cycle_t *cycle, ngx_str_t *name);
+void ngx_cdecl ngx_conf_log_error(ngx_uint_t level, ngx_conf_t *cf,
+    ngx_err_t err, const char *fmt, ...);
+
+
+char *ngx_conf_set_flag_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_str_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_str_array_slot(ngx_conf_t *cf, ngx_command_t *cmd,
+    void *conf);
+char *ngx_conf_set_keyval_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_num_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_size_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_off_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_msec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_sec_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_bufs_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_enum_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+char *ngx_conf_set_bitmask_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+
+
+#endif /* _NGX_CONF_FILE_H_INCLUDED_ */

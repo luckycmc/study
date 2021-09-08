@@ -15,49 +15,62 @@
 */
 
 #include "swoole.h"
-#include <sys/sem.h>
 
-static int swSem_lock(swLock *lock);
-static int swSem_unlock(swLock *lock);
-static int swSem_free(swLock *lock);
+static int swRWLock_lock_rd(swLock *lock);
+static int swRWLock_lock_rw(swLock *lock);
+static int swRWLock_unlock(swLock *lock);
+static int swRWLock_trylock_rw(swLock *lock);
+static int swRWLock_trylock_rd(swLock *lock);
+static int swRWLock_free(swLock *lock);
 
-int swSem_create(swLock *lock, key_t key, int n)
+int swRWLock_create(swLock *lock, int use_in_process)
 {
 	int ret;
-	assert(key != 0);
-	lock->type = SW_SEM;
-	if ((ret = semget(key, n, IPC_CREAT | 0666)) < 0)
+	bzero(lock, sizeof(swLock));
+	lock->type = SW_RWLOCK;
+	if(use_in_process == 1)
+	{
+		pthread_rwlockattr_setpshared(&lock->object.rwlock.attr, PTHREAD_PROCESS_SHARED);
+	}
+	if((ret = pthread_rwlock_init(&lock->object.rwlock._lock, &lock->object.rwlock.attr)) < 0)
 	{
 		return SW_ERR;
 	}
-	lock->object.sem.semid = ret;
-	lock->object.sem.lock_num = 0;
-
-	lock->lock = swSem_lock;
-	lock->unlock = swSem_unlock;
-	lock->free = swSem_free;
+	lock->lock_rd = swRWLock_lock_rd;
+	lock->lock = swRWLock_lock_rw;
+	lock->unlock = swRWLock_unlock;
+	lock->trylock = swRWLock_trylock_rw;
+	lock->trylock_rd = swRWLock_trylock_rd;
+	lock->free = swRWLock_free;
 	return SW_OK;
 }
 
-static int swSem_lock(swLock *lock)
+static int swRWLock_lock_rd(swLock *lock)
 {
-	struct sembuf sem;
-	sem.sem_flg = SEM_UNDO;
-	sem.sem_num = lock->object.sem.lock_num;
-	sem.sem_op = 1;
-	return semop(lock->object.sem.semid, &sem, 1);
+	return pthread_rwlock_rdlock(&lock->object.rwlock._lock);
 }
 
-static int swSem_unlock(swLock *lock)
+static int swRWLock_lock_rw(swLock *lock)
 {
-	struct sembuf sem;
-	sem.sem_flg = SEM_UNDO;
-	sem.sem_num = lock->object.sem.lock_num;
-	sem.sem_op = -1;
-	return semop(lock->object.sem.semid, &sem, 1);
+	return pthread_rwlock_wrlock(&lock->object.rwlock._lock);
 }
 
-static int swSem_free(swLock *lock)
+static int swRWLock_unlock(swLock *lock)
 {
-	return semctl(lock->object.sem.semid, 0, IPC_RMID);
+	return pthread_rwlock_unlock(&lock->object.rwlock._lock);
+}
+
+static int swRWLock_trylock_rd(swLock *lock)
+{
+	return pthread_rwlock_tryrdlock(&lock->object.rwlock._lock);
+}
+
+static int swRWLock_trylock_rw(swLock *lock)
+{
+	return pthread_rwlock_trywrlock(&lock->object.rwlock._lock);
+}
+
+static int swRWLock_free(swLock *lock)
+{
+	return pthread_rwlock_destroy(&lock->object.rwlock._lock);
 }

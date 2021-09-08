@@ -100,3 +100,145 @@ mov %ebp,%esp
 pop %ebp
 ret
 
+  75%     12
+  80%     12
+  90%     13
+  95%     14
+  98%     15
+  99%     20
+ 100%     24 (longest request)
+```
+
+## 目录结构 ##
+
+```
+├-- amd64
+│   └-- fiber.s   // 汇编实现协程初始化与切换等底层逻辑
+├-- i386
+│   └-- fiber.s
+├-- util
+├-- coroutine.h
+├-- coroutine.c   // 实现协程池，简化了协程的管理
+├-- fiber.h
+├-- fiber.c       // 实现了协程，提供核心API
+├-- framework.h
+├-- framework.c   // 框架层，封装了事件循环，实现了基于IO的协程调度
+├-- epoll.c
+├-- epollet.c     // edge triger
+├-- kqueue.c
+├-- poll.c        // 基本上所有Unix系统都会支持poll
+├-- poll.h
+├-- port.c        // event port
+├-- main.c
+├-- Makefile
+└-- Makefile.i386
+```
+
+## 示例浅析 ##
+
+1. 首先要进行框架初始化，包括协程池初始化与IO多路复用初始化工作。
+2. 然后创建用于监听端口的socket并加入到框架中存储监听类型socket的链表中，并指定业务处理入口。
+3. 最后运行框架，开始IO多路复用的事件循环就可以了。
+
+以下示例来自`main.c`：
+
+```
+int main(int argc, char *argv[])
+{
+    // 1. 初始化框架
+    // 协程池初始化，需要指定协程池规模，协程栈大小
+    // IO多路复用初始化
+    if (ef_init(&efr, 64 * 1024, 256, 512, 1000 * 60, 16) < 0) {
+        return -1;
+    }
+
+    ......
+
+    // 2. 创建监听socket
+    // 监听8080端口
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(sockfd < 0)
+    {
+        return -1;
+    }
+    struct sockaddr_in addr_in = {0};
+    addr_in.sin_family = AF_INET;
+    addr_in.sin_port = htons(8080);
+    int retval = bind(sockfd, (const struct sockaddr *)&addr_in, sizeof(addr_in));
+    if(retval < 0)
+    {
+        return -1;
+    }
+    listen(sockfd, 512);
+
+    // 把socket加入监听socket链表
+    // 框架支持多个监听socket分别监听不同端口，所以先放入链表，框架运行起来后会一并处理
+    // 需要指定业务处理入口，此处为forward_proc
+    // 新建立的连接会交给一个协程，forward_proc便是这些协程的执行入口
+    ef_add_listen(&efr, sockfd, forward_proc);
+
+    ......
+
+    // 3. 运行框架，开启IO多路复用事件循环
+    return ef_run_loop(&efr);
+}
+```
+
+接下来我们要做的就是实现forward_proc等业务处理函数，在其中使用框架包装好的IO操作函数，就可以按照常规业务逻辑来编写，完全不用关心协程切换与IO事件注册。
+
+```
+// 将8080端口接收到的GET请求转发到80端口
+long forward_proc(int fd, ef_routine_t *er)
+{
+    char buffer[BUFFER_SIZE];
+    // 读请求，理论上对于GET一次read应该就可以
+    ssize_t r = ef_routine_read(er, fd, buffer, BUFFER_SIZE);
+    if(r <= 0)
+    {
+        return r;
+    }
+
+    // 建立到80端口的连接
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in addr_in = {0};
+    addr_in.sin_family = AF_INET;
+    addr_in.sin_port = htons(80);
+    int ret = ef_routine_connect(er, sockfd, (const struct sockaddr *)&addr_in, sizeof(addr_in));
+    if(ret < 0)
+    {
+        return ret;
+    }
+
+    // 将读取到的请求体发送到80端口
+    ssize_t w = ef_routine_write(er, sockfd, buffer, r);
+    if(w < 0)
+    {
+        goto exit_proc;
+    }
+
+    while(1)
+    {
+        // 从80端口循环读取响应数据
+        r = ef_routine_read(er, sockfd, buffer, BUFFER_SIZE);
+        if(r <= 0)
+        {
+            break;
+        }
+        ssize_t wrt = 0;
+
+        // 将响应数据写给请求方，循环确保完全写入
+        while(wrt < r)
+        {
+            w = ef_routine_write(er, fd, &buffer[wrt], r - wrt);
+            if(w < 0)
+            {
+                goto exit_proc;
+            }
+            wrt += w;
+        }
+    }
+exit_proc:
+    ef_routine_close(er, sockfd);
+    return ret;
+}
+```

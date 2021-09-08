@@ -44,7 +44,7 @@ int main()
       sys_err("pthread_join error");
 
    printf("child thread exit with var= %d, str= %s\n", retval->var, retval->str);
-   pthread_exit(NULL);
+   pthread_exit(NULL); //退出当前线程 exit退出当前进程   return 返回到调用者
    return 0;
 
 }

@@ -5,72 +5,67 @@
  */
 
 
+#ifndef _NGX_THREAD_H_INCLUDED_
+#define _NGX_THREAD_H_INCLUDED_
+
+
 #include <ngx_config.h>
 #include <ngx_core.h>
 
+#if (NGX_THREADS)
 
-ngx_int_t
-ngx_thread_cond_create(ngx_thread_cond_t *cond, ngx_log_t *log)
-{
-    ngx_err_t  err;
-
-    err = pthread_cond_init(cond, NULL);
-    if (err == 0) {
-        return NGX_OK;
-    }
-
-    ngx_log_error(NGX_LOG_EMERG, log, err, "pthread_cond_init() failed");
-    return NGX_ERROR;
-}
+#include <pthread.h>
 
 
-ngx_int_t
-ngx_thread_cond_destroy(ngx_thread_cond_t *cond, ngx_log_t *log)
-{
-    ngx_err_t  err;
+typedef pthread_mutex_t  ngx_thread_mutex_t;
 
-    err = pthread_cond_destroy(cond);
-    if (err == 0) {
-        return NGX_OK;
-    }
-
-    ngx_log_error(NGX_LOG_EMERG, log, err, "pthread_cond_destroy() failed");
-    return NGX_ERROR;
-}
+ngx_int_t ngx_thread_mutex_create(ngx_thread_mutex_t *mtx, ngx_log_t *log);
+ngx_int_t ngx_thread_mutex_destroy(ngx_thread_mutex_t *mtx, ngx_log_t *log);
+ngx_int_t ngx_thread_mutex_lock(ngx_thread_mutex_t *mtx, ngx_log_t *log);
+ngx_int_t ngx_thread_mutex_unlock(ngx_thread_mutex_t *mtx, ngx_log_t *log);
 
 
-ngx_int_t
-ngx_thread_cond_signal(ngx_thread_cond_t *cond, ngx_log_t *log)
-{
-    ngx_err_t  err;
+typedef pthread_cond_t  ngx_thread_cond_t;
 
-    err = pthread_cond_signal(cond);
-    if (err == 0) {
-        return NGX_OK;
-    }
-
-    ngx_log_error(NGX_LOG_EMERG, log, err, "pthread_cond_signal() failed");
-    return NGX_ERROR;
-}
+ngx_int_t ngx_thread_cond_create(ngx_thread_cond_t *cond, ngx_log_t *log);
+ngx_int_t ngx_thread_cond_destroy(ngx_thread_cond_t *cond, ngx_log_t *log);
+ngx_int_t ngx_thread_cond_signal(ngx_thread_cond_t *cond, ngx_log_t *log);
+ngx_int_t ngx_thread_cond_wait(ngx_thread_cond_t *cond, ngx_thread_mutex_t *mtx,
+    ngx_log_t *log);
 
 
-ngx_int_t
-ngx_thread_cond_wait(ngx_thread_cond_t *cond, ngx_thread_mutex_t *mtx,
-    ngx_log_t *log)
-{
-    ngx_err_t  err;
+#if (NGX_LINUX)
 
-    err = pthread_cond_wait(cond, mtx);
+typedef pid_t      ngx_tid_t;
+#define NGX_TID_T_FMT         "%P"
 
-#if 0
-    ngx_time_update();
+#elif (NGX_FREEBSD)
+
+typedef uint32_t   ngx_tid_t;
+#define NGX_TID_T_FMT         "%uD"
+
+#elif (NGX_DARWIN)
+
+typedef uint64_t   ngx_tid_t;
+#define NGX_TID_T_FMT         "%uA"
+
+#else
+
+typedef uint64_t   ngx_tid_t;
+#define NGX_TID_T_FMT         "%uA"
+
 #endif
 
-    if (err == 0) {
-        return NGX_OK;
-    }
+ngx_tid_t ngx_thread_tid(void);
 
-    ngx_log_error(NGX_LOG_ALERT, log, err, "pthread_cond_wait() failed");
+#define ngx_log_tid           ngx_thread_tid()
 
-    return NGX_ERROR;
-}
+#else
+
+#define ngx_log_tid           0
+#define NGX_TID_T_FMT         "%d"
+
+#endif
+
+
+#endif /* _NGX_THREAD_H_INCLUDED_ */

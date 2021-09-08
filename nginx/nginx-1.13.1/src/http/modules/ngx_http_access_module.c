@@ -7,107 +7,59 @@
 
 #include <ngx_config.h>
 #include <ngx_core.h>
-#include <ngx_http.h>
+#include <ngx_event.h>
 
 
-typedef struct {
-    in_addr_t         mask;
-    in_addr_t         addr;
-    ngx_uint_t        deny;      /* unsigned  deny:1; */
-} ngx_http_access_rule_t;
-
-#if (NGX_HAVE_INET6)
-
-typedef struct {
-    struct in6_addr   addr;
-    struct in6_addr   mask;
-    ngx_uint_t        deny;      /* unsigned  deny:1; */
-} ngx_http_access_rule6_t;
-
-#endif
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-
-typedef struct {
-    ngx_uint_t        deny;      /* unsigned  deny:1; */
-} ngx_http_access_rule_un_t;
-
-#endif
-
-typedef struct {
-    ngx_array_t      *rules;     /* array of ngx_http_access_rule_t */
-#if (NGX_HAVE_INET6)
-    ngx_array_t      *rules6;    /* array of ngx_http_access_rule6_t */
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    ngx_array_t      *rules_un;  /* array of ngx_http_access_rule_un_t */
-#endif
-} ngx_http_access_loc_conf_t;
+static ngx_int_t ngx_select_init(ngx_cycle_t *cycle, ngx_msec_t timer);
+static void ngx_select_done(ngx_cycle_t *cycle);
+static ngx_int_t ngx_select_add_event(ngx_event_t *ev, ngx_int_t event,
+    ngx_uint_t flags);
+static ngx_int_t ngx_select_del_event(ngx_event_t *ev, ngx_int_t event,
+    ngx_uint_t flags);
+static ngx_int_t ngx_select_process_events(ngx_cycle_t *cycle, ngx_msec_t timer,
+    ngx_uint_t flags);
+static void ngx_select_repair_fd_sets(ngx_cycle_t *cycle);
+static char *ngx_select_init_conf(ngx_cycle_t *cycle, void *conf);
 
 
-static ngx_int_t ngx_http_access_handler(ngx_http_request_t *r);
-static ngx_int_t ngx_http_access_inet(ngx_http_request_t *r,
-    ngx_http_access_loc_conf_t *alcf, in_addr_t addr);
-#if (NGX_HAVE_INET6)
-static ngx_int_t ngx_http_access_inet6(ngx_http_request_t *r,
-    ngx_http_access_loc_conf_t *alcf, u_char *p);
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-static ngx_int_t ngx_http_access_unix(ngx_http_request_t *r,
-    ngx_http_access_loc_conf_t *alcf);
-#endif
-static ngx_int_t ngx_http_access_found(ngx_http_request_t *r, ngx_uint_t deny);
-static char *ngx_http_access_rule(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf);
-static void *ngx_http_access_create_loc_conf(ngx_conf_t *cf);
-static char *ngx_http_access_merge_loc_conf(ngx_conf_t *cf,
-    void *parent, void *child);
-static ngx_int_t ngx_http_access_init(ngx_conf_t *cf);
+static fd_set         master_read_fd_set;
+static fd_set         master_write_fd_set;
+static fd_set         work_read_fd_set;
+static fd_set         work_write_fd_set;
+
+static ngx_int_t      max_fd;
+static ngx_uint_t     nevents;
+
+static ngx_event_t  **event_index;
 
 
-static ngx_command_t  ngx_http_access_commands[] = {
+static ngx_str_t           select_name = ngx_string("select");
 
-    { ngx_string("allow"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
-                        |NGX_CONF_TAKE1,
-      ngx_http_access_rule,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      0,
-      NULL },
+static ngx_event_module_t  ngx_select_module_ctx = {
+    &select_name,
+    NULL,                                  /* create configuration */
+    ngx_select_init_conf,                  /* init configuration */
 
-    { ngx_string("deny"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
-                        |NGX_CONF_TAKE1,
-      ngx_http_access_rule,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      0,
-      NULL },
+    {
+        ngx_select_add_event,              /* add an event */
+        ngx_select_del_event,              /* delete an event */
+        ngx_select_add_event,              /* enable an event */
+        ngx_select_del_event,              /* disable an event */
+        NULL,                              /* add an connection */
+        NULL,                              /* delete an connection */
+        NULL,                              /* trigger a notify */
+        ngx_select_process_events,         /* process the events */
+        ngx_select_init,                   /* init the events */
+        ngx_select_done                    /* done the events */
+    }
 
-      ngx_null_command
 };
 
-
-
-static ngx_http_module_t  ngx_http_access_module_ctx = {
-    NULL,                                  /* preconfiguration */
-    ngx_http_access_init,                  /* postconfiguration */
-
-    NULL,                                  /* create main configuration */
-    NULL,                                  /* init main configuration */
-
-    NULL,                                  /* create server configuration */
-    NULL,                                  /* merge server configuration */
-
-    ngx_http_access_create_loc_conf,       /* create location configuration */
-    ngx_http_access_merge_loc_conf         /* merge location configuration */
-};
-
-
-ngx_module_t  ngx_http_access_module = {
+ngx_module_t  ngx_select_module = {
     NGX_MODULE_V1,
-    &ngx_http_access_module_ctx,           /* module context */
-    ngx_http_access_commands,              /* module directives */
-    NGX_HTTP_MODULE,                       /* module type */
+    &ngx_select_module_ctx,                /* module context */
+    NULL,                                  /* module directives */
+    NGX_EVENT_MODULE,                      /* module type */
     NULL,                                  /* init master */
     NULL,                                  /* init module */
     NULL,                                  /* init process */
@@ -120,344 +72,352 @@ ngx_module_t  ngx_http_access_module = {
 
 
 static ngx_int_t
-ngx_http_access_handler(ngx_http_request_t *r)
+ngx_select_init(ngx_cycle_t *cycle, ngx_msec_t timer)
 {
-    struct sockaddr_in          *sin;
-    ngx_http_access_loc_conf_t  *alcf;
-#if (NGX_HAVE_INET6)
-    u_char                      *p;
-    in_addr_t                    addr;
-    struct sockaddr_in6         *sin6;
-#endif
+    ngx_event_t  **index;
 
-    alcf = ngx_http_get_module_loc_conf(r, ngx_http_access_module);
-
-    switch (r->connection->sockaddr->sa_family) {
-
-    case AF_INET:
-        if (alcf->rules) {
-            sin = (struct sockaddr_in *) r->connection->sockaddr;
-            return ngx_http_access_inet(r, alcf, sin->sin_addr.s_addr);
-        }
-        break;
-
-#if (NGX_HAVE_INET6)
-
-    case AF_INET6:
-        sin6 = (struct sockaddr_in6 *) r->connection->sockaddr;
-        p = sin6->sin6_addr.s6_addr;
-
-        if (alcf->rules && IN6_IS_ADDR_V4MAPPED(&sin6->sin6_addr)) {
-            addr = p[12] << 24;
-            addr += p[13] << 16;
-            addr += p[14] << 8;
-            addr += p[15];
-            return ngx_http_access_inet(r, alcf, htonl(addr));
-        }
-
-        if (alcf->rules6) {
-            return ngx_http_access_inet6(r, alcf, p);
-        }
-
-        break;
-
-#endif
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-
-    case AF_UNIX:
-        if (alcf->rules_un) {
-            return ngx_http_access_unix(r, alcf);
-        }
-
-        break;
-
-#endif
+    if (event_index == NULL) {
+        FD_ZERO(&master_read_fd_set);
+        FD_ZERO(&master_write_fd_set);
+        nevents = 0;
     }
 
-    return NGX_DECLINED;
-}
-
-
-static ngx_int_t
-ngx_http_access_inet(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf,
-    in_addr_t addr)
-{
-    ngx_uint_t               i;
-    ngx_http_access_rule_t  *rule;
-
-    rule = alcf->rules->elts;
-    for (i = 0; i < alcf->rules->nelts; i++) {
-
-        ngx_log_debug3(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "access: %08XD %08XD %08XD",
-                       addr, rule[i].mask, rule[i].addr);
-
-        if ((addr & rule[i].mask) == rule[i].addr) {
-            return ngx_http_access_found(r, rule[i].deny);
+    if (ngx_process >= NGX_PROCESS_WORKER
+        || cycle->old_cycle == NULL
+        || cycle->old_cycle->connection_n < cycle->connection_n)
+    {
+        index = ngx_alloc(sizeof(ngx_event_t *) * 2 * cycle->connection_n,
+                          cycle->log);
+        if (index == NULL) {
+            return NGX_ERROR;
         }
+
+        if (event_index) {
+            ngx_memcpy(index, event_index, sizeof(ngx_event_t *) * nevents);
+            ngx_free(event_index);
+        }
+
+        event_index = index;
     }
 
-    return NGX_DECLINED;
-}
+    ngx_io = ngx_os_io;
 
+    ngx_event_actions = ngx_select_module_ctx.actions;
 
-#if (NGX_HAVE_INET6)
+    ngx_event_flags = NGX_USE_LEVEL_EVENT;
 
-static ngx_int_t
-ngx_http_access_inet6(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf,
-    u_char *p)
-{
-    ngx_uint_t                n;
-    ngx_uint_t                i;
-    ngx_http_access_rule6_t  *rule6;
-
-    rule6 = alcf->rules6->elts;
-    for (i = 0; i < alcf->rules6->nelts; i++) {
-
-#if (NGX_DEBUG)
-        {
-        size_t  cl, ml, al;
-        u_char  ct[NGX_INET6_ADDRSTRLEN];
-        u_char  mt[NGX_INET6_ADDRSTRLEN];
-        u_char  at[NGX_INET6_ADDRSTRLEN];
-
-        cl = ngx_inet6_ntop(p, ct, NGX_INET6_ADDRSTRLEN);
-        ml = ngx_inet6_ntop(rule6[i].mask.s6_addr, mt, NGX_INET6_ADDRSTRLEN);
-        al = ngx_inet6_ntop(rule6[i].addr.s6_addr, at, NGX_INET6_ADDRSTRLEN);
-
-        ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "access: %*s %*s %*s", cl, ct, ml, mt, al, at);
-        }
-#endif
-
-        for (n = 0; n < 16; n++) {
-            if ((p[n] & rule6[i].mask.s6_addr[n]) != rule6[i].addr.s6_addr[n]) {
-                goto next;
-            }
-        }
-
-        return ngx_http_access_found(r, rule6[i].deny);
-
-    next:
-        continue;
-    }
-
-    return NGX_DECLINED;
-}
-
-#endif
-
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-
-static ngx_int_t
-ngx_http_access_unix(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf)
-{
-    ngx_uint_t                  i;
-    ngx_http_access_rule_un_t  *rule_un;
-
-    rule_un = alcf->rules_un->elts;
-    for (i = 0; i < alcf->rules_un->nelts; i++) {
-
-        /* TODO: check path */
-        if (1) {
-            return ngx_http_access_found(r, rule_un[i].deny);
-        }
-    }
-
-    return NGX_DECLINED;
-}
-
-#endif
-
-
-static ngx_int_t
-ngx_http_access_found(ngx_http_request_t *r, ngx_uint_t deny)
-{
-    ngx_http_core_loc_conf_t  *clcf;
-
-    if (deny) {
-        clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
-
-        if (clcf->satisfy == NGX_HTTP_SATISFY_ALL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "access forbidden by rule");
-        }
-
-        return NGX_HTTP_FORBIDDEN;
-    }
+    max_fd = -1;
 
     return NGX_OK;
 }
 
 
-static char *
-ngx_http_access_rule(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+static void
+ngx_select_done(ngx_cycle_t *cycle)
 {
-    ngx_http_access_loc_conf_t *alcf = conf;
+    ngx_free(event_index);
 
-    ngx_int_t                   rc;
-    ngx_uint_t                  all;
-    ngx_str_t                  *value;
-    ngx_cidr_t                  cidr;
-    ngx_http_access_rule_t     *rule;
-#if (NGX_HAVE_INET6)
-    ngx_http_access_rule6_t    *rule6;
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-    ngx_http_access_rule_un_t  *rule_un;
-#endif
-
-    all = 0;
-    ngx_memzero(&cidr, sizeof(ngx_cidr_t));
-
-    value = cf->args->elts;
-
-    if (value[1].len == 3 && ngx_strcmp(value[1].data, "all") == 0) {
-        all = 1;
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-    } else if (value[1].len == 5 && ngx_strcmp(value[1].data, "unix:") == 0) {
-        cidr.family = AF_UNIX;
-#endif
-
-    } else {
-        rc = ngx_ptocidr(&value[1], &cidr);
-
-        if (rc == NGX_ERROR) {
-            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
-                         "invalid parameter \"%V\"", &value[1]);
-            return NGX_CONF_ERROR;
-        }
-
-        if (rc == NGX_DONE) {
-            ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
-                         "low address bits of %V are meaningless", &value[1]);
-        }
-    }
-
-    if (cidr.family == AF_INET || all) {
-
-        if (alcf->rules == NULL) {
-            alcf->rules = ngx_array_create(cf->pool, 4,
-                                           sizeof(ngx_http_access_rule_t));
-            if (alcf->rules == NULL) {
-                return NGX_CONF_ERROR;
-            }
-        }
-
-        rule = ngx_array_push(alcf->rules);
-        if (rule == NULL) {
-            return NGX_CONF_ERROR;
-        }
-
-        rule->mask = cidr.u.in.mask;
-        rule->addr = cidr.u.in.addr;
-        rule->deny = (value[0].data[0] == 'd') ? 1 : 0;
-    }
-
-#if (NGX_HAVE_INET6)
-    if (cidr.family == AF_INET6 || all) {
-
-        if (alcf->rules6 == NULL) {
-            alcf->rules6 = ngx_array_create(cf->pool, 4,
-                                            sizeof(ngx_http_access_rule6_t));
-            if (alcf->rules6 == NULL) {
-                return NGX_CONF_ERROR;
-            }
-        }
-
-        rule6 = ngx_array_push(alcf->rules6);
-        if (rule6 == NULL) {
-            return NGX_CONF_ERROR;
-        }
-
-        rule6->mask = cidr.u.in6.mask;
-        rule6->addr = cidr.u.in6.addr;
-        rule6->deny = (value[0].data[0] == 'd') ? 1 : 0;
-    }
-#endif
-
-#if (NGX_HAVE_UNIX_DOMAIN)
-    if (cidr.family == AF_UNIX || all) {
-
-        if (alcf->rules_un == NULL) {
-            alcf->rules_un = ngx_array_create(cf->pool, 1,
-                                            sizeof(ngx_http_access_rule_un_t));
-            if (alcf->rules_un == NULL) {
-                return NGX_CONF_ERROR;
-            }
-        }
-
-        rule_un = ngx_array_push(alcf->rules_un);
-        if (rule_un == NULL) {
-            return NGX_CONF_ERROR;
-        }
-
-        rule_un->deny = (value[0].data[0] == 'd') ? 1 : 0;
-    }
-#endif
-
-    return NGX_CONF_OK;
-}
-
-
-static void *
-ngx_http_access_create_loc_conf(ngx_conf_t *cf)
-{
-    ngx_http_access_loc_conf_t  *conf;
-
-    conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_access_loc_conf_t));
-    if (conf == NULL) {
-        return NULL;
-    }
-
-    return conf;
-}
-
-
-static char *
-ngx_http_access_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
-{
-    ngx_http_access_loc_conf_t  *prev = parent;
-    ngx_http_access_loc_conf_t  *conf = child;
-
-    if (conf->rules == NULL
-#if (NGX_HAVE_INET6)
-        && conf->rules6 == NULL
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-        && conf->rules_un == NULL
-#endif
-    ) {
-        conf->rules = prev->rules;
-#if (NGX_HAVE_INET6)
-        conf->rules6 = prev->rules6;
-#endif
-#if (NGX_HAVE_UNIX_DOMAIN)
-        conf->rules_un = prev->rules_un;
-#endif
-    }
-
-    return NGX_CONF_OK;
+    event_index = NULL;
 }
 
 
 static ngx_int_t
-ngx_http_access_init(ngx_conf_t *cf)
+ngx_select_add_event(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags)
 {
-    ngx_http_handler_pt        *h;
-    ngx_http_core_main_conf_t  *cmcf;
+    ngx_connection_t  *c;
 
-    cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
+    c = ev->data;
 
-    h = ngx_array_push(&cmcf->phases[NGX_HTTP_ACCESS_PHASE].handlers);
-    if (h == NULL) {
+    ngx_log_debug2(NGX_LOG_DEBUG_EVENT, ev->log, 0,
+                   "select add event fd:%d ev:%i", c->fd, event);
+
+    if (ev->index != NGX_INVALID_INDEX) {
+        ngx_log_error(NGX_LOG_ALERT, ev->log, 0,
+                      "select event fd:%d ev:%i is already set", c->fd, event);
+        return NGX_OK;
+    }
+
+    if ((event == NGX_READ_EVENT && ev->write)
+        || (event == NGX_WRITE_EVENT && !ev->write))
+    {
+        ngx_log_error(NGX_LOG_ALERT, ev->log, 0,
+                      "invalid select %s event fd:%d ev:%i",
+                      ev->write ? "write" : "read", c->fd, event);
         return NGX_ERROR;
     }
 
-    *h = ngx_http_access_handler;
+    if (event == NGX_READ_EVENT) {
+        FD_SET(c->fd, &master_read_fd_set);
+
+    } else if (event == NGX_WRITE_EVENT) {
+        FD_SET(c->fd, &master_write_fd_set);
+    }
+
+    if (max_fd != -1 && max_fd < c->fd) {
+        max_fd = c->fd;
+    }
+
+    ev->active = 1;
+
+    event_index[nevents] = ev;
+    ev->index = nevents;
+    nevents++;
 
     return NGX_OK;
+}
+
+
+static ngx_int_t
+ngx_select_del_event(ngx_event_t *ev, ngx_int_t event, ngx_uint_t flags)
+{
+    ngx_event_t       *e;
+    ngx_connection_t  *c;
+
+    c = ev->data;
+
+    ev->active = 0;
+
+    if (ev->index == NGX_INVALID_INDEX) {
+        return NGX_OK;
+    }
+
+    ngx_log_debug2(NGX_LOG_DEBUG_EVENT, ev->log, 0,
+                   "select del event fd:%d ev:%i", c->fd, event);
+
+    if (event == NGX_READ_EVENT) {
+        FD_CLR(c->fd, &master_read_fd_set);
+
+    } else if (event == NGX_WRITE_EVENT) {
+        FD_CLR(c->fd, &master_write_fd_set);
+    }
+
+    if (max_fd == c->fd) {
+        max_fd = -1;
+    }
+
+    if (ev->index < --nevents) {
+        e = event_index[nevents];
+        event_index[ev->index] = e;
+        e->index = ev->index;
+    }
+
+    ev->index = NGX_INVALID_INDEX;
+
+    return NGX_OK;
+}
+
+
+static ngx_int_t
+ngx_select_process_events(ngx_cycle_t *cycle, ngx_msec_t timer,
+    ngx_uint_t flags)
+{
+    int                ready, nready;
+    ngx_err_t          err;
+    ngx_uint_t         i, found;
+    ngx_event_t       *ev;
+    ngx_queue_t       *queue;
+    struct timeval     tv, *tp;
+    ngx_connection_t  *c;
+
+    if (max_fd == -1) {
+        for (i = 0; i < nevents; i++) {
+            c = event_index[i]->data;
+            if (max_fd < c->fd) {
+                max_fd = c->fd;
+            }
+        }
+
+        ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                       "change max_fd: %i", max_fd);
+    }
+
+#if (NGX_DEBUG)
+    if (cycle->log->log_level & NGX_LOG_DEBUG_ALL) {
+        for (i = 0; i < nevents; i++) {
+            ev = event_index[i];
+            c = ev->data;
+            ngx_log_debug2(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                           "select event: fd:%d wr:%d", c->fd, ev->write);
+        }
+
+        ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                       "max_fd: %i", max_fd);
+    }
+#endif
+
+    if (timer == NGX_TIMER_INFINITE) {
+        tp = NULL;
+
+    } else {
+        tv.tv_sec = (long) (timer / 1000);
+        tv.tv_usec = (long) ((timer % 1000) * 1000);
+        tp = &tv;
+    }
+
+    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                   "select timer: %M", timer);
+
+    work_read_fd_set = master_read_fd_set;
+    work_write_fd_set = master_write_fd_set;
+
+    ready = select(max_fd + 1, &work_read_fd_set, &work_write_fd_set, NULL, tp);
+
+    err = (ready == -1) ? ngx_errno : 0;
+
+    if (flags & NGX_UPDATE_TIME || ngx_event_timer_alarm) {
+        ngx_time_update();
+    }
+
+    ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                   "select ready %d", ready);
+
+    if (err) {
+        ngx_uint_t  level;
+
+        if (err == NGX_EINTR) {
+
+            if (ngx_event_timer_alarm) {
+                ngx_event_timer_alarm = 0;
+                return NGX_OK;
+            }
+
+            level = NGX_LOG_INFO;
+
+        } else {
+            level = NGX_LOG_ALERT;
+        }
+
+        ngx_log_error(level, cycle->log, err, "select() failed");
+
+        if (err == NGX_EBADF) {
+            ngx_select_repair_fd_sets(cycle);
+        }
+
+        return NGX_ERROR;
+    }
+
+    if (ready == 0) {
+        if (timer != NGX_TIMER_INFINITE) {
+            return NGX_OK;
+        }
+
+        ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
+                      "select() returned no events without timeout");
+        return NGX_ERROR;
+    }
+
+    nready = 0;
+
+    for (i = 0; i < nevents; i++) {
+        ev = event_index[i];
+        c = ev->data;
+        found = 0;
+
+        if (ev->write) {
+            if (FD_ISSET(c->fd, &work_write_fd_set)) {
+                found = 1;
+                ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                               "select write %d", c->fd);
+            }
+
+        } else {
+            if (FD_ISSET(c->fd, &work_read_fd_set)) {
+                found = 1;
+                ngx_log_debug1(NGX_LOG_DEBUG_EVENT, cycle->log, 0,
+                               "select read %d", c->fd);
+            }
+        }
+
+        if (found) {
+            ev->ready = 1;
+
+            queue = ev->accept ? &ngx_posted_accept_events
+                               : &ngx_posted_events;
+
+            ngx_post_event(ev, queue);
+
+            nready++;
+        }
+    }
+
+    if (ready != nready) {
+        ngx_log_error(NGX_LOG_ALERT, cycle->log, 0,
+                      "select ready != events: %d:%d", ready, nready);
+
+        ngx_select_repair_fd_sets(cycle);
+    }
+
+    return NGX_OK;
+}
+
+
+static void
+ngx_select_repair_fd_sets(ngx_cycle_t *cycle)
+{
+    int           n;
+    socklen_t     len;
+    ngx_err_t     err;
+    ngx_socket_t  s;
+
+    for (s = 0; s <= max_fd; s++) {
+
+        if (FD_ISSET(s, &master_read_fd_set) == 0) {
+            continue;
+        }
+
+        len = sizeof(int);
+
+        if (getsockopt(s, SOL_SOCKET, SO_TYPE, &n, &len) == -1) {
+            err = ngx_socket_errno;
+
+            ngx_log_error(NGX_LOG_ALERT, cycle->log, err,
+                          "invalid descriptor #%d in read fd_set", s);
+
+            FD_CLR(s, &master_read_fd_set);
+        }
+    }
+
+    for (s = 0; s <= max_fd; s++) {
+
+        if (FD_ISSET(s, &master_write_fd_set) == 0) {
+            continue;
+        }
+
+        len = sizeof(int);
+
+        if (getsockopt(s, SOL_SOCKET, SO_TYPE, &n, &len) == -1) {
+            err = ngx_socket_errno;
+
+            ngx_log_error(NGX_LOG_ALERT, cycle->log, err,
+                          "invalid descriptor #%d in write fd_set", s);
+
+            FD_CLR(s, &master_write_fd_set);
+        }
+    }
+
+    max_fd = -1;
+}
+
+
+static char *
+ngx_select_init_conf(ngx_cycle_t *cycle, void *conf)
+{
+    ngx_event_conf_t  *ecf;
+
+    ecf = ngx_event_get_conf(cycle->conf_ctx, ngx_event_core_module);
+
+    if (ecf->use != ngx_select_module.ctx_index) {
+        return NGX_CONF_OK;
+    }
+
+    /* disable warning: the default FD_SETSIZE is 1024U in FreeBSD 5.x */
+
+    if (cycle->connection_n > FD_SETSIZE) {
+        ngx_log_error(NGX_LOG_EMERG, cycle->log, 0,
+                      "the maximum number of files "
+                      "supported by select() is %ud", FD_SETSIZE);
+        return NGX_CONF_ERROR;
+    }
+
+    return NGX_CONF_OK;
 }

@@ -1,48 +1,31 @@
-#ifndef _EPOLL_SERVER_H
-#define _EPOLL_SERVER_H
-
-#include <stdio.h>
-#include <sys/socket.h>
-#include <sys/epoll.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <pthread.h>
- 
-#include <errno.h>
-
-
-#define MAXLINE 10
-#define OPEN_MAX 100
-#define LISTENQ 20
-#define SERV_PORT 8080  //监听的端口
-#define INFTIM 1000
-
-
-//线程池任务队列结构
-struct task{
-    
-     int fd; //需要读写的文件描述符
-
-     struct task *next; //下一个任务
+#include <string.h>
+#include <unistd.h>
+/**
+ * 对应线程执行的函数
+ */
+void *ThreadFunc()
+{
+    static int count = 1;
+    printf ("Create thread %d\n", count);
+    //对线程进行回收  
+    pthread_detach(pthread_self()); //标记为DETACHED状态，完成后释放自己占用的资源。
+    count++;
 }
-
-//用于读写的两个方面的参数传递
-
-struct user_data{
-
-     int fd;
-     unsigned int n_size;
-     char line[MAXLINE];
+//主函数
+main(void)
+{
+    int     err;
+    pthread_t tid; //  pthread_t用于声明线程ID。
+    while (1)
+    {
+           err= pthread_create(&tid, NULL, ThreadFunc, NULL);
+           if(err != 0){
+               printf("can't create thread: %s\n",strerror(err)); //strerror 将单纯的错误标号转为字符串描述，方便用户查找错误
+           break;
+           }
+          usleep(2000);
+    }
+    //  gcc -o thread ./thread.c -lpthread 编译线程对应的服务器
 }
-//线程任务函数
-void * readtask(void *args);
-//void * writetask(void *args);
-//设置非阻塞
-void setnonblocking(int sock);
-//服务器初始化
-void init_server();
-
-#endif

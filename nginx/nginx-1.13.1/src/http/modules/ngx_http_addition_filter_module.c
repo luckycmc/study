@@ -11,55 +11,86 @@
 
 
 typedef struct {
-    ngx_str_t     before_body;
-    ngx_str_t     after_body;
+    in_addr_t         mask;
+    in_addr_t         addr;
+    ngx_uint_t        deny;      /* unsigned  deny:1; */
+} ngx_http_access_rule_t;
 
-    ngx_hash_t    types;
-    ngx_array_t  *types_keys;
-} ngx_http_addition_conf_t;
-
+#if (NGX_HAVE_INET6)
 
 typedef struct {
-    ngx_uint_t    before_body_sent;
-} ngx_http_addition_ctx_t;
+    struct in6_addr   addr;
+    struct in6_addr   mask;
+    ngx_uint_t        deny;      /* unsigned  deny:1; */
+} ngx_http_access_rule6_t;
+
+#endif
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+
+typedef struct {
+    ngx_uint_t        deny;      /* unsigned  deny:1; */
+} ngx_http_access_rule_un_t;
+
+#endif
+
+typedef struct {
+    ngx_array_t      *rules;     /* array of ngx_http_access_rule_t */
+#if (NGX_HAVE_INET6)
+    ngx_array_t      *rules6;    /* array of ngx_http_access_rule6_t */
+#endif
+#if (NGX_HAVE_UNIX_DOMAIN)
+    ngx_array_t      *rules_un;  /* array of ngx_http_access_rule_un_t */
+#endif
+} ngx_http_access_loc_conf_t;
 
 
-static void *ngx_http_addition_create_conf(ngx_conf_t *cf);
-static char *ngx_http_addition_merge_conf(ngx_conf_t *cf, void *parent,
-    void *child);
-static ngx_int_t ngx_http_addition_filter_init(ngx_conf_t *cf);
+static ngx_int_t ngx_http_access_handler(ngx_http_request_t *r);
+static ngx_int_t ngx_http_access_inet(ngx_http_request_t *r,
+    ngx_http_access_loc_conf_t *alcf, in_addr_t addr);
+#if (NGX_HAVE_INET6)
+static ngx_int_t ngx_http_access_inet6(ngx_http_request_t *r,
+    ngx_http_access_loc_conf_t *alcf, u_char *p);
+#endif
+#if (NGX_HAVE_UNIX_DOMAIN)
+static ngx_int_t ngx_http_access_unix(ngx_http_request_t *r,
+    ngx_http_access_loc_conf_t *alcf);
+#endif
+static ngx_int_t ngx_http_access_found(ngx_http_request_t *r, ngx_uint_t deny);
+static char *ngx_http_access_rule(ngx_conf_t *cf, ngx_command_t *cmd,
+    void *conf);
+static void *ngx_http_access_create_loc_conf(ngx_conf_t *cf);
+static char *ngx_http_access_merge_loc_conf(ngx_conf_t *cf,
+    void *parent, void *child);
+static ngx_int_t ngx_http_access_init(ngx_conf_t *cf);
 
 
-static ngx_command_t  ngx_http_addition_commands[] = {
+static ngx_command_t  ngx_http_access_commands[] = {
 
-    { ngx_string("add_before_body"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_str_slot,
+    { ngx_string("allow"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
+                        |NGX_CONF_TAKE1,
+      ngx_http_access_rule,
       NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_http_addition_conf_t, before_body),
+      0,
       NULL },
 
-    { ngx_string("add_after_body"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_str_slot,
+    { ngx_string("deny"),
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LMT_CONF
+                        |NGX_CONF_TAKE1,
+      ngx_http_access_rule,
       NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_http_addition_conf_t, after_body),
+      0,
       NULL },
-
-    { ngx_string("addition_types"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
-      ngx_http_types_slot,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_http_addition_conf_t, types_keys),
-      &ngx_http_html_default_types[0] },
 
       ngx_null_command
 };
 
 
-static ngx_http_module_t  ngx_http_addition_filter_module_ctx = {
+
+static ngx_http_module_t  ngx_http_access_module_ctx = {
     NULL,                                  /* preconfiguration */
-    ngx_http_addition_filter_init,         /* postconfiguration */
+    ngx_http_access_init,                  /* postconfiguration */
 
     NULL,                                  /* create main configuration */
     NULL,                                  /* init main configuration */
@@ -67,15 +98,15 @@ static ngx_http_module_t  ngx_http_addition_filter_module_ctx = {
     NULL,                                  /* create server configuration */
     NULL,                                  /* merge server configuration */
 
-    ngx_http_addition_create_conf,         /* create location configuration */
-    ngx_http_addition_merge_conf           /* merge location configuration */
+    ngx_http_access_create_loc_conf,       /* create location configuration */
+    ngx_http_access_merge_loc_conf         /* merge location configuration */
 };
 
 
-ngx_module_t  ngx_http_addition_filter_module = {
+ngx_module_t  ngx_http_access_module = {
     NGX_MODULE_V1,
-    &ngx_http_addition_filter_module_ctx,  /* module context */
-    ngx_http_addition_commands,            /* module directives */
+    &ngx_http_access_module_ctx,           /* module context */
+    ngx_http_access_commands,              /* module directives */
     NGX_HTTP_MODULE,                       /* module type */
     NULL,                                  /* init master */
     NULL,                                  /* init module */
@@ -88,165 +119,345 @@ ngx_module_t  ngx_http_addition_filter_module = {
 };
 
 
-static ngx_http_output_header_filter_pt  ngx_http_next_header_filter;
-static ngx_http_output_body_filter_pt    ngx_http_next_body_filter;
-
-
 static ngx_int_t
-ngx_http_addition_header_filter(ngx_http_request_t *r)
+ngx_http_access_handler(ngx_http_request_t *r)
 {
-    ngx_http_addition_ctx_t   *ctx;
-    ngx_http_addition_conf_t  *conf;
+    struct sockaddr_in          *sin;
+    ngx_http_access_loc_conf_t  *alcf;
+#if (NGX_HAVE_INET6)
+    u_char                      *p;
+    in_addr_t                    addr;
+    struct sockaddr_in6         *sin6;
+#endif
 
-    if (r->headers_out.status != NGX_HTTP_OK || r != r->main) {
-        return ngx_http_next_header_filter(r);
+    alcf = ngx_http_get_module_loc_conf(r, ngx_http_access_module);
+
+    switch (r->connection->sockaddr->sa_family) {
+
+    case AF_INET:
+        if (alcf->rules) {
+            sin = (struct sockaddr_in *) r->connection->sockaddr;
+            return ngx_http_access_inet(r, alcf, sin->sin_addr.s_addr);
+        }
+        break;
+
+#if (NGX_HAVE_INET6)
+
+    case AF_INET6:
+        sin6 = (struct sockaddr_in6 *) r->connection->sockaddr;
+        p = sin6->sin6_addr.s6_addr;
+
+        if (alcf->rules && IN6_IS_ADDR_V4MAPPED(&sin6->sin6_addr)) {
+            addr = p[12] << 24;
+            addr += p[13] << 16;
+            addr += p[14] << 8;
+            addr += p[15];
+            return ngx_http_access_inet(r, alcf, htonl(addr));
+        }
+
+        if (alcf->rules6) {
+            return ngx_http_access_inet6(r, alcf, p);
+        }
+
+        break;
+
+#endif
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+
+    case AF_UNIX:
+        if (alcf->rules_un) {
+            return ngx_http_access_unix(r, alcf);
+        }
+
+        break;
+
+#endif
     }
 
-    conf = ngx_http_get_module_loc_conf(r, ngx_http_addition_filter_module);
-
-    if (conf->before_body.len == 0 && conf->after_body.len == 0) {
-        return ngx_http_next_header_filter(r);
-    }
-
-    if (ngx_http_test_content_type(r, &conf->types) == NULL) {
-        return ngx_http_next_header_filter(r);
-    }
-
-    ctx = ngx_pcalloc(r->pool, sizeof(ngx_http_addition_ctx_t));
-    if (ctx == NULL) {
-        return NGX_ERROR;
-    }
-
-    ngx_http_set_ctx(r, ctx, ngx_http_addition_filter_module);
-
-    ngx_http_clear_content_length(r);
-    ngx_http_clear_accept_ranges(r);
-    ngx_http_weak_etag(r);
-
-    return ngx_http_next_header_filter(r);
+    return NGX_DECLINED;
 }
 
 
 static ngx_int_t
-ngx_http_addition_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
+ngx_http_access_inet(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf,
+    in_addr_t addr)
 {
-    ngx_int_t                  rc;
-    ngx_uint_t                 last;
-    ngx_chain_t               *cl;
-    ngx_http_request_t        *sr;
-    ngx_http_addition_ctx_t   *ctx;
-    ngx_http_addition_conf_t  *conf;
+    ngx_uint_t               i;
+    ngx_http_access_rule_t  *rule;
 
-    if (in == NULL || r->header_only) {
-        return ngx_http_next_body_filter(r, in);
+    rule = alcf->rules->elts;
+    for (i = 0; i < alcf->rules->nelts; i++) {
+
+        ngx_log_debug3(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                       "access: %08XD %08XD %08XD",
+                       addr, rule[i].mask, rule[i].addr);
+
+        if ((addr & rule[i].mask) == rule[i].addr) {
+            return ngx_http_access_found(r, rule[i].deny);
+        }
     }
 
-    ctx = ngx_http_get_module_ctx(r, ngx_http_addition_filter_module);
+    return NGX_DECLINED;
+}
 
-    if (ctx == NULL) {
-        return ngx_http_next_body_filter(r, in);
-    }
 
-    conf = ngx_http_get_module_loc_conf(r, ngx_http_addition_filter_module);
+#if (NGX_HAVE_INET6)
 
-    if (!ctx->before_body_sent) {
-        ctx->before_body_sent = 1;
+static ngx_int_t
+ngx_http_access_inet6(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf,
+    u_char *p)
+{
+    ngx_uint_t                n;
+    ngx_uint_t                i;
+    ngx_http_access_rule6_t  *rule6;
 
-        if (conf->before_body.len) {
-            if (ngx_http_subrequest(r, &conf->before_body, NULL, &sr, NULL, 0)
-                != NGX_OK)
-            {
-                return NGX_ERROR;
+    rule6 = alcf->rules6->elts;
+    for (i = 0; i < alcf->rules6->nelts; i++) {
+
+#if (NGX_DEBUG)
+        {
+        size_t  cl, ml, al;
+        u_char  ct[NGX_INET6_ADDRSTRLEN];
+        u_char  mt[NGX_INET6_ADDRSTRLEN];
+        u_char  at[NGX_INET6_ADDRSTRLEN];
+
+        cl = ngx_inet6_ntop(p, ct, NGX_INET6_ADDRSTRLEN);
+        ml = ngx_inet6_ntop(rule6[i].mask.s6_addr, mt, NGX_INET6_ADDRSTRLEN);
+        al = ngx_inet6_ntop(rule6[i].addr.s6_addr, at, NGX_INET6_ADDRSTRLEN);
+
+        ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                       "access: %*s %*s %*s", cl, ct, ml, mt, al, at);
+        }
+#endif
+
+        for (n = 0; n < 16; n++) {
+            if ((p[n] & rule6[i].mask.s6_addr[n]) != rule6[i].addr.s6_addr[n]) {
+                goto next;
             }
         }
+
+        return ngx_http_access_found(r, rule6[i].deny);
+
+    next:
+        continue;
     }
 
-    if (conf->after_body.len == 0) {
-        ngx_http_set_ctx(r, NULL, ngx_http_addition_filter_module);
-        return ngx_http_next_body_filter(r, in);
-    }
+    return NGX_DECLINED;
+}
 
-    last = 0;
+#endif
 
-    for (cl = in; cl; cl = cl->next) {
-        if (cl->buf->last_buf) {
-            cl->buf->last_buf = 0;
-            cl->buf->last_in_chain = 1;
-            cl->buf->sync = 1;
-            last = 1;
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+
+static ngx_int_t
+ngx_http_access_unix(ngx_http_request_t *r, ngx_http_access_loc_conf_t *alcf)
+{
+    ngx_uint_t                  i;
+    ngx_http_access_rule_un_t  *rule_un;
+
+    rule_un = alcf->rules_un->elts;
+    for (i = 0; i < alcf->rules_un->nelts; i++) {
+
+        /* TODO: check path */
+        if (1) {
+            return ngx_http_access_found(r, rule_un[i].deny);
         }
     }
 
-    rc = ngx_http_next_body_filter(r, in);
-
-    if (rc == NGX_ERROR || !last || conf->after_body.len == 0) {
-        return rc;
-    }
-
-    if (ngx_http_subrequest(r, &conf->after_body, NULL, &sr, NULL, 0)
-        != NGX_OK)
-    {
-        return NGX_ERROR;
-    }
-
-    ngx_http_set_ctx(r, NULL, ngx_http_addition_filter_module);
-
-    return ngx_http_send_special(r, NGX_HTTP_LAST);
+    return NGX_DECLINED;
 }
+
+#endif
 
 
 static ngx_int_t
-ngx_http_addition_filter_init(ngx_conf_t *cf)
+ngx_http_access_found(ngx_http_request_t *r, ngx_uint_t deny)
 {
-    ngx_http_next_header_filter = ngx_http_top_header_filter;
-    ngx_http_top_header_filter = ngx_http_addition_header_filter;
+    ngx_http_core_loc_conf_t  *clcf;
 
-    ngx_http_next_body_filter = ngx_http_top_body_filter;
-    ngx_http_top_body_filter = ngx_http_addition_body_filter;
+    if (deny) {
+        clcf = ngx_http_get_module_loc_conf(r, ngx_http_core_module);
+
+        if (clcf->satisfy == NGX_HTTP_SATISFY_ALL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "access forbidden by rule");
+        }
+
+        return NGX_HTTP_FORBIDDEN;
+    }
 
     return NGX_OK;
 }
 
 
-static void *
-ngx_http_addition_create_conf(ngx_conf_t *cf)
+static char *
+ngx_http_access_rule(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-    ngx_http_addition_conf_t  *conf;
+    ngx_http_access_loc_conf_t *alcf = conf;
 
-    conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_addition_conf_t));
+    ngx_int_t                   rc;
+    ngx_uint_t                  all;
+    ngx_str_t                  *value;
+    ngx_cidr_t                  cidr;
+    ngx_http_access_rule_t     *rule;
+#if (NGX_HAVE_INET6)
+    ngx_http_access_rule6_t    *rule6;
+#endif
+#if (NGX_HAVE_UNIX_DOMAIN)
+    ngx_http_access_rule_un_t  *rule_un;
+#endif
+
+    all = 0;
+    ngx_memzero(&cidr, sizeof(ngx_cidr_t));
+
+    value = cf->args->elts;
+
+    if (value[1].len == 3 && ngx_strcmp(value[1].data, "all") == 0) {
+        all = 1;
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+    } else if (value[1].len == 5 && ngx_strcmp(value[1].data, "unix:") == 0) {
+        cidr.family = AF_UNIX;
+#endif
+
+    } else {
+        rc = ngx_ptocidr(&value[1], &cidr);
+
+        if (rc == NGX_ERROR) {
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                         "invalid parameter \"%V\"", &value[1]);
+            return NGX_CONF_ERROR;
+        }
+
+        if (rc == NGX_DONE) {
+            ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
+                         "low address bits of %V are meaningless", &value[1]);
+        }
+    }
+
+    if (cidr.family == AF_INET || all) {
+
+        if (alcf->rules == NULL) {
+            alcf->rules = ngx_array_create(cf->pool, 4,
+                                           sizeof(ngx_http_access_rule_t));
+            if (alcf->rules == NULL) {
+                return NGX_CONF_ERROR;
+            }
+        }
+
+        rule = ngx_array_push(alcf->rules);
+        if (rule == NULL) {
+            return NGX_CONF_ERROR;
+        }
+
+        rule->mask = cidr.u.in.mask;
+        rule->addr = cidr.u.in.addr;
+        rule->deny = (value[0].data[0] == 'd') ? 1 : 0;
+    }
+
+#if (NGX_HAVE_INET6)
+    if (cidr.family == AF_INET6 || all) {
+
+        if (alcf->rules6 == NULL) {
+            alcf->rules6 = ngx_array_create(cf->pool, 4,
+                                            sizeof(ngx_http_access_rule6_t));
+            if (alcf->rules6 == NULL) {
+                return NGX_CONF_ERROR;
+            }
+        }
+
+        rule6 = ngx_array_push(alcf->rules6);
+        if (rule6 == NULL) {
+            return NGX_CONF_ERROR;
+        }
+
+        rule6->mask = cidr.u.in6.mask;
+        rule6->addr = cidr.u.in6.addr;
+        rule6->deny = (value[0].data[0] == 'd') ? 1 : 0;
+    }
+#endif
+
+#if (NGX_HAVE_UNIX_DOMAIN)
+    if (cidr.family == AF_UNIX || all) {
+
+        if (alcf->rules_un == NULL) {
+            alcf->rules_un = ngx_array_create(cf->pool, 1,
+                                            sizeof(ngx_http_access_rule_un_t));
+            if (alcf->rules_un == NULL) {
+                return NGX_CONF_ERROR;
+            }
+        }
+
+        rule_un = ngx_array_push(alcf->rules_un);
+        if (rule_un == NULL) {
+            return NGX_CONF_ERROR;
+        }
+
+        rule_un->deny = (value[0].data[0] == 'd') ? 1 : 0;
+    }
+#endif
+
+    return NGX_CONF_OK;
+}
+
+
+static void *
+ngx_http_access_create_loc_conf(ngx_conf_t *cf)
+{
+    ngx_http_access_loc_conf_t  *conf;
+
+    conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_access_loc_conf_t));
     if (conf == NULL) {
         return NULL;
     }
-
-    /*
-     * set by ngx_pcalloc():
-     *
-     *     conf->before_body = { 0, NULL };
-     *     conf->after_body = { 0, NULL };
-     *     conf->types = { NULL };
-     *     conf->types_keys = NULL;
-     */
 
     return conf;
 }
 
 
 static char *
-ngx_http_addition_merge_conf(ngx_conf_t *cf, void *parent, void *child)
+ngx_http_access_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 {
-    ngx_http_addition_conf_t *prev = parent;
-    ngx_http_addition_conf_t *conf = child;
+    ngx_http_access_loc_conf_t  *prev = parent;
+    ngx_http_access_loc_conf_t  *conf = child;
 
-    ngx_conf_merge_str_value(conf->before_body, prev->before_body, "");
-    ngx_conf_merge_str_value(conf->after_body, prev->after_body, "");
-
-    if (ngx_http_merge_types(cf, &conf->types_keys, &conf->types,
-                             &prev->types_keys, &prev->types,
-                             ngx_http_html_default_types)
-        != NGX_OK)
-    {
-        return NGX_CONF_ERROR;
+    if (conf->rules == NULL
+#if (NGX_HAVE_INET6)
+        && conf->rules6 == NULL
+#endif
+#if (NGX_HAVE_UNIX_DOMAIN)
+        && conf->rules_un == NULL
+#endif
+    ) {
+        conf->rules = prev->rules;
+#if (NGX_HAVE_INET6)
+        conf->rules6 = prev->rules6;
+#endif
+#if (NGX_HAVE_UNIX_DOMAIN)
+        conf->rules_un = prev->rules_un;
+#endif
     }
 
     return NGX_CONF_OK;
+}
+
+
+static ngx_int_t
+ngx_http_access_init(ngx_conf_t *cf)
+{
+    ngx_http_handler_pt        *h;
+    ngx_http_core_main_conf_t  *cmcf;
+
+    cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
+
+    h = ngx_array_push(&cmcf->phases[NGX_HTTP_ACCESS_PHASE].handlers);
+    if (h == NULL) {
+        return NGX_ERROR;
+    }
+
+    *h = ngx_http_access_handler;
+
+    return NGX_OK;
 }

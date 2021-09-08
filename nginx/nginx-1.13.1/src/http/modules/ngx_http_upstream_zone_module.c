@@ -244,3 +244,17 @@ done:
 
     return peers;
 }
+                         "load balancing method redefined");
+    }
+
+    uscf->peer.init_upstream = ngx_http_upstream_init_ip_hash;
+
+    uscf->flags = NGX_HTTP_UPSTREAM_CREATE
+                  |NGX_HTTP_UPSTREAM_WEIGHT
+                  |NGX_HTTP_UPSTREAM_MAX_CONNS
+                  |NGX_HTTP_UPSTREAM_MAX_FAILS
+                  |NGX_HTTP_UPSTREAM_FAIL_TIMEOUT
+                  |NGX_HTTP_UPSTREAM_DOWN;
+
+    return NGX_CONF_OK;
+}

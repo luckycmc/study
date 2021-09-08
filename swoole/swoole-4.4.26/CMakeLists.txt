@@ -1,26 +1,53 @@
-PROJECT(swoole_server)
+language: php 
 
-SET(SWOOLE_VERSION 1.7.0)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+php:
+  - 5.3
+  - 5.4
+  - 5.5
 
-SET(CMAKE_BUILD_TYPE Debug)
+notifications:
+  email: false
+   
+env:
+  - REPORT_EXIT_STATUS=1 NO_INTERACTION=1
 
-file(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS src/*.c)
-file(GLOB_RECURSE HEAD_FILES FOLLOW_SYMLINKS include/*.h)
+#Compile
+before_script:
+    - ./travis/compile.sh
 
-SET(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+script:
+    - exit 0
 
-#message(STATUS "source=${SRC_LIST}")
-#message(STATUS "header=${HEAD_FILES}")
 
-#for Linux
-add_definitions(-DHAVE_EPOLL -DHAVE_EVENTFD -DHAVE_TIMERFD -DHAVE_CPU_AFFINITY)
-
-#for FreeBSD
-#add_definitions(-DHAVE_KQUEUE)
-
-INCLUDE_DIRECTORIES(BEFORE ./include ./)
+i
+/config.guess
+/config.h
+/config.h.in
+/config.log
+/config.nice
+/config.status
+/config.sub
+/configure
+/configure.in
+/Makefile.fragments
+/Makefile.global
+/Makefile.objects
+/install-sh
+/libtool
+/ltmain.sh
+/missing
+/mkinstalldirs
+/swoole.la
+/acinclude.m4
+/aclocal.m4
+/run-tests.php
+/autom4te.cache
+/build
+/examples/async/data.txt
+/examples/.idea
+/examples/recv_file.jpg
+/modules
+FORE ./include ./)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 #libary

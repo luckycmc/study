@@ -3,19 +3,17 @@
 # Copyright (C) Nginx, Inc.
 
 
-CFLAGS =	-c -zq -bt=nt -ot -op -oi -oe -s -bm $(CPU_OPT)
-PCREFLAGS =	-DHAVE_CONFIG_H -DPCRE_STATIC -DPOSIX_MALLOC_THRESHOLD=10 &
+CFLAGS =	-O2 -Ob1 -Oi -Gs $(LIBC) $(CPU_OPT)
+PCREFLAGS =	-DHAVE_CONFIG_H -DPCRE_STATIC -DPOSIX_MALLOC_THRESHOLD=10 \
 		-DSUPPORT_PCRE8 -DHAVE_MEMMOVE
 
 
 pcre.lib:
 	cd $(PCRE)
 
-	wcl386 $(CFLAGS) -i=. $(PCREFLAGS) pcre_*.c
+	cl -nologo -c $(CFLAGS) -I . $(PCREFLAGS) pcre_*.c
 
-	dir /b *.obj > pcre.lst
-
-	wlib -n pcre.lib @pcre.lst
+	link -lib -out:pcre.lib -verbose:lib pcre_*.obj
 
 pcre.h:
 	cd $(PCRE)

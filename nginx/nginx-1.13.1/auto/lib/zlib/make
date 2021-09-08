@@ -3,133 +3,78 @@
 # Copyright (C) Nginx, Inc.
 
 
-case "$NGX_CC_NAME" in
+cat << END                                                    >> $NGX_MAKEFILE
 
-    msvc)
-        ngx_makefile=makefile.msvc
-        ngx_opt="CPU_OPT=\"$CPU_OPT\" LIBC=$LIBC"
-        ngx_zlib="ZLIB=\"$ZLIB\""
+$NGX_OBJS/src/http/modules/perl/ngx_http_perl_module.o: \\
+		$NGX_OBJS/$ngx_perl_module
 
-    ;;
+$NGX_OBJS/$ngx_perl_module: \\
+		\$(CORE_DEPS) \$(HTTP_DEPS) \\
+		src/http/modules/perl/ngx_http_perl_module.h \\
+		$NGX_OBJS/src/http/modules/perl/Makefile
+	cd $NGX_OBJS/src/http/modules/perl && \$(MAKE)
 
-    owc)
-        ngx_makefile=makefile.owc
-        ngx_opt="CPU_OPT=\"$CPU_OPT\""
-        ngx_zlib=`echo ZLIB=\"$ZLIB\" | sed -e "s/\//$ngx_regex_dirsep/g"`
-    ;;
-
-    bcc)
-        ngx_makefile=makefile.bcc
-        ngx_opt="-DCPU_OPT=\"$CPU_OPT\""
-        ngx_zlib=`echo \-DZLIB=\"$ZLIB\" | sed -e "s/\//$ngx_regex_dirsep/g"`
-    ;;
-
-    *)
-        ngx_makefile=
-    ;;
-
-esac
+	rm -rf $NGX_OBJS/install_perl
 
 
-done=NO
+$NGX_OBJS/src/http/modules/perl/Makefile: \\
+		$NGX_AUTO_CONFIG_H \\
+		src/core/nginx.h \\
+		src/http/modules/perl/Makefile.PL \\
+		src/http/modules/perl/nginx.pm \\
+		src/http/modules/perl/nginx.xs \\
+		src/http/modules/perl/typemap
+	grep 'define NGINX_VERSION' src/core/nginx.h \\
+		| sed -e 's/^.*"\(.*\)".*/\1/' > \\
+		$NGX_OBJS/src/http/modules/perl/version
+	sed "s/%%VERSION%%/\`cat $NGX_OBJS/src/http/modules/perl/version\`/" \\
+		src/http/modules/perl/nginx.pm > \\
+		$NGX_OBJS/src/http/modules/perl/nginx.pm
+	cp -p src/http/modules/perl/nginx.xs $NGX_OBJS/src/http/modules/perl/
+	cp -p src/http/modules/perl/typemap $NGX_OBJS/src/http/modules/perl/
+	cp -p src/http/modules/perl/Makefile.PL $NGX_OBJS/src/http/modules/perl/
 
-
-case "$NGX_PLATFORM" in
-
-    win32)
-
-        if [ -n "$ngx_makefile" ]; then
-            cat << END                                        >> $NGX_MAKEFILE
-
-`echo "$ZLIB/zlib.lib:	$NGX_MAKEFILE" | sed -e "s/\//$ngx_regex_dirsep/g"`
-	\$(MAKE) -f auto/lib/zlib/$ngx_makefile $ngx_opt $ngx_zlib
-
-END
-
-        else
-
-            cat << END                                        >> $NGX_MAKEFILE
-
-$ZLIB/libz.a:	$NGX_MAKEFILE
-	cd $ZLIB \\
-	&& \$(MAKE) distclean \\
-	&& \$(MAKE) -f win32/Makefile.gcc \\
-		CFLAGS="$ZLIB_OPT" CC="\$(CC)" \\
-		libz.a
+	cd $NGX_OBJS/src/http/modules/perl \\
+		&& NGX_PM_CFLAGS="\$(NGX_PM_CFLAGS) -g $NGX_CC_OPT" \\
+			NGX_PM_LDFLAGS="$NGX_LD_OPT \$(NGX_PM_LDFLAGS)" \\
+			NGX_INCS="$CORE_INCS $NGX_OBJS $HTTP_INCS" \\
+			NGX_DEPS="\$(CORE_DEPS) \$(HTTP_DEPS)" \\
+		$NGX_PERL Makefile.PL \\
+			LIB=$NGX_PERL_MODULES \\
+			INSTALLSITEMAN3DIR=$NGX_PERL_MODULES_MAN
 
 END
+GX_HAVE_PERL_MULTIPLICITY . auto/have
+        echo " + perl interpreter multiplicity found"
+    fi
 
-        fi
+    if $NGX_PERL -V:useithreads | grep undef > /dev/null; then
+        # FreeBSD port wants to link with -pthread non-threaded perl
+        ngx_perl_ldopts=`echo $ngx_perl_ldopts | sed 's/ -pthread//'`
+    fi
 
-        done=YES
-    ;;
+    if [ "$NGX_SYSTEM" = "Darwin" ]; then
+        # OS X system perl wants to link universal binaries
+        ngx_perl_ldopts=`echo $ngx_perl_ldopts \
+                         | sed -e 's/-arch i386//' -e 's/-arch x86_64//'`
+    fi
 
-    # FreeBSD: i386
-    # Linux: i686
+    if [ $USE_PERL = YES ]; then
+        CORE_LINK="$CORE_LINK $ngx_perl_ldopts"
+    fi
 
-    *:i386 | *:i686)
-        case $ZLIB_ASM in
-            pentium)
+    NGX_LIB_PERL="$ngx_perl_ldopts"
 
-                cat << END                                    >> $NGX_MAKEFILE
+    if test -n "$NGX_PERL_MODULES"; then
+        have=NGX_PERL_MODULES value="(u_char *) \"$NGX_PERL_MODULES\""
+        . auto/define
+        NGX_PERL_MODULES_MAN=$NGX_PERL_MODULES/man3
+    fi
 
-$ZLIB/libz.a:	$NGX_MAKEFILE
-	cd $ZLIB \\
-	&& \$(MAKE) distclean \\
-	&& cp contrib/asm586/match.S . \\
-	&& CFLAGS="$ZLIB_OPT -DASMV" CC="\$(CC)" \\
-		./configure \\
-	&& \$(MAKE) OBJA=match.o libz.a
+else
+    echo
+    echo "$0: error: perl 5.8.6 or higher is required"
+    echo
 
-END
-
-                done=YES
-            ;;
-
-            pentiumpro)
-
-                cat << END                                    >> $NGX_MAKEFILE
-
-$ZLIB/libz.a:	$NGX_MAKEFILE
-	cd $ZLIB \\
-	&& \$(MAKE) distclean \\
-	&& cp contrib/asm686/match.S . \\
-	&& CFLAGS="$ZLIB_OPT -DASMV" CC="\$(CC)" \\
-		./configure \\
-	&& \$(MAKE) OBJA=match.o libz.a
-
-END
-
-                done=YES
-            ;;
-
-            NO)
-            ;;
-
-            *)
-                echo "$0: error: invalid --with-zlib-asm=$ZLIB_ASM option."
-                echo "The valid values are \"pentium\" and \"pentiumpro\" only".
-                echo
-
-                exit 1;
-            ;;
-        esac
-    ;;
-
-esac
-
-
-if [ $done = NO ]; then
-
-    cat << END                                                >> $NGX_MAKEFILE
-
-$ZLIB/libz.a:	$NGX_MAKEFILE
-	cd $ZLIB \\
-	&& \$(MAKE) distclean \\
-	&& CFLAGS="$ZLIB_OPT" CC="\$(CC)" \\
-		./configure \\
-	&& \$(MAKE) libz.a
-
-END
-
+    exit 1;
 fi

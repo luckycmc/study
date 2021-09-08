@@ -1,58 +1,99 @@
 <?php
-$serv = new swoole_server("0.0.0.0", 9501);
+$svr = new SwooleUploadServer;
+$svr->run();
 
-$context = new ZMQContext();
-    
-$sender = new ZMQSocket($context, ZMQ::SOCKET_PUSH);
-$sender->bind("tcp://*:5557");
-    
-$receiver = new ZMQSocket($context, ZMQ::SOCKET_PULL);
-$receiver->bind("tcp://*:5558");
-    
-function onZMQR()
+class SwooleUploadServer
 {
-	global $receiver;
-	$string = $receiver->recv();
-	echo $string, PHP_EOL;
-}
+    /**
+     * @var swoole_server
+     */
+    protected $serv;
+    protected $files;
 
-$serv->set(array(
-	//'tcp_defer_accept' => 5,
-	'worker_num' => 1,
-	'reactor_num' => 1,
-	//'daemonize' => true,
-	//'log_file' => '/tmp/swoole.log'
-));
+    protected $root_path = '/tmp/';
+    protected $override = false;
 
-$serv->on('workerStart', function($serv, $worker_id) {
-	global $sender;
-    global $receiver;
-    
-    $rfd = $receiver->getsockopt(ZMQ::SOCKOPT_FD);  
-    swoole_event_add($rfd, 'onZMQR', NULL , SWOOLE_EVENT_READ);
-    echo "worker start\n";
-});
+    static $max_file_size = 100000000; //100M
 
-$serv->on('connect', function ($serv, $fd, $from_id){
-    echo "[#".posix_getpid()."]\tClient@[$fd:$from_id]: Connect.\n";
-});
-
-$serv->on('receive', function (swoole_server $serv, $fd, $from_id, $data) {
-	
-    $cmd = trim($data);
-    echo "[#".posix_getpid()."]\tClient[$fd]: $data\n";
-    
-    if($cmd == "zmqtest")
+    function onConnect($serv, $fd, $from_id)
     {
-        echo 'aaaaaaaaaaaa'. PHP_EOL;
-        $sender->send("msg to zmq");
+        echo "new upload client[$fd] connected.\n";
     }
-    $serv->send($fd, 'OK'.PHP_EOL);
-    //$serv->close($fd);
-});
 
-$serv->on('close', function ($serv, $fd, $from_id) {
-    echo "[#".posix_getpid()."]\tClient@[$fd:$from_id]: Close.\n";
-});
+    function message($fd, $code, $msg)
+    {
+        $this->serv->send($fd, json_encode(array('code' => $code, 'msg' => $msg)));
+        echo "[-->$fd]\t$code\t$msg\n";
+        if ($code != 0) {
+            $this->serv->close($fd);
+        }
+        return true;
+    }
 
-//$serv->start();
+    function onReceive(swoole_server $serv, $fd, $from_id, $data)
+    {
+        //传输尚未开始
+        if (empty($this->files[$fd])) {
+            $req = json_decode($data, true);
+            if ($req === false) {
+                return $this->message($fd, 400, 'Error Request');
+            } elseif (empty($req['size']) or empty($req['name'])) {
+                return $this->message($fd, 500, 'require file name and size.');
+            } elseif ($req['size'] > self::$max_file_size) {
+                return $this->message($fd, 501, 'over the max_file_size. ' . self::$max_file_size);
+            }
+            $file = $this->root_path . '/' . $req['name'];
+            $dir = realpath(dirname($file));
+            if (!$dir or strncmp($dir, $this->root_path, strlen($this->root_path)) != 0) {
+                return $this->message($fd, 502, "file path[$dir] error. Access deny.");
+            } elseif ($this->override and is_file($file)) {
+                return $this->message($fd, 503, 'file exists. Server not allowed override');
+            }
+            $fp = fopen($file, 'w');
+            if (!$fp) {
+                return $this->message($fd, 504, 'can open file.');
+            } else {
+                $this->message($fd, 0, 'transmission start');
+                $this->files[$fd] = array('fp' => $fp, 'name' => $file, 'size' => $req['size'], 'recv' => 0);
+            }
+        } //传输已建立
+        else {
+            $info = & $this->files[$fd];
+            $fp = $info['fp'];
+            $file = $info['name'];
+            if (!fwrite($fp, $data)) {
+                $this->message($fd, 600, "fwrite failed. transmission stop.");
+                unlink($file);
+            } else {
+                $info['recv'] += strlen($data);
+                if ($info['recv'] >= $info['size']) {
+                    $this->message($fd, 0, "Success, transmission finish. Close connection.");
+                    unset($this->files[$fd]);
+                }
+            }
+        }
+    }
+
+    function onclose($serv, $fd, $from_id)
+    {
+        unset($this->files[$fd]);
+        echo "upload client[$fd] closed.\n";
+    }
+
+    function run()
+    {
+        $serv = new swoole_server("0.0.0.0", 9507);
+        $serv->set(array(
+            'worker_num' => 1,
+        ));
+        $serv->on('Start', function ($serv) {
+            echo "Swoole Upload Server running\n";
+        });
+        $this->root_path = rtrim($this->root_path, ' /');
+        $serv->on('connect', array($this, 'onConnect'));
+        $serv->on('receive', array($this, 'onreceive'));
+        $serv->on('close', array($this, 'onclose'));
+        $this->serv = $serv;
+        $serv->start();
+    }
+}

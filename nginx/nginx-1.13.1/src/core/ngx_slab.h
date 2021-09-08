@@ -5,67 +5,45 @@
  */
 
 
-#ifndef _NGX_SLAB_H_INCLUDED_
-#define _NGX_SLAB_H_INCLUDED_
+#ifndef _NGX_SHMTX_H_INCLUDED_
+#define _NGX_SHMTX_H_INCLUDED_
 
 
 #include <ngx_config.h>
 #include <ngx_core.h>
 
 
-typedef struct ngx_slab_page_s  ngx_slab_page_t;
-
-struct ngx_slab_page_s {
-    uintptr_t         slab;
-    ngx_slab_page_t  *next;
-    uintptr_t         prev;
-};
+typedef struct {
+    ngx_atomic_t   lock;
+#if (NGX_HAVE_POSIX_SEM)
+    ngx_atomic_t   wait;
+#endif
+} ngx_shmtx_sh_t;
 
 
 typedef struct {
-    ngx_uint_t        total;
-    ngx_uint_t        used;
-
-    ngx_uint_t        reqs;
-    ngx_uint_t        fails;
-} ngx_slab_stat_t;
-
-
-typedef struct {
-    ngx_shmtx_sh_t    lock;
-
-    size_t            min_size;
-    size_t            min_shift;
-
-    ngx_slab_page_t  *pages;
-    ngx_slab_page_t  *last;
-    ngx_slab_page_t   free;
-
-    ngx_slab_stat_t  *stats;
-    ngx_uint_t        pfree;
-
-    u_char           *start;
-    u_char           *end;
-
-    ngx_shmtx_t       mutex;
-
-    u_char           *log_ctx;
-    u_char            zero;
-
-    unsigned          log_nomem:1;
-
-    void             *data;
-    void             *addr;
-} ngx_slab_pool_t;
+#if (NGX_HAVE_ATOMIC_OPS)
+    ngx_atomic_t  *lock;
+#if (NGX_HAVE_POSIX_SEM)
+    ngx_atomic_t  *wait;
+    ngx_uint_t     semaphore;
+    sem_t          sem;
+#endif
+#else
+    ngx_fd_t       fd;
+    u_char        *name;
+#endif
+    ngx_uint_t     spin;
+} ngx_shmtx_t;
 
 
-void ngx_slab_init(ngx_slab_pool_t *pool);
-void *ngx_slab_alloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_alloc_locked(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc(ngx_slab_pool_t *pool, size_t size);
-void *ngx_slab_calloc_locked(ngx_slab_pool_t *pool, size_t size);
-void ngx_slab_free(ngx_slab_pool_t *pool, void *p);
-void ngx_slab_free_locked(ngx_slab_pool_t *pool, void *p);
+ngx_int_t ngx_shmtx_create(ngx_shmtx_t *mtx, ngx_shmtx_sh_t *addr,
+    u_char *name);
+void ngx_shmtx_destroy(ngx_shmtx_t *mtx);
+ngx_uint_t ngx_shmtx_trylock(ngx_shmtx_t *mtx);
+void ngx_shmtx_lock(ngx_shmtx_t *mtx);
+void ngx_shmtx_unlock(ngx_shmtx_t *mtx);
+ngx_uint_t ngx_shmtx_force_unlock(ngx_shmtx_t *mtx, ngx_pid_t pid);
 
 
-#endif /* _NGX_SLAB_H_INCLUDED_ */
+#endif /* _NGX_SHMTX_H_INCLUDED_ */

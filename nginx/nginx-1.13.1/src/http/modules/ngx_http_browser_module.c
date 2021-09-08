@@ -713,3 +713,401 @@ ngx_http_ancient_browser_value(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     return NGX_CONF_OK;
 }
+t_t) (length / (1024 * 1024));
+                    if ((length % (1024 * 1024)) > (1024 * 1024 / 2 - 1)) {
+                        size++;
+                    }
+                    scale = 'M';
+
+                } else if (length > 9999) {
+                    size = (ngx_int_t) (length / 1024);
+                    if (length % 1024 > 511) {
+                        size++;
+                    }
+                    scale = 'K';
+
+                } else {
+                    size = (ngx_int_t) length;
+                    scale = '\0';
+                }
+
+                if (scale) {
+                    b->last = ngx_sprintf(b->last, "%6i%c", size, scale);
+
+                } else {
+                    b->last = ngx_sprintf(b->last, " %6i", size);
+                }
+            }
+        }
+
+        *b->last++ = CR;
+        *b->last++ = LF;
+    }
+
+    b->last = ngx_cpymem(b->last, "</pre><hr>", sizeof("</pre><hr>") - 1);
+
+    b->last = ngx_cpymem(b->last, tail, sizeof(tail) - 1);
+
+    return b;
+}
+
+
+static ngx_buf_t *
+ngx_http_autoindex_json(ngx_http_request_t *r, ngx_array_t *entries,
+    ngx_str_t *callback)
+{
+    size_t                       len;
+    ngx_buf_t                   *b;
+    ngx_uint_t                   i;
+    ngx_http_autoindex_entry_t  *entry;
+
+    len = sizeof("[" CRLF CRLF "]") - 1;
+
+    if (callback) {
+        len += sizeof("/* callback */" CRLF "();") - 1 + callback->len;
+    }
+
+    entry = entries->elts;
+
+    for (i = 0; i < entries->nelts; i++) {
+        entry[i].escape = ngx_escape_json(NULL, entry[i].name.data,
+                                          entry[i].name.len);
+
+        len += sizeof("{  }," CRLF) - 1
+            + sizeof("\"name\":\"\"") - 1
+            + entry[i].name.len + entry[i].escape
+            + sizeof(", \"type\":\"directory\"") - 1
+            + sizeof(", \"mtime\":\"Wed, 31 Dec 1986 10:00:00 GMT\"") - 1;
+
+        if (entry[i].file) {
+            len += sizeof(", \"size\":") - 1 + NGX_OFF_T_LEN;
+        }
+    }
+
+    b = ngx_create_temp_buf(r->pool, len);
+    if (b == NULL) {
+        return NULL;
+    }
+
+    if (callback) {
+        b->last = ngx_cpymem(b->last, "/* callback */" CRLF,
+                             sizeof("/* callback */" CRLF) - 1);
+
+        b->last = ngx_cpymem(b->last, callback->data, callback->len);
+
+        *b->last++ = '(';
+    }
+
+    *b->last++ = '[';
+
+    for (i = 0; i < entries->nelts; i++) {
+        b->last = ngx_cpymem(b->last, CRLF "{ \"name\":\"",
+                             sizeof(CRLF "{ \"name\":\"") - 1);
+
+        if (entry[i].escape) {
+            b->last = (u_char *) ngx_escape_json(b->last, entry[i].name.data,
+                                                 entry[i].name.len);
+        } else {
+            b->last = ngx_cpymem(b->last, entry[i].name.data,
+                                 entry[i].name.len);
+        }
+
+        b->last = ngx_cpymem(b->last, "\", \"type\":\"",
+                             sizeof("\", \"type\":\"") - 1);
+
+        if (entry[i].dir) {
+            b->last = ngx_cpymem(b->last, "directory", sizeof("directory") - 1);
+
+        } else if (entry[i].file) {
+            b->last = ngx_cpymem(b->last, "file", sizeof("file") - 1);
+
+        } else {
+            b->last = ngx_cpymem(b->last, "other", sizeof("other") - 1);
+        }
+
+        b->last = ngx_cpymem(b->last, "\", \"mtime\":\"",
+                             sizeof("\", \"mtime\":\"") - 1);
+
+        b->last = ngx_http_time(b->last, entry[i].mtime);
+
+        if (entry[i].file) {
+            b->last = ngx_cpymem(b->last, "\", \"size\":",
+                                 sizeof("\", \"size\":") - 1);
+            b->last = ngx_sprintf(b->last, "%O", entry[i].size);
+
+        } else {
+            *b->last++ = '"';
+        }
+
+        b->last = ngx_cpymem(b->last, " },", sizeof(" },") - 1);
+    }
+
+    if (i > 0) {
+        b->last--;  /* strip last comma */
+    }
+
+    b->last = ngx_cpymem(b->last, CRLF "]", sizeof(CRLF "]") - 1);
+
+    if (callback) {
+        *b->last++ = ')'; *b->last++ = ';';
+    }
+
+    return b;
+}
+
+
+static ngx_int_t
+ngx_http_autoindex_jsonp_callback(ngx_http_request_t *r, ngx_str_t *callback)
+{
+    u_char      *p, c, ch;
+    ngx_uint_t   i;
+
+    if (ngx_http_arg(r, (u_char *) "callback", 8, callback) != NGX_OK) {
+        callback->len = 0;
+        return NGX_OK;
+    }
+
+    if (callback->len > 128) {
+        ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
+                      "client sent too long callback name: \"%V\"", callback);
+        return NGX_DECLINED;
+    }
+
+    p = callback->data;
+
+    for (i = 0; i < callback->len; i++) {
+        ch = p[i];
+
+        c = (u_char) (ch | 0x20);
+        if (c >= 'a' && c <= 'z') {
+            continue;
+        }
+
+        if ((ch >= '0' && ch <= '9') || ch == '_' || ch == '.') {
+            continue;
+        }
+
+        ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
+                      "client sent invalid callback name: \"%V\"", callback);
+
+        return NGX_DECLINED;
+    }
+
+    return NGX_OK;
+}
+
+
+static ngx_buf_t *
+ngx_http_autoindex_xml(ngx_http_request_t *r, ngx_array_t *entries)
+{
+    size_t                          len;
+    ngx_tm_t                        tm;
+    ngx_buf_t                      *b;
+    ngx_str_t                       type;
+    ngx_uint_t                      i;
+    ngx_http_autoindex_entry_t     *entry;
+
+    static u_char  head[] = "<?xml version=\"1.0\"?>" CRLF "<list>" CRLF;
+    static u_char  tail[] = "</list>" CRLF;
+
+    len = sizeof(head) - 1 + sizeof(tail) - 1;
+
+    entry = entries->elts;
+
+    for (i = 0; i < entries->nelts; i++) {
+        entry[i].escape = ngx_escape_html(NULL, entry[i].name.data,
+                                          entry[i].name.len);
+
+        len += sizeof("<directory></directory>" CRLF) - 1
+            + entry[i].name.len + entry[i].escape
+            + sizeof(" mtime=\"1986-12-31T10:00:00Z\"") - 1;
+
+        if (entry[i].file) {
+            len += sizeof(" size=\"\"") - 1 + NGX_OFF_T_LEN;
+        }
+    }
+
+    b = ngx_create_temp_buf(r->pool, len);
+    if (b == NULL) {
+        return NULL;
+    }
+
+    b->last = ngx_cpymem(b->last, head, sizeof(head) - 1);
+
+    for (i = 0; i < entries->nelts; i++) {
+        *b->last++ = '<';
+
+        if (entry[i].dir) {
+            ngx_str_set(&type, "directory");
+
+        } else if (entry[i].file) {
+            ngx_str_set(&type, "file");
+
+        } else {
+            ngx_str_set(&type, "other");
+        }
+
+        b->last = ngx_cpymem(b->last, type.data, type.len);
+
+        b->last = ngx_cpymem(b->last, " mtime=\"", sizeof(" mtime=\"") - 1);
+
+        ngx_gmtime(entry[i].mtime, &tm);
+
+        b->last = ngx_sprintf(b->last, "%4d-%02d-%02dT%02d:%02d:%02dZ",
+                              tm.ngx_tm_year, tm.ngx_tm_mon,
+                              tm.ngx_tm_mday, tm.ngx_tm_hour,
+                              tm.ngx_tm_min, tm.ngx_tm_sec);
+
+        if (entry[i].file) {
+            b->last = ngx_cpymem(b->last, "\" size=\"",
+                                 sizeof("\" size=\"") - 1);
+            b->last = ngx_sprintf(b->last, "%O", entry[i].size);
+        }
+
+        *b->last++ = '"'; *b->last++ = '>';
+
+        if (entry[i].escape) {
+            b->last = (u_char *) ngx_escape_html(b->last, entry[i].name.data,
+                                                 entry[i].name.len);
+        } else {
+            b->last = ngx_cpymem(b->last, entry[i].name.data,
+                                 entry[i].name.len);
+        }
+
+        *b->last++ = '<'; *b->last++ = '/';
+
+        b->last = ngx_cpymem(b->last, type.data, type.len);
+
+        *b->last++ = '>';
+
+        *b->last++ = CR; *b->last++ = LF;
+    }
+
+    b->last = ngx_cpymem(b->last, tail, sizeof(tail) - 1);
+
+    return b;
+}
+
+
+static int ngx_libc_cdecl
+ngx_http_autoindex_cmp_entries(const void *one, const void *two)
+{
+    ngx_http_autoindex_entry_t *first = (ngx_http_autoindex_entry_t *) one;
+    ngx_http_autoindex_entry_t *second = (ngx_http_autoindex_entry_t *) two;
+
+    if (first->dir && !second->dir) {
+        /* move the directories to the start */
+        return -1;
+    }
+
+    if (!first->dir && second->dir) {
+        /* move the directories to the start */
+        return 1;
+    }
+
+    return (int) ngx_strcmp(first->name.data, second->name.data);
+}
+
+
+#if 0
+
+static ngx_buf_t *
+ngx_http_autoindex_alloc(ngx_http_autoindex_ctx_t *ctx, size_t size)
+{
+    ngx_chain_t  *cl;
+
+    if (ctx->buf) {
+
+        if ((size_t) (ctx->buf->end - ctx->buf->last) >= size) {
+            return ctx->buf;
+        }
+
+        ctx->size += ctx->buf->last - ctx->buf->pos;
+    }
+
+    ctx->buf = ngx_create_temp_buf(ctx->pool, ctx->alloc_size);
+    if (ctx->buf == NULL) {
+        return NULL;
+    }
+
+    cl = ngx_alloc_chain_link(ctx->pool);
+    if (cl == NULL) {
+        return NULL;
+    }
+
+    cl->buf = ctx->buf;
+    cl->next = NULL;
+
+    *ctx->last_out = cl;
+    ctx->last_out = &cl->next;
+
+    return ctx->buf;
+}
+
+#endif
+
+
+static ngx_int_t
+ngx_http_autoindex_error(ngx_http_request_t *r, ngx_dir_t *dir, ngx_str_t *name)
+{
+    if (ngx_close_dir(dir) == NGX_ERROR) {
+        ngx_log_error(NGX_LOG_ALERT, r->connection->log, ngx_errno,
+                      ngx_close_dir_n " \"%V\" failed", name);
+    }
+
+    return r->header_sent ? NGX_ERROR : NGX_HTTP_INTERNAL_SERVER_ERROR;
+}
+
+
+static void *
+ngx_http_autoindex_create_loc_conf(ngx_conf_t *cf)
+{
+    ngx_http_autoindex_loc_conf_t  *conf;
+
+    conf = ngx_palloc(cf->pool, sizeof(ngx_http_autoindex_loc_conf_t));
+    if (conf == NULL) {
+        return NULL;
+    }
+
+    conf->enable = NGX_CONF_UNSET;
+    conf->format = NGX_CONF_UNSET_UINT;
+    conf->localtime = NGX_CONF_UNSET;
+    conf->exact_size = NGX_CONF_UNSET;
+
+    return conf;
+}
+
+
+static char *
+ngx_http_autoindex_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
+{
+    ngx_http_autoindex_loc_conf_t *prev = parent;
+    ngx_http_autoindex_loc_conf_t *conf = child;
+
+    ngx_conf_merge_value(conf->enable, prev->enable, 0);
+    ngx_conf_merge_uint_value(conf->format, prev->format,
+                              NGX_HTTP_AUTOINDEX_HTML);
+    ngx_conf_merge_value(conf->localtime, prev->localtime, 0);
+    ngx_conf_merge_value(conf->exact_size, prev->exact_size, 1);
+
+    return NGX_CONF_OK;
+}
+
+
+static ngx_int_t
+ngx_http_autoindex_init(ngx_conf_t *cf)
+{
+    ngx_http_handler_pt        *h;
+    ngx_http_core_main_conf_t  *cmcf;
+
+    cmcf = ngx_http_conf_get_module_main_conf(cf, ngx_http_core_module);
+
+    h = ngx_array_push(&cmcf->phases[NGX_HTTP_CONTENT_PHASE].handlers);
+    if (h == NULL) {
+        return NGX_ERROR;
+    }
+
+    *h = ngx_http_autoindex_handler;
+
+    return NGX_OK;
+}
