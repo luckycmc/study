@@ -67,7 +67,7 @@ int main()
         printf("绑定失败\n");
         return -1;
     }
-
+    //网络进入半连接状态 产生listen_fd
     if (listen(server_socket, 5) == -1) {
 
         printf("监听失败\n");
@@ -127,7 +127,7 @@ int main()
             {
 
                 addr_size     = sizeof(client_addr);
-                //接受客户端连接,客户端连接服务器端连接成功
+                //接受客户端连接,客户端连接服务器端连接成功 ，此时进入全连接状态，去除对应的可操作的fd
                 client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
                 printf("%d 连接成功\n", client_socket);  // server 端提示连接成功

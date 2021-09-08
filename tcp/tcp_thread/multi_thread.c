@@ -30,21 +30,23 @@ void *rec_func(void *arg)
             if(nbytes == 0)
             {
                  printf("client close fd is %d\n",new_fd);
-                 close(new_fd);
+                 close(new_fd); //关闭对应的fd
                  break;
             }
             //给结尾添加表示符
             buffer[nbytes] = '\0';
-
             //打印接受的数据
             //printf("I have received:%s\n",buffer);
-
-            //数据返回给客户端
-            if(send(new_fd,buffer,strlen(buffer),0) == -1)
+            if(nbytes > 0)
             {
-                  fprintf(stderr,"Write Error:%s\n",strerror(errno));
-                  exit(1);
+                  //把数据发送给对应的客户端
+                if(send(new_fd,buffer,strlen(buffer),0) == -1)
+                {
+                    fprintf(stderr,"Write Error:%s\n",strerror(errno));
+                    exit(1);
+                }
             }
+            
      }
 
     // return NULL;
