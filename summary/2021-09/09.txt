@@ -1,0 +1,18 @@
+
+Meecache 网络处理的流程
+
+1）主线程的主要工作就是监听和接收listen和accpet进入新的链接，主线程为自己分配一个event_base句柄，用于监听连接，
+即listen fd。
+
+2）主线程启动的时候会创建n个worker线程（默认情况下是4个，可根据配置进行修改），
+同时每个worker线程也分配了独立的event_base句柄。
+
+3）每个worker线程通过管道方式与其它线程（主要是主线程）进行通信，调用pipe函数创建匿名管道。
+worker线程把管道读取fd加到自己的event_base，监听管道读取fd的可读事件，即当主线程往某个线程的管道写入fd写数据时，触发事件。
+
+4）主线程监听到有一个连接到达时，accept连接，产生一个client fd，然后通过求余的方式选择一个worker线程，
+把这个client fd包装成一个CQ_ITEM对象，然后压到worker线程的CQ_ITEM队列里面去，同时主线程往选中的worker线程的管道写入fd中写入一个1，来通知woker线程（触发worker线程）。
+
+5）当worker线程监听到自己的管道读取fd可读，触发事件处理，而此是的事件处理是：从自己的CQ_ITEM队列中取出
+CQ_ITEM对象（相当于收信，看看主线程给了自己什么东西），worker线程把此client fd加入到自己的event_base
+（创建libevent的读写事件），从此负责该连接的读写工作。

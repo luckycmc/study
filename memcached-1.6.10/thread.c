@@ -29,18 +29,18 @@ enum conn_queue_item_modes {
 };
 typedef struct conn_queue_item CQ_ITEM;
 struct conn_queue_item {
-    int               sfd;
-    enum conn_states  init_state;
-    int               event_flags;
-    int               read_buffer_size;
+    int               sfd;                 // socket 的fd
+    enum conn_states  init_state;          //事件类型
+    int               event_flags;         //libevent的flags
+    int               read_buffer_size;      //读取的buffer的大小
     enum network_transport     transport;
     enum conn_queue_item_modes mode;
     conn *c;
     void    *ssl;
-    CQ_ITEM          *next;
+    CQ_ITEM          *next;  //下一个指针节点
 };
 
-/* A connection queue. */
+/* A connection queue. */   // CQ是CQ_ITEM的集合信息，是每个线程的处理队列。
 typedef struct conn_queue CQ;
 struct conn_queue {
     CQ_ITEM *head;
@@ -365,7 +365,7 @@ static void create_worker(void *(*func)(void *), void *arg) {
     int             ret;
 
     pthread_attr_init(&attr);
-
+    //pthread_create来创建线程
     if ((ret = pthread_create(&((LIBEVENT_THREAD*)arg)->thread_id, &attr, func, arg)) != 0) {
         fprintf(stderr, "Can't create thread: %s\n",
                 strerror(ret));
@@ -384,6 +384,7 @@ void accept_new_conns(const bool do_accept) {
 /****************************** LIBEVENT THREADS *****************************/
 
 /*
+   event句柄
  * Set up a thread's information.
  */
 static void setup_thread(LIBEVENT_THREAD *me) {
@@ -394,7 +395,7 @@ static void setup_thread(LIBEVENT_THREAD *me) {
     me->base = event_base_new_with_config(ev_config);
     event_config_free(ev_config);
 #else
-    me->base = event_init();
+    me->base = event_init(); //根据libevent的使用文档，我们可以知道一般情况下每个独立的线程都应该有自己独立的event_base
 #endif
 
     if (! me->base) {
@@ -403,21 +404,22 @@ static void setup_thread(LIBEVENT_THREAD *me) {
     }
 
     /* Listen for notifications from other threads */
+    //读事件EV_READ的监听，如果pipe中有写事件的时候，libevent就会调用thread_libevent_process方法
     event_set(&me->notify_event, me->notify_receive_fd,
               EV_READ | EV_PERSIST, thread_libevent_process, me);
     event_base_set(me->base, &me->notify_event);
-
+    // //添加事件操作
     if (event_add(&me->notify_event, 0) == -1) {
         fprintf(stderr, "Can't monitor libevent notify pipe\n");
         exit(1);
     }
-
+    //初始化一个工作队列
     me->new_conn_queue = malloc(sizeof(struct conn_queue));
     if (me->new_conn_queue == NULL) {
         perror("Failed to allocate memory for connection queue");
         exit(EXIT_FAILURE);
     }
-    cq_init(me->new_conn_queue);
+    cq_init(me->new_conn_queue); //初始化工作队列
 
     if (pthread_mutex_init(&me->stats.mutex, NULL) != 0) {
         perror("Failed to initialize mutex");
@@ -458,6 +460,8 @@ static void setup_thread(LIBEVENT_THREAD *me) {
 }
 
 /*
+   //主要是开启事件循环，因此每个工作线程都具有事件循环
+   //memcache的每个工作线程都会独立处理自己接管的连接
  * Worker thread: main event loop
  */
 static void *worker_libevent(void *arg) {
@@ -475,7 +479,7 @@ static void *worker_libevent(void *arg) {
     if (settings.drop_privileges) {
         drop_worker_privileges();
     }
-
+    
     register_thread_initialized();
 
     event_base_loop(me->base, 0);
@@ -489,6 +493,7 @@ static void *worker_libevent(void *arg) {
 
 
 /*
+   这段代码是setup_thread设置句柄函数中的管道pipe监听事件发生后所调用的函数。
  * Processes an incoming "handle a new connection" item. This is called when
  * input arrives on the libevent wakeup pipe.
  */
@@ -499,14 +504,15 @@ static void thread_libevent_process(evutil_socket_t fd, short which, void *arg) 
     conn *c;
     unsigned int fd_from_pipe;
 
-    if (read(fd, buf, 1) != 1) {
+    if (read(fd, buf, 1) != 1) { // 读取主线程发送过来的数据
         if (settings.verbose > 0)
             fprintf(stderr, "Can't read from libevent pipe\n");
         return;
     }
 
     switch (buf[0]) {
-    case 'c':
+    case 'c':   
+        //  // 如果是c 则从当前队列中取出对应的fd节点                     
         item = cq_pop(me->new_conn_queue);
 
         if (NULL == item) {
@@ -514,6 +520,8 @@ static void thread_libevent_process(evutil_socket_t fd, short which, void *arg) 
         }
         switch (item->mode) {
             case queue_new_conn:
+                // /conn_new这个方法非常重要，主要是创建socket的读写等监听事件
+                //init_state 为初始化的类型，主要在drive_machine中通过这个状态类判断处理类型
                 c = conn_new(item->sfd, item->init_state, item->event_flags,
                                    item->read_buffer_size, item->transport,
                                    me->base, item->ssl);
@@ -931,7 +939,8 @@ void slab_stats_aggregate(struct thread_stats *stats, struct slab_stats *out) {
 
 /*
  * Initializes the thread subsystem, creating various worker threads.
- *
+ *  工作线程初始化 初始化线程锁 和对应的条件变量 以及创建对应的工作线程
+ *  每个线程创建对应的读写管道
  * nthreads  Number of worker event handler threads to spawn
  */
 void memcached_thread_init(int nthreads, void *arg) {
@@ -980,6 +989,7 @@ void memcached_thread_init(int nthreads, void *arg) {
         perror("Can't allocate item locks");
         exit(1);
     }
+    //锁初始化
     for (i = 0; i < item_lock_count; i++) {
         pthread_mutex_init(&item_locks[i], NULL);
     }
@@ -989,7 +999,7 @@ void memcached_thread_init(int nthreads, void *arg) {
         perror("Can't allocate thread descriptors");
         exit(1);
     }
-
+    //创建读写管道
     for (i = 0; i < nthreads; i++) {
         int fds[2];
         if (pipe(fds)) {
@@ -997,17 +1007,18 @@ void memcached_thread_init(int nthreads, void *arg) {
             exit(1);
         }
 
-        threads[i].notify_receive_fd = fds[0];
-        threads[i].notify_send_fd = fds[1];
+        threads[i].notify_receive_fd = fds[0];  //接受端读管道
+        threads[i].notify_send_fd = fds[1];     //发送端写管道
 #ifdef EXTSTORE
         threads[i].storage = arg;
 #endif
-        setup_thread(&threads[i]);
+        setup_thread(&threads[i]); // 一个setup_thread是给每个工作线程创建属于自己的event_base句柄。
         /* Reserve three fds for the libevent base, and two for the pipe */
         stats_state.reserved_fds += 5;
     }
 
     /* Create threads after we've done all the libevent setup. */
+    /*//这里循环创建线程，设置回调函数为worker_libevent*/
     for (i = 0; i < nthreads; i++) {
         create_worker(worker_libevent, &threads[i]);
     }

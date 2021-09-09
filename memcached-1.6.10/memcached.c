@@ -4516,7 +4516,7 @@ static int _mc_meta_load_cb(const char *tag, void *ctx, void *data) {
 
     return reuse_mmap;
 }
-
+// server 的入口函数
 int main (int argc, char **argv) {
     int c;
     bool lock_memory = false;
@@ -5661,7 +5661,7 @@ int main (int argc, char **argv) {
     main_base = event_base_new_with_config(ev_config);
     event_config_free(ev_config);
 #else
-    /* Otherwise, use older API */
+    /* Otherwise, use older API */  //初始化，得到句柄
     main_base = event_init();
 #endif
 
@@ -5919,7 +5919,7 @@ int main (int argc, char **argv) {
     /* Initialize the uriencode lookup table. */
     uriencode_init();
 
-    /* enter the event loop */
+    /* enter the event loop */   //主线程进入事件循环
     while (!stop_main_loop) {
         if (event_base_loop(main_base, EVLOOP_ONCE) != 0) {
             retval = EXIT_FAILURE;
