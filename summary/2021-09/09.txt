@@ -30,3 +30,9 @@ sunmmary:
              read();
              write();
              close(); 的数据封装 采用多进程或者多线程模型+reactor反应堆模型 进入事件监听和处理
+
+nginx 采用的是 多进程+reactor。
+redis 采用的是 单进程+reactor。
+swoole 采用的是 多进程+多线程+reactor。
+Meecache 采用的是多线程+reactor。
+php 采用的是多进程+同步阻塞模型
