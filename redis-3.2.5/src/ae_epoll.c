@@ -119,10 +119,10 @@ static int aeApiPoll(aeEventLoop *eventLoop, struct timeval *tvp) {
             int mask = 0;
             struct epoll_event *e = state->events+j;
 
-            if (e->events & EPOLLIN) mask |= AE_READABLE;
-            if (e->events & EPOLLOUT) mask |= AE_WRITABLE;
-            if (e->events & EPOLLERR) mask |= AE_WRITABLE;
-            if (e->events & EPOLLHUP) mask |= AE_WRITABLE;
+            if (e->events & EPOLLIN) mask |= AE_READABLE;  //可读
+            if (e->events & EPOLLOUT) mask |= AE_WRITABLE; //可写
+            if (e->events & EPOLLERR) mask |= AE_WRITABLE; // 出错
+            if (e->events & EPOLLHUP) mask |= AE_WRITABLE; // 来自上游服务器
             eventLoop->fired[j].fd = e->data.fd;
             eventLoop->fired[j].mask = mask;
         }
