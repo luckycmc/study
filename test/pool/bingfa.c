@@ -26,7 +26,8 @@
   断开连接
   close()
   shutdown()
-  
+
+  struct 
 */
 /**
   1.udp 的缺点就是不稳定
