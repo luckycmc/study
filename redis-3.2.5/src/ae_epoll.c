@@ -71,6 +71,7 @@ static void aeApiFree(aeEventLoop *eventLoop) {
 }
 //添加对应的事件
 static int aeApiAddEvent(aeEventLoop *eventLoop, int fd, int mask) {
+   
     aeApiState *state = eventLoop->apidata;
     struct epoll_event ee = {0}; /* avoid valgrind warning */
     /* If the fd was already monitored for some event, we need a MOD
@@ -82,7 +83,7 @@ static int aeApiAddEvent(aeEventLoop *eventLoop, int fd, int mask) {
     mask |= eventLoop->events[fd].mask; /* Merge old events */
     if (mask & AE_READABLE) ee.events |= EPOLLIN;
     if (mask & AE_WRITABLE) ee.events |= EPOLLOUT;
-    ee.data.fd = fd;
+    ee.data.fd = fd;  //就绪事件添加到对应的epoll 中
     if (epoll_ctl(state->epfd,op,fd,&ee) == -1) return -1;
     return 0;
 }

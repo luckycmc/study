@@ -32,14 +32,14 @@
 #include <stdlib.h>
 #include "adlist.h"
 #include "zmalloc.h"
-
+#include <stdio.h>
 /* Create a new list. The created list can be freed with
  * AlFreeList(), but private value of every node need to be freed
  * by the user before to call AlFreeList().
  *
  * On error, NULL is returned. Otherwise the pointer to the new list. */
 list *listCreate(void)
-{
+{  
     struct list *list;
 
     if ((list = zmalloc(sizeof(*list))) == NULL)
@@ -106,7 +106,7 @@ list *listAddNodeHead(list *list, void *value)
 list *listAddNodeTail(list *list, void *value)
 {
     listNode *node;
-
+   
     if ((node = zmalloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
