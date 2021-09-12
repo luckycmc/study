@@ -37,7 +37,7 @@ Redis中的事件驱动库只关注网络IO，以及定时器。该事件库处�
 
 时间事件(time  eveat)：Redis 服务器中的一些操作（比如serverCron函数）需要在给定的时间点执行，而时间事件就是处理这类定时操作的。
 
-nginx 采用的是 多进程+reactor。
+nginx 采用的是 多进程+reactor。 每一个进程都有对应的accept()// 因此会有一个全局锁
 redis 采用的是 单进程+reactor。
 swoole 采用的是 多进程+多线程+reactor。
 Meecache 采用的是多线程+reactor。
