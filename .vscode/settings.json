@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "adlist.h": "c",
-        "zmalloc.h": "c"
+        "zmalloc.h": "c",
+        "thread_pool.h": "c"
     }
 }

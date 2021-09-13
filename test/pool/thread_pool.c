@@ -16,19 +16,21 @@
        销毁线程池
     2.创建线程池结构体 指针
       初始化线程池结构体{N个 成员变量}
-      创建 N个任务线程
-      创建一个管理线程
+
+      创建 N个任务线程  // 任务线程主要处理 任务
+      创建一个管理线程  // 管理线程 主要用于管理工作线程的 线程的创建和回收
+
       失败的时,销毁开辟的所有空间(释放)
     3.
        进入线程回调函数
        结束参数 void *arg -->pool 结构体
-       枷锁----》》 lock 整个结构体枷锁
+       枷锁---- lock 整个结构体枷锁
        判断条件变量---》wait
     4.
       循环10 秒执行一次
       进入管理者线程回调函数
       接受参数 void *arg ----> pool 结构体
-      枷锁   ----》 lock ----> 整个结构体枷锁
+      枷锁   ---- lock ----> 整个结构体枷锁
       获取线程池中用到 变量   task_num  live_num busy_num
       根据既定的算法 使用上述三个变量 判断是否是创建 销毁 指定部长的线程
 */
@@ -44,17 +46,22 @@
 typedef struct {
     void *(*function)(void *);  /*函数指针，回调函数*/
     void *arg;                  /*上面函数的参数*/
-} threadpool_task_t;            /*各子线程任务结构体*/
 
+} threadpool_task_t;            /*各子线程任务结构体*/  //子线程任务机构体  回调函数 和参数
+/**
+ * 
+ * 线程池结构体 ，对线程池的基本定义
+ */
 typedef struct threadpool_s {
+
     pthread_mutex_t lock;            /*用于锁住本结构体*/
     pthread_mutex_t thread_counter;  /*记录忙状态线程个数的锁 -- busy_thread_num*/
     pthread_cond_t queue_not_full;   /*当队列任务满时，添加任务的线程阻塞，等待此条件变量*/
     pthread_cond_t queue_not_empty;  /*任务队列不为空时，通知等待任务的线程*/
 
-    pthread_t *workers_tid;          /*存放线程池中每个线程的tid，数组*/
-    pthread_t manager_tid;           /*存管理线程tid*/
-    threadpool_task_t *task_queue;   /*任务队列*/
+    pthread_t *workers_tid;          /*存放线程池中每个线程的tid，数组*/ //记录整个线程的tid
+    pthread_t manager_tid;           /*存管理线程tid*/ //  管理线程
+    threadpool_task_t *task_queue;   /*任务线程队列*/
 
     int min_thread_num;                /*线程池最小线程数*/
     int max_thread_num;                /*线程池最大线程数*/
@@ -68,11 +75,12 @@ typedef struct threadpool_s {
     int queue_max_size;              /*task_queue队列可容纳任务上限*/
 
     int shutdown;                    /*标志位，线程池使用状态，true或者false*/
+
 } threadpool_t;
 
 
 //定义工作进程要做的事情
-void* workers_thread( void *threadpool ); //线程池中工作线程要做的事情。
+void *workers_thread( void *threadpool ); //线程池中工作线程要做的事情。
 void *manager_thread(void *threadpool);  //管理线程要做的事情
 
 /***************************************************************************
@@ -104,18 +112,19 @@ threadpool_t *threadpool_create(int min_thread_num, int max_thread_num, int queu
             goto err_1;
         }
         
-        pool->min_thread_num  = min_thread_num;
-        pool->max_thread_num  = max_thread_num;
+        pool->min_thread_num  = min_thread_num; //最小个数
+        pool->max_thread_num  = max_thread_num; // 最大个数
         pool->busy_thread_num = 0;
-        pool->live_thread_num = min_thread_num;
+        pool->live_thread_num = min_thread_num; //活跃的线程个数
         pool->queue_size 	  = 0;
-        pool->queue_max_size  = queue_max_size;
+        pool->queue_max_size  = queue_max_size; //队列的长度
         pool->queue_front 	  = 0;
         pool->queue_rear 	  = 0;
         pool->shutdown        = 0;
         
         /*根据最大线程上限数，给工作线程数据开辟空间，并清零*/
         pool->workers_tid = (pthread_t *)malloc(sizeof(pthread_t) * max_thread_num);
+
         if (pool->workers_tid == NULL) {
             printf("malloc workers_tid fail\n");
             goto err_2;
@@ -140,6 +149,7 @@ threadpool_t *threadpool_create(int min_thread_num, int max_thread_num, int queu
         
         /* 启动 min_thread_num 个 work thread */
         for (i = 0; i < min_thread_num; i++) {
+            //创建工作线程
             pthread_create(&(pool->workers_tid[i]), NULL, workers_thread,(void *)pool); /*pool指向当前线程池*/
             printf("start thread  0x%x...\n", (unsigned int)pool->workers_tid[i]);
         }
@@ -180,8 +190,10 @@ void *manager_thread(void *threadpool)
 {
     threadpool_t *pool = (threadpool_t *)threadpool;
     int i;
-    
-    while (!pool->shutdown) {
+    //只要线程池存在 管理线程会一直管理 工作线程池
+    while (!pool->shutdown)
+    {
+
         sleep(DEFAULT_TIME);   /*定时对线程池管理*/
         
         pthread_mutex_lock(&(pool->lock));
@@ -196,17 +208,20 @@ void *manager_thread(void *threadpool)
         /* 创建新线程算法，任务数大于最小线程池个数，
          * 且存活的线程数小于最大线程数时
          */
-        if (queue_size >= MIN_WAIT_TASK_NUM && live_thread_num < pool->max_thread_num){
+        if (queue_size >= MIN_WAIT_TASK_NUM && live_thread_num < pool->max_thread_num)
+        {
             pthread_mutex_lock(&(pool->lock));
+
             int add = 0;
             
             /* 一次增加 DEFAULT_THREAD_VERY 个线程*/
-            for (i = 0; i < pool->max_thread_num && add < DEFAULT_THREAD_VERY
-                    && pool->live_thread_num < pool->max_thread_num; i++) {
-                if (pool->workers_tid[i] == 0 || !is_thread_alive(pool->workers_tid[i])) {
+            for (i = 0; i < pool->max_thread_num && add < DEFAULT_THREAD_VERY && pool->live_thread_num < pool->max_thread_num; i++) {
+                if (pool->workers_tid[i] == 0 || !is_thread_alive(pool->workers_tid[i])) 
+                {   
+                    // 创建工作线程
                     pthread_create(&(pool->workers_tid[i]), NULL,workers_thread,(void *)pool);
                     add++;
-                    pool->live_thread_num++;
+                    pool->live_thread_num++;  //活跃个数也要添加
                 }
             }
             
@@ -216,13 +231,15 @@ void *manager_thread(void *threadpool)
         /* 销毁多余的空闲线程算法，忙线程 x2 小于存活的线程数 且 
          * 存活的线程数大于最小线程数时
          */
-        if (busy_thread_num * 2 < live_thread_num && live_thread_num > pool->min_thread_num) {
+        if (busy_thread_num * 2 < live_thread_num && live_thread_num > pool->min_thread_num) 
+        {
             /*一次销毁 DEFAULT_THREAD_VERY 个线程*/
             pthread_mutex_lock(&(pool->lock));
             pool->wait_exit_thr_num = DEFAULT_THREAD_VERY;
             pthread_mutex_unlock(&(pool->lock));
             
-            for (i = 0; i < DEFAULT_THREAD_VERY; i++) {
+            for (i = 0; i < DEFAULT_THREAD_VERY; i++)
+            {
                 /*通知处在空闲状态的线程，他们会自行终止，线程自杀*/
                 pthread_cond_signal(&(pool->queue_not_empty));
             }
@@ -251,10 +268,12 @@ void *manager_thread(void *threadpool)
 ****************************************************************************/
 void *workers_thread(void *threadpool)
 {
-    threadpool_t *pool = (threadpool_t *)threadpool;
-    threadpool_task_t task;
+    threadpool_t *pool = (threadpool_t *)threadpool; //初始化工作池
 
-    while(1) {
+    threadpool_task_t task; // 工作线程结构体
+
+    while(1) 
+    {
         /* Lock must be taken to wait on condition variable */
         /* 刚创建出线程，等待任务队列里面有任务，否则阻塞等待任务队列里有任务再唤醒
          * 接收任务
@@ -262,14 +281,17 @@ void *workers_thread(void *threadpool)
         pthread_mutex_lock(&(pool->lock));
         
         /* queue_size == 0 说明没有任务，调wait 阻塞在条件变量上，若有任务，跳过该while */
-        while((pool->queue_size == 0) && (!pool->shutdown)) {
+        while((pool->queue_size == 0) && (!pool->shutdown)) 
+        {
             printf("Workers'thread ID 0x%x is waiting\n", (unsigned int)pthread_self());
             pthread_cond_wait(&(pool->queue_not_empty), &(pool->lock));
             
             /* 清除指定数目的空闲线程，如果要结束的线程个数大于0，结束线程 */
-            if (pool->wait_exit_thr_num > 0) { 
+            if (pool->wait_exit_thr_num > 0) 
+            { 
                 /* 如果线程池里的线程个数大于最小值时可以结束当前线程 */
-                if (pool->live_thread_num > pool->min_thread_num) {
+                if (pool->live_thread_num > pool->min_thread_num) 
+                {
                     printf("Workers'thread ID 0x%x is exiting\n", (unsigned int)pthread_self());
                     pool->live_thread_num--;
 					pool->wait_exit_thr_num--;
@@ -354,8 +376,8 @@ int threadpool_add(threadpool_t *pool, void *function(void *arg), void *arg)
         pool->task_queue[pool->queue_rear].arg = NULL;
     }
     /*添加任务到任务队列里面*/
-    pool->task_queue[pool->queue_rear].function = function;
-    pool->task_queue[pool->queue_rear].arg = arg;
+    pool->task_queue[pool->queue_rear].function = function;  // 回调函数 也就是处理函数
+    pool->task_queue[pool->queue_rear].arg = arg;            // 对应的参数 
     pool->queue_rear = (pool->queue_rear + 1) % pool->queue_max_size;
     pool->queue_size++;
     
@@ -392,15 +414,19 @@ int threadpool_distory(threadpool_t *pool)
     
     /*先销毁管理线程*/
     pthread_join(pool->manager_tid, NULL);
-    
-    for (i = 0; i < pool->live_thread_num; i++) {/*通知所有空闲线程*/
+    /*通知所有空闲线程*/
+    for (i = 0; i < pool->live_thread_num; i++) 
+    {   
+        //销毁所有的空闲线程
         pthread_cond_broadcast(&(pool->queue_not_empty));
     }
-    for (i = 0; i < pool->live_thread_num; i++) {/*回收所有管理者线程资源*/
+    /*回收所有管理者线程资源*/
+    for (i = 0; i < pool->live_thread_num; i++) 
+    {
         pthread_join(pool->workers_tid[i], NULL);
     }
+    // 内存池的释放
     threadpool_free(pool);
-    
     return 0;
 }
 
@@ -430,7 +456,8 @@ int threadpool_free(threadpool_t *pool)
         free(pool->task_queue);
     }
     
-    if (pool->workers_tid) {
+    if (pool->workers_tid)
+     {
         free(pool->workers_tid);
         pthread_mutex_lock(&(pool->lock));
         pthread_mutex_destroy(&(pool->lock));
@@ -460,6 +487,8 @@ int threadpool_free(threadpool_t *pool)
 ****************************************************************************/
 int is_thread_alive(pthread_t tid)
 {    
+    // pthread_kill(tid,0) //判断线程是否存活 如果存活则返回为1 不存活 返回为0 
+
     // ESRCH 表示线程不存在了
     int kill_rc = pthread_kill(tid, 0); /*发0号信号，测试线程是否存活*/
     if (kill_rc == ESRCH) {
@@ -481,7 +510,7 @@ int is_thread_alive(pthread_t tid)
 *		无
 ****************************************************************************/
 // update user set authentication_string=password('dhw456123') where user='zs'
-/* 线程池中的线程，模拟处理业务 */
+/* 线程池中的线程，模拟处理业务 */  // 这是线程池工作的回调函数
 void process(void *arg)
 {
     printf("thread 0x%x working on task %d\n", (unsigned int)pthread_self(),
@@ -510,9 +539,10 @@ int main(int argc, char **argv)
         threadpool_add(thp, (void *)&process, (void *)&num[i]);
     }
     /*等待子线程完成任务*/
-	
+	//最好做个线程回收
+
 	sleep(30);
-	
+	//释放内存池
     threadpool_distory(thp);
     
     return 0;
