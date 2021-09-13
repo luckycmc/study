@@ -12,7 +12,10 @@ static tpool_t *tpool = NULL; //初始化线程池
 
 /* 工作者线程函数, 从任务链表中取出任务并执行 */
 static void *thread_routine(void *arg)
-{
+{   
+    //当前子进程的id 是
+    printf("create workers_tid is %lu\n",pthread_self());
+
     tpool_worker_t *work;
     //执行对应的任务
     while (1)
@@ -93,6 +96,7 @@ int tpool_create(int max_thr_num)
               printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__,errno, strerror(errno));
                exit(1);
           }
+         
     }
      return 0;
 }
@@ -153,7 +157,7 @@ int tpool_add_worker(void*(*routine)(void*), void *arg)
      if (!member)  //节点没有数据了
      {
          tpool->queue_head = work;
-         
+
      }else{
          while(member->next)
          {
