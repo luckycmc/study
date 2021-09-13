@@ -26,7 +26,6 @@
             tpool_add_worker(func,(void *)&i);
        }
        sleep(2);
-       
        //销毁线程池
        tpool_destroy();
        return 0;

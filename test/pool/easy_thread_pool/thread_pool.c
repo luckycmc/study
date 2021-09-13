@@ -153,6 +153,7 @@ int tpool_add_worker(void*(*routine)(void*), void *arg)
      if (!member)  //节点没有数据了
      {
          tpool->queue_head = work;
+         
      }else{
          while(member->next)
          {
