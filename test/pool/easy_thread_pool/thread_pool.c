@@ -24,10 +24,10 @@ static void *thread_routine(void *arg)
            //1. 枷锁
            pthread_mutex_lock(&tpool->queue_lock);
 
-           //如果工作线程不为空,并且线程没有关闭 唤醒对应的线程
+           //从任务队列中去数据 如果没有任务则 阻塞等待 并且线程池没有关闭
            while(!tpool->queue_head && !tpool->shutdown){
                 
-                 pthread_cond_wait(&tpool->queue_ready, &tpool->queue_lock);
+                 pthread_cond_wait(&tpool->queue_ready, &tpool->queue_lock); //阻塞等待
            }
            //如果当前的线程状态是关闭的
            if (tpool->shutdown)
@@ -37,24 +37,30 @@ static void *thread_routine(void *arg)
                   //线程退出
                   pthread_exit(NULL);
            }
-            work = tpool->queue_head;
+            work = tpool->queue_head;  //取出对应的 工作任务
             //链表
-            tpool->queue_head = tpool->queue_head->next;
+            tpool->queue_head = tpool->queue_head->next;  //工作任务节点下移
+
             pthread_mutex_unlock(&tpool->queue_lock);
             //具体执行函数
-            work->routine(work->arg);
+            work->routine(work->arg);  //指向对应的方法
             free(work);
     }
 
     
 }
 
-//创建线程池
+/**
+ * @brief 创建线程池
+ * 
+ * @param max_thr_num  创建线程的个数
+ * @return int 
+ */
 int tpool_create(int max_thr_num)
 {
     int i;
     
-    tpool = calloc(1, sizeof(tpool_t));
+    tpool = calloc(1, sizeof(tpool_t));  //申请内存空间
     if (!tpool)
     {
          printf("%s: calloc failed\n", __FUNCTION__);
@@ -62,8 +68,8 @@ int tpool_create(int max_thr_num)
     }
     
     //对应属性的初始化
-    tpool->max_thread_num = max_thr_num;
-    tpool->shutdown   = 0; //默认为0
+    tpool->max_thread_num = max_thr_num;  //线程个数
+    tpool->shutdown   = 0; //默认为0      // 0 正常使用  1 关闭
     tpool->queue_head = NULL;
 
     //初始化线程锁
@@ -79,7 +85,7 @@ int tpool_create(int max_thr_num)
         printf("%s: pthread_cond_init failed, errno:%d, error:%s\n", __FUNCTION__, errno, strerror(errno));
           exit(1);
     }
-    //创建工作线程池
+    //线程id 工作组申请内存
     tpool->thr_t = calloc(max_thr_num,sizeof(pthread_t));
     
     if (!tpool->thr_t)
@@ -88,7 +94,7 @@ int tpool_create(int max_thr_num)
         exit(1);
     }
 
-    //创建工作线程
+    //创建工作线程池
     for (i = 0; i < max_thr_num; i++)
     {
           if (pthread_create(&tpool->thr_t[i], NULL,thread_routine, NULL) != 0)

@@ -16,9 +16,12 @@ typedef struct tpool_worker{
 typedef struct tpool{
     
      int shutdown;          //线程是否销毁
+
      int max_thread_num;    //最大线程数
+
      pthread_t *thr_t;      //线程id 数组
-     tpool_worker_t *queue_head; //  线程链表头
+
+     tpool_worker_t *queue_head; //工作任务队列的表头
 
      //初始化线程锁
      pthread_mutex_t queue_lock; //线程锁
