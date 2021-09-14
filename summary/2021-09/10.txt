@@ -2,8 +2,13 @@
   
    TCP 是主机对主机的传输控制协议,提供可靠的连接服务,采用三次握手确认一个连接:
    位码就是tcp标志位,有6中标识  
-              SYN(synchronous建立联机) ACK(acknowledgement 确认) PSH(push传送) FIN(finish结束) RST(reset重置) 
-              URG(urgent紧急)Sequence number(顺序号码) Acknowledge number(确认号码)
+              SYN(synchronous建立联机) 
+              ACK(acknowledgement 确认) 
+              PSH(push传送) FIN(finish结束) 
+              RST(reset重置) 
+              URG(urgent紧急)
+              Sequence number(顺序号码) 
+              Acknowledge number(确认号码)
 
     三次握手的流程:
 
@@ -16,4 +21,5 @@
     主机A会再发送ack number=(主机B的seq+1),ack=1，主机B收到后确认seq值与ack=1则连接建立成功。
   
 2.系统的调用
+
     系统调用 内核提供的函数   库调用 程序库中的函数
