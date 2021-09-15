@@ -23,12 +23,14 @@ static void *thread_routine(void *arg)
            /* 如果线程池没有被销毁且没有任务要执行，则等待 */
            //1. 枷锁
            pthread_mutex_lock(&tpool->queue_lock);
-
+           
            //从任务队列中去数据 如果没有任务则 阻塞等待 并且线程池没有关闭
            while(!tpool->queue_head && !tpool->shutdown){
                 
                  pthread_cond_wait(&tpool->queue_ready, &tpool->queue_lock); //阻塞等待
            }
+             //当前子进程的id 是
+           //printf("deal workers_tid is %lu\n",pthread_self());
            //如果当前的线程状态是关闭的
            if (tpool->shutdown)
            {
@@ -43,7 +45,7 @@ static void *thread_routine(void *arg)
 
             pthread_mutex_unlock(&tpool->queue_lock);
             //具体执行函数
-            work->routine(work->arg);  //指向对应的方法
+            work->routine(work->arg);  //指向对应的方法 当前任务的指向方法
             free(work);
     }
 
@@ -154,7 +156,7 @@ int tpool_add_worker(void*(*routine)(void*), void *arg)
          return -1;
      }
      work = malloc(sizeof(tpool_worker_t));
-     work->routine = routine;
+     work->routine = routine;   //对应的回调函数
      work->arg = arg;
      work->next = NULL;
      pthread_mutex_lock(&tpool->queue_lock);
@@ -174,8 +176,8 @@ int tpool_add_worker(void*(*routine)(void*), void *arg)
 
       /* 通知工作者线程，有新任务添加 */
       pthread_cond_signal(&tpool->queue_ready);
+      //解锁是当前的工作线程进程工作
       pthread_mutex_unlock(&tpool->queue_lock);
 
       return 0; 
-     
 }
