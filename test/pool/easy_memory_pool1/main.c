@@ -17,28 +17,29 @@
 //大块内存
 struct mp_large_s 
 {
-	struct mp_large_s *next;
-	void *alloc;
+	struct mp_large_s *next; //下一个大节点的指针
+	void *alloc; //对应的数据区
 };
 // 内存节点
 struct mp_node_s 
 {
 
-	unsigned char *last;
-	unsigned char *end;
+	unsigned char *last;  // 上一个位置
+	unsigned char *end;   // 结束的位置
 	
-	struct mp_node_s *next;
-	size_t failed;
+	struct mp_node_s *next; // 对应的下一一个节点
+
+	size_t failed; //失败节点数
 };
 //内存池
 struct mp_pool_s {
 
-	size_t max;
+	size_t max; //最大数量
 
-	struct mp_node_s *current;
-	struct mp_large_s *large;
+	struct mp_node_s *current;  // 当前节点
+	struct mp_large_s *large;  //大块内存节点
 
-	struct mp_node_s head[0];
+	struct mp_node_s head[0];  // 头节点
 
 };
 
@@ -57,21 +58,22 @@ void mp_free(struct mp_pool_s *pool, void *p);
  */
 struct mp_pool_s *mp_create_pool(size_t size) 
 {
-
+    // posix_memalign为您提供了保证具有所请求对齐的内存块。
 	struct mp_pool_s *p;
+	//内存对齐
 	int ret = posix_memalign((void **)&p, MP_ALIGNMENT, size + sizeof(struct mp_pool_s) + sizeof(struct mp_node_s));
 	if (ret) {
 		return NULL;
 	}
 	
-	p->max = (size < MP_MAX_ALLOC_FROM_POOL) ? size : MP_MAX_ALLOC_FROM_POOL;
-	p->current = p->head;
+	p->max = (size < MP_MAX_ALLOC_FROM_POOL) ? size : MP_MAX_ALLOC_FROM_POOL; //内存池的最大个数
+	p->current = p->head; //
 	p->large = NULL;
-
+    //下一个节点开始的地方
 	p->head->last = (unsigned char *)p + sizeof(struct mp_pool_s) + sizeof(struct mp_node_s);
-	p->head->end = p->head->last + size;
+	p->head->end = p->head->last + size; // 尾部节点
 
-	p->head->failed = 0;
+	p->head->failed = 0; // 失败的次数
 
 	return p;
 
@@ -114,7 +116,7 @@ void mp_reset_pool(struct mp_pool_s *pool) {
 
 	struct mp_node_s *h;
 	struct mp_large_s *l;
-
+    // 释放内存节点
 	for (l = pool->large; l; l = l->next) {
 		if (l->alloc) {
 			free(l->alloc);
@@ -314,7 +316,7 @@ void mp_free(struct mp_pool_s *pool, void *p) {
 int main(int argc, char *argv[]) {
 
 	int size = 1 << 12;
-
+    
 	struct mp_pool_s *p = mp_create_pool(size);
 
 	int i = 0;
