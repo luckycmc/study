@@ -43,12 +43,12 @@ struct mp_pool_s {
 
 };
 
-struct mp_pool_s *mp_create_pool(size_t size);
-void mp_destory_pool(struct mp_pool_s *pool);
+struct mp_pool_s *mp_create_pool(size_t size);        //内存池的创建
+void mp_destory_pool(struct mp_pool_s *pool);         // 内存池的销毁
 void *mp_alloc(struct mp_pool_s *pool, size_t size);
 void *mp_nalloc(struct mp_pool_s *pool, size_t size);
 void *mp_calloc(struct mp_pool_s *pool, size_t size);
-void mp_free(struct mp_pool_s *pool, void *p);
+void mp_free(struct mp_pool_s *pool, void *p);  // 内存池的释放
 
 /**
  * @内存池的创建
@@ -88,15 +88,15 @@ void mp_destory_pool(struct mp_pool_s *pool)
 
 	struct mp_node_s *h, *n;
 	struct mp_large_s *l;
-
+    //销毁大块内存
 	for (l = pool->large; l; l = l->next) {
 		if (l->alloc) {
 			free(l->alloc);
 		}
 	}
 
-	h = pool->head->next;
-
+	h = pool->head->next;  //小块内存
+    //释放小块内存
 	while (h) {
 		n = h->next;
 		free(h);
@@ -118,15 +118,19 @@ void mp_reset_pool(struct mp_pool_s *pool) {
 	struct mp_large_s *l;
     // 释放内存节点
 	for (l = pool->large; l; l = l->next) {
+
+		
 		if (l->alloc) {
-			free(l->alloc);
+			printf("memeory is %p\n",l->alloc);
+			free(l->alloc);  //释放所有的节点
 		}
 	}
 
 	pool->large = NULL;
 
 	for (h = pool->head; h; h = h->next) {
-		h->last = (unsigned char *)h + sizeof(struct mp_node_s);
+		h->last = (unsigned char *)h + sizeof(struct mp_node_s);//内存节点扩大一倍
+		printf("memeory is %p\n",h->last);
 	}
 
 }
@@ -185,27 +189,28 @@ static void *mp_alloc_large(struct mp_pool_s *pool, size_t size) {
 
 	size_t n = 0;
 	struct mp_large_s *large;
+	//查找好对应的大块内存
 	for (large = pool->large; large; large = large->next) {
 		if (large->alloc == NULL) {
 			large->alloc = p;
 			return p;
 		}
-		if (n ++ > 3) break;
+		if (n ++ > 3) break; //三次没有 退出
 	}
 
-	large = mp_alloc(pool, sizeof(struct mp_large_s));
+	large = mp_alloc(pool, sizeof(struct mp_large_s));  //申请内存
 	if (large == NULL) {
 		free(p);
 		return NULL;
 	}
 
-	large->alloc = p;
-	large->next = pool->large;
-	pool->large = large;
+	large->alloc = p;  // 大节点对应的内存区域
+	large->next = pool->large;//下一个节点
+	pool->large = large;    //大块内存
 
 	return p;
 }
-
+// 内存对齐
 void *mp_memalign(struct mp_pool_s *pool, size_t size, size_t alignment) {
 
 	void *p;
@@ -230,16 +235,18 @@ void *mp_memalign(struct mp_pool_s *pool, size_t size, size_t alignment) {
 
 
 
-
+/***
+ * 创建内存节点
+ * */
 void *mp_alloc(struct mp_pool_s *pool, size_t size) {
 
 	unsigned char *m;
 	struct mp_node_s *p;
 
-	if (size <= pool->max) {
+	if (size <= pool->max)  //小内存 
+	{
 
 		p = pool->current;
-
 		do {
 			
 			m = mp_align_ptr(p->last, MP_ALIGNMENT);
@@ -253,11 +260,11 @@ void *mp_alloc(struct mp_pool_s *pool, size_t size) {
 		return mp_alloc_block(pool, size);
 	}
 
-	return mp_alloc_large(pool, size);
+	return mp_alloc_large(pool, size); //走大内存
 	
 }
 
-
+//内存区域的创建
 void *mp_nalloc(struct mp_pool_s *pool, size_t size) {
 
 	unsigned char *m;
@@ -281,12 +288,12 @@ void *mp_nalloc(struct mp_pool_s *pool, size_t size) {
 	return mp_alloc_large(pool, size);
 	
 }
-
+//调用malloc并初始化为0
 void *mp_calloc(struct mp_pool_s *pool, size_t size) {
 
 	void *p = mp_alloc(pool, size);
 	if (p) {
-		memset(p, 0, size);
+		memset(p, 0, size); //调用malloc并初始化为0
 	}
 
 	return p;
@@ -300,7 +307,8 @@ void *mp_calloc(struct mp_pool_s *pool, size_t size) {
  */
 void mp_free(struct mp_pool_s *pool, void *p) {
 
-	struct mp_large_s *l;
+	struct mp_large_s *l; //拿到节点遍历所有的节点
+
 	for (l = pool->large; l; l = l->next) {
 		if (p == l->alloc) {
 			free(l->alloc);
@@ -317,7 +325,7 @@ int main(int argc, char *argv[]) {
 
 	int size = 1 << 12;
     
-	struct mp_pool_s *p = mp_create_pool(size);
+	struct mp_pool_s *p = mp_create_pool(size); //申请内存池
 
 	int i = 0;
 	for (i = 0;i < 10;i ++) {
@@ -338,6 +346,7 @@ int main(int argc, char *argv[]) {
 			if (pp[j]) {
 				printf("calloc wrong\n");
 			}
+			//sleep(1);
 			printf("calloc success\n");
 		}
 	}
@@ -349,7 +358,7 @@ int main(int argc, char *argv[]) {
 		mp_free(p, l);
 	}
 
-	mp_reset_pool(p);
+	mp_reset_pool(p); //重置内存池
 
 	//printf("mp_destory_pool\n");
 	for (i = 0;i < 58;i ++) {
