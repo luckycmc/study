@@ -271,10 +271,10 @@ void *mp_nalloc(struct mp_pool_s *pool, size_t size) {
 	struct mp_node_s *p;
 
 	if (size <= pool->max) {
-		p = pool->current;
+		p = pool->current; //当前快是当前可以用的块
 
 		do {
-			m = p->last;
+			m = p->last;  //指向未分配的位置
 			if ((size_t)(p->end - m) >= size) {
 				p->last = m+size;
 				return m;
@@ -301,7 +301,7 @@ void *mp_calloc(struct mp_pool_s *pool, size_t size) {
 }
 /**
  * @brief 内存池的释放
- * 
+ *   nginx 内存池对应小块 没有 一个个释放而是一起释放
  * @param pool 
  * @param p 
  */
@@ -370,6 +370,12 @@ int main(int argc, char *argv[]) {
 	return 0;
 
 }
+/**
+ * @brief 
+ * 内存池的组织方案
+ * htop/top 查看内存
+ * mtrace 
+ */
 
 
 

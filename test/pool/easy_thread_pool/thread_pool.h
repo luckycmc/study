@@ -8,7 +8,7 @@ typedef struct tpool_worker{
       
       void* (*routine)(void*);   /*任务函数*/
       void* arg; // 参数
-      struct tpool_worker *next; // 任务的下一个节点
+      struct tpool_worker *next; // 任务的下一个节点 形成一个链表
 
 }tpool_worker_t;
 

@@ -104,7 +104,6 @@ int tpool_create(int max_thr_num)
               printf("%s:pthread_create failed, errno:%d, error:%s\n", __FUNCTION__,errno, strerror(errno));
                exit(1);
           }
-         
     }
      return 0;
 }
@@ -175,7 +174,7 @@ int tpool_add_worker(void*(*routine)(void*), void *arg)
      }
 
       /* 通知工作者线程，有新任务添加 */
-      pthread_cond_signal(&tpool->queue_ready);
+      pthread_cond_signal(&tpool->queue_ready);  //唤醒对应的工作线程执行对应的任务
       //解锁是当前的工作线程进程工作
       pthread_mutex_unlock(&tpool->queue_lock);
 
