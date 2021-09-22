@@ -96,7 +96,7 @@ int send_cb(int fd, int events, void *arg)
 	ev.events = EPOLLIN | EPOLLET;
 	//ev.data.fd = clientfd;
 	si->sockfd = fd;
-	si->callback = recv_cb;
+	si->callback = recv_cb; //注册回调函数
 	ev.data.ptr = si;
 
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
@@ -151,7 +151,7 @@ int recv_cb(int fd, int events, void *arg)
 		ev.events = EPOLLOUT | EPOLLET;
 		//ev.data.fd = clientfd;
 		si->sockfd = fd;
-		si->callback = send_cb;
+		si->callback = send_cb; //设置对应的回调函数
 		ev.data.ptr = si;
 		epoll_ctl(eventloop->epfd, EPOLL_CTL_MOD, fd, &ev);
        
@@ -175,7 +175,7 @@ int accept_cb(int fd, int events, void *arg)
 		ntohs(client_addr.sin_port));
 
 	struct epoll_event ev;
-	ev.events = EPOLLIN | EPOLLET;
+	ev.events = EPOLLIN | EPOLLET; //出发模式
 	//ev.data.fd = clientfd;
 
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
@@ -185,7 +185,7 @@ int accept_cb(int fd, int events, void *arg)
 	
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
 	//接受数据回调函数
-	 onConnect();
+	 onConnect();     //出发有链接进来的回调函数
 	 return clientfd;
 }
 //关闭事件的处理函数
@@ -203,13 +203,13 @@ int close_cb(int fd, int events, void *arg)
 	 onClose();
 }
 
-//创建对应的reactor
+//创建对应的reactor 模型
 int reactor_cteate()
 {
     eventloop = (struct reactor*)malloc(sizeof(struct reactor));
 	// epoll opera
 
-	eventloop->epfd = epoll_create(1);
+	eventloop->epfd = epoll_create(1); // 红黑树节点的创建
 	printf("eventloop->epfd is %d\n", eventloop->epfd);
 	if (eventloop->epfd < -1)
 	{
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
 
 	printf("server is starting\n");
 
-    epfd = reactor_cteate();
+    epfd = reactor_cteate();  //epoll_create 的创建
 
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 	
 	epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &ev);
 
-	while (1) 
+	while (1)  // 进入事件循环
      {
 		int nready = epoll_wait(eventloop->epfd, eventloop->events, 512, -1);
 
@@ -257,13 +257,15 @@ int main(int argc, char *argv[])
 
 			if (eventloop->events[i].events & EPOLLIN) {
 				//printf("sockitem\n");
-				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
+				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr; //检测数用户设置的参数
+				//触发回调函数
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 			}
 
 			if (eventloop->events[i].events & EPOLLOUT) {
 
-				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
+				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;//检测数用户设置的参数
+				//触发回调函数
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 			}
 		}
