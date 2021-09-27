@@ -16,7 +16,7 @@ clent.c
 
 
 //file: net/core/request_sock.c  //对应的 文件代码
-
+server listen 的工作
 int reqsk_queue_alloc(struct request_sock_queue *queue,
      unsigned int nr_table_entries)
 {
@@ -266,4 +266,4 @@ client connect()
            开启保活计时器后发出第三次握手的 ack 确认。
        5. 服务器响应 ack 时，把对应半连接对象删除，创建了新的 sock 后加入到全连接队列中，
            最后将新连接状态设置为 ESTABLISHED。
-        6. accept 从已经建立好的全连接队列中取出一个返回给用户进程。
+       6. accept 从已经建立好的全连接队列中取出一个返回给用户进程。
