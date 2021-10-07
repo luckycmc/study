@@ -92,6 +92,7 @@ void list_online_user(sockfd)
   }*/
   
 }
+//注册用户
 int  registe(int fd)
 {
   struct protocol msg,msgback;
@@ -117,6 +118,7 @@ int  registe(int fd)
     return 0  ;
   }
 }
+//用户登录
 int login(int fd)
 {
   struct protocol msg,msgback;
@@ -149,6 +151,7 @@ int logout(int fd)
   close(fd);
   login_f = -1;
 }
+//客户端是单线程和单进程
 int main(int argc, char **argv)
 {
   int    sel;
