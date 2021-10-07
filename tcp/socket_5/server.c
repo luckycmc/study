@@ -56,12 +56,14 @@ void broadcast(int index,struct protocol*msg)
   sprintf(buf,"%s say:%s\n",online[index].name ,msg->data);
   
   for(i=0;i<MAX_USER_NUM;i++)
-  {// jump offline and sender self
-    if((online[i].fd == -1)||(i == index))
-    {
-      continue;
-    }
-    write(online[i].fd,buf,strlen(buf));  
+  {     
+        // jump offline and sender self
+        if((online[i].fd == -1)||(i == index))
+        {
+        continue;
+        }
+       //把数据写入到对应的客户端
+       write(online[i].fd,buf,strlen(buf));  
   }  
 }
 //查找在线用户
@@ -71,8 +73,8 @@ int find_dest_user_online(int sockfd,int *index,struct protocol*msg)
   
   for(i=0;i<MAX_USER_NUM;i++)
   {
-  //this pos not use
-    if(online[i].flage== -1)
+     //this pos not use
+    if(online[i].flage== -1)  //跳过下线用户
     {
       continue;      
     }
@@ -135,7 +137,7 @@ void private(int index,struct protocol*msg)
   
   
 }
-//在线用户列表
+//显示在线用户列表
 void list_online_user(int index)
 {
   int i;
@@ -205,7 +207,7 @@ void login(int sockfd,int *index,struct protocol*msg)
   //找到那个人
   ret = find_dest_user_online(sockfd,index,msg);
   
-  if(ret != OP_OK)
+  if(ret != OP_OK)  //用户不存在登陆失败
   {
     msg_back.state = ret;
     strcpy(buf,"there is no this user\n");
@@ -226,7 +228,7 @@ void login(int sockfd,int *index,struct protocol*msg)
   {
     if(online[i].fd != -1)
     {
-      write(online[i].fd,buf,strlen(buf));
+      write(online[i].fd,buf,strlen(buf));  //通知所有的用户
     }      
   }
   
@@ -250,16 +252,16 @@ void *func(void *arg)
   while(1)
   {
     len = read(sockfd,&msg,sizeof(msg));
-    if(len<=0)
-    {//下线
+    if(len <= 0)
+    {//下线 
       printf("%s offline\n",online[index].name);
       //从在线列表中删除
-      del_user_online(index);
-      close(sockfd);
+      del_user_online(index);  //说明该用户下线
+      close(sockfd);           // 关闭对应的fd
       return;
     }
     
-    switch(msg.cmd)
+    switch(msg.cmd)  //匹配对应的功能
     {
       case REGISTE:
         registe(sockfd,&index,&msg);
@@ -282,7 +284,7 @@ void *func(void *arg)
     
   }  
 }
-
+//入口函数
 int main(int argc, char **argv)
 {
   int lsfd,newfd;
@@ -338,10 +340,10 @@ int main(int argc, char **argv)
     printf("client:ip:%s   port:%d  \n",
       inet_ntoa(cli_adr.sin_addr),cli_adr.sin_port);
         
-    arg = malloc(sizeof(int));
+    arg = malloc(sizeof(int));  //指针必须申请内存
     *arg = newfd;//必须搞清楚为什么要申请内存
     
-          pthread_create(&pid,NULL,func, (void*)arg);  
+          pthread_create(&pid,NULL,func, (void*)arg);  //
   }
   close(newfd);
   close(lsfd);
