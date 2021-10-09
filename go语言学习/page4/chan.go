@@ -6,6 +6,7 @@ func rec(c chan int){
 	ret := <-c  //等待管道的值发送过来,
 	fmt.Println("数据接受成功",ret)
 }
+
 func main(){
    //定义一个整型通道
    ch := make(chan int) //无缓存通道
