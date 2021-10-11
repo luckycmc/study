@@ -60,7 +60,7 @@ void broadcast(int index,struct protocol*msg)
         // jump offline and sender self
         if((online[i].fd == -1)||(i == index))
         {
-        continue;
+            continue;
         }
        //把数据写入到对应的客户端
        write(online[i].fd,buf,strlen(buf));  
@@ -71,7 +71,7 @@ int find_dest_user_online(int sockfd,int *index,struct protocol*msg)
 {
   int i;
   
-  for(i=0;i<MAX_USER_NUM;i++)
+  for(i=0; i<MAX_USER_NUM; i++)
   {
      //this pos not use
     if(online[i].flage== -1)  //跳过下线用户
@@ -96,7 +96,7 @@ int find_dest_user_online(int sockfd,int *index,struct protocol*msg)
   }
   return NAME_PWD_NMATCH;
 }
-//查找对应的用户
+//查找对应的用户 用用户的名字去查找
 int find_dest_user(char *name)
 {
   int i;
@@ -111,7 +111,7 @@ int find_dest_user(char *name)
     
     if(strcmp(name,online[i].name)==0)
     {
-      return i;      
+      return i;      //返回对应的索引 id
     }
   }
   return -1;
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
     arg = malloc(sizeof(int));  //指针必须申请内存
     *arg = newfd;//必须搞清楚为什么要申请内存
     
-          pthread_create(&pid,NULL,func, (void*)arg);  //
+          pthread_create(&pid,NULL,func, (void*)arg);  //一个连接一个线程去处理该用户的数据
   }
   close(newfd);
   close(lsfd);
