@@ -287,64 +287,66 @@ void *func(void *arg)
 //入口函数
 int main(int argc, char **argv)
 {
-  int lsfd,newfd;
-  int addrLen,cliaddrlen;
-  struct sockaddr_in   my_addr; 
-  struct sockaddr_in   cli_adr;  
-  char buf[64]="xuezhiqian fuhele\n";
-  pthread_t pid;
-  int *arg;
-  int i;
-  int portnumber;
-  
-  if(argc<2)
-  {
-    printf("cmd: %s  portnumber\n",argv[0]);
-    return;
-  }
-/*׋ࠚۅһהì΋Զ*/
-  if((portnumber=atoi(argv[1]))<0)
-  {
-    fprintf(stderr,"Usage:%s portnumber\a\n",argv[0]);
-    exit(1);
-  }  
-  lsfd = socket(PF_INET,SOCK_STREAM,0);  
-  if(lsfd<0)
-  {
-    perror("socket() fail\n");
-    return;
-  }
-  bzero(&my_addr,sizeof(struct sockaddr_in));
-  my_addr.sin_family =  PF_INET;  
-  my_addr.sin_port   =  htons(portnumber);
-  my_addr.sin_addr.s_addr   =  htonl(INADDR_ANY);
-  addrLen = sizeof(struct sockaddr_in);
-  
-  if(bind(lsfd,(struct sockaddr* )&my_addr ,addrLen)<0)
-  {
-    perror("bind() fail\n");
-    return;    
-  }
-  
-  listen(lsfd,5);
-  cliaddrlen = sizeof(struct sockaddr_in);
-  
-  for(i=0;i<64;i++)
-  {
-    online[i].fd = -1;
-    online[i].flage= -1;
-  }
-  while(1)
-  {
-    newfd = accept(lsfd,(struct sockaddr *)&cli_adr,&cliaddrlen);
-    printf("client:ip:%s   port:%d  \n",
-      inet_ntoa(cli_adr.sin_addr),cli_adr.sin_port);
-        
-    arg = malloc(sizeof(int));  //指针必须申请内存
-    *arg = newfd;//必须搞清楚为什么要申请内存
+    int lsfd,newfd;
+    int addrLen,cliaddrlen;
+    struct sockaddr_in   my_addr; 
+    struct sockaddr_in   cli_adr;  
+    char buf[64]="xuezhiqian fuhele\n";
+    pthread_t pid;
+    int *arg;
+    int i;
+    int portnumber;
     
-          pthread_create(&pid,NULL,func, (void*)arg);  //一个连接一个线程去处理该用户的数据
-  }
-  close(newfd);
-  close(lsfd);
+    if(argc<2)
+    {
+      printf("cmd: %s  portnumber\n",argv[0]);
+      return;
+    }
+  /*׋ࠚۅһהì΋Զ*/
+    if((portnumber=atoi(argv[1]))<0)
+    {
+      fprintf(stderr,"Usage:%s portnumber\a\n",argv[0]);
+      exit(1);
+    }  
+    lsfd = socket(PF_INET,SOCK_STREAM,0);    //创建爱socket
+    if(lsfd<0)
+    {
+      perror("socket() fail\n");
+      return;
+    }
+    bzero(&my_addr,sizeof(struct sockaddr_in));
+    my_addr.sin_family =  PF_INET;  
+    my_addr.sin_port   =  htons(portnumber);
+    my_addr.sin_addr.s_addr   =  htonl(INADDR_ANY);
+    addrLen = sizeof(struct sockaddr_in);
+    
+    if(bind(lsfd,(struct sockaddr* )&my_addr ,addrLen)<0) //绑定对应的端口和被使用的ip
+    {
+      perror("bind() fail\n");
+      return;    
+    }
+    
+    listen(lsfd,5);  // 申请半连接队列的 空间初始化半连接 队列 和初始化全连接队列
+
+    cliaddrlen = sizeof(struct sockaddr_in);
+    
+    for(i=0;i<64;i++)
+    {
+        online[i].fd = -1;   //初始化fd和对应的标识
+        online[i].flage= -1;
+    }
+    while(1)
+    {  
+      //取出全连接队列的fd 进行处理
+      newfd = accept(lsfd,(struct sockaddr *)&cli_adr,&cliaddrlen);
+      printf("client:ip:%s   port:%d  \n",
+        inet_ntoa(cli_adr.sin_addr),cli_adr.sin_port);
+          
+      arg = malloc(sizeof(int));  //指针必须申请内存
+      *arg = newfd;//必须搞清楚为什么要申请内存
+      
+            pthread_create(&pid,NULL,func, (void*)arg);  //一个连接一个线程去处理该用户的数据
+    }
+    close(newfd);
+    close(lsfd);
 }
