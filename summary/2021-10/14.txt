@@ -45,4 +45,7 @@ TCP的四种拥塞控制算法
 
 当 cwnd < rwnd 时，则是网络的拥塞限制发送窗口的最大值。
 
+
+ssthresh 是慢开始门限
+
 参考这个博客 https://blog.csdn.net/qican_7/article/details/100523652
