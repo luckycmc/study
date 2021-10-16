@@ -48,4 +48,9 @@ TCP的四种拥塞控制算法
 
 ssthresh 是慢开始门限
 
+tcp 规定 即使是接受窗口为0 也好接受零窗口探测报文段 确认报文段 以及紧急数据的报文段
+零窗口探测报文若丢失，会超时重传，直到正确收到B的ack，若一直未收到B的ack，则说明A，B间不可通信，或者通信质量差
+
+tcpdump -nn -i eth0 port 80  抓包
+
 参考这个博客 https://blog.csdn.net/qican_7/article/details/100523652
