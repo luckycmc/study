@@ -3,7 +3,7 @@
 #include "queue.h"
 
 //链表的初始化
-QNode * initQueue()
+QNode *initQueue()
 {
     QNode *queue = (QNode *)malloc(sizeof(QNode));
     queue->next = NULL;
