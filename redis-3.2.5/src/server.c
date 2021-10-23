@@ -4109,6 +4109,7 @@ int main(int argc, char **argv) {
     }
 
     aeSetBeforeSleepProc(server.el,beforeSleep);
+    //开启事假循环
     aeMain(server.el);
     aeDeleteEventLoop(server.el);
     return 0;
