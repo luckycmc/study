@@ -3,7 +3,7 @@ import(
 	"fmt"
 	"net"
 )
-
+//server struct
 type Server struct{
 	Ip string
 	Port int
@@ -21,6 +21,7 @@ func NewServer(ip string,port int) *Server{
 //处理对应的业务
 func (this *Server) Handler(conn net.Conn){
      
+	 defer conn.Close(); //close
 	 fmt.Println("连接建立成功")
 }
 //启动服务的接口
@@ -49,6 +50,5 @@ func (this *Server) Start() {
 		go this.Handler(conn)
 	 }
 	
-
 	 //close listen socket
 }
