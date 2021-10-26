@@ -4,6 +4,7 @@ import(
 	"net"
 	"sync"
 	"io"
+	"time"
 )
 //server struct
 type Server struct{
@@ -23,7 +24,7 @@ func NewServer(ip string,port int) *Server{
 		   Ip:ip,
 		   Port:port,
 		   OnlineMap : make(map[string]*User), 
-		   Message : make(chan string)
+		   Message : make(chan string),
 	 }
 	 return server
 }
@@ -56,7 +57,8 @@ func (this *Server) Handler(conn net.Conn){
 	 user := NewUser(conn,this)
 	 //用户上线 将用户加入到online中
      user.Online()
-	 
+	 //监听用户是否是活跃的管道channel
+	 isLive := make(chan bool)
 	 //接受客户端消息
 	 go func ()  {
 		   
@@ -82,18 +84,39 @@ func (this *Server) Handler(conn net.Conn){
 
 				  //用户针对message 
 				  user.DoMessage(msg)
+				  //用户的任意消息代表当前用户是一个活跃用户
+				  isLive <- true
 			}
 	 }()
 
 	 //当前handle 阻塞
-	 select{}
+	 for{
+         
+		select{
+		case <- isLive:
+			//当前用户是活跃的,应该重置定时器
+			//不做任何事情 为了激活select 更新下面的定时器
+		case <- time.After(time.Second *10):
+			//已经超时
+			//将当前的User强制关闭
+			user.SendMsg("你被踢出了")
+
+			//销毁用的资源
+			close(user.C)
+			//关闭连接
+			conn.Close()
+			//退出当前协成
+			return
+		}
+	 }
+	
 }
 //启动服务的接口
 func (this *Server) Start() {
 	  
 	 //socket listen 
      listener,err := net.Listen("tcp",fmt.Sprintf("%s:%d",this.Ip,this.Port))
-	 fmt.Println("listen is startting....");
+	 fmt.Println("listen is startting....",this.Ip,this.Port);
 	 //accept
 	 if err != nil{
 		 fmt.Println("net.Listen err:",err)

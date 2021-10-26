@@ -1,6 +1,7 @@
 package main
 import (
 	"net"
+	"strings"
 )
 
 type User struct{
@@ -49,9 +50,43 @@ func (this *User) Offline() {
 	  //广播当前用户消息
 	  this.server.BroadCast(this,"已下线")
 }
+//发送消息给用户
+func (this *User) SendMsg(msg string)  {
+	  
+	  this.conn.Write([]byte(msg))
+}
 //用户处理消息的业务
 func (this *User) DoMessage(msg string)  {
-	this.server.BroadCast(this,msg)
+	//获取对应的命令然后解析
+	if msg == "who"{
+         
+		  //查询当前在线用户有哪些
+		  this.server.mapLock.Lock()
+		  for _, user := range this.server.OnlineMap{
+			  onlineMsg := "["+user.Addr+"]" +user.Name +":"+"在线...\n"
+			  this.SendMsg(onlineMsg)
+		  }
+		  this.server.mapLock.Unlock()
+	}else if len(msg) >7 && msg[:7] == "rename|"{
+          
+		  //消息格式 rename|张三
+		  newName := strings.Split(msg, "|")[1]
+		  _,ok := this.server.OnlineMap[newName]
+		  if ok{
+			  this.SendMsg("当前用户名被使用\n")
+		  }else{
+			this.server.mapLock.Lock()
+			delete(this.server.OnlineMap, this.Name)
+			this.server.OnlineMap[newName] = this
+			this.server.mapLock.Unlock()
+			this.Name = newName
+			this.SendMsg("您已经更新用户名:"+this.Name+"\n")
+		  }
+		  
+	}else{
+		this.server.BroadCast(this,msg) //广播用户信息
+	}
+	
 }
 //监听当前User channnel 的方法，一旦有消息，直接发送给对端客户
 func (this *User) ListenMessage() {
