@@ -69,7 +69,7 @@ func (this *Server) Handler(conn net.Conn){
 				  n,err := conn.Read(buf)
 				  //客户端关闭
 				  if n==0 {
-					   
+					    //当前用户下线
 					    user.Offline()
 						return
 				  }
@@ -96,7 +96,7 @@ func (this *Server) Handler(conn net.Conn){
 		case <- isLive:
 			//当前用户是活跃的,应该重置定时器
 			//不做任何事情 为了激活select 更新下面的定时器
-		case <- time.After(time.Second *10):
+		case <- time.After(time.Second *60):
 			//已经超时
 			//将当前的User强制关闭
 			user.SendMsg("你被踢出了")
