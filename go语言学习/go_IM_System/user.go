@@ -25,7 +25,7 @@ func NewUser(conn net.Conn,server *Server) *User {
 			conn :conn,
 			server : server,
 	   }
-       //启动监听当前User channel 消息的gorontine
+       //启动监听当前User channel 消息的gorontine  主要处理user的消息
 	   go user.ListenMessage()
 
 	   return user
@@ -33,6 +33,7 @@ func NewUser(conn net.Conn,server *Server) *User {
 
 //用户的上线业务
 func (this *User) Online() {
+	  //当亲this是一个指针
 	  //用户上线 将用户加入到online中
 	  this.server.mapLock.Lock()
 	  this.server.OnlineMap[this.Name] = this
@@ -45,7 +46,7 @@ func (this *User) Online() {
 func (this *User) Offline() {
 	  //用户上线 将用户加入到online中
 	  this.server.mapLock.Lock()
-	  delete(this.server.OnlineMap,this.Name)
+	  delete(this.server.OnlineMap,this.Name) //删除map 中的键值队数据
 	  this.server.mapLock.Unlock()
 	  //广播当前用户消息
 	  this.server.BroadCast(this,"已下线")
@@ -55,10 +56,10 @@ func (this *User) SendMsg(msg string)  {
 	  
 	  this.conn.Write([]byte(msg))
 }
-//用户处理消息的业务
+//用户处理消息的业务 主要是用户的逻辑处理
 func (this *User) DoMessage(msg string)  {
 	//获取对应的命令然后解析
-	if msg == "who"{
+	if msg == "who"{   //查看当前用户
          
 		  //查询当前在线用户有哪些
 		  this.server.mapLock.Lock()
@@ -67,7 +68,7 @@ func (this *User) DoMessage(msg string)  {
 			  this.SendMsg(onlineMsg)
 		  }
 		  this.server.mapLock.Unlock()
-	}else if len(msg) >7 && msg[:7] == "rename|"{
+	}else if len(msg) >7 && msg[:7] == "rename|"{  //修改用户名称
           
 		  //消息格式 rename|张三
 		  newName := strings.Split(msg, "|")[1]
@@ -83,7 +84,7 @@ func (this *User) DoMessage(msg string)  {
 			this.SendMsg("您已经更新用户名:"+this.Name+"\n")
 		  }
 		  
-	}else if len(msg) >4 && msg[:3] == "to|" {
+	}else if len(msg) >4 && msg[:3] == "to|" {  //私聊给用户发消息
             
 		    //消息格式 rename|张三|消息内容
 			 //获取对方的用户名

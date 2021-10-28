@@ -23,8 +23,8 @@ func NewServer(ip string,port int) *Server{
 	 server := &Server{
 		   Ip:ip,
 		   Port:port,
-		   OnlineMap : make(map[string]*User), 
-		   Message : make(chan string),
+		   OnlineMap : make(map[string]*User),  //初始化 map
+		   Message : make(chan string),         //初始化 channel
 	 }
 	 return server
 }
@@ -124,7 +124,7 @@ func (this *Server) Start() {
 	 }
 	 //关闭监听
 	 defer listener.Close()
-	 //启动监听Message 的goroutine
+	 //启动监听Message 的goroutine  用户的上线通知消息
 	 go this.ListenMessage()
 
 	 //接受客户端请求
@@ -136,7 +136,7 @@ func (this *Server) Start() {
 			fmt.Println("net.Listen err:",err)
 			continue
 		 }
-        // do handle
+        // do handle  处理用户的业务逻辑
 		go this.Handler(conn)
 	 }
 	
