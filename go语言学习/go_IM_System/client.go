@@ -61,6 +61,31 @@ func (client *Client) menu() bool {
 		   return false
 	   }
 }
+//查询用户
+func (client *Client) SelectUsers()  {
+	  
+	   sendMsg := "who\n"
+	   _,err := client.conn.Write([]byte(sendMsg))
+	   if err != nil {
+		   fmt.Println("conn Write error: ", err)
+		   return
+	   }
+}
+//私聊模式
+func (client *Client) PrvilateChat()  {
+	   
+	   var remoteName string
+	   var chatMsg string
+	   client.SelectUsers()
+	   fmt.Println(">>>>请输入聊天[用户名],exit退出")
+	   fmt.Scanln(&remoteName)
+
+	   for remoteName != "exit" {
+		    fmt.Println(">>>>请输入聊天内容,exit退出")
+            fmt.Scanln(&chatMsg)
+	   }
+
+}
 //公聊模式
 func (client *Client) PublicChat()  {
 	  
