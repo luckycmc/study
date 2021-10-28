@@ -83,6 +83,28 @@ func (client *Client) PrvilateChat()  {
 	   for remoteName != "exit" {
 		    fmt.Println(">>>>请输入聊天内容,exit退出")
             fmt.Scanln(&chatMsg)
+
+			for chatMsg != "exit"{
+				  
+				   //发送消息
+			  if len(chatMsg) !=0 {
+				  
+					sendMsg := "to|"+remoteName+"|"+chatMsg+"\n\n"
+					_,err := client.conn.Write([]byte(sendMsg))
+					if err != nil {
+						fmt.Println("conn Write err:",err)
+						break
+					}
+		   		}
+				
+				chatMsg = ""
+				fmt.Println(">>>>请输入聊天内容,exit退出")
+				fmt.Scanln(&chatMsg)  
+			}
+
+			client.SelectUsers()
+			fmt.Println(">>>>请输入聊天[用户名],exit退出")
+			fmt.Scanln(&remoteName)
 	   }
 
 }
@@ -140,7 +162,7 @@ func (client *Client) run(){
 					client.PublicChat()
 					break
 			    case 2:
-					fmt.Println("私聊模式选择...")
+					client.PrvilateChat()
 					//私聊模式
 					break
 				case 3:
