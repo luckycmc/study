@@ -31,7 +31,7 @@ func (this *Client) hand() bool{
 	   this.conn = conn
 	   msg := "flag|"+this.data+"|window|"+this.window //拼接发送消息
 	   _, err2 := conn.Write([]byte(msg))
-	   buf :=make([]byte, 2014)
+	   buf := make([]byte, 1024)
 	   if err2 != nil{
 		   fmt.Println("server 半连接队列是满的")
 	   }
@@ -48,6 +48,11 @@ func (this *Client) hand() bool{
 //发送数据
  func (this *Client)  sendData() {
 	fmt.Printf("send data %s\n",this.window)
+	for i := 0; i < 10; i++ {
+		this.conn.Write([]byte("established|hello world\n"))
+		fmt.Println(i)
+	}
+	
 } 
 //四次挥手
 /* func (this *Client) byeHand() bool  {
