@@ -49,7 +49,7 @@ func (this *Client) hand() bool{
  func (this *Client)  sendData() {
 	fmt.Printf("send data %s\n",this.window)
 	for i := 0; i < 10; i++ {
-		this.conn.Write([]byte("established|hello world\n"))
+		this.conn.Write([]byte("data|hello world "+string(i)+"\n"))
 		fmt.Println(i)
 	}
 	
