@@ -305,11 +305,12 @@ static void cqi_free(CQ_ITEM *item) {
 
 
 /*
+  创建真的的工作线程
  * Creates a worker thread.
  */
 static void create_worker(void *(*func)(void *), void *arg) {
-    pthread_t       thread;
-    pthread_attr_t  attr;
+    pthread_t       thread;  //线程id 
+    pthread_attr_t  attr;    //线程属性
     int             ret;
 
     pthread_attr_init(&attr);
@@ -332,9 +333,12 @@ void accept_new_conns(const bool do_accept) {
 /****************************** LIBEVENT THREADS *****************************/
 
 /*
+   设置线程的信息
  * Set up a thread's information.
  */
 static void setup_thread(LIBEVENT_THREAD *me) {
+    /创建一个event_base
+    //根据libevent的使用文档，我们可以知道一般情况下每个独立的线程都应该有自己独立的event_base
     me->base = event_init();
     if (! me->base) {
         fprintf(stderr, "Can't allocate event base\n");
@@ -342,20 +346,23 @@ static void setup_thread(LIBEVENT_THREAD *me) {
     }
 
     /* Listen for notifications from other threads */
+    //这边非常重要，这边主要创建pipe的读事件EV_READ的监听
+    //当pipe中有写入事件的时候，libevent就会回调thread_libevent_process方法
     event_set(&me->notify_event, me->notify_receive_fd,
               EV_READ | EV_PERSIST, thread_libevent_process, me);
     event_base_set(me->base, &me->notify_event);
-
+    //添加事件操作
     if (event_add(&me->notify_event, 0) == -1) {
         fprintf(stderr, "Can't monitor libevent notify pipe\n");
         exit(1);
     }
-
+    //初始化一个工作队列
     me->new_conn_queue = malloc(sizeof(struct conn_queue));
     if (me->new_conn_queue == NULL) {
         perror("Failed to allocate memory for connection queue");
         exit(EXIT_FAILURE);
     }
+    //初始化队列信息
     cq_init(me->new_conn_queue);
 
     if (pthread_mutex_init(&me->stats.mutex, NULL) != 0) {
@@ -373,6 +380,7 @@ static void setup_thread(LIBEVENT_THREAD *me) {
 
 /*
  * Worker thread: main event loop
+   一个线程一个 eventLoop
  */
 static void *worker_libevent(void *arg) {
     LIBEVENT_THREAD *me = arg;
@@ -389,7 +397,9 @@ static void *worker_libevent(void *arg) {
     pthread_setspecific(item_lock_type_key, &me->item_lock_type);
 
     register_thread_initialized();
-
+    //这个方法主要是开启事件的循环
+    //每个线程中都会有自己独立的event_base和事件的循环机制
+    //memcache的每个工作线程都会独立处理自己接管的连接
     event_base_loop(me->base, 0);
     return NULL;
 }
@@ -403,16 +413,20 @@ static void thread_libevent_process(int fd, short which, void *arg) {
     LIBEVENT_THREAD *me = arg;
     CQ_ITEM *item;
     char buf[1];
-
+    //回调函数中回去读取pipe中的信息
+    //主线程中如果有新的连接，会向其中一个线程的pipe中写入1
+    //这边读取pipe中的数据，如果为1，则说明从pipe中获取的数据是正确的
     if (read(fd, buf, 1) != 1)
         if (settings.verbose > 0)
             fprintf(stderr, "Can't read from libevent pipe\n");
 
     switch (buf[0]) {
     case 'c':
-    item = cq_pop(me->new_conn_queue);
+    item = cq_pop(me->new_conn_queue);  //从工作线程的队列中获取一个CQ_ITEM连接信息
 
     if (NULL != item) {
+        //conn_new这个方法非常重要，主要是创建socket的读写等监听事件。
+    	//init_state 为初始化的类型，主要在drive_machine中通过这个状态类判断处理类型
         conn *c = conn_new(item->sfd, item->init_state, item->event_flags,
                            item->read_buffer_size, item->transport, me->base);
         if (c == NULL) {
@@ -454,6 +468,7 @@ static int last_thread = -1;
  */
 void dispatch_conn_new(int sfd, enum conn_states init_state, int event_flags,
                        int read_buffer_size, enum network_transport transport) {
+    //每个连接连上来的时候，都会申请一块CQ_ITEM的内存块，用于存储连接的基本信息                       
     CQ_ITEM *item = cqi_new();
     char buf[1];
     if (item == NULL) {
@@ -462,9 +477,11 @@ void dispatch_conn_new(int sfd, enum conn_states init_state, int event_flags,
         fprintf(stderr, "Failed to allocate memory for connection object\n");
         return ;
     }
-
+    //这个方法非常重要。主要是通过求余数的方法来得到当前的连接需要哪个线程来接管
+    //而且last_thread会记录每次最后一次使用的工作线程，每次记录之后就可以让工作线程进入一个轮询，
+    //保证了每个工作线程处理的连接数的平衡
     int tid = (last_thread + 1) % settings.num_threads;
-
+    ////获取线程的基本结构
     LIBEVENT_THREAD *thread = threads + tid;
 
     last_thread = tid;
@@ -474,11 +491,14 @@ void dispatch_conn_new(int sfd, enum conn_states init_state, int event_flags,
     item->event_flags = event_flags;
     item->read_buffer_size = read_buffer_size;
     item->transport = transport;
-
+     //向工作线程的队列中放入CQ_ITEM
     cq_push(thread->new_conn_queue, item);
 
     MEMCACHED_CONN_DISPATCH(sfd, thread->thread_id);
     buf[0] = 'c';
+    //向工作线程的pipe中写入1
+    //工作线程监听到pipe中有写入数据，工作线程接收到通知后，
+    //就会向thread->new_conn_queue队列中pop出一个item，然后进行连接的接管操作
     if (write(thread->notify_send_fd, buf, 1) != 1) {
         perror("Writing to thread notify pipe");
     }

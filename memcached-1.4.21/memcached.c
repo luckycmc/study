@@ -461,11 +461,13 @@ conn *conn_new(const int sfd, enum conn_states init_state,
     c->item = 0;
 
     c->noreply = false;
-
+    //我们发现这个方法中又在创建event了，这边实际上是监听socket的读写等事件
+    //主线程主要是监听用户的socket连接事件；工作线程主要监听socket的读写事件
+    //当用户socket的连接有数据传递过来的时候，就会调用event_handler这个回调函数
     event_set(&c->event, sfd, event_flags, event_handler, (void *)c);
     event_base_set(base, &c->event);
     c->ev_flags = event_flags;
-
+    //将事件添加到libevent的loop循环中
     if (event_add(&c->event, 0) == -1) {
         perror("event_add");
         return NULL;
@@ -3998,7 +4000,11 @@ static enum transmit_result transmit(conn *c) {
         return TRANSMIT_COMPLETE;
     }
 }
-
+/**
+ 
+ * 
+ * @param c 
+ */
 static void drive_machine(conn *c) {
     bool stop = false;
     int sfd;
@@ -4016,8 +4022,9 @@ static void drive_machine(conn *c) {
     assert(c != NULL);
 
     while (!stop) {
-
+         //这边通过state来处理不同类型的事件
         switch(c->state) {
+            //这边主要处理tcp连接,只有在主线程的下，才会执行listening监听操作。
         case conn_listening:
             addrlen = sizeof(addr);
 #ifdef HAVE_ACCEPT4
@@ -4072,7 +4079,7 @@ static void drive_machine(conn *c) {
 
             stop = true;
             break;
-
+        //等待事件连接
         case conn_waiting:
             if (!update_event(c, EV_READ | EV_PERSIST)) {
                 if (settings.verbose > 0)
@@ -4084,7 +4091,8 @@ static void drive_machine(conn *c) {
             conn_set_state(c, conn_read);
             stop = true;
             break;
-
+        //读取事件
+        //例如有用户提交数据过来的时候，工作线程监听到事件后，最终会调用这块代码
         case conn_read:
             res = IS_UDP(c->transport) ? try_read_udp(c) : try_read_network(c);
 
@@ -4333,7 +4341,10 @@ static void drive_machine(conn *c) {
 
     return;
 }
-
+/**
+ * 
+ * 事件句柄函数
+ */
 void event_handler(const int fd, const short which, void *arg) {
     conn *c;
 
@@ -4349,7 +4360,9 @@ void event_handler(const int fd, const short which, void *arg) {
         conn_close(c);
         return;
     }
-
+    //最终转交给了drive_machine这个方法
+    //memcache的大部分的网络事件都是由drive_machine这个方法来处理的
+    //drive_machine这个方法主要通过c->state这个事件的类型来处理不同类型的事件
     drive_machine(c);
 
     /* wait for next event */
