@@ -22,6 +22,10 @@ func process(conn net.Conn)  {
 				fmt.Println("read from client failed, err:", err)
 				break
 			}
+			//表示客户端退出
+			if n==0 {
+				fmt.Println("客户端退出")
+			}
 			//数据转换
 			recvStr := string(buf[:n])
 			fmt.Println("recv from client data:",recvStr)
@@ -32,13 +36,14 @@ func process(conn net.Conn)  {
 
 func main() {
 	 
-	  fmt.Println("tcp server is startting")
+	  
 	  //直接进入监听状态
 	  listen,err := net.Listen("tcp","0.0.0.0:8090")  //和C语言不同的是C需要 socket bind listen
 	  if err != nil {
 		  fmt.Println("listen failed: ",err)
 		  return //程序终止
 	  }
+	  fmt.Println("tcp server is startting.....,port is 8090")
 	  //一直接受客户端连接 7 * 24 小时
 	  for{
 

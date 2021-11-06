@@ -8,7 +8,7 @@ import(
 )
 func main(){
    //创建tcp客户端
-	conn,err := net.Dial("tcp","127.0.0.1:20000")
+	conn,err := net.Dial("tcp","127.0.0.1:8090")
 	if err != nil{
 		fmt.Println("连接错误,",err)
 		return 
