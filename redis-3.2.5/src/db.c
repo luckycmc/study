@@ -41,7 +41,9 @@ void slotToKeyFlush(void);
  * C-level DB API
  *----------------------------------------------------------------------------*/
 
-/* Low level key lookup API, not actually called directly from commands
+/* 
+   redis 查找当前数据库下的key
+   Low level key lookup API, not actually called directly from commands
  * implementations that should instead rely on lookupKeyRead(),
  * lookupKeyWrite() and lookupKeyReadWithFlags(). */
 robj *lookupKey(redisDb *db, robj *key, int flags) {
@@ -191,7 +193,7 @@ void setKey(redisDb *db, robj *key, robj *val) {
     removeExpire(db,key);
     signalModifiedKey(db,key);
 }
-
+//当前数据库 当前db数据库下 的key值是否存在
 int dbExists(redisDb *db, robj *key) {
     return dictFind(db->dict,key->ptr) != NULL;
 }

@@ -498,10 +498,13 @@ struct evictionPoolEntry {
     sds key;                    /* Key name. */
 };
 
-/* Redis database representation. There are multiple databases identified
+/* 
+   redis数据库结构体
+   Redis database representation. There are multiple databases identified
  * by integers from 0 (the default database) up to the max configured
  * database. The database number is the 'id' field in the structure. */
 typedef struct redisDb {
+    // 数据库键空间，保存着数据库中的所有键值对
     dict *dict;                 /* The keyspace for this DB */
     dict *expires;              /* Timeout of keys with a timeout set */
     dict *blocking_keys;        /* Keys with clients waiting for data (BLPOP) */
