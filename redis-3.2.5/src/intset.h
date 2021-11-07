@@ -33,14 +33,19 @@
 #include <stdint.h>
 
 typedef struct intset {
+     // 编码方式
     uint32_t encoding;
+    // 集合包含的元素数量
     uint32_t length;
-    int8_t contents[];
+    // 保存元素的数组
+    int8_t contents[];  //contents 数组是整数集合的底层实现： 整数集合的每个元素都是 contents 数组的一个数组项（item）， 
+    //各个项在数组中按值的大小从小到大有序地排列， 并且数组中不包含任何重复项。
 } intset;
 
 intset *intsetNew(void);
 intset *intsetAdd(intset *is, int64_t value, uint8_t *success);
 intset *intsetRemove(intset *is, int64_t value, int *success);
+//intsetFind ()低程数组是有序的所以直接二分法查找
 uint8_t intsetFind(intset *is, int64_t value);
 int64_t intsetRandom(intset *is);
 uint8_t intsetGet(intset *is, uint32_t pos, int64_t *value);
