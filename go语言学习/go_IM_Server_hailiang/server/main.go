@@ -57,6 +57,12 @@ func process(conn net.Conn)  {
 		   fmt.Println("mes = ",mes)
 	  }  
 }
+//编写一个process函数
+//功能:根据客户端发送消息种类的不同,决定用哪个函数处理
+func serverProcessMsg(conn net.Conn,mes *mes.Message){
+
+}
+//主函数
 func main()  {
 	
 	  //提示新消息
