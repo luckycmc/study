@@ -57,5 +57,7 @@ func main()  {
 	 }else if key ==2 {
 		fmt.Println("注册用户")
 	 }
-	 time.Sleep(time.Second *10)
+
+
+	 //time.Sleep(time.Second *10)
 }

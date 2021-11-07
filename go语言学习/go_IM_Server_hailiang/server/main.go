@@ -37,26 +37,7 @@ func readPkg(conn net.Conn) (msg message.Message, err error) {
 		   }
 		   return 
 }
-//处理与客户端的连接
-func process(conn net.Conn)  {
-	  
-	 defer conn.Close() //延时关闭客户端
-	 
-	  //读取客户端发送的数据
-	  for {
-		   mes,err := readPkg(conn)
-		   if err != nil {
-			   if err == io.EOF {
-				    fmt.Println("客户端关闭了连接,服务器端也进行关闭")
-					return
-			   }else{
-				fmt.Println("readPkg err=",err)
-				return
-			   } 
-		   }
-		   fmt.Println("mes = ",mes)
-	  }  
-}
+
 //发送数据
 func writePkg(conn net.Conn,data []byte)(err error)  {
 	  
@@ -82,6 +63,27 @@ func writePkg(conn net.Conn,data []byte)(err error)  {
 		}
 		return
 }
+//处理与客户端的连接
+func process(conn net.Conn)  {
+	  
+	defer conn.Close() //延时关闭客户端
+	
+	 //读取客户端发送的数据
+	 for {
+		  mes,err := readPkg(conn)
+		  if err != nil {
+			  if err == io.EOF {
+				   fmt.Println("客户端关闭了连接,服务器端也进行关闭")
+				   return
+			  }else{
+			   fmt.Println("readPkg err=",err)
+			   return
+			  } 
+		  }
+		  fmt.Println("mes = ",mes)
+	 }  
+}
+
 //编写一个函数专门处理serviceProcessLogin函数专门处理登录请求
 func serviceProcessLogin(conn net.Conn,mes message.Message)(err error)  {
 	   
@@ -125,7 +127,8 @@ func serviceProcessLogin(conn net.Conn,mes message.Message)(err error)  {
 			return
 		}
 		//6发送 data
-		writePkg(conn,data)
+		err = writePkg(conn,data)
+		return
 }
 //编写一个process函数
 //功能:根据客户端发送消息种类的不同,决定用哪个函数处理
