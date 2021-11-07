@@ -43,18 +43,18 @@
 
 /* Unused arguments generate annoying warnings... */
 #define DICT_NOTUSED(V) ((void) V)
-
+//具体的hash表 也就是存放数据的 key=>val
 typedef struct dictEntry {
-    void *key;
+    void *key;   
     union {
         void *val;
         uint64_t u64;
         int64_t s64;
         double d;
-    } v;
-    struct dictEntry *next;
+    } v; //对应的val
+    struct dictEntry *next;  //解决hash冲突的的指针链表
 } dictEntry;
-
+//对应的处理函数
 typedef struct dictType {
     unsigned int (*hashFunction)(const void *key);
     void *(*keyDup)(void *privdata, const void *key);
@@ -76,7 +76,7 @@ typedef struct dictht {
 typedef struct dict {
     dictType *type;
     void *privdata;
-    dictht ht[2];
+    dictht ht[2];    //和rehashindex 一起来搞定渐进式hash
     long rehashidx; /* rehashing not in progress if rehashidx == -1 */
     int iterators; /* number of iterators currently running */
 } dict;

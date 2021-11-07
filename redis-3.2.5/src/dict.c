@@ -300,7 +300,7 @@ int dictRehashMilliseconds(dict *d, int ms) {
     int rehashes = 0;
 
     while(dictRehash(d,100)) {
-        rehashes += 100;
+        rehashes += 100;   //每一次进行100 个移动
         if (timeInMilliseconds()-start > ms) break;
     }
     return rehashes;
