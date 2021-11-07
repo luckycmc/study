@@ -57,10 +57,90 @@ func process(conn net.Conn)  {
 		   fmt.Println("mes = ",mes)
 	  }  
 }
+//发送数据
+func writePkg(conn net.Conn,data []byte)(err error)  {
+	  
+	    //先发送一个长度给对端
+		//先获取到 data的长度->转成一个表示长度的byte切片
+		var pkgLen uint32
+		pkgLen = uint32(len(data))
+		var bytes [4]byte
+		binary.BigEndian.PutUint32(bytes[0:4], pkgLen)
+		//发送长度
+		n,err := conn.Write(bytes[0:4])
+		if n !=4 ||err != nil {
+			
+			fmt.Println("conn.Write(bytes) fail",err)
+			return
+		}
+		//发送data数据值
+		n,err = conn.Write(data)
+		if n != int(pkgLen) ||err != nil {
+			
+			fmt.Println("conn.Write(bytes) fail",err)
+			return
+		}
+		return
+}
+//编写一个函数专门处理serviceProcessLogin函数专门处理登录请求
+func serviceProcessLogin(conn net.Conn,mes message.Message)(err error)  {
+	   
+	    //1.先从mes中取出mes.Data,并直接反序列化LoginMes
+		var loginMes message.LoginMes
+		err = json.Unmarshal([]byte(mes.Data), &loginMes)
+		if err != nil {
+			fmt.Println("json.Unmarshal failed error: ", err)
+			return
+		}
+		//1先声明一个resMes
+		var resMes message.Message
+		resMes.Type = message.LoginMessageType
+
+		//2在声明一个LoginResMes
+		var loginResMes message.LoginResMes
+
+		//如果用户的id为100 密码等于123456 认为合法 否者不合法
+		if loginMes.UserId == 100 && loginMes.UserPwd == "123456" {
+			  
+			    //合法
+				loginResMes.Code = 200
+				loginResMes.Error = "用户登录成功"
+		}else{
+               //合法
+				loginResMes.Code  = 500
+				loginResMes.Error = "该用户不存在请注册在使用"
+		}
+		//3.将loginMessage 序列化
+		data, err = json.Marshal(loginResMes)
+		if err != nil{
+			fmt.Println("json.Marshal failed:", err)
+			return
+		}
+		//4将data 赋值给
+		resMes.data = string(data)
+        //5.对reMes 进行序列化 准备发送
+		data, err = json.Marshal(resMes)
+		if err != nil{
+			fmt.Println("json.Marshal failed:", err)
+			return
+		}
+		//6发送 data
+		writePkg(conn,data)
+}
 //编写一个process函数
 //功能:根据客户端发送消息种类的不同,决定用哪个函数处理
-func serverProcessMsg(conn net.Conn,mes *mes.Message){
-
+func serverProcessMsg(conn net.Conn,mes *message.Message)(err error){
+     
+	   switch mes.Type {
+			case message.LoginMessageType:
+				//处理登录的信息
+				err = serviceProcessLogin(conn,mes)
+			case message.RegisterMesType:
+				//处理注册的信息
+			default:
+				fmt.Println("消息类型不存在无法处理....")
+	   }
+	   return
 }
 //主函数
 func main()  {
