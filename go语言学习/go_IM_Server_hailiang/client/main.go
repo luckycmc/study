@@ -2,6 +2,7 @@ package main
 import(
 	"fmt"
 	"os"
+	"time"
 )
 
 //定义连个变量 一个表示用户id，一个表示用户密码
@@ -56,4 +57,5 @@ func main()  {
 	 }else if key ==2 {
 		fmt.Println("注册用户")
 	 }
+	 time.Sleep(time.Second *10)
 }
