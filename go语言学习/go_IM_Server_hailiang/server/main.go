@@ -80,7 +80,12 @@ func process(conn net.Conn)  {
 			   return
 			  } 
 		  }
-		  fmt.Println("mes = ",mes)
+		  //fmt.Println("mes = ",mes)
+		  //传入到对应的操作
+		  err = serverProcessMsg(conn,&mes)
+		  if err != nil{
+			  return
+		  }
 	 }  
 }
 
