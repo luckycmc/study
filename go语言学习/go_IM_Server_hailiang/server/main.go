@@ -85,7 +85,7 @@ func process(conn net.Conn)  {
 }
 
 //编写一个函数专门处理serviceProcessLogin函数专门处理登录请求
-func serviceProcessLogin(conn net.Conn,mes message.Message)(err error)  {
+func serviceProcessLogin(conn net.Conn,mes *message.Message)(err error)  {
 	   
 	    //1.先从mes中取出mes.Data,并直接反序列化LoginMes
 		var loginMes message.LoginMes
@@ -113,15 +113,15 @@ func serviceProcessLogin(conn net.Conn,mes message.Message)(err error)  {
 				loginResMes.Error = "该用户不存在请注册在使用"
 		}
 		//3.将loginMessage 序列化
-		data, err = json.Marshal(loginResMes)
+		data,err := json.Marshal(loginResMes)
 		if err != nil{
 			fmt.Println("json.Marshal failed:", err)
 			return
 		}
 		//4将data 赋值给
-		resMes.data = string(data)
+		resMes.Data = string(data)
         //5.对reMes 进行序列化 准备发送
-		data, err = json.Marshal(resMes)
+		data,err = json.Marshal(resMes)
 		if err != nil{
 			fmt.Println("json.Marshal failed:", err)
 			return

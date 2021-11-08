@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"net"
 	"../common/message"
-	"io"
+	_"io"
 )
 //读取客户端发送过来的信息
 func readPkg(conn net.Conn) (msg message.Message, err error) {

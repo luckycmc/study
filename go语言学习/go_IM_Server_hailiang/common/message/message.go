@@ -9,8 +9,8 @@ const(
 
 //消息结构体
 type Message struct{
-	Type string `json:"type"`//消息类型
-	Data string `json:"data"`//消息数据
+	Type string `json:"type"` //消息类型
+	Data string `json:"data"` //消息数据
 }
 
 //登陆信息
