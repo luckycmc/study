@@ -39,12 +39,23 @@
 #define AE_ERR -1
 
 #define AE_NONE 0
+/**
+   当套接字变得可读时（客户端对套接字执行 write 操作，或者执行 close 操作）， 或者有新的可应答（acceptable）
+   套接字出现时（客户端对服务器的监听套接字执行 connect 操作）， 套接字产生 AE_READABLE 事件。
+ * 
+ */
 #define AE_READABLE 1    //设置读事件
+/**
+
+ * 当套接字变得可写时（客户端对套接字执行 read 操作）， 套接字产生 AE_WRITABLE 事件
+ * 
+ */
 #define AE_WRITABLE 2    //设置写事件
 
 #define AE_FILE_EVENTS 1
 #define AE_TIME_EVENTS 2
-#define AE_ALL_EVENTS (AE_FILE_EVENTS|AE_TIME_EVENTS)   //读写事件同时监控
+//如果一个套接字又可读又可写的话,那么服务器将先读套接字， 后写套接字
+#define AE_ALL_EVENTS (AE_FILE_EVENTS|AE_TIME_EVENTS)   //读写事件同时监控 
 #define AE_DONT_WAIT 4
 
 #define AE_NOMORE -1
