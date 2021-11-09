@@ -77,7 +77,8 @@ func login(userId int,passPwd string) (err error) {
 	
 	//将mes的data 反序列话 LoginResMes
     var loginResMes message.LoginResMes
-	err = json.Unmarshal([]byte(msg.Data),&msg)
+	err = json.Unmarshal([]byte(msg.Data),&loginResMes)
+	//判断最好的状态
 	if loginResMes.Code == 200{
 		fmt.Println("登陆成功")
 	}else if loginResMes.Code == 500 {

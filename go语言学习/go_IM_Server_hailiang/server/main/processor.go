@@ -29,7 +29,7 @@ func(this *Processor) ServerProcessMsg(mes *message.Message)(err error){
 	}
 	return
 }
-
+//process2 方法读写数据
 func (this *Processor) Process2()(err error)  {
 	  //读取客户端发送的数据
 	for {

@@ -2,7 +2,7 @@ package main
 import(
 	"fmt"
 	"os"
-	"time"
+	//"time"
 )
 
 //定义连个变量 一个表示用户id，一个表示用户密码
@@ -48,16 +48,9 @@ func main()  {
 		 fmt.Println("请输入用户密码")
 		 fmt.Scanf("%s\n",&passPwd)
 		 //验证用户登陆
-		 err := login(userId,passPwd)
-		 if err != nil{
-			 fmt.Println("用户登陆失败")
-		 }else{
-			 fmt.Println("登陆成功")
-		 }
+		 login(userId,passPwd)
 	 }else if key ==2 {
 		fmt.Println("注册用户")
 	 }
-
-
-	 time.Sleep(time.Second *10)
+	 //time.Sleep(time.Second *10)
 }
