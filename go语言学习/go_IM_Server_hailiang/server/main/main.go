@@ -20,9 +20,6 @@ func process(conn net.Conn)  {
 	}
 }
 
-
-//编写一个process函数
-
 //主函数
 func main()  {
 	
