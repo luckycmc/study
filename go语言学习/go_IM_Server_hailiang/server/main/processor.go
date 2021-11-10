@@ -9,7 +9,7 @@ import (
 )
 //先创建一个process结构体
 type Processor struct{
-	Conn net.Conn
+	Conn net.Conn  // net 中的conn
 }
 //功能:根据客户端发送消息种类的不同,决定用哪个函数处理
 func(this *Processor) ServerProcessMsg(mes *message.Message)(err error){
