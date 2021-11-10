@@ -1,4 +1,5 @@
 package process2
+
 import(
 	"fmt"
 	"net"
@@ -6,6 +7,7 @@ import(
 	"encoding/json"
     "../utils"
 )
+
 type UserProcess struct{
 	//分析它的字段
 	Conn net.Conn

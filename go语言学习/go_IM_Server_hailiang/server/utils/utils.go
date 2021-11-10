@@ -7,6 +7,7 @@ import(
 	"net"
 	"../../common/message"
 )
+
 //讲这些方法关联到结构体中
 type Transfer struct{
 	//分析它的字段
