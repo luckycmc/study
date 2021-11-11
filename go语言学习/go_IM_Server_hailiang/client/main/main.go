@@ -3,6 +3,7 @@ import(
 	"fmt"
 	"os"
 	//"time"
+	"../process"
 )
 
 //定义连个变量 一个表示用户id，一个表示用户密码
@@ -29,7 +30,16 @@ func main()  {
 		  switch key {
 		  case 1:
 			fmt.Println(" 登陆聊天室")
-			loop = false
+			fmt.Println("请输入用户id")
+			fmt.Scanf("%d\n",&userId)
+			fmt.Println("请输入用户密码")
+			fmt.Scanf("%s\n",&passPwd)
+			//完成登录
+		    //1.创建一个UserProcess的实例
+			up := &process.UserProcess{
+
+			}
+			up.Login(userId,passPwd)
 		  case 2:
 			fmt.Println("注册用户")
 			loop = false
@@ -39,18 +49,6 @@ func main()  {
 		  default:
 			fmt.Println("你的输入有误请重新输入")
 		  }
-	 }
-
-	 if key ==1 {
-		 //说明用户要登录了
-		 fmt.Println("请输入用户id")
-		 fmt.Scanf("%d\n",&userId)
-		 fmt.Println("请输入用户密码")
-		 fmt.Scanf("%s\n",&passPwd)
-		 //验证用户登陆
-		 login(userId,passPwd)
-	 }else if key ==2 {
-		fmt.Println("注册用户")
 	 }
 	 //time.Sleep(time.Second *10)
 }

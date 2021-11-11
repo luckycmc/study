@@ -6,14 +6,15 @@ import(
 	"encoding/binary"
 	"net"
 	"../../common/message"
+	"../utils"
 )
 //UserProcess 结构体
 type UserProcess struct{
-
+     //暂时不需要字段....
 }
 
 //写一个函数完成用户表登陆
-func login(userId int,passPwd string) (err error) {
+func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 	   
 	//下一个就要开始定义协议
 	//fmt.Printf(" userId = %d userPwd = %s\n",userId,passPwd)
@@ -74,7 +75,12 @@ func login(userId int,passPwd string) (err error) {
 	  return
  }
  //这里还需要服务器端返回的消息 客户端接收的数据
-  msg,err = readPkg(conn)  //mes 就是
+ // 创建一个Transfer 实例
+  tf := &utils.Transfer{
+	  Conn:conn,
+  }
+  //读取数据
+  msg,err = tf.ReadPkg()  //mes 就是
   if err !=nil {
 	  fmt.Println("readPkg(conn) err =",err)
 	  return
@@ -85,7 +91,15 @@ func login(userId int,passPwd string) (err error) {
   err = json.Unmarshal([]byte(msg.Data),&loginResMes)
   //判断最好的状态
   if loginResMes.Code == 200{
-	  fmt.Println("登陆成功")
+	  //fmt.Println("登陆成功")
+	  //在这里还需要启动一个协成保持和客户端的一个通讯
+	  //如果服务器有你推送 给客户端 接受并显示客户端的地方
+	  go serverProcessMes(conn)
+
+	  //1.显示登录成功后的菜单
+	  for{
+		ShowMenu()
+	  }
   }else if loginResMes.Code == 500 {
 	  fmt.Println(loginResMes.Error)
   }
