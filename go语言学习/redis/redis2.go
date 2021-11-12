@@ -14,7 +14,7 @@ func main(){
 	  defer c.Close()
 
 	  //设置 对应的消息
-	  _,err = c.Do("set","abc","100")
+	  _,err := c.Do("set","abc","100")
 	  if err != nil{
 		  fmt.Println(err)
 		  return
