@@ -1,0 +1,30 @@
+version: '1.0'
+name: pr-pipeline
+displayName: PRPipeline
+stages:
+  - stage: 
+    name: compile
+    displayName: 编译
+    steps:
+      - step: build@php
+        name: build_php
+        displayName: PHP 构建
+        phpVersion: '8.0'
+        artifacts:
+          - name: pipeline_temp_artifact
+            path:
+              - ./target
+        commands:
+          - php --version
+      - step: publish@general_artifacts
+        name: publish_general_artifacts
+        displayName: 上传到通用制品库
+        dependArtifact: pipeline_temp_artifact
+        artifactRepository: default
+        artifactName: pipeline_artifact
+        dependsOn: build_php
+triggers:
+  pr:
+    branches:
+      include:
+        - master
