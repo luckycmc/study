@@ -1,0 +1,43 @@
+version: '1.0'
+name: branch-pipeline
+displayName: BranchPipeline
+stages:
+  - stage: 
+    name: compile
+    displayName: 编译
+    steps:
+      - step: build@php
+        name: build_php
+        displayName: PHP 构建
+        phpVersion: '8.0'
+        artifacts:
+          - name: pipeline_temp_artifact
+            path:
+              - ./target
+        commands:
+          - php --version
+      - step: publish@general_artifacts
+        name: publish_general_artifacts
+        displayName: 上传到通用制品库
+        dependArtifact: pipeline_temp_artifact
+        artifactRepository: default
+        artifactName: pipeline_artifact
+        dependsOn: build_php
+  - stage: 
+    name: release
+    displayName: 发布
+    steps:
+      - step: publish@release_artifacts
+        name: publish_release_artifacts
+        displayName: '发布'
+        dependArtifact: pipeline_artifact
+        artifactRepository: release
+        version: '1.0.0.0'
+        autoIncrement: true
+triggers:
+  push:
+    branches:
+      exclude:
+        - master
+      include:
+        - .*
