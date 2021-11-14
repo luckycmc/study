@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"time"
 )
 
 //处理与客户端的连接
@@ -20,10 +21,17 @@ func process(conn net.Conn)  {
 		return
 	}
 }
-
+//编写一个函数完成对应UserDao的初始化
+func initUserDao()  {
+	   
+	   //这里的pool本身就是一个全局变量
+	   model.MyUserDao = model.NewUserDao(pool)
+}
 //主函数
 func main()  {
-	
+	   
+	  initPool("localhost:6379",16,0,300 * time.Second) //初始化连接池 服务器启动的时候
+	  initUserDao()
 	  //提示新消息
 	  fmt.Println("服务器在8090端口监听.....")
       //直接进入监听状态
@@ -34,7 +42,7 @@ func main()  {
 		  return //程序终止
 	  }
 	  //一旦监听成功 等待客户端连接服务器
-	  for{
+	  for	{
 
 		   fmt.Println("等待客户端连接服务器")
 		   conn,err := listen.Accept()
