@@ -4,6 +4,7 @@ import(
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"encoding/json"
+	"../../common/message"
 )
 //我们在服务器启动的时候,就初始化 一个UserDao s实例
 var (
@@ -60,4 +61,29 @@ func (this *UserDao) Login(userId int,userPwd string) (user *User,err error)  {
 		   return
 	   }
 	   return
+}
+
+//完成登陆的校验Register
+func (this *UserDao) Register(user *message.User) (err error)  {
+	   
+	//先从UserDao的连接池中取出一个连接出来
+	conn := this.pool.Get()
+	defer conn.Close()
+	_,err = this.getUserById(conn,user.UserId)
+	if err ==nil {
+		 err = ERROR_USER_EXISTS
+		return
+	}
+    //说明redis还没有
+	data,err := json.Marshal(user)
+	if err != nil {
+		return
+	}
+	//数据入库
+	_,err =conn.Do("Hset","users",user.UserId,string(data))
+    if err != nil {
+		fmt.Println("保存用户注册错误 err = ",err)
+		return
+	}
+	return
 }

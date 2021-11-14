@@ -9,6 +9,7 @@ import(
 //定义连个变量 一个表示用户id，一个表示用户密码
 var userId int
 var passPwd string
+var userName string
 
 func main()  {
 	 
@@ -42,7 +43,17 @@ func main()  {
 			up.Login(userId,passPwd)
 		  case 2:
 			fmt.Println("注册用户")
-			loop = false
+			fmt.Println("请输入用户id")
+			fmt.Scanf("%d\n",&userId)
+			fmt.Println("请输入用户密码")
+			fmt.Scanf("%s\n",&passPwd)
+			fmt.Println("请输入用户的名称(nickname)")
+			fmt.Scanf("%s\n",&userName)
+			//1.创建一个UserProcess的实例 完成用户的注册请求
+			up := &process.UserProcess{
+
+			}
+			up.Register(userId,passPwd,userName)
 		  case 3:
 			fmt.Println("退出系统")
 			os.Exit(0)

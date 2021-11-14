@@ -7,12 +7,75 @@ import(
 	"net"
 	"../../common/message"
 	"../utils"
+	"os"
 )
 //UserProcess 结构体
 type UserProcess struct{
      //暂时不需要字段....
 }
+//用户注册
+func (this *UserProcess) Register(userId int,userPwd string,userName string)(err error)  {
+	   //连接到服务器上
+	conn, err := net.Dial("tcp","localhost:8889")
+	if err != nil {
+		 fmt.Println("net.Dial err=",err)
+		 return 
+	}
+	//延时关闭
+	defer conn.Close()
+	//准备通过当前的conn 发送数据给服务器
+	var msg message.Message
+	msg.Type = message.RegisterMesType
+	//3.创建一个LoginMes 结构体
+	var registerMsg message.RegisterMes
 
+	registerMsg.User.UserId = userId
+	registerMsg.User.UserPwd = userPwd
+	registerMsg.User.UserName = userName
+
+	//将register序列化
+	data,err := json.Marshal(registerMsg)
+	if err != nil{
+		fmt.Println("json.Marshal err = ",err)
+		return
+	}
+	//吧data 赋予给mes.Data 字段
+	msg.Data = string(data)
+	data,err = json.Marshal(msg)
+	if err != nil{
+		fmt.Println("json.Marshal err = ",err)
+		return
+	}
+
+	//创建一个Transfer 实例
+	tf := &utils.Transfer{
+		Conn:conn,
+	}
+	//发送data 给服务端
+	err = tf.WritePkg(data)
+	if err != nil{
+		 fmt.Println("注册发送信息出错了")
+	}
+	//读取数据
+	msg,err = tf.ReadPkg()  //mes 就是 register相应
+	if err !=nil {
+		fmt.Println("readPkg(conn) err =",err)
+		return
+	}
+
+	//将mes的data 反序列话 RegisterResMes
+	var registerResMes message.RegisterResMes
+	err = json.Unmarshal([]byte(msg.Data),&registerResMes)
+	//判断最好的状态
+	if registerResMes.Code == 200{
+		fmt.Println("注册成功,请重新登陆一把")
+        os.Exit(0)
+	}else {
+		fmt.Println(registerResMes.Error)
+		os.Exit(0)
+	}
+	return 
+}
 //写一个函数完成用户表登陆
 func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 	   
