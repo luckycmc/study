@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"time"
+	"../model"
 )
 
 //处理与客户端的连接

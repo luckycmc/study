@@ -6,6 +6,7 @@ import(
 	"../../common/message"
 	"encoding/json"
     "../utils"
+	"../model"
 )
 
 type UserProcess struct{
@@ -28,9 +29,30 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 
 	//2在声明一个LoginResMes
 	var loginResMes message.LoginResMes
-
+    
+	user,err := model.MyUserDao.Login(loginMes.UserId,loginMes.UserPwd)
+	fmt.Println("某人....",user)
+    if err !=nil {
+        
+		if err == model.ERROR_USER_NOTEXISTS {
+			loginResMes.Code  = 500
+			//先测试成功 然后再根据 具体的信息返回对应的状态信息
+			loginResMes.Error = err.Error()
+		}else if err == model.ERROR_USER_PWD {
+			loginResMes.Code  = 300
+			//先测试成功 然后再根据 具体的信息返回对应的状态信息
+			loginResMes.Error = err.Error()
+		}else{
+			loginResMes.Code  = 505
+			//先测试成功 然后再根据 具体的信息返回对应的状态信息
+			loginResMes.Error = "服务器内部错误"
+		}
+	}else{
+		loginResMes.Code = 200
+		fmt.Println(user,"登陆成功!")
+	}
 	//如果用户的id为100 密码等于123456 认为合法 否者不合法
-	if loginMes.UserId == 100 && loginMes.UserPwd == "123456" {
+	/*if loginMes.UserId == 100 && loginMes.UserPwd == "123456" {
 		  
 			//合法
 			loginResMes.Code = 200
@@ -39,7 +61,7 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 		   //合法
 			loginResMes.Code  = 500
 			loginResMes.Error = "该用户不存在请注册在使用"
-	}
+	}*/
 	//3.将loginMessage 序列化
 	data,err := json.Marshal(loginResMes)
 	if err != nil{
