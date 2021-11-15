@@ -4,7 +4,6 @@ const(
 	LoginMessageType     = "LoginMes"
 	LoginResMesType      = "LoginResMes"
 	RegisterMesType      = "RegisterMes"
-	RegisterResType      = "RegisterMes"
 )
 
 

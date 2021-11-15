@@ -67,5 +67,6 @@ func(this *Transfer) WritePkg(data []byte)(err error)  {
 		fmt.Println("conn.Write(bytes) fail",err)
 		return
 	}
+
 	return
 }
