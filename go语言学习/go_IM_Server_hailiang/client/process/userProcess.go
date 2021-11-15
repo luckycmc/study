@@ -155,6 +155,16 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
   //判断最好的状态
   if loginResMes.Code == 200{
 	  //fmt.Println("登陆成功")
+	  //可以显示当前用户的列表,遍历里面的id
+	  fmt.Println("当前用户列表如下:")
+	  for _,v := range loginResMes.UsersId{
+		   if v == userId{  //过滤自己
+			   continue
+		   }
+           fmt.Println("用户id:",v)
+	  }
+	  fmt.Println()
+	  fmt.Println()
 	  //在这里还需要启动一个协成保持和客户端的一个通讯
 	  //如果服务器有你推送 给客户端 接受并显示客户端的地方
 	  go serverProcessMes(conn)

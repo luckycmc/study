@@ -23,6 +23,7 @@ type LoginMes struct{
 //返回状态信息
 type LoginResMes struct{
 	Code int            `json:"code"`//返回500 表示该用户为注册  200 表示登陆成功
+	UsersId []int                                  //增加一个字段 保存用户id的切片
 	Error string        `json:"error"`//返回错误信息
 }
 

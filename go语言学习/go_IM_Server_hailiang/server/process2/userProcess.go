@@ -12,6 +12,8 @@ import(
 type UserProcess struct{
 	//分析它的字段
 	Conn net.Conn
+	//增加一个字段
+	UserId int
 }
 //服务注册
 func(this *UserProcess) ServiceProcessRegister(mes *message.Message)(err error)  {
@@ -103,6 +105,17 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 		}
 	}else{
 		loginResMes.Code = 200
+		//这里是用户登录成功,我们就把登录的信息放入到userMgr中
+
+		this.UserId = loginMes.UserId //插入对应的id
+		userMgr.AddOnlineUsers(this)
+		//讲当前在线用户的id 存放到 loginResMes.UsersId
+		//遍历userMgr.onlineUsers
+		for id,_ := range userMgr.onlineUsers{
+			//应该把自己给过滤掉
+			
+			loginResMes.UsersId = append(loginResMes.UsersId,id)  //追加到对应的切片里面
+		}
 		fmt.Println(user,"登陆成功!")
 	}
 	//如果用户的id为100 密码等于123456 认为合法 否者不合法
