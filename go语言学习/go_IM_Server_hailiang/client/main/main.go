@@ -58,7 +58,7 @@ func main()  {
 			fmt.Println("退出系统")
 			os.Exit(0)
 		  default:
-			fmt.Println("你的输入有误请重新输入")
+			fmt.Println("你的输入有误请重新输入对应的数字")
 		  }
 	 }
 	 //time.Sleep(time.Second *10)

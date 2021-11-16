@@ -2,9 +2,9 @@ package model
 
 import(
 	"fmt"
-	"github.com/garyburd/redigo/redis"
+	"github.com/garyburd/redigo/redis"  //引入redis 库
 	"encoding/json"
-	"../../common/message"
+	"../../common/message"  //也可以相对路径引入
 )
 //我们在服务器启动的时候,就初始化 一个UserDao s实例
 var (

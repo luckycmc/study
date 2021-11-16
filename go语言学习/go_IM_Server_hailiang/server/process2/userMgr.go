@@ -1,4 +1,5 @@
 package process2
+
 import(
 	"fmt"
 )
@@ -10,7 +11,7 @@ var(
 //结构体
 type UserMgr struct {
 	  
-	   onlineUsers map[int]*UserProcess
+	   onlineUsers map[int]*UserProcess //整型id对应Userprocess的指针
 }
 //初始化数据
 func init(){

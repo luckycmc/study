@@ -11,9 +11,9 @@ import(
 
 type UserProcess struct{
 	//分析它的字段
-	Conn net.Conn
+	Conn net.Conn   //当前 用户的连接
 	//增加一个字段
-	UserId int
+	UserId int      //对应的当前用户的id
 }
 //服务注册
 func(this *UserProcess) ServiceProcessRegister(mes *message.Message)(err error)  {
@@ -112,8 +112,6 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 		//讲当前在线用户的id 存放到 loginResMes.UsersId
 		//遍历userMgr.onlineUsers
 		for id,_ := range userMgr.onlineUsers{
-			//应该把自己给过滤掉
-			
 			loginResMes.UsersId = append(loginResMes.UsersId,id)  //追加到对应的切片里面
 		}
 		fmt.Println(user,"登陆成功!")

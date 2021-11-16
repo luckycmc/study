@@ -173,7 +173,8 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 	  for{
 		ShowMenu()
 	  }
-  }else {
+  }else {//登录信息错误
+
 	  fmt.Println(loginResMes.Error)
   }
   return 
