@@ -4,6 +4,8 @@ const(
 	LoginMessageType     = "LoginMes"
 	LoginResMesType      = "LoginResMes"
 	RegisterMesType      = "RegisterMes"
+	RegisterResMesType   = "RegisterResMes"
+	NotifyUserStatusMesType = "NotifyUserStatusMes"
 )
 
 
@@ -38,3 +40,9 @@ type RegisterResMes struct{
 	Error string        `json:"error"`//返回错误信息
 }
 
+//为了配合服务器端推送用户状态信息变化
+type NotifyUserStatusMes struct{
+
+	  UserId int  `json:"userId"`  //用户id
+	  Status int  `json:"status"`  //用户的状态
+}
