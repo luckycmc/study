@@ -46,6 +46,13 @@ func serverProcessMes(conn net.Conn){
 			   return 
 		   }
 		   //如果读取到消息则下一个处理
-		   fmt.Println("mes=%v",mes)
+            switch mes.Type {
+			      case message.NotifyUserStatusMesType :  //有人上线了
+				  //1.去除notifymessage
+				  //2.吧这个用户的状态保存到map客户端
+			default:
+				fmt.Println("服务器端反回了一个未知消息")
+			}
+		   //fmt.Println("mes=%v",mes)
 	   }
 }

@@ -1,11 +1,18 @@
 package message
 
 const(
-	LoginMessageType     = "LoginMes"
-	LoginResMesType      = "LoginResMes"
-	RegisterMesType      = "RegisterMes"
+	LoginMesType             = "LoginMes"
+	LoginResMesType          = "LoginResMes"
+	RegisterMesType          = "RegisterMes"
+	RegisterResMesType       = "RegisterResMes"
+	NotifyUserStatusMesType  = "NotifyUserStatusMes"
 )
-
+//这里我们定义几个用户在线状态
+const (
+	UserOnline = itoa
+    UserOffline
+	UserBusyStatus
+)
 
 //消息结构体
 type Message struct{
@@ -38,3 +45,10 @@ type RegisterResMes struct{
 	Error string        `json:"error"`//返回错误信息
 }
 
+// 应对客户端的变化
+type NotifyUserStatusMes struct {
+       
+	   UserId int         `json:"userId"`  //用户id
+	   Status int         `json:"status"`  //用户状态
+
+}

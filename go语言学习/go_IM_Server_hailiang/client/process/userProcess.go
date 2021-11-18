@@ -162,6 +162,14 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 			   continue
 		   }
            fmt.Println("用户id:",v)
+		   //完成客户端的 onlineUsers 完成初始化
+		   user := &message.User{
+                 
+			     UserId : v,
+				 UserStatus: message.UserOnline,
+		   }
+		   //存放到对应的map中
+		   onlineUsers[v] = user
 	  }
 	  fmt.Println()
 	  fmt.Println()
