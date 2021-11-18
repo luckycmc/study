@@ -15,6 +15,54 @@ type UserProcess struct{
 	//增加一个字段
 	UserId int      //对应的当前用户的id
 }
+//编写所有通知用户的方法 userId要通知其他的在线用户
+func (this *UserProcess) NotifyOthersOnlineUSer(userId int)  {
+	  
+	  //遍历onlineUsers，然后一个个发送
+	  for id,up := range this.onlineUsers{
+		   //过滤自己
+		   if id == userId {
+			   continue
+		   }
+		   //开始推送
+		   up.NotifyMeonline()
+	  }
+}
+func(this *UserProcess) NotifyMeonline(UserId int) {
+     
+	   //组装我们的notify消息
+	   var mes message.Message
+	   mes.Type = message.NotifyUserStatusMesType
+
+	   var notifyUserStatusMes message.NotifyUserStatusMes
+	   notifyUserStatusMes.UserId = UserId
+	   notifyUserStatusMes.Status = message.UserOnline
+
+	   //将数据序列化
+	   data,err := json.Marshal(notifyUserStatusMes)
+	   if err != nil {
+		   fmt.Println("json.Marshal",err)
+		   return
+	   }
+	   //将序列化的数据复制给 mes.Data
+	   mes.Data = string(data)
+	   //对mes再次序列化
+	   data,err = json.Marshal(mes)
+	   if err != nil {
+		   fmt.Println("json.Marshal",err)
+		   return
+	   }
+	   //发送数据 创建一个trabfer
+	   tf := &utils.Transfer{
+		   Conn :this.Conn,
+	   }
+	   tf.WritePkg(data)
+	   if err !=nil{
+		   fmt.Println("NotifyMeonline err = ",err)
+		   return
+	   }
+
+}
 //服务注册
 func(this *UserProcess) ServiceProcessRegister(mes *message.Message)(err error)  {
      //1.先从mes中取出mes.Data,并直接反序列化LoginMes
@@ -109,6 +157,8 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 
 		this.UserId = loginMes.UserId //插入对应的id
 		userMgr.AddOnlineUsers(this)
+		//通知其他的在线用户我上线了
+		this.NotifyOthersOnlineUSer(loginMes.UserId)
 		//讲当前在线用户的id 存放到 loginResMes.UsersId
 		//遍历userMgr.onlineUsers
 		for id,_ := range userMgr.onlineUsers{
@@ -116,17 +166,6 @@ func(this *UserProcess) ServiceProcessLogin(mes *message.Message)(err error)  {
 		}
 		fmt.Println(user,"登陆成功!")
 	}
-	//如果用户的id为100 密码等于123456 认为合法 否者不合法
-	/*if loginMes.UserId == 100 && loginMes.UserPwd == "123456" {
-		  
-			//合法
-			loginResMes.Code = 200
-			loginResMes.Error = "用户登录成功"
-	}else{
-		   //合法
-			loginResMes.Code  = 500
-			loginResMes.Error = "该用户不存在请注册在使用"
-	}*/
 	//3.将loginMessage 序列化
 	data,err := json.Marshal(loginResMes)
 	if err != nil{
