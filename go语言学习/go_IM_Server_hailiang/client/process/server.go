@@ -5,6 +5,8 @@ import(
 	"os"
 	"net"
 	"../utils"
+	"../../common/message"
+	"encoding/json"
 )
 
 //显示登陆后的界面.....
@@ -19,7 +21,8 @@ func ShowMenu(){
 	fmt.Scanf("%d\n",&key)
 	switch key{
 		case 1:
-			fmt.Println("显示在线用户类表-")
+			//fmt.Println("显示在线用户类表-")
+			outputOnlineUsers()
 		case 2:
 			fmt.Println("发行消息-")
 		case 3:
@@ -48,8 +51,11 @@ func serverProcessMes(conn net.Conn){
 		   //如果读取到消息则下一个处理
             switch mes.Type {
 			      case message.NotifyUserStatusMesType :  //有人上线了
-				  //1.去除notifymessage
-				  //2.吧这个用户的状态保存到map客户端
+				  //1.取出notifymessage
+                  var notifyUserStatusMes message.NotifyUserStatusMes
+				  json.Unmarshal([]byte(mes.data),&notifyUserStatusMes)
+				  //2.这个用户的状态保存到map客户端
+				  updateUserStatus(&notifyUserStatusMes)
 			default:
 				fmt.Println("服务器端反回了一个未知消息")
 			}

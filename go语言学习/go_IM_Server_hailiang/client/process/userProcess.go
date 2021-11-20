@@ -168,12 +168,16 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 			     UserId : v,
 				 UserStatus: message.UserOnline,
 		   }
-		   //存放到对应的map中
+		   //存放到对应的map中 完成客户端onlinUser完成初始化
+		   user := &message.User{
+			   UserId:v,
+			   UserStatus: message.UserOffline,
+		   }
 		   onlineUsers[v] = user
 	  }
 	  fmt.Println()
 	  fmt.Println()
-	  //在这里还需要启动一个协成保持和客户端的一个通讯
+	  //在这里还需要启动一个协成保持和客户端的一个通讯 map[int]*message
 	  //如果服务器有你推送 给客户端 接受并显示客户端的地方
 	  go serverProcessMes(conn)
 
