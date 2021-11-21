@@ -2,14 +2,16 @@ package message
 
 var (
 	LoginMesType             = "LoginMes"
+	LoginMessageType        = "LoginMes"
 	LoginResMesType          = "LoginResMes"
 	RegisterMesType          = "RegisterMes"
 	RegisterResMesType       = "RegisterResMes"
 	NotifyUserStatusMesType  = "NotifyUserStatusMes"
+	SmsMesType               = "SmsMes"
 )
 //这里我们定义几个用户在线状态
 const (
-	UserOnline = itoa
+	UserOnline = iota
     UserOffline
 	UserBusyStatus
 )
@@ -50,4 +52,10 @@ type NotifyUserStatusMes struct {
        
 	   UserId int         `json:"userId"`  //用户id
 	   Status int         `json:"status"`  //用户状态
+}
+
+//增加一个SmsMes  发送的消息
+type SmsMes struct{
+	Content  string  `json:"Content"`
+	User    //匿名结构体
 }

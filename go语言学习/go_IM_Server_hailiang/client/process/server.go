@@ -18,13 +18,21 @@ func ShowMenu(){
 	fmt.Println("-----------4.退出系统-------------")
 	fmt.Println("请选着(1-4):")
 	var key int
+	var content string
+
+	smsProcess := &SmsProcess{
+
+	}
+
 	fmt.Scanf("%d\n",&key)
 	switch key{
 		case 1:
 			//fmt.Println("显示在线用户类表-")
 			outputOnlineUsers()
 		case 2:
-			fmt.Println("发行消息-")
+			fmt.Println("请输入你想对大家说什么:")
+            fmt.Scanf("%s\n",&content)
+            smsProcess.SendGroupMes(content)
 		case 3:
 			fmt.Println("信息列表-")
 		case 4:
@@ -53,7 +61,7 @@ func serverProcessMes(conn net.Conn){
 			      case message.NotifyUserStatusMesType :  //有人上线了
 				  //1.取出notifymessage
                   var notifyUserStatusMes message.NotifyUserStatusMes
-				  json.Unmarshal([]byte(mes.data),&notifyUserStatusMes)
+				  json.Unmarshal([]byte(mes.Data),&notifyUserStatusMes)
 				  //2.这个用户的状态保存到map客户端
 				  updateUserStatus(&notifyUserStatusMes)
 			default:

@@ -154,6 +154,10 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
   err = json.Unmarshal([]byte(msg.Data),&loginResMes)
   //判断最好的状态
   if loginResMes.Code == 200{
+	  //初始化CurUser
+      CurUser.Conn = conn
+	  CurUser.UserId = userId
+	  CurUser.UserStatus = message.UserOnline
 	  //fmt.Println("登陆成功")
 	  //可以显示当前用户的列表,遍历里面的id
 	  fmt.Println("当前用户列表如下:")
@@ -167,11 +171,6 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
                  
 			     UserId : v,
 				 UserStatus: message.UserOnline,
-		   }
-		   //存放到对应的map中 完成客户端onlinUser完成初始化
-		   user := &message.User{
-			   UserId:v,
-			   UserStatus: message.UserOffline,
 		   }
 		   onlineUsers[v] = user
 	  }

@@ -25,7 +25,7 @@ func (this *UserProcess) NotifyOthersOnlineUSer(userId int)  {
 			   continue
 		   }
 		   //开始推送
-		   up.NotifyMeonline()
+		   up.NotifyMeonline(id)
 	  }
 }
 func(this *UserProcess) NotifyMeonline(UserId int) {

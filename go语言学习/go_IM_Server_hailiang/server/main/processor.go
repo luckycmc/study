@@ -14,7 +14,9 @@ type Processor struct{
 }
 //功能:根据客户端发送消息种类的不同,决定用哪个函数处理
 func(this *Processor) ServerProcessMsg(mes *message.Message)(err error){
-     
+    
+	//看看是否能够接受客户端发送的消息
+	fmt.Println("mes",mes)
 	switch mes.Type {
 		 case message.LoginMessageType:
 			 //处理登录的信息
@@ -29,6 +31,9 @@ func(this *Processor) ServerProcessMsg(mes *message.Message)(err error){
 				Conn:this.Conn,
 			 }
 			 err = up.ServiceProcessRegister(mes)
+		 case message.SmsMestype:
+             //创建一个SmsProcess实例 完成转发群聊的任务
+
 		 default:
 			 fmt.Println("消息类型不存在无法处理....")
 	}
