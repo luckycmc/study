@@ -22,23 +22,23 @@ type Message struct{
 	Data string `json:"data"` //消息数据
 }
 
-//登陆信息
+//登陆信息的结构体
 type LoginMes struct{
 	UserId int       `json:"userId"`//用户id
 	UserPwd string   `json:"userPwd"`//用户密码
 	UserName string  `json:"userName"`//用户名
 }
 
-//返回状态信息
+//返回状态信息的结构体
 type LoginResMes struct{
 	Code int            `json:"code"`//返回500 表示该用户为注册  200 表示登陆成功
 	UsersId []int                                  //增加一个字段 保存用户id的切片
 	Error string        `json:"error"`//返回错误信息
 }
 
-//注册的结构体
+//注册的结构体 的结构体
 type RegisterMes struct {
-     User User   `json:"user"`
+     User User   `json:"user"`  //直接使用同一个包下的User
 }
 
 //返回状态信息
@@ -54,8 +54,8 @@ type NotifyUserStatusMes struct {
 	   Status int         `json:"status"`  //用户状态
 }
 
-//增加一个SmsMes  发送的消息
+//增加一个SmsMes 发送的消息
 type SmsMes struct{
-	Content  string  `json:"Content"`
+	Content  string  `json:"Content"`  //主要是消息的内容
 	User    //匿名结构体
 }

@@ -13,7 +13,7 @@ import(
 type UserProcess struct{
      //暂时不需要字段....
 }
-//用户注册
+//用户注册  功能
 func (this *UserProcess) Register(userId int,userPwd string,userName string)(err error)  {
 	   //连接到服务器上
 	conn, err := net.Dial("tcp","localhost:8889")
@@ -80,10 +80,6 @@ func (this *UserProcess) Register(userId int,userPwd string,userName string)(err
 func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 	   
 	//下一个就要开始定义协议
-	//fmt.Printf(" userId = %d userPwd = %s\n",userId,passPwd)
-
-	//return nil
-
 	//连接到服务器上
 	conn, err := net.Dial("tcp","localhost:8889")
 	if err != nil {
@@ -184,6 +180,7 @@ func(this *UserProcess) Login(userId int,passPwd string) (err error) {
 	  for{
 		ShowMenu()
 	  }
+
   }else {//登录信息错误
 
 	  fmt.Println(loginResMes.Error)
