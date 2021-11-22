@@ -7,7 +7,7 @@ import(
 	"net"
 	"../../common/message"
 )
-
+//主要定义一些传输协议  用于数据交换的传输
 //讲这些方法关联到结构体中
 type Transfer struct{
 	//分析它的字段
