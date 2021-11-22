@@ -26,17 +26,13 @@ func (this *SmsProcess) SendGroupMes(content string) (err error) {
 	   smsMes.UserStatus = CurUser.UserStatus  //当前用户的状态
 
 	   //将数据序列化
-
 	   data,err := json.Marshal(smsMes)
 	   if err != nil {
 		   fmt.Println("SendGroupMes json.Marshal",err)
 		   return
 	   }
-
 	   mes.Data = string(data)
-
 	   //对mes  
-
 	   data,err = json.Marshal(mes)
 
 	   if err != nil {

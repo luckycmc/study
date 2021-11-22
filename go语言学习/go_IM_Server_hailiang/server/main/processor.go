@@ -31,9 +31,12 @@ func(this *Processor) ServerProcessMsg(mes *message.Message)(err error){
 				Conn:this.Conn,
 			 }
 			 err = up.ServiceProcessRegister(mes)
-		 case message.SmsMestype:
+		 case message.SmsMesType:
              //创建一个SmsProcess实例 完成转发群聊的任务
-
+			 process := &process2.SmsProcess{
+				
+			 }
+			 process.SendGroupMes(mes)
 		 default:
 			 fmt.Println("消息类型不存在无法处理....")
 	}
