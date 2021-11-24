@@ -55,4 +55,27 @@ func main()  {
 		
 	  }
 	  fmt.Println(sparselArr)
+
+	  //1.将稀疏数组存盘
+
+	  //2.将稀疏数组恢复
+	  var chessMap2 [11][11]int
+
+	  //遍
+	  for i,valNode := range sparselArr{
+		  if i == 0{
+			  continue
+		  }
+		 chessMap2[valNode.row][valNode.col] = valNode.val
+		 //fmt.Println(valNode.row)
+	  }
+     
+	  fmt.Println("恢复后的数据")
+
+	  for _,v := range chessMap2{
+		for _,v2 := range v{
+		    fmt.Printf("%d\t",v2)
+		}
+		fmt.Println()
+	  }
 }
