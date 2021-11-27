@@ -33,7 +33,11 @@ func (m *Money) Minute(i int64) {
         m.amount = m.amount - i
     }
 }
+// 减钱
+func (m *Money) Get() (amount int64) {
 
+    return m.amount
+}
 func main() {
     m := new(Money)
     m.Add(10000)
@@ -46,6 +50,6 @@ func main() {
     }
 
     time.Sleep(20 * time.Second)
-    fmt.Println(m.Get())
+    fmt.Println("最后的数据:",m.Get())
 
 }
