@@ -147,7 +147,7 @@ func main()  {
 				if emp == nil {
                     fmt.Printf("id=%d 的雇员不存在\n\t",id)
 				}else {
-                     
+                     fmt.Printf("id=%d \t\n",emp.Id)
 				}
 			case "exit":
 				os.Exit(-1)
