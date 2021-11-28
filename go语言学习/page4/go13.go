@@ -5,12 +5,12 @@ import(
 	"time"
 )
 
-type Money struct{
+type Moneys struct{
 	lock sync.Mutex  //获取锁的实例
 	amount int64
 }
 // 加钱
-func (m *Money) Add(i int64) {
+func (m *Moneys) Add(i int64) {
     // 加锁
     m.lock.Lock()
 
@@ -21,7 +21,7 @@ func (m *Money) Add(i int64) {
 
 
 // 减钱
-func (m *Money) Minute(i int64) {
+func (m *Moneys) Minute(i int64) {
     // 加锁
     m.lock.Lock()
 
@@ -34,12 +34,13 @@ func (m *Money) Minute(i int64) {
     }
 }
 // 减钱
-func (m *Money) Get() (amount int64) {
+func (m *Moneys) Get() (amount int64) {
 
     return m.amount
 }
 func main() {
-    m := new(Money)
+   // m := new(Moneys) // m:=&moneys{}
+	m:=&Moneys{}
     m.Add(10000)
 
     for i := 0; i < 1000; i++ {
