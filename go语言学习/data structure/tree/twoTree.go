@@ -27,7 +27,7 @@ func main(){
 	t.Right = &TreeNode{Data:"C"}
 	t.Left.Left = &TreeNode{Data: "D"}  //给树的左节点的的左节点 赋值给D
 	t.Left.Right = &TreeNode{Data: "E"}  //给树的左节点的的左节点 赋值给D
-	t.Right = &TreeNode{Data:"C"}
+	t.Right.Left = &TreeNode{Data:"H"}
 	fmt.Println("先序排序：")
     PreOrder(t)
 }
