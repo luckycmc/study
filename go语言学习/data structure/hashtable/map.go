@@ -125,3 +125,69 @@ func main() {
 	fmt.Println("list of all items", s.List())
 }
 
+// 清除集合所有元素
+func (s *Set) Clear() {
+    s.Lock()
+    defer s.Unlock()
+    s.m = map[int]struct{}{} // 字典重新赋值
+    s.len = 0                // 大小归零
+}
+
+// 集合是够为空
+func (s *Set) IsEmpty() bool {
+    if s.Len() == 0 {
+        return true
+    }
+    return false
+}
+
+// 将集合转化为列表
+func (s *Set) List() []int {
+    s.RLock()
+    defer s.RUnlock()
+    list := make([]int, 0, s.len)
+    for item := range s.m {
+        list = append(list, item)
+    }
+    return list
+}
+
+// 为什么使用空结构体
+func other() {
+    a := struct{}{}
+    b := struct{}{}
+    if a == b {
+        fmt.Printf("right:%p\n", &a)
+    }
+
+    fmt.Println(unsafe.Sizeof(a))
+}
+
+func main() {
+    //other()
+
+    // 初始化一个容量为5的不可重复集合
+    s := NewSet(5)
+
+    s.Add(1)
+    s.Add(1)
+    s.Add(2)
+    fmt.Println("list of all items", s.List())
+
+    s.Clear()
+    if s.IsEmpty() {
+        fmt.Println("empty")
+    }
+
+    s.Add(1)
+    s.Add(2)
+    s.Add(3)
+
+    if s.Has(2) {
+        fmt.Println("2 does exist")
+    }
+
+    s.Remove(2)
+    s.Remove(3)
+    fmt.Println("list of all items", s.List())
+}

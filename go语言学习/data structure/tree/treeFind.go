@@ -28,8 +28,10 @@ type BinarySearchTreeNode struct{
 	Right *BinarySearchTreeNode    //右子数
 }
 
+
 //初始化一个二叉树
 func NewBinarySearchTree() *BinarySearchTree {
+
 	return new(BinarySearchTree)
 }
 //添加元素节点
@@ -332,3 +334,5 @@ func main() {
 	// 中序遍历，实现排序
 	tree.MidOrder()
 }
+
+
