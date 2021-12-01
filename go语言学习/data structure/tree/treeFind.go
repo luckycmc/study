@@ -140,7 +140,7 @@ func (tree *BinarySearchTree) Add(value int64) {
 				// 右子树为空，表示找不到该值了，返回nil
 				return nil
 			}
-			return node.Right.Find(value)
+			return node.Right.Find(value)   //一直递归查找
 		}
 	}
 	// 查找指定节点的父亲
