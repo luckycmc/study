@@ -4,16 +4,16 @@ import(
 )
 //二叉树结构体的定义
 type TreeNode struct{
-       Data string         //对应的数据
-	   Left  *TreeNode    //左节点
-	   Right *TreeNode
+
+	Data string         //对应的数据
+	Left  *TreeNode    //左节点
+	Right *TreeNode
 }
 // 先序遍历
 func PreOrder(tree *TreeNode) {
     if tree == nil {
         return
     }
-
     // 先打印根节点
     fmt.Println(tree.Data, " ")
     // 再打印左子树
@@ -29,5 +29,9 @@ func main(){
 	t.Left.Right = &TreeNode{Data: "E"}  //给树的左节点的的左节点 赋值给D
 	t.Right.Left = &TreeNode{Data:"H"}
 	fmt.Println("先序排序：")
-    PreOrder(t)
+
+	PreOrder(t)
 }
+
+
+
