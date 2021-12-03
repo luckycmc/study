@@ -23,7 +23,6 @@ func NewAVLTree() *AVLTree {
     return new(AVLTree)
 }
 
-//更新树的高度
 // 更新节点的树高度
 func (node *AVLTreeNode) UpdateHeight() {
     if node == nil {
@@ -45,7 +44,7 @@ func (node *AVLTreeNode) UpdateHeight() {
     // 高度加上自己那一层
     node.Height = maxHeight + 1
 }
-//计算平衡因子
+//计算平衡因子 当前节点的左树高度和又树高度
 func (node *AVLTreeNode) BalanceFactor() int64 {
     var leftHeight, rightHeight int64 = 0, 0
     if node.Left != nil {
@@ -56,13 +55,13 @@ func (node *AVLTreeNode) BalanceFactor() int64 {
     }
     return leftHeight - rightHeight
 }
-// 单右旋操作，看图说话
+// 单右旋操作，看图说话   当前需要旋转的节点
 func RightRotation(Root *AVLTreeNode) *AVLTreeNode {
     // 只有Pivot和B，Root位置变了
     Pivot := Root.Left
     B := Pivot.Right
-    Pivot.Right = Root
-    Root.Left = B
+    Pivot.Right = Root  //儿子节点代替治安的父节点
+    Root.Left = B       //父节点的左节点指向之前儿子节点的右节点
 
     // 只有Root和Pivot变化了高度
     Root.UpdateHeight()
@@ -100,8 +99,9 @@ func (tree *AVLTree) Add(value int64) {
     // 往树根添加元素，会返回新的树根
     tree.Root = tree.Root.Add(value)
 }
-
+//绑定的是avltreeNode 节点的 方法  给当前的nodetree节点添加数据
 func (node *AVLTreeNode) Add(value int64) *AVLTreeNode {
+    fmt.Println(node.Value)
     // 添加值到根节点node，如果node为空，那么让值成为新的根节点，树的高度为1
     if node == nil {
         return &AVLTreeNode{Value: value, Height: 1}
