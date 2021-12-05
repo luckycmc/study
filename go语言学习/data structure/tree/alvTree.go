@@ -23,7 +23,7 @@ func NewAVLTree() *AVLTree {
     return new(AVLTree)
 }
 
-// 更新节点的树高度
+// 更新节点的树高度  左子树和右子树的高度
 func (node *AVLTreeNode) UpdateHeight() {
     if node == nil {
         return
@@ -101,20 +101,19 @@ func (tree *AVLTree) Add(value int64) {
 }
 //绑定的是avltreeNode 节点的 方法  给当前的nodetree节点添加数据
 func (node *AVLTreeNode) Add(value int64) *AVLTreeNode {
-    fmt.Println(node.Value)
     // 添加值到根节点node，如果node为空，那么让值成为新的根节点，树的高度为1
     if node == nil {
-        return &AVLTreeNode{Value: value, Height: 1}
+        return &AVLTreeNode{Value: value, Height: 1}   //赋值节点数
     }
 
     // 如果值重复，什么都不用做，直接更新次数
     if node.Value == value {
-        node.Times = node.Times + 1
-        return node
+        node.Times = node.Times + 1  //统计出现的次数
+        return node     //直接返回节点
     }
 
     // 辅助变量
-    var newTreeNode *AVLTreeNode
+    var newTreeNode *AVLTreeNode   //创建辅助节点
 
     if value > node.Value {
         // 插入的值大于节点值，要从右子树继续插入
@@ -239,7 +238,9 @@ func (tree *AVLTree) Delete(value int64) {
 
     tree.Root = tree.Root.Delete(value)
 }
-
+/**
+ 删除之后会产生左旋和右旋 因为树的高度不平衡了
+ */
 func (node *AVLTreeNode) Delete(value int64) *AVLTreeNode {
     if node == nil {
         // 如果是空树，直接返回
@@ -476,8 +477,9 @@ func (node *AVLTreeNode) IsRight() bool {
 
     return true
 }
-
+//主函数
 func main() {
+    //定义一个数组和对应的数据
     values := []int64{2, 3, 7, 10, 10, 10, 10, 23, 9, 102, 109, 111, 112, 113}
 
     // 初始化二叉查找树并添加元素
