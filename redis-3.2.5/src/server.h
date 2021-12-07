@@ -511,8 +511,8 @@ typedef struct redisDb {
     dict *ready_keys;           /* Blocked keys that received a PUSH */
     dict *watched_keys;         /* WATCHED keys for MULTI/EXEC CAS */
     struct evictionPoolEntry *eviction_pool;    /* Eviction pool of keys */
-    int id;                     /* Database ID */
-    long long avg_ttl;          /* Average TTL, just for stats */
+    int id;                     /* Database ID */    // 数据库号码
+    long long avg_ttl;          /* Average TTL, just for stats */   // 数据库的键的平均 TTL ，统计信息
 } redisDb;
 
 /* Client MULTI/EXEC state */

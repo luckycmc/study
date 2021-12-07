@@ -42,10 +42,10 @@ func NewSkipList() *skipList {
     s.head.nexts = make([]*node, MaxLevel)
     return s
 }
- //数据添加到节点
+ //数据添加到节点 和对应的层高
 func (s *skipList) insert(v int) {
     l := randomLevel()
-    add := new(node)
+	fmt.Println(l)
     add.level = l
     add.nexts = make([]*node, l)
     add.v = v
@@ -58,9 +58,9 @@ func (s *skipList) insert(v int) {
             p = n
             n = n.nexts[i - 1]
         }
-        p.nexts[i - 1] = add
+        p.nexts[i - 1] = add  
         add.nexts[i - 1] = n
-        i --
+        i --  //添加对应的层高 i控制层高
     }
 }
  
@@ -73,12 +73,10 @@ func (s *skipList) search(v int) *node {
             p = n
             n = n.nexts[i - 1]
         }
-		fmt.Println("------------------------",i,n.v)
         if n != nil && n.v == v {
             return n
         }
         i --
-		
     }
     return nil
 }
