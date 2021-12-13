@@ -78,7 +78,7 @@ func (tree *RBTree) RotateLeft(h *RBTNode) {
     if h != nil {
 
         // 看图理解
-        x := h.Right
+        x := h.Right                //x作为辅助节点
         h.Right = x.Left
 
         if x.Left != nil {
