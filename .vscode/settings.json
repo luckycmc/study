@@ -3,6 +3,7 @@
         "adlist.h": "c",
         "zmalloc.h": "c",
         "thread_pool.h": "c",
-        "rdb.h": "c"
+        "rdb.h": "c",
+        "slowlog.h": "c"
     }
 }

@@ -49,18 +49,18 @@
 #include <signal.h>
 
 typedef long long mstime_t; /* millisecond time type. */
-
-#include "ae.h"      /* Event driven programming library */
-#include "sds.h"     /* Dynamic safe strings */
-#include "dict.h"    /* Hash tables */
-#include "adlist.h"  /* Linked lists */
-#include "zmalloc.h" /* total memory usage aware version of malloc/free */
-#include "anet.h"    /* Networking the easy way */
-#include "ziplist.h" /* Compact list data structure */
-#include "intset.h"  /* Compact integer set structure */
-#include "version.h" /* Version macro */
-#include "util.h"    /* Misc functions useful in many places */
-#include "latency.h" /* Latency monitor API */
+/* ----------------------- 声明了一下所需的头文件，主要为各种结构体的操作文件 -------------------- */
+#include "ae.h"      /* Event driven programming library */ /* Event driven programming library  事件驱动库*/
+#include "sds.h"     /* Dynamic safe strings  动态字符串库*/
+#include "dict.h"    /* Hash tables 哈希字典*/
+#include "adlist.h"  /* Linked lists 普通双向链表*/
+#include "zmalloc.h" /* total memory usage aware version of malloc/free 内存申请管理库*/
+#include "anet.h"    /* Networking the easy way 网络操作库*/
+#include "ziplist.h" /* Compact list data structure 压缩列表*/
+#include "intset.h"  /* Compact integer set structure 整形set结构体*/
+#include "version.h" /* Version macro 版本号文件*/
+#include "util.h"    /* Misc functions useful in many places 同样方法类*/
+#include "latency.h" /* Latency monitor API 延时监视方法*/
 #include "sparkline.h" /* ASCII graphs API */
 #include "quicklist.h"
 
@@ -68,11 +68,11 @@ typedef long long mstime_t; /* millisecond time type. */
 #include "zipmap.h"
 #include "sha1.h"
 #include "endianconv.h"
-#include "crc64.h"
+#include "crc64.h"  /*crc64 */
 
 /* Error codes */
-#define C_OK                    0
-#define C_ERR                   -1
+#define C_OK                    0      // 正确
+#define C_ERR                   -1     // 错误
 
 /* Static server configuration */
 #define CONFIG_DEFAULT_HZ        10      /* Time interrupt calls/sec. */
@@ -117,7 +117,7 @@ typedef long long mstime_t; /* millisecond time type. */
 #define CONFIG_DEFAULT_STOP_WRITES_ON_BGSAVE_ERROR 1
 #define CONFIG_DEFAULT_RDB_COMPRESSION 1
 #define CONFIG_DEFAULT_RDB_CHECKSUM 1
-#define CONFIG_DEFAULT_RDB_FILENAME "dump.rdb"
+#define CONFIG_DEFAULT_RDB_FILENAME "dump.rdb"  //rdb
 #define CONFIG_DEFAULT_REPL_DISKLESS_SYNC 0
 #define CONFIG_DEFAULT_REPL_DISKLESS_SYNC_DELAY 5
 #define CONFIG_DEFAULT_SLAVE_SERVE_STALE_DATA 1
@@ -127,7 +127,7 @@ typedef long long mstime_t; /* millisecond time type. */
 #define CONFIG_DEFAULT_REPL_DISABLE_TCP_NODELAY 0
 #define CONFIG_DEFAULT_MAXMEMORY 0
 #define CONFIG_DEFAULT_MAXMEMORY_SAMPLES 5
-#define CONFIG_DEFAULT_AOF_FILENAME "appendonly.aof"
+#define CONFIG_DEFAULT_AOF_FILENAME "appendonly.aof"  //aof文件
 #define CONFIG_DEFAULT_AOF_NO_FSYNC_ON_REWRITE 0
 #define CONFIG_DEFAULT_AOF_LOAD_TRUNCATED 1
 #define CONFIG_DEFAULT_ACTIVE_REHASHING 1
@@ -1090,7 +1090,7 @@ uint64_t crc64(uint64_t crc, const unsigned char *s, uint64_t l);
 void exitFromChild(int retcode);
 size_t redisPopcount(void *s, long count);
 void redisSetProcTitle(char *title);
-
+/*********************网络相关的处理函数 start***********************/
 /* networking.c -- Networking and Client related operations */
 client *createClient(int fd);
 void closeTimedoutClients(void);
@@ -1154,7 +1154,7 @@ void addReplyStatusFormat(client *c, const char *fmt, ...)
 void addReplyErrorFormat(client *c, const char *fmt, ...);
 void addReplyStatusFormat(client *c, const char *fmt, ...);
 #endif
-
+/*********************网络相关的处理函数 end***********************/
 /* List data type */
 void listTypeTryConversion(robj *subject, robj *value);
 void listTypePush(robj *subject, robj *value, int where);
@@ -1225,12 +1225,13 @@ int collateStringObjects(robj *a, robj *b);
 int equalStringObjects(robj *a, robj *b);
 unsigned long long estimateObjectIdleTime(robj *o);
 #define sdsEncodedObject(objptr) (objptr->encoding == OBJ_ENCODING_RAW || objptr->encoding == OBJ_ENCODING_EMBSTR)
-
+/************IO相关的处理函数 start**************/
 /* Synchronous I/O with timeout */
 ssize_t syncWrite(int fd, char *ptr, ssize_t size, long long timeout);
 ssize_t syncRead(int fd, char *ptr, ssize_t size, long long timeout);
 ssize_t syncReadLine(int fd, char *ptr, ssize_t size, long long timeout);
-
+/************IO相关的处理函数 end**************/
+/************复制相关的相关的处理函数 start**************/
 /* Replication */
 void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc);
 void replicationFeedMonitors(client *c, list *monitors, int dictid, robj **argv, int argc);
@@ -1260,10 +1261,10 @@ void startLoading(FILE *fp);
 void loadingProgress(off_t pos);
 void stopLoading(void);
 
-/* RDB persistence */
+/* RDB persistence */   // RDB 持久化
 #include "rdb.h"
 
-/* AOF persistence */
+/* AOF persistence */   //aof 相关的处理
 void flushAppendOnlyFile(int force);
 void feedAppendOnlyFile(struct redisCommand *cmd, int dictid, robj **argv, int argc);
 void aofRemoveTempFile(pid_t childpid);
@@ -1282,7 +1283,7 @@ typedef struct {
     double min, max;
     int minex, maxex; /* are min or max exclusive? */
 } zrangespec;
-
+/*************有序集合的相关处理 start*************/
 /* Struct to hold an inclusive/exclusive range spec by lexicographic comparison. */
 typedef struct {
     robj *min, *max;  /* May be set to shared.(minstring|maxstring) */
@@ -1345,7 +1346,7 @@ const char *evictPolicyToString(void);
 #define RESTART_SERVER_CONFIG_REWRITE (1<<1) /* CONFIG REWRITE before restart.*/
 int restartServer(int flags, mstime_t delay);
 
-/* Set data type */
+/* Set data type */  //set数据的类型
 robj *setTypeCreate(robj *value);
 int setTypeAdd(robj *subject, robj *value);
 int setTypeRemove(robj *subject, robj *value);
@@ -1431,7 +1432,7 @@ int verifyClusterConfigWithData(void);
 void scanGenericCommand(client *c, robj *o, unsigned long cursor);
 int parseScanCursorOrReply(client *c, robj *o, unsigned long *cursor);
 
-/* API to get key arguments from commands */
+/* API to get key arguments from commands */  //获取一个key
 int *getKeysFromCommand(struct redisCommand *cmd, robj **argv, int argc, int *numkeys);
 void getKeysFreeResult(int *result);
 int *zunionInterGetKeys(struct redisCommand *cmd,robj **argv, int argc, int *numkeys);
@@ -1439,7 +1440,7 @@ int *evalGetKeys(struct redisCommand *cmd, robj **argv, int argc, int *numkeys);
 int *sortGetKeys(struct redisCommand *cmd, robj **argv, int argc, int *numkeys);
 int *migrateGetKeys(struct redisCommand *cmd, robj **argv, int argc, int *numkeys);
 
-/* Cluster */
+/* Cluster */   //集群
 void clusterInit(void);
 unsigned short crc16(const char *buf, int len);
 unsigned int keyHashSlot(char *key, int keylen);
@@ -1448,7 +1449,7 @@ void clusterPropagatePublish(robj *channel, robj *message);
 void migrateCloseTimedoutSockets(void);
 void clusterBeforeSleep(void);
 
-/* Sentinel */
+/* Sentinel */ //哨兵
 void initSentinelConfig(void);
 void initSentinel(void);
 void sentinelTimer(void);
@@ -1478,7 +1479,7 @@ char *redisGitSHA1(void);
 char *redisGitDirty(void);
 uint64_t redisBuildId(void);
 
-/* Commands prototypes */
+/* Commands prototypes */  //命令相关的属性
 void authCommand(client *c);
 void pingCommand(client *c);
 void echoCommand(client *c);
