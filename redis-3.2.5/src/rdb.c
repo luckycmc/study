@@ -914,24 +914,25 @@ werr:
     unlink(tmpfile);
     return C_ERR;
 }
-
+//异步RDB
 int rdbSaveBackground(char *filename) {
     pid_t childpid;
     long long start;
-
+    //如果aof 和rdb 正在执行 异步复制任务则 不在执行
     if (server.aof_child_pid != -1 || server.rdb_child_pid != -1) return C_ERR;
 
     server.dirty_before_bgsave = server.dirty;
     server.lastbgsave_try = time(NULL);
 
-    start = ustime();
+    start = ustime();  // fork() 开始前的时间，记录 fork() 返回耗时用
+    //启动一个子进程进行处理
     if ((childpid = fork()) == 0) {
         int retval;
 
         /* Child */
         closeListeningSockets(0);
         redisSetProcTitle("redis-rdb-bgsave");
-        retval = rdbSave(filename);
+        retval = rdbSave(filename);  // 执行保存操作
         if (retval == C_OK) {
             size_t private_dirty = zmalloc_get_private_dirty();
 
@@ -941,9 +942,10 @@ int rdbSaveBackground(char *filename) {
                     private_dirty/(1024*1024));
             }
         }
+        // 向父进程发送信号
         exitFromChild((retval == C_OK) ? 0 : 1);
     } else {
-        /* Parent */
+        /* Parent */  //父进程的空间
         server.stat_fork_time = ustime()-start;
         server.stat_fork_rate = (double) zmalloc_used_memory() * 1000000 / server.stat_fork_time / (1024*1024*1024); /* GB per second. */
         latencyAddSampleIfNeeded("fork",server.stat_fork_time/1000);
@@ -962,7 +964,11 @@ int rdbSaveBackground(char *filename) {
     }
     return C_OK; /* unreached */
 }
-
+/**
+ * 移除 BGSAVE 所产生的临时文件
+ *  BGSAVE 执行被中断时使用
+ * @param childpid 
+ */
 void rdbRemoveTempFile(pid_t childpid) {
     char tmpfile[256];
 
@@ -971,18 +977,20 @@ void rdbRemoveTempFile(pid_t childpid) {
 }
 
 /* Load a Redis object of the specified type from the specified file.
+  从 rdb 文件中载入指定类型的对象。
+  读入成功返回一个新对象，否则返回 NULL 。
  * On success a newly allocated object is returned, otherwise NULL. */
 robj *rdbLoadObject(int rdbtype, rio *rdb) {
     robj *o = NULL, *ele, *dec;
     size_t len;
     unsigned int i;
-
+     // 载入字符串对象
     if (rdbtype == RDB_TYPE_STRING) {
         /* Read string value */
         if ((o = rdbLoadEncodedStringObject(rdb)) == NULL) return NULL;
         o = tryObjectEncoding(o);
-    } else if (rdbtype == RDB_TYPE_LIST) {
-        /* Read list value */
+    } else if (rdbtype == RDB_TYPE_LIST) {   // 载入列表对象
+        /* Read list value */  //读入节点数
         if ((len = rdbLoadLen(rdb,NULL)) == RDB_LENERR) return NULL;
 
         o = createQuicklistObject();
@@ -998,7 +1006,7 @@ robj *rdbLoadObject(int rdbtype, rio *rdb) {
             decrRefCount(dec);
             decrRefCount(ele);
         }
-    } else if (rdbtype == RDB_TYPE_SET) {
+    } else if (rdbtype == RDB_TYPE_SET) {  //  载入集合对象
         /* Read list/set value */
         if ((len = rdbLoadLen(rdb,NULL)) == RDB_LENERR) return NULL;
 
@@ -1037,7 +1045,7 @@ robj *rdbLoadObject(int rdbtype, rio *rdb) {
                 decrRefCount(ele);
             }
         }
-    } else if (rdbtype == RDB_TYPE_ZSET) {
+    } else if (rdbtype == RDB_TYPE_ZSET) {  // 载入有序集合对象
         /* Read list/set value */
         size_t zsetlen;
         size_t maxelelen = 0;
@@ -1070,7 +1078,7 @@ robj *rdbLoadObject(int rdbtype, rio *rdb) {
         if (zsetLength(o) <= server.zset_max_ziplist_entries &&
             maxelelen <= server.zset_max_ziplist_value)
                 zsetConvert(o,OBJ_ENCODING_ZIPLIST);
-    } else if (rdbtype == RDB_TYPE_HASH) {
+    } else if (rdbtype == RDB_TYPE_HASH) {  //// 载入哈希表对象
         size_t len;
         int ret;
 
@@ -1226,6 +1234,8 @@ robj *rdbLoadObject(int rdbtype, rio *rdb) {
 }
 
 /* Mark that we are loading in the global state and setup the fields
+  在全局状态中标记程序正在进行载入，
+  并设置相应的载入状态。
  * needed to provide loading stats. */
 void startLoading(FILE *fp) {
     struct stat sb;

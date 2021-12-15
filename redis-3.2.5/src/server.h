@@ -786,14 +786,14 @@ struct redisServer {
         long long samples[STATS_METRIC_SAMPLES];
         int idx;
     } inst_metric[STATS_METRIC_COUNT];
-    /* Configuration */
+    /* Configuration */  //配置相关的信息
     int verbosity;                  /* Loglevel in redis.conf */
     int maxidletime;                /* Client timeout in seconds */
     int tcpkeepalive;               /* Set SO_KEEPALIVE if non-zero. */
     int active_expire_enabled;      /* Can be disabled for testing purposes. */
     size_t client_max_querybuf_len; /* Limit for client query buffer length */
     int dbnum;                      /* Total number of configured DBs */  //而数据库的数量则由 redisServer.dbnum 属性保存。
-    int supervised;                 /* 1 if supervised, 0 otherwise. */
+    int supervised;                 /* 1 if supervised, 0 otherwise. */  //是否被监督
     int supervised_mode;            /* See SUPERVISED_* */
     int daemonize;                  /* True if running as a daemon */
     clientBufferLimitsConfig client_obuf_limits[CLIENT_TYPE_OBUF_COUNT];
