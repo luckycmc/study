@@ -4111,7 +4111,7 @@ int main(int argc, char **argv) {
     if (server.maxmemory > 0 && server.maxmemory < 1024*1024) {
         serverLog(LL_WARNING,"WARNING: You specified a maxmemory value that is less than 1MB (current value is %llu bytes). Are you sure this is what you really want?", server.maxmemory);
     }
-    printf("redis server is running\n");
+    //printf("redis server is running\n");
     aeSetBeforeSleepProc(server.el,beforeSleep);
     //开启事假循环
     aeMain(server.el);
