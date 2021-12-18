@@ -32,7 +32,7 @@
 
 #ifndef __SDS_H
 #define __SDS_H
-
+/* 最大分配内存1M */
 #define SDS_MAX_PREALLOC (1024*1024)
 
 #include <sys/types.h>
@@ -89,7 +89,8 @@ struct __attribute__ ((__packed__)) sdshdr64 {
 #define SDS_HDR_VAR(T,s) struct sdshdr##T *sh = (void*)((s)-(sizeof(struct sdshdr##T)));
 #define SDS_HDR(T,s) ((struct sdshdr##T *)((s)-(sizeof(struct sdshdr##T))))
 #define SDS_TYPE_5_LEN(f) ((f)>>SDS_TYPE_BITS)
-
+/* 计算sds的长度，返回的size_t类型的数值 */
+/* size_t,它是一个与机器相关的unsigned类型，其大小足以保证存储内存中对象的大小。 */
 static inline size_t sdslen(const sds s) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -106,7 +107,7 @@ static inline size_t sdslen(const sds s) {
     }
     return 0;
 }
-
+/* 根据sdshdr中的free标记获取可用空间 */
 static inline size_t sdsavail(const sds s) {
     unsigned char flags = s[-1];
     switch(flags&SDS_TYPE_MASK) {
@@ -221,17 +222,17 @@ static inline void sdssetalloc(sds s, size_t newlen) {
     }
 }
 
-sds sdsnewlen(const void *init, size_t initlen);
-sds sdsnew(const char *init);
+sds sdsnewlen(const void *init, size_t initlen);  //根据给定长度，新生出一个sds
+sds sdsnew(const char *init);  //根据给定的值，生出sds
 sds sdsempty(void);
 sds sdsdup(const sds s);
-void sdsfree(sds s);
+void sdsfree(sds s); //释放对应的sds字符串
 sds sdsgrowzero(sds s, size_t len);
-sds sdscatlen(sds s, const void *t, size_t len);
+sds sdscatlen(sds s, const void *t, size_t len);//判断sds获取可用空间
 sds sdscat(sds s, const char *t);
 sds sdscatsds(sds s, const sds t);
 sds sdscpylen(sds s, const char *t, size_t len);
-sds sdscpy(sds s, const char *t);
+sds sdscpy(sds s, const char *t);  //字符串复制相关
 
 sds sdscatvprintf(sds s, const char *fmt, va_list ap);
 #ifdef __GNUC__
@@ -257,7 +258,7 @@ sds *sdssplitargs(const char *line, int *argc);
 sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen);
 sds sdsjoin(char **argv, int argc, char *sep);
 sds sdsjoinsds(sds *argv, int argc, const char *sep, size_t seplen);
-
+/* 开放给使用者的API */
 /* Low level functions exposed to the user API */
 sds sdsMakeRoomFor(sds s, size_t addlen);
 void sdsIncrLen(sds s, int incr);

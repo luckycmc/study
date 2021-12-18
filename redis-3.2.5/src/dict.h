@@ -37,10 +37,10 @@
 
 #ifndef __DICT_H
 #define __DICT_H
-
+/* 定义了成功与错误的值 */
 #define DICT_OK 0
 #define DICT_ERR 1
-
+/* dict没有用到时，用来提示警告的 */
 /* Unused arguments generate annoying warnings... */
 #define DICT_NOTUSED(V) ((void) V)
 //具体的hash表 也就是存放数据的 key=>val
@@ -52,10 +52,10 @@ typedef struct dictEntry {
         int64_t s64;
         double d;
     } v; //对应的val
-    struct dictEntry *next;  //解决hash冲突的的指针链表
+    struct dictEntry *next;  //解决hash冲突的的指针链表 //下一字典结点
 } dictEntry;
 //对应的处理函数
-typedef struct dictType {
+typedef struct dictType {   /* 字典类型 */
     unsigned int (*hashFunction)(const void *key);
     void *(*keyDup)(void *privdata, const void *key);
     void *(*valDup)(void *privdata, const void *obj);

@@ -54,7 +54,7 @@ list *listCreate(void)
 }
 
 /* Free the whole list.
- *
+ * 释放节点资源
  * This function can't fail. */
 void listRelease(list *list)
 {
@@ -74,7 +74,7 @@ void listRelease(list *list)
 
 /* Add a new node to the list, to head, containing the specified 'value'
  * pointer as value.
- *
+ *  头结点添加数据
  * On error, NULL is returned and no operation is performed (i.e. the
  * list remains unaltered).
  * On success the 'list' pointer you pass to the function is returned. */
@@ -100,7 +100,7 @@ list *listAddNodeHead(list *list, void *value)
 
 /* Add a new node to the list, to tail, containing the specified 'value'
  * pointer as value.
- *
+ * 尾部节点添加数据
  * On error, NULL is returned and no operation is performed (i.e. the
  * list remains unaltered).
  * On success the 'list' pointer you pass to the function is returned. */
@@ -123,7 +123,7 @@ list *listAddNodeTail(list *list, void *value)
     list->len++;
     return list;
 }
-
+//在某个节点后面添加数据
 list *listInsertNode(list *list, listNode *old_node, void *value, int after) {
     listNode *node;
 
@@ -155,7 +155,7 @@ list *listInsertNode(list *list, listNode *old_node, void *value, int after) {
 
 /* Remove the specified node from the specified list.
  * It's up to the caller to free the private value of the node.
- *
+ *  删除某个节点数据
  * This function can't fail. */
 void listDelNode(list *list, listNode *node)
 {
@@ -174,7 +174,7 @@ void listDelNode(list *list, listNode *node)
 
 /* Returns a list iterator 'iter'. After the initialization every
  * call to listNext() will return the next element of the list.
- *
+ * 列表迭代器
  * This function can't fail. */
 listIter *listGetIterator(list *list, int direction)
 {
@@ -188,7 +188,7 @@ listIter *listGetIterator(list *list, int direction)
     iter->direction = direction;
     return iter;
 }
-
+// 列表迭代器的释放
 /* Release the iterator memory */
 void listReleaseIterator(listIter *iter) {
     zfree(iter);
@@ -217,7 +217,7 @@ void listRewindTail(list *list, listIter *li) {
  * while ((node = listNext(iter)) != NULL) {
  *     doSomethingWith(listNodeValue(node));
  * }
- *
+ *  列表的下一个节点
  * */
 listNode *listNext(listIter *iter)
 {
@@ -238,7 +238,7 @@ listNode *listNext(listIter *iter)
  * The 'Dup' method set with listSetDupMethod() function is used
  * to copy the node value. Otherwise the same pointer value of
  * the original node is used as value of the copied node.
- *
+ * 列表的复制
  * The original list both on success or error is never modified. */
 list *listDup(list *orig)
 {
@@ -276,7 +276,7 @@ list *listDup(list *orig)
  * set with listSetMatchMethod(). If no 'match' method
  * is set, the 'value' pointer of every node is directly
  * compared with the 'key' pointer.
- *
+ * 查找类表中的某个key
  * On success the first matching node pointer is returned
  * (search starts from head). If no matching node exists
  * NULL is returned. */

@@ -74,12 +74,12 @@ void zlibc_free(void *ptr) {
 #define update_zmalloc_stat_add(__n) __sync_add_and_fetch(&used_memory, (__n))
 #define update_zmalloc_stat_sub(__n) __sync_sub_and_fetch(&used_memory, (__n))
 #else
-#define update_zmalloc_stat_add(__n) do { \
+#define update_zmalloc_stat_add(__n) do { \        /* 在对内存空间做使用的时候，进行了加锁控制 */
     pthread_mutex_lock(&used_memory_mutex); \
     used_memory += (__n); \
     pthread_mutex_unlock(&used_memory_mutex); \
 } while(0)
-
+//分配内存的处理
 #define update_zmalloc_stat_sub(__n) do { \
     pthread_mutex_lock(&used_memory_mutex); \
     used_memory -= (__n); \
@@ -87,7 +87,7 @@ void zlibc_free(void *ptr) {
 } while(0)
 
 #endif
-
+// 通过锁操作实现对于used_memory的控制，是对这个变量做控制，避免了这个数值出现脏数据的可能。
 #define update_zmalloc_stat_alloc(__n) do { \
     size_t _n = (__n); \
     if (_n&(sizeof(long)-1)) _n += sizeof(long)-(_n&(sizeof(long)-1)); \
@@ -108,9 +108,9 @@ void zlibc_free(void *ptr) {
     } \
 } while(0)
 
-static size_t used_memory = 0;
-static int zmalloc_thread_safe = 0;
-pthread_mutex_t used_memory_mutex = PTHREAD_MUTEX_INITIALIZER;
+static size_t used_memory = 0;   //系统已经使用了多少的内存大小，在全局只维护了这么一个变量的大小
+static int zmalloc_thread_safe = 0;   //这指的是线程安全模式状态 线程安全模式
+pthread_mutex_t used_memory_mutex = PTHREAD_MUTEX_INITIALIZER;  //使用线程的互斥锁
 
 static void zmalloc_default_oom(size_t size) {
     fprintf(stderr, "zmalloc: Out of memory trying to allocate %zu bytes\n",
@@ -120,12 +120,14 @@ static void zmalloc_default_oom(size_t size) {
 }
 
 static void (*zmalloc_oom_handler)(size_t) = zmalloc_default_oom;
-
+/* 调用zmalloc申请size个大小的空间 */
 void *zmalloc(size_t size) {
+    //实际调用的还是malloc函数
     void *ptr = malloc(size+PREFIX_SIZE);
-
+    //如果申请的结果为null，说明发生了oom,调用oom的处理方法
     if (!ptr) zmalloc_oom_handler(size);
 #ifdef HAVE_MALLOC_SIZE
+    //更新used_memory的大小
     update_zmalloc_stat_alloc(zmalloc_size(ptr));
     return ptr;
 #else
@@ -217,10 +219,10 @@ char *zstrdup(const char *s) {
     memcpy(p,s,l);
     return p;
 }
-
+/*redis使用了多大的内存*/
 size_t zmalloc_used_memory(void) {
     size_t um;
-
+     
     if (zmalloc_thread_safe) {
 #if defined(__ATOMIC_RELAXED) || defined(HAVE_ATOMIC)
         um = update_zmalloc_stat_add(0);
@@ -233,10 +235,10 @@ size_t zmalloc_used_memory(void) {
     else {
         um = used_memory;
     }
-
+     
     return um;
 }
-
+/********是否这是线程安全********/
 void zmalloc_enable_thread_safeness(void) {
     zmalloc_thread_safe = 1;
 }
@@ -262,13 +264,13 @@ void zmalloc_set_oom_handler(void (*oom_handler)(size_t)) {
 #include <fcntl.h>
 
 size_t zmalloc_get_rss(void) {
-    int page = sysconf(_SC_PAGESIZE);
+    int page = sysconf(_SC_PAGESIZE);  // 该函数是获取一些系统的参数
     size_t rss;
     char buf[4096];
     char filename[256];
     int fd, count;
     char *p, *x;
-
+    
     snprintf(filename,256,"/proc/%d/stat",getpid());
     if ((fd = open(filename,O_RDONLY)) == -1) return 0;
     if (read(fd,buf,4096) <= 0) {
@@ -313,7 +315,7 @@ size_t zmalloc_get_rss(void) {
     return t_info.resident_size;
 }
 #else
-size_t zmalloc_get_rss(void) {
+size_t zmalloc_get_rss(void) {     //获取内存的使用统计
     /* If we can't get the RSS in an OS-specific way for this system just
      * return the memory usage we estimated in zmalloc()..
      *

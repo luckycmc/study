@@ -1,0 +1,15 @@
+redis 键值对应设置时  key的值在满足使用的情况下 一定要尽量短  减少内存空间的暂用
+
+(error) OOM command not allowed when used memory > 'maxmemory'.  reddis 内存使用完毕
+
+通过 config set maxmemory 11  设置内存的上限值
+
+
+/proc 文件系统是一个伪文件系统，它只存在内存当中，而不占用外存空间。
+
+系统中当前运行的每一个进程在/proc下都对应一个以进程号为目录名的目录/proc/pid，它们是读取进程信息的接口
+
+在Linux 2.6.0-test6以上的版本中/proc/pid目录中有一个task目录，/proc/pid/task目录中也有一些以该进程所拥有的线程的
+线程号命名的目录/proc/pid/task/tid，它们是读取线程信息的接口。
+
+/proc/<pid>/stat  是对应线程的相关信息
