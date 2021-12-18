@@ -29,6 +29,9 @@
  */
 
 /*-----------------------------------------------------------------------------
+   哈希表将 Redis 对象映射到分值上。
+ * 而跳跃表则将分值映射到 Redis 对象上，
+ * 以跳跃表的视角来看，可以说 Redis 对象是根据分值来排序的。
  * Sorted set API
  *----------------------------------------------------------------------------*/
 
@@ -44,9 +47,13 @@
  * algorithm described by William Pugh in "Skip Lists: A Probabilistic
  * Alternative to Balanced Trees", modified in three ways:
  * a) this implementation allows for repeated scores.
+    这个实现允许有重复的分值
  * b) the comparison is not just by key (our 'score') but by satellite data.
+    对元素的比对不仅要比对他们的分值，还要比对他们的对象
  * c) there is a back pointer, so it's a doubly linked list with the back
  * pointers being only at "level 1". This allows to traverse the list
+  每个跳跃表节点都带有一个后退指针，
+ *    它允许程序在执行像 ZREVRANGE 这样的命令时，从表尾向表头遍历跳跃表。
  * from tail to head, useful for ZREVRANGE. */
 
 #include "server.h"
@@ -54,51 +61,65 @@
 
 static int zslLexValueGteMin(robj *value, zlexrangespec *spec);
 static int zslLexValueLteMax(robj *value, zlexrangespec *spec);
-
+/*
+ * 创建一个层数为 level 的跳跃表节点，
+ * 并将节点的成员对象设置为 obj ，分值设置为 score 。
+ *
+ * 返回值为新创建的跳跃表节点
+ *
+ * T = O(1)
+ */
 zskiplistNode *zslCreateNode(int level, double score, robj *obj) {
+     // 分配空间
     zskiplistNode *zn = zmalloc(sizeof(*zn)+level*sizeof(struct zskiplistLevel));
+    //设置分值属性
     zn->score = score;
     zn->obj = obj;
     return zn;
 }
-
+//创建并返回一个新的跳表
 zskiplist *zslCreate(void) {
     int j;
     zskiplist *zsl;
-
+    //分配空间
     zsl = zmalloc(sizeof(*zsl));
+    //设置高度和起始层
     zsl->level = 1;
     zsl->length = 0;
+    //初始化头节点
     zsl->header = zslCreateNode(ZSKIPLIST_MAXLEVEL,0,NULL);
     for (j = 0; j < ZSKIPLIST_MAXLEVEL; j++) {
         zsl->header->level[j].forward = NULL;
         zsl->header->level[j].span = 0;
     }
     zsl->header->backward = NULL;
+    //设置表尾
     zsl->tail = NULL;
     return zsl;
 }
-
+//释放给定跳表的节点
 void zslFreeNode(zskiplistNode *node) {
     decrRefCount(node->obj);
     zfree(node);
 }
-
+//释放跳表和跳表中的所有节点
 void zslFree(zskiplist *zsl) {
     zskiplistNode *node = zsl->header->level[0].forward, *next;
 
     zfree(zsl->header);
-    while(node) {
+    while(node) {  //只有有节点就一直释放
         next = node->level[0].forward;
         zslFreeNode(node);
-        node = next;
+        node = next; //指针节点指向下一个节点
     }
     zfree(zsl);
 }
 
 /* Returns a random level for the new skiplist node we are going to create.
+  返回一个随机值,用于跳表节点的层数
  * The return value of this function is between 1 and ZSKIPLIST_MAXLEVEL
  * (both inclusive), with a powerlaw-alike distribution where higher
+
  * levels are less likely to be returned. */
 int zslRandomLevel(void) {
     int level = 1;
@@ -106,7 +127,13 @@ int zslRandomLevel(void) {
         level += 1;
     return (level<ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;
 }
-
+/**
+   创建一个成员 obj 分值为score 的新节点
+   并且插入到新的跳表zsl中
+   
+   函数返回值为新的节点
+   这个函数很重要
+*/
 zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
     zskiplistNode *update[ZSKIPLIST_MAXLEVEL], *x;
     unsigned int rank[ZSKIPLIST_MAXLEVEL];
@@ -162,7 +189,7 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, robj *obj) {
     zsl->length++;
     return x;
 }
-
+// 内部删除函数
 /* Internal function used by zslDelete, zslDeleteByScore and zslDeleteByRank */
 void zslDeleteNode(zskiplist *zsl, zskiplistNode *x, zskiplistNode **update) {
     int i;
@@ -183,7 +210,7 @@ void zslDeleteNode(zskiplist *zsl, zskiplistNode *x, zskiplistNode **update) {
         zsl->level--;
     zsl->length--;
 }
-
+//从跳表中删除一个带对象的节点
 /* Delete an element with matching score/object from the skiplist. */
 int zslDelete(zskiplist *zsl, double score, robj *obj) {
     zskiplistNode *update[ZSKIPLIST_MAXLEVEL], *x;
@@ -208,15 +235,15 @@ int zslDelete(zskiplist *zsl, double score, robj *obj) {
     }
     return 0; /* not found */
 }
-
+//获取最小值
 static int zslValueGteMin(double value, zrangespec *spec) {
     return spec->minex ? (value > spec->min) : (value >= spec->min);
 }
-
+//获取最大值
 int zslValueLteMax(double value, zrangespec *spec) {
     return spec->maxex ? (value < spec->max) : (value <= spec->max);
 }
-
+//返回值是否在指定的范围内
 /* Returns if there is a part of the zset is in range. */
 int zslIsInRange(zskiplist *zsl, zrangespec *range) {
     zskiplistNode *x;
@@ -475,7 +502,7 @@ static int zslParseRange(robj *min, robj *max, zrangespec *spec) {
   * that will be used for the comparision, and ex will be set to 0 or 1
   * respectively if the item is exclusive or inclusive. C_OK will be
   * returned.
-  *
+  *  对min和max  进行分析,并且将值保存在spec中
   * If the string is not a valid range C_ERR is returned, and the value
   * of *dest and *ex is undefined. */
 int zslParseLexRangeItem(robj *item, robj **dest, int *ex) {
@@ -629,9 +656,13 @@ zskiplistNode *zslLastInLexRange(zskiplist *zsl, zlexrangespec *range) {
 }
 
 /*-----------------------------------------------------------------------------
- * Ziplist-backed sorted set API
- *----------------------------------------------------------------------------*/
+ * Ziplist-backed sorted set API  
+    跳表中的 有序集合的API
 
+ *----------------------------------------------------------------------------*/
+/**
+  取出sptr 指向节点保存的有序集合的值
+*/
 double zzlGetScore(unsigned char *sptr) {
     unsigned char *vstr;
     unsigned int vlen;
@@ -640,9 +671,11 @@ double zzlGetScore(unsigned char *sptr) {
     double score;
 
     serverAssert(sptr != NULL);
+    //取出节点的值
     serverAssert(ziplistGet(sptr,&vstr,&vlen,&vlong));
 
     if (vstr) {
+        //字符串转成double
         memcpy(buf,vstr,vlen);
         buf[vlen] = '\0';
         score = strtod(buf,NULL);
@@ -670,7 +703,7 @@ robj *ziplistGetObject(unsigned char *sptr) {
         return createStringObjectFromLongLong(vlong);
     }
 }
-
+//对比两个元素
 /* Compare element in sorted set with given element. */
 int zzlCompareElements(unsigned char *eptr, unsigned char *cstr, unsigned int clen) {
     unsigned char *vstr;
@@ -691,7 +724,7 @@ int zzlCompareElements(unsigned char *eptr, unsigned char *cstr, unsigned int cl
     if (cmp == 0) return vlen-clen;
     return cmp;
 }
-
+//返回跳表中包含元素的数量
 unsigned int zzlLength(unsigned char *zl) {
     return ziplistLen(zl)/2;
 }
@@ -911,7 +944,8 @@ unsigned char *zzlLastInLexRange(unsigned char *zl, zlexrangespec *range) {
 
     return NULL;
 }
-
+// 从ziplist 编码中有序集合中 查找ele成员,并将它保存到score中
+//寻找成功返回对应的 ele指针,查找失败 返回为NULL
 unsigned char *zzlFind(unsigned char *zl, robj *ele, double *score) {
     unsigned char *eptr = ziplistIndex(zl,0), *sptr;
 

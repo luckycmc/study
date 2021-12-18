@@ -513,7 +513,7 @@ typedef struct redisDb {
     struct evictionPoolEntry *eviction_pool;    /* Eviction pool of keys */
     int id;                     /* Database ID */    // 数据库号码
     long long avg_ttl;          /* Average TTL, just for stats */   // 数据库的键的平均 TTL ，统计信息
-} redisDb;
+} redisDb; 
 
 /* Client MULTI/EXEC state */
 typedef struct multiCmd {
