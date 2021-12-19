@@ -24,6 +24,9 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+   t_hash.c,z_list,z_set.c,t_string.c,t_zset.c,这些文件的功能其实都差不多，
+   就是用来实现Client和Server之间的命令处理的操作类，
+   通过robj的形式，把dict,ziplist等存入robj中，进行各个转换，实现命令操作
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
@@ -36,7 +39,9 @@
 
 /* Check the length of a number of objects to see if we need to convert a
  * ziplist to a real hash. Note that we only check string encoded objects
- * as their string length can be queried in constant time. */
+ * as their string length can be queried in constant time.
+    判断服务对象是否超出了服务范围
+  */
 void hashTypeTryConversion(robj *o, robj **argv, int start, int end) {
     int i;
 
@@ -61,6 +66,7 @@ void hashTypeTryObjectEncoding(robj *subject, robj **o1, robj **o2) {
 }
 
 /* Get the value from a ziplist encoded hash, identified by field.
+   获取hash表中的某个值
  * Returns -1 when the field cannot be found. */
 int hashTypeGetFromZiplist(robj *o, robj *field,
                            unsigned char **vstr,
@@ -98,13 +104,15 @@ int hashTypeGetFromZiplist(robj *o, robj *field,
 
 /* Get the value from a hash table encoded hash, identified by field.
  * Returns -1 when the field cannot be found. */
+ /* 获取哈希字典中的某个值 */
 int hashTypeGetFromHashTable(robj *o, robj *field, robj **value) {
     dictEntry *de;
 
     serverAssert(o->encoding == OBJ_ENCODING_HT);
-
+    //通过robj->ptr里面存的dict总类或ziplist类开始寻找 
     de = dictFind(o->ptr, field);
     if (de == NULL) return -1;
+    //获取其中的value值
     *value = dictGetVal(de);
     return 0;
 }
@@ -112,7 +120,7 @@ int hashTypeGetFromHashTable(robj *o, robj *field, robj **value) {
 /* Higher level function of hashTypeGet*() that always returns a Redis
  * object (either new or with refcount incremented), so that the caller
  * can retain a reference or call decrRefCount after the usage.
- *
+ * 获取某个节点的
  * The lower level function can prevent copy on write so it is
  * the preferred way of doing read operations. */
 robj *hashTypeGetObject(robj *o, robj *field) {
@@ -145,6 +153,7 @@ robj *hashTypeGetObject(robj *o, robj *field) {
 
 /* Higher level function using hashTypeGet*() to return the length of the
  * object associated with the requested field, or 0 if the field does not
+   获取hash表值得长度
  * exist. */
 size_t hashTypeGetValueLength(robj *o, robj *field) {
     size_t len = 0;
@@ -167,6 +176,7 @@ size_t hashTypeGetValueLength(robj *o, robj *field) {
 }
 
 /* Test if the specified field exists in the given hash. Returns 1 if the field
+  hash表值得类型是否存在
  * exists, and 0 when it doesn't. */
 int hashTypeExists(robj *o, robj *field) {
     if (o->encoding == OBJ_ENCODING_ZIPLIST) {
@@ -189,12 +199,13 @@ int hashTypeExists(robj *o, robj *field) {
  * Return 0 on insert and 1 on update.
  * This function will take care of incrementing the reference count of the
  * retained fields and value objects. */
+ /* hashType设置操作，分2种情况，ziplist,和字典hashtable */
 int hashTypeSet(robj *o, robj *field, robj *value) {
     int update = 0;
 
     if (o->encoding == OBJ_ENCODING_ZIPLIST) {
         unsigned char *zl, *fptr, *vptr;
-
+        //首先对field和value进行解码
         field = getDecodedObject(field);
         value = getDecodedObject(value);
 
@@ -207,10 +218,10 @@ int hashTypeSet(robj *o, robj *field, robj *value) {
                 vptr = ziplistNext(zl, fptr);
                 serverAssert(vptr != NULL);
                 update = 1;
-
+                 //设置的操作，其实先删除，再插入语一个新值
                 /* Delete value */
                 zl = ziplistDelete(zl, &vptr);
-
+                // 插入一个新的值
                 /* Insert new value */
                 zl = ziplistInsert(zl, vptr, value->ptr, sdslen(value->ptr));
             }
@@ -391,6 +402,7 @@ void hashTypeCurrentFromHashTable(hashTypeIterator *hi, int what, robj **dst) {
 
 /* A non copy-on-write friendly but higher level version of hashTypeCurrent*()
  * that returns an object with incremented refcount (or a new object). It is up
+ 当前hash对象的类型
  * to the caller to decrRefCount() the object if no reference is retained. */
 robj *hashTypeCurrentObject(hashTypeIterator *hi, int what) {
     robj *dst;
@@ -480,7 +492,9 @@ void hashTypeConvert(robj *o, int enc) {
 }
 
 /*-----------------------------------------------------------------------------
- * Hash type commands
+ * Hash type commands 
+   hash set 相关命令解析
+   
  *----------------------------------------------------------------------------*/
 
 void hsetCommand(client *c) {
@@ -513,7 +527,9 @@ void hsetnxCommand(client *c) {
         server.dirty++;
     }
 }
-
+/**
+   hmest 设置相关的 命令
+**/
 void hmsetCommand(client *c) {
     int i;
     robj *o;
@@ -534,7 +550,9 @@ void hmsetCommand(client *c) {
     notifyKeyspaceEvent(NOTIFY_HASH,"hset",c->argv[1],c->db->id);
     server.dirty++;
 }
-
+/**
+   键值对的增加
+**/
 void hincrbyCommand(client *c) {
     long long value, incr, oldvalue;
     robj *o, *current, *new;
@@ -568,7 +586,9 @@ void hincrbyCommand(client *c) {
     notifyKeyspaceEvent(NOTIFY_HASH,"hincrby",c->argv[1],c->db->id);
     server.dirty++;
 }
-
+/**
+  字段的自动增加
+**/
 void hincrbyfloatCommand(client *c) {
     double long value, incr;
     robj *o, *current, *new, *aux;
@@ -643,7 +663,9 @@ static void addHashFieldToReply(client *c, robj *o, robj *field) {
         serverPanic("Unknown hash encoding");
     }
 }
-
+/**
+  hget  获取相关的hash 数据
+**/
 void hgetCommand(client *c) {
     robj *o;
 
@@ -652,7 +674,7 @@ void hgetCommand(client *c) {
 
     addHashFieldToReply(c, o, c->argv[2]);
 }
-
+//获取
 void hmgetCommand(client *c) {
     robj *o;
     int i;
@@ -670,7 +692,7 @@ void hmgetCommand(client *c) {
         addHashFieldToReply(c, o, c->argv[i]);
     }
 }
-
+// hdel  删除相关
 void hdelCommand(client *c) {
     robj *o;
     int j, deleted = 0, keyremoved = 0;
@@ -698,7 +720,7 @@ void hdelCommand(client *c) {
     }
     addReplyLongLong(c,deleted);
 }
-
+// helen  获取键值对的长度
 void hlenCommand(client *c) {
     robj *o;
 
@@ -770,19 +792,19 @@ void genericHgetallCommand(client *c, int flags) {
     hashTypeReleaseIterator(hi);
     serverAssert(count == length);
 }
-
+//获取hash  table的keys
 void hkeysCommand(client *c) {
     genericHgetallCommand(c,OBJ_HASH_KEY);
 }
-
+//获取hash  table的vals
 void hvalsCommand(client *c) {
     genericHgetallCommand(c,OBJ_HASH_VALUE);
 }
-
+//获取hash  所有的键值对
 void hgetallCommand(client *c) {
     genericHgetallCommand(c,OBJ_HASH_KEY|OBJ_HASH_VALUE);
 }
-
+// hash中的键值对 是否存在
 void hexistsCommand(client *c) {
     robj *o;
     if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.czero)) == NULL ||
@@ -790,7 +812,7 @@ void hexistsCommand(client *c) {
 
     addReply(c, hashTypeExists(o,c->argv[2]) ? shared.cone : shared.czero);
 }
-
+// hascan 命令 scan  扫描
 void hscanCommand(client *c) {
     robj *o;
     unsigned long cursor;
