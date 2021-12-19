@@ -1048,11 +1048,16 @@ typedef struct {
 /* Structure to hold hash iteration abstraction. Note that iteration over
  * hashes involves both fields and values. Because it is possible that
  * not both are required, store pointers in the iterator to avoid
- * unnecessary memory allocation for fields/values. */
+ * unnecessary memory allocation for fields/values. 
+    哈希对象的迭代器
+ */
 typedef struct {
+     // 被迭代的哈希对象
     robj *subject;
+    // 哈希对象的编码
     int encoding;
-
+     // 域指针和值指针
+    // 在迭代 ZIPLIST 编码的哈希对象时使用
     unsigned char *fptr, *vptr;
 
     dictIterator *di;

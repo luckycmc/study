@@ -369,6 +369,16 @@ int hashTypeNext(hashTypeIterator *hi) {
 }
 
 /* Get the field or value at iterator cursor, for an iterator on a hash value
+   从 ziplist 编码的 hash 中取出和 field 相对应的值。
+   * 参数：
+ *  field   域
+ *  vstr    值是字符串时，将它保存到这个指针
+ *  vlen    保存字符串的长度
+ *  ll      值是整数时，将它保存到这个指针
+ *
+ * 查找失败时，函数返回 -1 。
+ * 查找成功时，返回 0 。
+ 
  * encoded as a ziplist. Prototype is similar to `hashTypeGetFromZiplist`. */
 void hashTypeCurrentFromZiplist(hashTypeIterator *hi, int what,
                                 unsigned char **vstr,
