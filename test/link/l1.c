@@ -3,10 +3,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 /**
- * @brief 
- * 
+ * @brief
+ *
  * 节点链表的定义
- * 
+ *
  */
 typedef struct Node
 {
@@ -37,7 +37,7 @@ PNode create_list()
         PTail = PNew;  //  PTail指向节点往后移动
      }
      return PHead; //返回头部节点的指针
-     
+
 }
 // 对链表进行遍历
 void traverse(PNode pHead)
@@ -73,7 +73,7 @@ int list_num(PNode pHead)
 //像链表出入节点
 bool insert_list(PNode pHead,int val ,int pos)
 {
-
+   
 }
 //删除链表中的节点
 //主函数
@@ -84,10 +84,10 @@ int main()
      if(isEmpty(PHead)){
           printf("链表为空\n");
      }
-        
+
     printf("链表的长度为：%d\n",list_num(PHead));
 
      traverse(PHead);
-     
+
      return 0;
 }

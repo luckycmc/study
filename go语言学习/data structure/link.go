@@ -5,9 +5,9 @@ import (
 
 //定义节点
 type Node struct{
-	Value int
-	Next *Node
-	Size int
+	Value int      //对应的整形值
+	Next *Node    //下一个结构体的节点
+	Size int      //节点的大小
 }
 
 //头节点初始化 
@@ -27,7 +27,7 @@ func addNode(t *Node,v int) int{
 			fmt.Println("节点已存在:", v)
 			return -1
 		}
-		t.Size++
+		t.Size++ //Size的值在增加  
         
 		t=t.Next  //节点后移
 	  }
