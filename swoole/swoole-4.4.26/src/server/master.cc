@@ -700,11 +700,17 @@ int swServer_start(swServer *serv)
 }
 
 /**
+ * 
+ * @brief 
+ *   服务器初始化
+ * @param serv 
+ * @return * initializing, 
+ *
  * initializing server config, set default
  */
 void swServer_init(swServer *serv)
 {
-    swoole_init();
+    swoole_init();  // swoole 初始化
     bzero(serv, sizeof(swServer));
 
     serv->factory_mode = SW_MODE_BASE;
@@ -761,7 +767,12 @@ void swServer_init(swServer *serv)
 
     SwooleG.serv = serv;
 }
-
+/**
+ * @brief 
+ * 创建swoole 服务器
+ * @param serv 
+ * @return int 
+ */
 int swServer_create(swServer *serv)
 {
     serv->factory.ptr = serv;
@@ -798,12 +809,12 @@ int swServer_create(swServer *serv)
         serv->max_connection = SW_SESSION_LIST_SIZE;
         swWarn("serv->max_connection is exceed the SW_SESSION_LIST_SIZE, it's reset to %u", SW_SESSION_LIST_SIZE);
     }
-
+    //BASE模式 创建进程
     if (serv->factory_mode == SW_MODE_BASE)
     {
         return swReactorProcess_create(serv);
     }
-    else
+    else   //process 模式创建线程
     {
         return swReactorThread_create(serv);
     }

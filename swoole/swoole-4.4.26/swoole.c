@@ -2303,7 +2303,12 @@ PHP_FUNCTION(swoole_errno)
 {
     RETURN_LONG(errno);
 }
-
+/**
+ * 
+ * @brief Construct a new php function object
+ * 
+ * swoole 网络服务器启动
+ */
 PHP_FUNCTION(swoole_server_start)
 {
 	zval *zobject = getThis();

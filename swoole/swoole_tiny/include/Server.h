@@ -95,8 +95,8 @@ int swServer_start(swServer *serv);   //服务器启动
 int swServer_addListen(swServer *serv, int type, char *host,int port); //添加监听者进程
 int swServer_create(swServer *serv); // 创建服务
 int swServer_free(swServer *serv);   // 释放服务
-int swServer_close(swServer *factory, swEvent *event);
-int swServer_shutdown(swServer *serv);
+int swServer_close(swServer *factory, swEvent *event);  //服务器关闭
+int swServer_shutdown(swServer *serv);                  //服务器 shutdown
 int swServer_addTimer(swServer *serv, int interval);
 
 #endif /* SW_SERVER_H_ */
