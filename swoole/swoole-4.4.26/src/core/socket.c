@@ -16,7 +16,16 @@
 
 #include "swoole.h"
 #include "connection.h"
-
+/**
+ * @brief 
+ * 
+ * @param sock 
+ * @param filename 
+ * @param offset 
+ * @param length 
+ * @param timeout 
+ * @return int 
+ */
 int swSocket_sendfile_sync(int sock, const char *filename, off_t offset, size_t length, double timeout)
 {
     int timeout_ms = timeout < 0 ? -1 : timeout * 1000;
