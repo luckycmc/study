@@ -18,7 +18,7 @@
 #include "connection.h"
 /**
  * @brief 
- * 
+ * socket 异步发送文件
  * @param sock 
  * @param filename 
  * @param offset 
@@ -81,6 +81,9 @@ int swSocket_sendfile_sync(int sock, const char *filename, off_t offset, size_t 
 }
 
 /**
+ * @brief 
+ * 
+ *  清除socket 缓存
  * clear socket buffer.
  */
 void swSocket_clean(int fd)
@@ -90,6 +93,8 @@ void swSocket_clean(int fd)
 }
 
 /**
+ * 
+ * 等待socket 读写
  * Wait socket can read or write.
  */
 int swSocket_wait(int fd, int timeout_ms, int events)
@@ -185,7 +190,7 @@ int swSocket_wait_multi(int *list_of_fd, int n_fd, int timeout_ms, int events)
     sw_free(event_list);
     return SW_OK;
 }
-
+// socket 写阻塞
 int swSocket_write_blocking(int __fd, const void *__data, int __len)
 {
     int n = 0;
@@ -216,7 +221,7 @@ int swSocket_write_blocking(int __fd, const void *__data, int __len)
 
     return written;
 }
-
+// socket 接受数据
 int swSocket_recv_blocking(int fd, void *__data, size_t __len, int flags)
 {
     int ret;
@@ -241,7 +246,7 @@ int swSocket_recv_blocking(int fd, void *__data, size_t __len, int flags)
     }
     return read_bytes;
 }
-
+//socket  接受 accept
 int swSocket_accept(int fd, swSocketAddress *sa)
 {
     int conn;
@@ -257,7 +262,7 @@ int swSocket_accept(int fd, swSocketAddress *sa)
 #endif
     return conn;
 }
-
+//udp发送数据
 ssize_t swSocket_udp_sendto(int server_sock, const char *dst_ip, int dst_port, const char *data, uint32_t len)
 {
     struct sockaddr_in addr;
@@ -320,7 +325,7 @@ ssize_t swSocket_sendto_blocking(int fd, const void *__buf, size_t __n, int flag
 
     return n;
 }
-
+// socket 创建
 int swSocket_create(int type)
 {
     int _domain;
@@ -359,7 +364,7 @@ int swSocket_create(int type)
     }
     return socket(_domain, _type, 0);
 }
-
+// socket 绑定
 int swSocket_bind(int sock, int type, const char *host, int *port)
 {
     int ret;
@@ -462,7 +467,7 @@ int swSocket_set_buffer_size(int fd, uint32_t buffer_size)
     }
     return SW_OK;
 }
-
+// socket创建超时时间
 int swSocket_set_timeout(int sock, double timeout)
 {
     int ret;
@@ -483,7 +488,7 @@ int swSocket_set_timeout(int sock, double timeout)
     }
     return SW_OK;
 }
-
+// socet 服务的创建
 int swSocket_create_server(int type, const char *address, int port, int backlog)
 {
 #if 0

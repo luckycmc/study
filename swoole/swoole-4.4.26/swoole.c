@@ -2333,7 +2333,7 @@ PHP_FUNCTION(swoole_server_start)
 	//可选事件
 	if (php_sw_callback[SW_SERVER_CB_onStart] != NULL)
 	{
-		serv->onStart = php_swoole_onStart;
+		serv->onStart = php_swoole_onStart; 
 	}
 	if (php_sw_callback[SW_SERVER_CB_onShutdown] != NULL)
 	{

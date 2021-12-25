@@ -2348,23 +2348,33 @@ void call(client *c, int flags) {
  * command, arguments are in the client argv/argc fields.
  * processCommand() execute the command or prepare the
  * server for a bulk read from the client.
- *
+ * 这个函数执行时，我们已经读入了一个完整的命令到客户端，
+ * * 这个函数负责执行这个命令，
+ * 或者服务器准备从客户端中进行一次读取。
  * If C_OK is returned the client is still alive and valid and
  * other operations can be performed by the caller. Otherwise
- * if C_ERR is returned the client was destroyed (i.e. after QUIT). */
+ * if C_ERR is returned the client was destroyed (i.e. after QUIT).
+ *   如果这个函数返回 1 ，那么表示客户端在执行命令之后仍然存在，
+ * 调用者可以继续执行其他操作。
+ * 否则，如果这个函数返回 0 ，那么表示客户端已经被销毁。
+ *  */
 int processCommand(client *c) {
     /* The QUIT command is handled separately. Normal command procs will
      * go through checking for replication and QUIT will cause trouble
      * when FORCE_REPLICATION is enabled and would be implemented in
-     * a regular command proc. */
+     * a regular command proc.
+     *  处理 quit 结束的命令
+     *  */
     if (!strcasecmp(c->argv[0]->ptr,"quit")) {
         addReply(c,shared.ok);
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;
         return C_ERR;
     }
-
+     
     /* Now lookup the command and check ASAP about trivial error conditions
-     * such as wrong arity, bad command name and so forth. */
+     * such as wrong arity, bad command name and so forth. 
+       // 查找命令，并进行命令合法性检查，以及命令参数个数检查
+     */
     c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
     if (!c->cmd) {
         flagTransaction(c);
@@ -2379,7 +2389,10 @@ int processCommand(client *c) {
         return C_OK;
     }
 
-    /* Check if the user is authenticated */
+    /* Check if the user is authenticated 
+    
+       验证登录信息
+    */
     if (server.requirepass && !c->authenticated && c->cmd->proc != authCommand)
     {
         flagTransaction(c);
@@ -2388,6 +2401,7 @@ int processCommand(client *c) {
     }
 
     /* If cluster is enabled perform the cluster redirection here.
+     如果开启了集群模式，那么在这里进行转向操作。
      * However we don't perform the redirection if:
      * 1) The sender of this command is our master.
      * 2) The command has no key arguments. */
@@ -2417,6 +2431,7 @@ int processCommand(client *c) {
      *
      * First we try to free some memory if possible (if there are volatile
      * keys in the dataset). If there are not the only thing we can do
+        // 如果设置了最大内存，那么检查内存是否超过限制，并做相应的操作
      * is returning an error. */
     if (server.maxmemory) {
         int retval = freeMemoryIfNeeded();
@@ -2434,7 +2449,10 @@ int processCommand(client *c) {
     }
 
     /* Don't accept write commands if there are problems persisting on disk
-     * and if this is a master instance. */
+     * and if this is a master instance. 
+       // 如果这是一个主服务器，并且这个服务器之前执行 BGSAVE 时发生了错误
+    // 那么不执行写命令
+     */
     if (((server.stop_writes_on_bgsave_err &&
           server.saveparamslen > 0 &&
           server.lastbgsave_status == C_ERR) ||
@@ -2455,7 +2473,10 @@ int processCommand(client *c) {
     }
 
     /* Don't accept write commands if there are not enough good slaves and
-     * user configured the min-slaves-to-write option. */
+     * user configured the min-slaves-to-write option. 
+     // 如果服务器没有足够多的状态良好服务器
+    // 并且 min-slaves-to-write 选项已打开
+     */
     if (server.masterhost == NULL &&
         server.repl_min_slaves_to_write &&
         server.repl_min_slaves_max_lag &&
@@ -2468,7 +2489,9 @@ int processCommand(client *c) {
     }
 
     /* Don't accept write commands if this is a read only slave. But
-     * accept write commands if this is our master. */
+     * accept write commands if this is our master. 
+     // 如果这个服务器是一个只读 slave 的话，那么拒绝执行写命令
+     */
     if (server.masterhost && server.repl_slave_ro &&
         !(c->flags & CLIENT_MASTER) &&
         c->cmd->flags & CMD_WRITE)
@@ -2478,6 +2501,8 @@ int processCommand(client *c) {
     }
 
     /* Only allow SUBSCRIBE and UNSUBSCRIBE in the context of Pub/Sub */
+    // 如果服务器正在载入数据到数据库，那么只执行带有 REDIS_CMD_LOADING
+    // 标识的命令，否则将出错
     if (c->flags & CLIENT_PUBSUB &&
         c->cmd->proc != pingCommand &&
         c->cmd->proc != subscribeCommand &&
@@ -2522,7 +2547,9 @@ int processCommand(client *c) {
         return C_OK;
     }
 
-    /* Exec the command */
+    /* Exec the command 
+       /* Exec the command */
+    */
     if (c->flags & CLIENT_MULTI &&
         c->cmd->proc != execCommand && c->cmd->proc != discardCommand &&
         c->cmd->proc != multiCommand && c->cmd->proc != watchCommand)
@@ -2532,6 +2559,7 @@ int processCommand(client *c) {
     } else {
         call(c,CMD_CALL_FULL);
         c->woff = server.master_repl_offset;
+        // 处理那些解除了阻塞的键
         if (listLength(server.ready_keys))
             handleClientsBlockedOnLists();
     }
@@ -3807,7 +3835,10 @@ int checkForSentinelMode(int argc, char **argv) {
     return 0;
 }
 
-/* Function called at startup to load RDB or AOF file in memory. */
+/* Function called at startup to load RDB or AOF file in memory.
+
+    把RDB和AOF文件载入到内存 优先加载aof
+ */
 void loadDataFromDisk(void) {
     long long start = ustime();
     if (server.aof_state == AOF_ON) {
@@ -3941,7 +3972,7 @@ int redisIsSupervised(int mode) {
     return 0;
 }
 
-//服务器的入口函数
+/*******************服务器的入口函数*********************/
 int main(int argc, char **argv) {
     struct timeval tv;
     int j;
@@ -3983,7 +4014,7 @@ int main(int argc, char **argv) {
     gettimeofday(&tv,NULL);
     dictSetHashFunctionSeed(tv.tv_sec^tv.tv_usec^getpid());
     server.sentinel_mode = checkForSentinelMode(argc,argv);
-    initServerConfig();
+    initServerConfig();  //服务器配置初始化
 
     /* Store the executable path and arguments in a safe place in order
      * to be able to restart the server later. */
@@ -3994,7 +4025,9 @@ int main(int argc, char **argv) {
 
     /* We need to init sentinel right now as parsing the configuration file
      * in sentinel mode will have the effect of populating the sentinel
-     * data structures with master nodes to monitor. */
+     * data structures with master nodes to monitor. 
+     *  哨兵模式
+     * */
     if (server.sentinel_mode) {
         initSentinelConfig();
         initSentinel();
@@ -4002,7 +4035,9 @@ int main(int argc, char **argv) {
 
     /* Check if we need to start in redis-check-rdb mode. We just execute
      * the program main. However the program is part of the Redis executable
-     * so that we can easily execute an RDB check on loading errors. */
+     * so that we can easily execute an RDB check on loading errors.
+     * 检测RDB
+     *  */
     if (strstr(argv[0],"redis-check-rdb") != NULL)
         redis_check_rdb_main(argc,argv);
 

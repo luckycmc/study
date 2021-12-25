@@ -510,11 +510,11 @@ struct evictionPoolEntry {
  * database. The database number is the 'id' field in the structure. */
 typedef struct redisDb {
     // 数据库键空间，保存着数据库中的所有键值对
-    dict *dict;                 /* The keyspace for this DB */
-    dict *expires;              /* Timeout of keys with a timeout set */
+    dict *dict;                 /* The keyspace for this DB */        //对应当前数据下的key=>val
+    dict *expires;              /* Timeout of keys with a timeout set */  //对应当前数据库下的key的时间
     dict *blocking_keys;        /* Keys with clients waiting for data (BLPOP) */
     dict *ready_keys;           /* Blocked keys that received a PUSH */
-    dict *watched_keys;         /* WATCHED keys for MULTI/EXEC CAS */
+    dict *watched_keys;         /* WATCHED keys for MULTI/EXEC CAS */ //被监控的key 
     struct evictionPoolEntry *eviction_pool;    /* Eviction pool of keys */
     int id;                     /* Database ID */    // 数据库号码
     long long avg_ttl;          /* Average TTL, just for stats */   // 数据库的键的平均 TTL ，统计信息
