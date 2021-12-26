@@ -66,14 +66,16 @@ typedef struct dictType {   /* 字典类型 */
 
 /* This is our hash table structure. Every dictionary has two of this as we
  * implement incremental rehashing, for the old to the new table. */
+
 typedef struct dictht {         //dictht 是哈希表结构  对应hash 数据进行管理
     dictEntry **table;             // 哈希表数组，二维   //指针数组，用于存储键值对 table[0] 其实就是个指针数组
     unsigned long size;            // 哈希表大小    
     unsigned long sizemask;
     unsigned long used;             // 哈希表已有节点数
+
 } dictht;
 
-typedef struct dict {
+typedef struct dict {   // ===>dict  ===> dictht ====> dictEntry
     dictType *type;
     void *privdata;
     dictht ht[2];    //和rehashindex 一起来搞定渐进式hash
