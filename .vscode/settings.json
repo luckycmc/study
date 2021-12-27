@@ -5,6 +5,7 @@
         "thread_pool.h": "c",
         "rdb.h": "c",
         "slowlog.h": "c",
-        "php_swoole.h": "c"
+        "php_swoole.h": "c",
+        "fmacros.h": "c"
     }
 }

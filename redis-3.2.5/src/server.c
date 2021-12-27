@@ -2548,7 +2548,7 @@ int processCommand(client *c) {
     }
 
     /* Exec the command 
-       /* Exec the command */
+        Exec the command 
     */
     if (c->flags & CLIENT_MULTI &&
         c->cmd->proc != execCommand && c->cmd->proc != discardCommand &&
