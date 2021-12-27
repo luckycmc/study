@@ -43,13 +43,14 @@ void slotToKeyFlush(void);
 
 /* 
    redis 查找当前数据库下的key
+   从db中获取key的值
    Low level key lookup API, not actually called directly from commands
  * implementations that should instead rely on lookupKeyRead(),
  * lookupKeyWrite() and lookupKeyReadWithFlags(). */
 robj *lookupKey(redisDb *db, robj *key, int flags) {
-    dictEntry *de = dictFind(db->dict,key->ptr);
+    dictEntry *de = dictFind(db->dict,key->ptr); //查找对应的key
     if (de) {
-        robj *val = dictGetVal(de);
+        robj *val = dictGetVal(de); //获取到对应的key的值
 
         /* Update the access time for the ageing algorithm.
          * Don't do it if we have a saving child, as this will trigger
@@ -60,7 +61,7 @@ robj *lookupKey(redisDb *db, robj *key, int flags) {
         {
             val->lru = LRU_CLOCK();
         }
-        return val;
+        return val; //找到对应的数据直接返回
     } else {
         return NULL;
     }
@@ -118,14 +119,16 @@ robj *lookupKeyReadWithFlags(redisDb *db, robj *key, int flags) {
     }
     val = lookupKey(db,key,flags);
     if (val == NULL)
-        server.stat_keyspace_misses++;
+        server.stat_keyspace_misses++;  //统计没有命中的次数
     else
-        server.stat_keyspace_hits++;
+        server.stat_keyspace_hits++;   //统计命中的次数
     return val;
 }
 
 /* Like lookupKeyReadWithFlags(), but does not use any flag, which is the
- * common case. */
+ * common case. 
+   查找某个key 与lookup相比多个过期时间
+ */
 robj *lookupKeyRead(redisDb *db, robj *key) {
     return lookupKeyReadWithFlags(db,key,LOOKUP_NONE);
 }
@@ -182,7 +185,9 @@ void dbOverwrite(redisDb *db, robj *key, robj *val) {
  *
  * 1) The ref count of the value object is incremented.
  * 2) clients WATCHing for the destination key notified.
- * 3) The expire time of the key is reset (the key is made persistent). */
+ * 3) The expire time of the key is reset (the key is made persistent). 
+   往数据库中添加值，如果不存在直接添加 存在直接覆盖
+ */
 void setKey(redisDb *db, robj *key, robj *val) {
     if (lookupKeyWrite(db,key) == NULL) {
         dbAdd(db,key,val);
@@ -201,7 +206,9 @@ int dbExists(redisDb *db, robj *key) {
 /* Return a random key, in form of a Redis object.
  * If there are no keys, NULL is returned.
  *
- * The function makes sure to return keys not already expired. */
+ * The function makes sure to return keys not already expired.
+   随机返回过期的key
+  */
 robj *dbRandomKey(redisDb *db) {
     dictEntry *de;
 
@@ -287,7 +294,7 @@ long long emptyDb(void(callback)(void*)) {
     if (server.cluster_enabled) slotToKeyFlush();
     return removed;
 }
-
+//选着对应的数据库
 int selectDb(client *c, int id) {
     if (id < 0 || id >= server.dbnum)
         return C_ERR;

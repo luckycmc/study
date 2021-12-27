@@ -140,7 +140,7 @@ typedef void (dictScanFunction)(void *privdata, const dictEntry *de);
 
 #define dictHashKey(d, key) (d)->type->hashFunction(key)
 #define dictGetKey(he) ((he)->key)
-#define dictGetVal(he) ((he)->v.val)
+#define dictGetVal(he) ((he)->v.val) //直接返回给字典的数据
 #define dictGetSignedIntegerVal(he) ((he)->v.s64)
 #define dictGetUnsignedIntegerVal(he) ((he)->v.u64)
 #define dictGetDoubleVal(he) ((he)->v.d)
