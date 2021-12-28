@@ -572,7 +572,7 @@ dictEntry *dictFind(dict *d, const void *key)
         he = d->ht[table].table[idx];
         while(he) {
             if (key==he->key || dictCompareKeys(d, key, he->key))
-                return he;   //返回对应的查找数据
+                return he;   //返回对应的查找数据key
             he = he->next;
         }
         if (!dictIsRehashing(d)) return NULL;

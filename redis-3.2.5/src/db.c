@@ -49,6 +49,7 @@ void slotToKeyFlush(void);
  * lookupKeyWrite() and lookupKeyReadWithFlags(). */
 robj *lookupKey(redisDb *db, robj *key, int flags) {
     dictEntry *de = dictFind(db->dict,key->ptr); //查找对应的key
+    //printf("current lookup key: %s\n",(char *)de->key);
     if (de) {
         robj *val = dictGetVal(de); //获取到对应的key的值
 
@@ -58,8 +59,9 @@ robj *lookupKey(redisDb *db, robj *key, int flags) {
         if (server.rdb_child_pid == -1 &&
             server.aof_child_pid == -1 &&
             !(flags & LOOKUP_NOTOUCH))
-        {
-            val->lru = LRU_CLOCK();
+        {   
+            //果当前没有进行RDB或者AOF过程，则更新该值对象的lru属性，也就是更新该键值对的访问时间。
+            val->lru = LRU_CLOCK();    
         }
         return val; //找到对应的数据直接返回
     } else {
@@ -158,7 +160,9 @@ robj *lookupKeyWriteOrReply(client *c, robj *key, robj *reply) {
 /* Add the key to the DB. It's up to the caller to increment the reference
  * counter of the value if needed.
  *
- * The program is aborted if the key already exists. */
+ * The program is aborted if the key already exists.
+    添加键值队
+  */
 void dbAdd(redisDb *db, robj *key, robj *val) {
     sds copy = sdsdup(key->ptr);
     int retval = dictAdd(db->dict, copy, val);
@@ -172,7 +176,9 @@ void dbAdd(redisDb *db, robj *key, robj *val) {
  * count of the new value is up to the caller.
  * This function does not modify the expire time of the existing key.
  *
- * The program is aborted if the key was not already present. */
+ * The program is aborted if the key was not already present.
+ *    覆盖重写键值队
+ *  */
 void dbOverwrite(redisDb *db, robj *key, robj *val) {
     dictEntry *de = dictFind(db->dict,key->ptr);
 

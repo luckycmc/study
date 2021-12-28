@@ -83,16 +83,21 @@ void setGenericCommand(client *c, int flags, robj *key, robj *val, robj *expire,
         addReply(c, abort_reply ? abort_reply : shared.nullbulk);
         return;
     }
+    
     setKey(c->db,key,val);
-    server.dirty++;
+    server.dirty++;  // 保存的次数
+    //设置对应的key 过期
     if (expire) setExpire(c->db,key,mstime()+milliseconds);
+
     notifyKeyspaceEvent(NOTIFY_STRING,"set",key,c->db->id);
     if (expire) notifyKeyspaceEvent(NOTIFY_GENERIC,
         "expire",key,c->db->id);
     addReply(c, ok_reply ? ok_reply : shared.ok);
 }
 
-/* SET key value [NX] [XX] [EX <seconds>] [PX <milliseconds>] */
+/* SET key value [NX] [XX] [EX <seconds>] [PX <milliseconds>] 
+  key ===> val 的set  命令
+*/
 void setCommand(client *c) {
     int j;
     robj *expire = NULL;
@@ -134,7 +139,7 @@ void setCommand(client *c) {
             return;
         }
     }
-
+    /*************对应值的编码**************/
     c->argv[2] = tryObjectEncoding(c->argv[2]);
     setGenericCommand(c,flags,c->argv[1],c->argv[2],expire,unit,NULL,NULL);
 }

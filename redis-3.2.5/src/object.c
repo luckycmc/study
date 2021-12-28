@@ -86,6 +86,9 @@ robj *createEmbeddedStringObject(const char *ptr, size_t len) {
  * The current limit of 39 is chosen so that the biggest string object
  * we allocate as EMBSTR will still fit into the 64 byte arena of jemalloc. */
 #define OBJ_ENCODING_EMBSTR_SIZE_LIMIT 44
+/** The
+ * 创建一个字符串对象
+ * */
 robj *createStringObject(const char *ptr, size_t len) {
     if (len <= OBJ_ENCODING_EMBSTR_SIZE_LIMIT)
         return createEmbeddedStringObject(ptr,len);
@@ -187,35 +190,35 @@ robj *createQuicklistObject(void) {
     o->encoding = OBJ_ENCODING_QUICKLIST;
     return o;
 }
-
+// 创建压缩列表对象
 robj *createZiplistObject(void) {
     unsigned char *zl = ziplistNew();
     robj *o = createObject(OBJ_LIST,zl);
     o->encoding = OBJ_ENCODING_ZIPLIST;
     return o;
 }
-
+//创建集合对象
 robj *createSetObject(void) {
     dict *d = dictCreate(&setDictType,NULL);
     robj *o = createObject(OBJ_SET,d);
     o->encoding = OBJ_ENCODING_HT;
     return o;
 }
-
+//创建整型对象
 robj *createIntsetObject(void) {
     intset *is = intsetNew();
     robj *o = createObject(OBJ_SET,is);
     o->encoding = OBJ_ENCODING_INTSET;
     return o;
 }
-
+// 创建hash 结构对象
 robj *createHashObject(void) {
     unsigned char *zl = ziplistNew();
     robj *o = createObject(OBJ_HASH, zl);
     o->encoding = OBJ_ENCODING_ZIPLIST;
     return o;
 }
-
+// 创建有序集合对象
 robj *createZsetObject(void) {
     zset *zs = zmalloc(sizeof(*zs));
     robj *o;
@@ -226,7 +229,7 @@ robj *createZsetObject(void) {
     o->encoding = OBJ_ENCODING_SKIPLIST;
     return o;
 }
-
+//创建有序结合的压缩列表
 robj *createZsetZiplistObject(void) {
     unsigned char *zl = ziplistNew();
     robj *o = createObject(OBJ_ZSET,zl);
@@ -357,7 +360,11 @@ int isObjectRepresentableAsLongLong(robj *o, long long *llval) {
     }
 }
 
-/* Try to encode a string object in order to save space */
+/* Try to encode a string object in order to save space 
+
+   ryObjectEncoding会对传进来的值进行编码，如果小于20个字节采用int编码编码成64位，
+   如果是小于44个字节会采用EMBSTR编码，比44字节大会采用raw编码
+*/
 robj *tryObjectEncoding(robj *o) {
     long value;
     sds s = o->ptr;
@@ -662,7 +669,12 @@ int getLongFromObjectOrReply(client *c, robj *o, long *target, const char *msg) 
     *target = value;
     return C_OK;
 }
-
+/**
+ * @brief 
+ * 设置字符串的编码
+ * @param encoding 
+ * @return char* 
+ */
 char *strEncoding(int encoding) {
     switch(encoding) {
     case OBJ_ENCODING_RAW: return "raw";
