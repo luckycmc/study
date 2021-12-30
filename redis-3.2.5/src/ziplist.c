@@ -154,15 +154,25 @@
     if (ZIPLIST_LENGTH(zl) < UINT16_MAX) \
         ZIPLIST_LENGTH(zl) = intrev16ifbe(intrev16ifbe(ZIPLIST_LENGTH(zl))+incr); \
 }
-
+/*元素实体所有信息, 仅仅是描述使用, 内存中并非如此存储*/
 typedef struct zlentry {
+    /*前一个元素长度需要空间和前一个元素长度*/
     unsigned int prevrawlensize, prevrawlen;
+    /*元素长度需要空间和元素长度*/
     unsigned int lensize, len;
+     /*头部长度即prevrawlensize + lensize*/
     unsigned int headersize;
+    /*元素内容编码*/
     unsigned char encoding;
+    /*元素实际内容*/
     unsigned char *p;
 } zlentry;
-
+/**
+                                     ziplist内存布局
+|-----------|-----------|----------|---------------------------------------------------|---|
+    bytes      offset      length  content         {zlentry, zlentry ... ...}           end
+ * 
+ */
 #define ZIPLIST_ENTRY_ZERO(zle) { \
     (zle)->prevrawlensize = (zle)->prevrawlen = 0; \
     (zle)->lensize = (zle)->len = (zle)->headersize = 0; \
