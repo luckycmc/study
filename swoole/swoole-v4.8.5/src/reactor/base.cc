@@ -59,6 +59,7 @@ void ReactorImpl::after_removal_failure(network::Socket *_socket) {
 }
 
 Reactor::Reactor(int max_event, Type _type) {
+    /*******创建系统IO多路复用对象***********/
     if (_type == TYPE_AUTO) {
 #ifdef HAVE_EPOLL
         type_ = TYPE_EPOLL;

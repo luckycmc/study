@@ -10,15 +10,15 @@ int main()
     string str3;
     int  len ;
  
-   // ¸´ÖÆ str1 µ½ str3
+   // å¤åˆ¶ str1 åˆ° str3
    str3 = str1;
    cout << "str3 : " << str3 << endl;
  
-   // Á¬½Ó str1 ºÍ str2
+   // è¿æ¥ str1 å’Œ str2
    str3 = str1 + str2;
    cout << "str1 + str2 : " << str3 << endl;
  
-   // Á¬½Óºó£¬str3 µÄ×Ü³¤¶È
+   // è¿æ¥åï¼Œstr3 çš„æ€»é•¿åº¦
    len = str3.size();
    cout << "str3.size() :  " << len << endl;
  

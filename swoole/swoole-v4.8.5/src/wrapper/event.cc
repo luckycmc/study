@@ -39,7 +39,7 @@ int swoole_event_init(int flags) {
         std::unique_lock<std::mutex> lock(init_lock);
         swoole_init();
     }
-
+    /* 初始化 reactor线程*/
     Reactor *reactor = new Reactor(SW_REACTOR_MAXEVENTS);
     if (!reactor->ready()) {
         return SW_ERR;

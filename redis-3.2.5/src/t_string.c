@@ -63,7 +63,22 @@ static int checkStringLength(client *c, long long size) {
 #define OBJ_SET_XX (1<<1)     /* Set if key exists. */
 #define OBJ_SET_EX (1<<2)     /* Set if time in seconds is given */
 #define OBJ_SET_PX (1<<3)     /* Set if time in ms in given */
-
+/**
+ * @brief Set the Generic Command object
+ *   
+set Generic Command
+set Generic Command
+设置通用命令
+ * @param c 
+ * @param flags 
+ * @param key 
+ * @param val 
+ * @param expire 
+ * @param unit 
+ * @param ok_reply 
+ * @param abort_reply 
+ * 
+ */
 void setGenericCommand(client *c, int flags, robj *key, robj *val, robj *expire, int unit, robj *ok_reply, robj *abort_reply) {
     long long milliseconds = 0; /* initialized to avoid any harmness warning */
 
@@ -158,7 +173,9 @@ void psetexCommand(client *c) {
     c->argv[3] = tryObjectEncoding(c->argv[3]);
     setGenericCommand(c,OBJ_SET_NO_FLAGS,c->argv[1],c->argv[3],c->argv[2],UNIT_MILLISECONDS,NULL,NULL);
 }
-
+/*******
+ * 获取通用命令
+ * */
 int getGenericCommand(client *c) {
     robj *o;
 

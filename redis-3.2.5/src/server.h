@@ -466,6 +466,7 @@ typedef struct redisObject {
     // 编码
     /**
       对象ptr 的指针指向底层实现的数据结构,而这些数据结构是由encoding属性决定的
+      encoding 属性记录了对象所使用的编码， 也即是说这个对象使用了什么数据结构作为对象的底层实现
      **/
     unsigned encoding:4;    //记录了对象所使用的编码名称, int，embstr，raw，hashtable， ziplist，intset，linkedlist，skiplist
     // 对象最后一次被访问的时间
