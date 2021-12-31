@@ -147,7 +147,19 @@
 #define ZIPLIST_ENTRY_HEAD(zl)  ((zl)+ZIPLIST_HEADER_SIZE)
 #define ZIPLIST_ENTRY_TAIL(zl)  ((zl)+intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl)))
 #define ZIPLIST_ENTRY_END(zl)   ((zl)+intrev32ifbe(ZIPLIST_BYTES(zl))-1)
+/**
+ 
+  
+ ziplist的优点
+内存占用少 容易被加载到CPU缓存
+结构紧凑 减少内存碎片
 
+ziplist的缺点
+连锁更新（头部插入 或 删除，对头部的操作主要是在用ziplist保存list类型对象时发送，保存hash对象不需要在头部更新。）
+查询复杂度从O（1）变成O（N）（保存hash对象时）
+
+ * 
+ */
 /* We know a positive increment can only be 1 because entries can only be
  * pushed one at a time. */
 #define ZIPLIST_INCR_LENGTH(zl,incr) { \
