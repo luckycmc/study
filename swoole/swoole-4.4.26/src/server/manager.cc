@@ -590,7 +590,8 @@ static pid_t swManager_spawn_worker(swServer *serv, int worker_id)
     //worker child processor  //
     else if (pid == 0)
     {   
-    
+        
+        /***********worker 进程进入事件循环************/
         ret = swWorker_loop(serv, worker_id);
         exit(ret);
     }

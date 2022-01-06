@@ -638,6 +638,7 @@ void swWorker_clean_pipe_buffer(swServer *serv)
  * @param worker_id 
  * @return * main[Worker] 
  *
+ * worker 进程进入事件循环
  * main loop [Worker]
  */
 int swWorker_loop(swServer *serv, int worker_id)
@@ -657,6 +658,7 @@ int swWorker_loop(swServer *serv, int worker_id)
     swReactor * reactor = SwooleTG.reactor;
     /**
      * set pipe buffer size
+     * 设置管道 大小 方便进程通讯
      */
     for (uint32_t i = 0; i < serv->worker_num + serv->task_worker_num; i++)
     {
@@ -676,6 +678,7 @@ int swWorker_loop(swServer *serv, int worker_id)
     reactor->ptr = serv;
     //注册 pipe_worker 此时也是一个 fd
     reactor->add(reactor, pipe_worker, SW_FD_PIPE | SW_EVENT_READ);
+    /********设置对应的回调函数**********/
     swReactor_set_handler(reactor, SW_FD_PIPE, swWorker_onPipeReceive);
 
     if (serv->dispatch_mode == SW_DISPATCH_STREAM)

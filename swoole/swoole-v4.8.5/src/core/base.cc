@@ -353,7 +353,7 @@ pid_t swoole_fork(int flags) {
     if (flags & SW_FORK_PRECHECK) {
         return 0;
     }
-
+     /***************创建进程的原型*************/
     pid_t pid = fork();
     if (pid == 0) {
         SwooleG.pid = getpid();
