@@ -5,3 +5,10 @@
 2.fork 赋值进程 复制的意思
 
 3.当子进程退出时 回向父进程发送中断信号 sighld
+
+
+4.php 执行的echo  系统会调用  write 函数 打印大屏幕上
+
+5.ps -eF |grep 对应的文件
+
+6.cat /proc/cpuinfo(查看CPU的详细信息)  lscpu (查看CPU的核心数)
