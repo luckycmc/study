@@ -20,7 +20,7 @@ void *function(void *arg);
 int  main()
 {
      pthread_t a_thread;
-     //创建子线程执行子线程
+     //创建子线程执行子线程,实际上给定一个地址的入口 然后一段执行空间
      if(pthread_create(&a_thread, NULL, function,NULL))
      {
           perror("fail to create thread");

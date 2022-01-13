@@ -140,6 +140,7 @@ int rdbSaveLen(rio *rdb, uint32_t len) {
 /* Load an encoded length. The "isencoded" argument is set to 1 if the length
  * is not actually a length but an "encoding type". See the RDB_ENC_*
  * definitions in rdb.h for more information. */
+/* 加载长度，也需要根据编码方式，读取不同的buf获取长度 */
 uint32_t rdbLoadLen(rio *rdb, int *isencoded) {
     unsigned char buf[2];
     uint32_t len;
@@ -300,6 +301,7 @@ ssize_t rdbSaveLzfStringObject(rio *rdb, unsigned char *s, size_t len) {
 /* Load an LZF compressed string in RDB format. The returned value
  * changes according to 'flags'. For more info check the
  * rdbGenericLoadStringObject() function. */
+/* rdb加载字符串对象的泛型方法 */
 void *rdbLoadLzfStringObject(rio *rdb, int flags) {
     int plain = flags & RDB_LOAD_PLAIN;
     unsigned int len, clen;
@@ -855,7 +857,9 @@ werr: /* Write error. */
     return C_ERR;
 }
 
-/* Save the DB on disk. Return C_ERR on error, C_OK on success. */
+/* Save the DB on disk. Return C_ERR on error, C_OK on success. 
+   把数据保存到对应的磁盘文件上
+*/
 int rdbSave(char *filename) {
     char tmpfile[256];
     char cwd[MAXPATHLEN]; /* Current working dir path for error messages. */
@@ -914,7 +918,7 @@ werr:
     unlink(tmpfile);
     return C_ERR;
 }
-//异步RDB
+//异步RDB  /* 后台进行rbd保存操作 */
 int rdbSaveBackground(char *filename) {
     pid_t childpid;
     long long start;
@@ -926,6 +930,10 @@ int rdbSaveBackground(char *filename) {
 
     start = ustime();  // fork() 开始前的时间，记录 fork() 返回耗时用
     //启动一个子进程进行处理
+    //利用fork()创建子进程用来实现rdb的保存操作
+    //此时有2个进程在执行这段函数的代码，在子进行程返回的pid为0,
+    //所以会执行下面的代码，在父进程中返回的代码为孩子的pid,不为0，所以执行else分支的代码
+    //在父进程中放返回-1代表创建子进程失败
     if ((childpid = fork()) == 0) {
         int retval;
 
