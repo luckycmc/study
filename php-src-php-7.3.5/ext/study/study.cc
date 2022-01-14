@@ -4,25 +4,23 @@
 
 PHP_MINIT_FUNCTION(study)
 {   
-	php_printf("MINIT\n");
+	study_coroutine_util_init();
     return SUCCESS;
 }
 
 PHP_MSHUTDOWN_FUNCTION(study)
 {   
-	php_printf("MSHUTDOWN\n");
+	
     return SUCCESS;
 }
 
 PHP_RINIT_FUNCTION(study)
 {   
-	 php_printf("RINIT\n");
     return SUCCESS;
 }
 
 PHP_RSHUTDOWN_FUNCTION(study)
 {   
-	php_printf("RSHUTDOWN\n");
     return SUCCESS;
 }
 
