@@ -1,8 +1,0 @@
-/**
-PHP的生命周期
-MINIT
-RINIT
-execute the script
-RSHUTDOWN
-RINIT
- */

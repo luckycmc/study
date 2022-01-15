@@ -1,8 +1,24 @@
 <?php
-// /usr/local/php7.3/bin/php 7.3.5的PHP 启动
 
+study_event_init();
 
-Study\Coroutine::create(function ($a, $b){
-    echo $a . PHP_EOL;
-    echo $b . PHP_EOL;
-}, 'a', 'b');
+Study\Runtime::enableCoroutine();
+
+Sgo(function () {
+    $ctx = stream_context_create(['socket' => ['so_reuseaddr' => true, 'backlog' => 128]]);
+    $socket = stream_socket_server(
+        'tcp://0.0.0.0:6666',
+        $errno,
+        $errstr,
+        STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
+        $ctx
+    );
+    if (!$socket) {
+        echo "$errstr ($errno)" . PHP_EOL;
+        exit(1);
+    }
+    var_dump($socket);
+    sleep(10000);
+});
+
+study_event_wait();

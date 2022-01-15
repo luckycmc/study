@@ -1,3 +1,4 @@
+.deps
 *.lo
 *.la
 .libs
@@ -5,6 +6,7 @@ acinclude.m4
 aclocal.m4
 autom4te.cache
 build
+configure.ac
 config.guess
 config.h
 config.h.in
@@ -13,9 +15,7 @@ config.nice
 config.status
 config.sub
 configure
-configure.ac
 configure.in
-include
 install-sh
 libtool
 ltmain.sh
@@ -33,3 +33,6 @@ tests/*/*.php
 tests/*/*.exp
 tests/*/*.log
 tests/*/*.sh
+.vscode
+.DS_Store
+node_modules
