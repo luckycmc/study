@@ -26,7 +26,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 PHP_FUNCTION(study_coroutine_create);
-
+//PHP 自定义函数
 PHP_FUNCTION(study_event_init)
 {
     int ret;
@@ -73,12 +73,14 @@ PHP_RSHUTDOWN_FUNCTION(study)
 {
     return SUCCESS;
 }
-
+/**
+  phpinfo 的相关信息打印出来
+**/
 PHP_MINFO_FUNCTION(study)
 {
-    php_info_print_table_start();
+    php_info_print_table_start(); // 开始
     php_info_print_table_header(2, "study support", "enabled");
-    php_info_print_table_end();
+    php_info_print_table_end(); //结束
 }
 
 const zend_function_entry study_functions[] = {
