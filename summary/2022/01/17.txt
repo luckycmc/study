@@ -1,0 +1,12 @@
+7.3.3 编写扩展的基本步骤
+编写一个PHP扩展主要分为以下几步：
+
+通过ext目录下ext_skel脚本生成扩展的基本框架：./ext_skel --extname；
+
+修改config.m4配置：设置编译配置参数、设置扩展的源文件、依赖库/函数检查等等；
+
+编写扩展要实现的功能：按照PHP扩展的格式以及PHP提供的API编写功能；
+
+生成configure：扩展编写完成后执行phpize脚本生成configure及其它配置文件；
+
+编译&安装：./configure、make、make install，然后将扩展的.so路径添加到php.ini中。
