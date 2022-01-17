@@ -24,9 +24,9 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0)
 ZEND_END_ARG_INFO()
-
+/*************PHP 函数接口注册 start**************/
 PHP_FUNCTION(study_coroutine_create);
-//PHP 自定义函数
+
 PHP_FUNCTION(study_event_init)
 {
     int ret;
@@ -48,9 +48,10 @@ PHP_FUNCTION(study_event_wait)
     }
     RETURN_TRUE;
 }
-
+/*************PHP 函数接口注册 start**************/
+//php模块初始化 注册相关的入口函数
 PHP_MINIT_FUNCTION(study)
-{
+{  
     study_coroutine_util_init();
     study_coro_server_init(module_number);
     study_coro_channel_init();
@@ -73,16 +74,14 @@ PHP_RSHUTDOWN_FUNCTION(study)
 {
     return SUCCESS;
 }
-/**
-  phpinfo 的相关信息打印出来
-**/
+
 PHP_MINFO_FUNCTION(study)
 {
-    php_info_print_table_start(); // 开始
+    php_info_print_table_start();
     php_info_print_table_header(2, "study support", "enabled");
-    php_info_print_table_end(); //结束
+    php_info_print_table_end();
 }
-
+//php 函数和类注册 也就是提供给PHP 使用的接口
 const zend_function_entry study_functions[] = {
     PHP_FE(study_coroutine_create, arginfo_study_coroutine_create)
     PHP_FALIAS(sgo, study_coroutine_create, arginfo_study_coroutine_create)
@@ -90,7 +89,7 @@ const zend_function_entry study_functions[] = {
     PHP_FE(study_event_wait, arginfo_study_void)
     PHP_FE_END
 };
-
+// study 模块注册
 zend_module_entry study_module_entry = {
     STANDARD_MODULE_HEADER,
     "study",
