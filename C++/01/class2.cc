@@ -9,28 +9,28 @@ class Line
 		void   setLength(double len);
 		double getLength(void);
 };
-
-//³ÉÔ±º¯ÊıµÄ¶¨Òå
+/*************å®ç°Lineç±»çš„æ–¹æ³• start*************/
+//æˆå‘˜å‡½æ•°çš„å®šä¹‰
 double Line::getLength(void)
 {
 	return length;
 } 
 
-//³ÉÔ±º¯Êı ÉèÖÃ³¤¶È
+//æˆå‘˜å‡½æ•° è®¾ç½®é•¿åº¦
 void  Line::setLength(double len)
 {
 	length = len;
 } 
-
-//³ÌĞòÖ÷º¯Êı
+/*************å®ç°Lineç±»çš„æ–¹æ³• end*************/
+//ç¨‹åºä¸»å‡½æ•°
 int main()
 {
 	Line line;
-	//ÉèÖÃ³¤¶È
+	//è®¾ç½®é•¿åº¦
 	line.setLength(6.0);
 	cout << "Line of line :" << line.getLength() <<endl; 
 	
-	//Ò²¿ÉÒÔÖ±½ÓÉèÖÃ
+	//ä¹Ÿå¯ä»¥ç›´æ¥è®¾ç½®
 	line.length = 10.0;
 	cout << "Line of line :" << line.getLength() <<endl; 
 

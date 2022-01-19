@@ -18,7 +18,7 @@ class Shape
       int height;
 };
 
-//派生类
+//派生类 继承父类的属性和方法
 class Reactangle :public Shape
 {
      public:

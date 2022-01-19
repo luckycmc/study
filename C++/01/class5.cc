@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
-
+/**********
+ * 对象的指针引用类型
+ * */
 class Box
 {
 	 public:
@@ -30,13 +32,13 @@ class Box
 
 int main()
 {
-	 Box Box1(3.3, 1.2, 1.5);    // Declare box1
-     Box Box2(8.5, 6.0, 2.0);    // Declare box2
+	Box Box1(3.3, 1.2, 1.5);    // Declare box1
+    Box Box2(8.5, 6.0, 2.0);    // Declare box2
      //比较box1和box2 
-     Box *ptrBox;
+    Box *ptrBox;   //对象指针
      
-	 //保存第一个对象的地址
-	 ptrBox = &Box1;
+	 //保存第一个对象的地址 
+	ptrBox = &Box1;
 
 		// 现在尝试使用成员访问运算符来访问成员 和struct 结构体指针 一样
 	cout << "Volume of Box1: " << ptrBox->Volume() << endl;
