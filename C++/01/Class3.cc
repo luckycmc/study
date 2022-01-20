@@ -11,7 +11,7 @@ class Box
     private:
        double with;
 };
-//成员函数
+//鎴愬憳鍑芥暟
 double Box::getWith(void)
 {
 	return with;
@@ -26,12 +26,12 @@ int main()
 {
 	Box box;
 	
-	//不适用成员函数设置长度
-	box.length = 10.0; //OK：因为length  是共有的
+	//涓嶉�傜敤鎴愬憳鍑芥暟璁剧疆闀垮害
+	box.length = 10.0; //OK锛氬洜涓簂ength  鏄叡鏈夌殑
 	cout << "Length of box :" << box.length <<endl;
 	 
-	   // box.width = 10.0; // Error: 因为 width 是私有的
-    box.setWith(10.02);  // 使用成员函数设置宽度
+	   // box.width = 10.0; // Error: 鍥犱负 width 鏄鏈夌殑
+    box.setWith(10.02);  // 浣跨敤鎴愬憳鍑芥暟璁剧疆瀹藉害
 
 	cout << "Width of box : " << box.getWith() <<endl;
     

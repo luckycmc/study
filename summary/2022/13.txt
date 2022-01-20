@@ -1,5 +1,0 @@
-make 时增加 ZEND_EXTRA_LIBS=’-liconv’ 参数即可，如下
-
-make ZEND_EXTRA_LIBS='-liconv'
-
-php7 安装

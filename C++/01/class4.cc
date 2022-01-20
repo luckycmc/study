@@ -4,14 +4,14 @@ using namespace std;
 class Box
 {
 	 public:
-	 	 Box(double l=2.0, double b=2.0, double h=2.0)  //¶¨Òå´ø²ÎµÄ¹¹Ôì·½·¨ 
+	 	 Box(double l=2.0, double b=2.0, double h=2.0)  //å®šä¹‰å¸¦å‚çš„æ„é€ æ–¹æ³• 
 		  {
 		  	    cout <<"Constructor called." << endl;
 		         length = l;
 		         breadth = b;
 		         height = h;
 		  }
-		  //¼ÆËãÌå»ı 
+		  //è®¡ç®—ä½“ç§¯ 
 		  double Volume()
 		  {
 		  	return  length *  breadth *  height; 
@@ -21,7 +21,7 @@ class Box
 		  {
 		  	return this->Volume() > box.Volume();
 		  }
-		  //Ë½ÓĞÊôĞÔ 
+		  //ç§æœ‰å±æ€§ 
 		private:
 			  double length;     // Length of a box
 		      double breadth;    // Breadth of a box
@@ -32,7 +32,7 @@ int main()
 {
 	 Box Box1(3.3, 1.2, 1.5);    // Declare box1
      Box Box2(8.5, 6.0, 2.0);    // Declare box2
-     //±È½Ïbox1ºÍbox2 
+     //æ¯”è¾ƒbox1å’Œbox2 
      if(Box1.compare(Box2))
 	   {
 	      cout << "Box2 is smaller than Box1" <<endl;

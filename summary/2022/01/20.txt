@@ -1,0 +1,25 @@
+上下文简介
+context:上下文切换
+   首先要理解boost::context的概念和应用场景。程序在执行的时候，当前的执行的代码环境和所处的状态，就是context。
+boost::context保留了当前程序执行时的寄存器等的状态，可以认为是一个上下文A；然后线程就可以去执行其他的代码，完
+成执行后，可以切回上下文A，并从当初切走的地方执行，而且当初的上下文的现场不变，这就是完成了一次真正意义上的上下文切换。
+
+   上线文切换，在协程和用户态线程等有重要的意义（统称它们为routine），我们可以启动一定数量的操作系统的线程，
+然后让routine在OS的thread中切换，切换时仅需要保留有关的上下文即可，通过一定的调度方式，
+是的OS的Thread不停的执行这些routine。routine的切换速度，远远快于thread，可极大提高效率。
+//  
+
+%rax 一般用作累加器(Accumulator)
+%rbx 一般用作基址寄存器( Base )
+%rxc 一般用来计数( Count )
+%rdx 一般用来存放数据( Data )
+%rsi一般用作源变址( Source Index )
+%rdi 一般用作目标变址( DestinatinIndex )
+%rbp 一般用作基址指针( Base Pointer )
+%rsp 一般用作堆栈指针( Stack Pointer )
+
+
+%rip 是指令指针，也称为 PC指针
+
+
+pidstat :查看进程的相关切换信息
