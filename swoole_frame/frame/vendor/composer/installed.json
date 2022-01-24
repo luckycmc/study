@@ -1,0 +1,107 @@
+[
+    {
+        "name": "sethink/swoole-orm",
+        "version": "v0.0.7",
+        "version_normalized": "0.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sethink/swoole-orm.git",
+            "reference": "13fbfaf97e912329c96216714a9485badaacab43"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sethink/swoole-orm/zipball/13fbfaf97e912329c96216714a9485badaacab43",
+            "reference": "13fbfaf97e912329c96216714a9485badaacab43",
+            "shasum": ""
+        },
+        "require": {
+            "ext-swoole": ">=4.2.7",
+            "php": ">=7.0.0"
+        },
+        "time": "2019-09-24T04:47:47+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "sethink\\swooleOrm\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "sethink",
+                "email": "358066237@qq.com"
+            }
+        ],
+        "description": "sethink"
+    },
+    {
+        "name": "sethink/swoole-redis",
+        "version": "v0.0.4",
+        "version_normalized": "0.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sethink/swoole-redis.git",
+            "reference": "246fa1138b3d8604f060c0a373676b5c0f398e2a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sethink/swoole-redis/zipball/246fa1138b3d8604f060c0a373676b5c0f398e2a",
+            "reference": "246fa1138b3d8604f060c0a373676b5c0f398e2a",
+            "shasum": ""
+        },
+        "require": {
+            "ext-swoole": ">=4.2.7",
+            "php": ">=7.0.0"
+        },
+        "time": "2019-09-24T04:50:51+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "sethink\\swooleRedis\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "sethink",
+                "email": "358066237@qq.com"
+            }
+        ],
+        "description": "sethink"
+    },
+    {
+        "name": "zpw/swostar",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "dist": {
+            "type": "path",
+            "url": "../swostar",
+            "reference": "cfae40fc7bd1ef721ea1bdfb9617506bfb58ad39"
+        },
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SwoStar\\": "./src/",
+                "sethink\\": "./vensor/sethink/"
+            },
+            "files": [
+                "src/Supper/Helper.php"
+            ]
+        },
+        "authors": [
+            {
+                "name": "admin123456",
+                "email": "1765321014@qq.com"
+            }
+        ]
+    }
+]

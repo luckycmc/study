@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+require dirname(__DIR__).'/vendor/autoload.php';
+//设置网站的启动目录
+defined('SWOSTAR_ROOT') or define('SWOSTAR_ROOT',dirname(__DIR__));
+//启动服务
+\SwoCloud\SwoCloud::run();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4b4403d7-98fe-4d2d-bdfe-583fdaa196df" name="swoole_frame" url="http://192.168.32.129">
+        <fileTransfer host="192.168.32.129" port="22" rootFolder="/data/web/swoole_frame" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

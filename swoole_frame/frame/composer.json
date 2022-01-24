@@ -1,0 +1,29 @@
+{
+    "name": "zpw/swostar_frame",
+    "type": "library",
+    "authors": [
+        {
+            "name": "admin123456",
+            "email": "1765321014@qq.com"
+        }
+    ],
+    "require": {
+        "zpw/swostar": "dev-master"
+    },
+    "repositories": {
+        "shineyork": {
+            "type": "path",
+            "url": "../swostar"
+        }
+    },
+    "autoload":{
+        "psr-4":{
+            "App\\":"app/",
+            "Database\\":"database"
+
+        },
+        "files":[
+            "vendor/zpw/swostar/src/Supper/Helper.php"
+        ]
+    }
+}

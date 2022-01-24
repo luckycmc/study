@@ -1,0 +1,20 @@
+{
+    "name": "zpw/swostar",
+    "type": "library",
+    "authors": [
+        {
+            "name": "admin123456",
+            "email": "1765321014@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+        "psr-4":{
+            "SwoStar\\":"./src/",
+            "sethink\\":"./vensor/sethink/"
+        },
+        "files":[
+            "src/Supper/Helper.php"
+        ]
+    }
+}

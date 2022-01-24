@@ -1,0 +1,56 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "00e7fcef6c9d71049af884798ffd7d81",
+    "packages": [
+        {
+            "name": "sethink/swoole-orm",
+            "version": "v0.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sethink/swoole-orm.git",
+                "reference": "13fbfaf97e912329c96216714a9485badaacab43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sethink/swoole-orm/zipball/13fbfaf97e912329c96216714a9485badaacab43",
+                "reference": "13fbfaf97e912329c96216714a9485badaacab43",
+                "shasum": ""
+            },
+            "require": {
+                "ext-swoole": ">=4.2.7",
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "sethink\\swooleOrm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "sethink",
+                    "email": "358066237@qq.com"
+                }
+            ],
+            "description": "sethink",
+            "time": "2019-09-24T04:47:47+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
+}
