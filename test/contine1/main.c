@@ -1,3 +1,5 @@
+#include <studio.h>
+
 int stop = 0;
 static void foo_5(schedule_t *S, void *ud) {
     while (!stop) {
@@ -40,4 +42,12 @@ static void test5(schedule_t *S) {
     gettimeofday(&end, NULL);
     printf("create time2=%f\n", timediff(&begin, &end));
     printf("test5 end===============\n");
+}
+
+int main()
+{
+    
+    test5(); //测试代码
+
+    return 0;
 }

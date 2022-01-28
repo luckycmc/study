@@ -13,7 +13,7 @@ struct php_study_fci_fcc
     zend_fcall_info fci;
     zend_fcall_info_cache fcc;
 };
-
+//PHP的参数
 struct php_coro_args
 {
     zend_fcall_info_cache *fci_cache;
@@ -27,8 +27,8 @@ struct php_coro_task
     zval *vm_stack_top; // coroutine stack top
     zval *vm_stack_end; // coroutine stack end
     zend_vm_stack vm_stack; // current coroutine stack pointer
-    size_t vm_stack_page_size;
-    zend_execute_data *execute_data; // current coroutine stack frame
+    size_t vm_stack_page_size;    //栈的大小
+    zend_execute_data *execute_data; // current coroutine stack frame 当前协成的栈帧
     study::Coroutine *co;
     std::stack<php_study_fci_fcc *> *defer_tasks;
 };
