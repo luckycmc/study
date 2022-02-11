@@ -29,6 +29,20 @@ PHP_FUNCTION(for_say)
 	}
     
 }
+/**带参数的函数**/
+PHP_FUNCTION(my_function) 
+{
+
+    char *arg = NULL;
+    size_t arg_len;
+    // 解析对应的参数
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",&arg, &arg_len) == FAILURE){
+           return;
+    }
+    zend_string *strg;
+    strg = strpprintf(0,arg);
+    RETURN_STR(strg);
+}
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
@@ -105,6 +119,7 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(say_test1,		arginfo_say_test1)
 	PHP_FE(say_test2,		arginfo_say_test2)
 	PHP_FE(for_say,NULL) /* For testing, remove later. */
+	PHP_FE(my_function,NULL) /* For testing, remove later. */
 	PHP_FE_END
 };
 /* }}} */
