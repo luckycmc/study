@@ -14,6 +14,21 @@ PHP_FUNCTION(say)
     strg = strpprintf(0, "hello word 扩展 method\n");
     RETURN_STR(strg);
 }
+/**for_say扩展**/
+PHP_FUNCTION(for_say)
+{    
+	int i =0;
+	while(1)
+	{  
+		if(i >= 10){
+            break;
+		}
+        printf("for_say\n");
+		i++;
+
+	}
+    
+}
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
@@ -89,6 +104,7 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(say, NULL)    /* For testing, remove later. */
 	PHP_FE(say_test1,		arginfo_say_test1)
 	PHP_FE(say_test2,		arginfo_say_test2)
+	PHP_FE(for_say,NULL) /* For testing, remove later. */
 	PHP_FE_END
 };
 /* }}} */

@@ -1,2 +1,2 @@
 <?php
-   echo say().PHP_EOL;
+   for_say();
