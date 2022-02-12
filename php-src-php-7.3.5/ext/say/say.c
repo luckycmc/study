@@ -32,7 +32,6 @@ PHP_FUNCTION(for_say)
 /**带参数的函数**/
 PHP_FUNCTION(my_function) 
 {
-
     char *arg = NULL;
     size_t arg_len;
     // 解析对应的参数
@@ -42,6 +41,24 @@ PHP_FUNCTION(my_function)
     zend_string *strg;
     strg = strpprintf(0,arg);
     RETURN_STR(strg);
+}
+
+/*****数据的加法***/
+
+PHP_FUNCTION(smart_counter)
+{
+    long arg_add1 = 0;
+    long arg_add2 = 0;
+    long sum = 0;
+    size_t arg_len;
+  
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &arg_add1, &arg_add2, &arg_len) == FAILURE) {
+        return;
+    }
+  
+    sum = arg_add1 + arg_add2;
+  
+    RETURN_LONG(sum);
 }
 
 /* For compatibility with older PHP versions */
@@ -120,6 +137,7 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(say_test2,		arginfo_say_test2)
 	PHP_FE(for_say,NULL) /* For testing, remove later. */
 	PHP_FE(my_function,NULL) /* For testing, remove later. */
+	PHP_FE(smart_counter,NULL) /* For testing, remove later. */
 	PHP_FE_END
 };
 /* }}} */
