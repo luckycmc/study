@@ -60,6 +60,41 @@ PHP_FUNCTION(smart_counter)
   
     RETURN_LONG(sum);
 }
+/***函数类型 start**/
+
+PHP_FUNCTION(default_value)
+{
+    zend_string     *type;    
+    zval            *value = NULL;
+ 
+#ifndef FAST_ZPP
+    /* Get function parameters and do error-checking. */
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "S|z", &type, &value) == FAILURE) {
+        return;
+    }    
+#else
+    ZEND_PARSE_PARAMETERS_START(1, 2)
+        Z_PARAM_STR(type)
+        Z_PARAM_OPTIONAL
+        Z_PARAM_ZVAL_EX(value, 0, 1)
+    ZEND_PARSE_PARAMETERS_END();
+#endif
+     
+    if (ZSTR_LEN(type) == 3 && strncmp(ZSTR_VAL(type), "int", 3) == 0 && value == NULL) {
+        RETURN_LONG(0);
+    } else if (ZSTR_LEN(type) == 3 && strncmp(ZSTR_VAL(type), "int", 3) == 0 && value != NULL) {
+        RETURN_ZVAL(value, 0, 1); 
+    } else if (ZSTR_LEN(type) == 4 && strncmp(ZSTR_VAL(type), "bool", 4) == 0 && value == NULL) {
+        RETURN_FALSE;
+    } else if (ZSTR_LEN(type) == 4 && strncmp(ZSTR_VAL(type), "bool", 4) == 0 && value != NULL) {
+        RETURN_ZVAL(value, 0, 1); 
+    } else if (ZSTR_LEN(type) == 3 && strncmp(ZSTR_VAL(type), "str", 3) == 0 && value == NULL) {
+        RETURN_EMPTY_STRING();
+    } else if (ZSTR_LEN(type) == 3 && strncmp(ZSTR_VAL(type), "str", 3) == 0 && value != NULL) {
+        RETURN_ZVAL(value, 0, 1); 
+    } 
+    RETURN_NULL();
+}
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
