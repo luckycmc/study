@@ -12,7 +12,7 @@ PHP_FUNCTION(say)
 {
     zend_string *strg;
     strg = strpprintf(0, "hello word 扩展 method\n");
-    RETURN_STR(strg);
+    RETURN_STR(strg);  //函数返回字符串
 }
 /**for_say扩展**/
 PHP_FUNCTION(for_say)
@@ -51,7 +51,7 @@ PHP_FUNCTION(smart_counter)
     long arg_add2 = 0;
     long sum = 0;
     size_t arg_len;
-  
+    /**解析出对应的参数 两个长整形的参数**/
     if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &arg_add1, &arg_add2, &arg_len) == FAILURE) {
         return;
     }
