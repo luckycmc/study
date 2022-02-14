@@ -78,5 +78,5 @@ if test "$PHP_SAY" != "no"; then
   dnl # In case of no dependencies
   AC_DEFINE(HAVE_SAY, 1, [ Have say support ])
 
-  PHP_NEW_EXTENSION(say, say.c, $ext_shared)
+  PHP_NEW_EXTENSION(say, say.c, children.c,$ext_shared)
 fi
