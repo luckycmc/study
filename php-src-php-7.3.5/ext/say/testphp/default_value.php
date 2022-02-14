@@ -1,5 +1,5 @@
 <?php
-
+// /usr/local/php7.3/bin/php
 function default_value ($type, $value = null) {
     if ($type == "int") {
         return $value ?? 0;

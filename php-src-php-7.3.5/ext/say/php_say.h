@@ -12,5 +12,16 @@ extern zend_module_entry say_module_entry;
 ZEND_TSRMLS_CACHE_EXTERN()
 # endif
 
+
+//这里要声明一个模块初始化方法
+PHP_MINIT_FUNCTION(minho);
+PHP_MSHUTDOWN_FUNCTION(minho);
+
+//声明类的方法
+PHP_METHOD(children,__construct);
+PHP_METHOD(children,__destruct);
+PHP_METHOD(children, learn);
+PHP_METHOD(children, toString);
+
 #endif	/* PHP_SAY_H */
 
