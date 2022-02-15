@@ -9,6 +9,6 @@
         }
     } */
      
-    var_dump(getSize("abc"));
-    var_dump(getSize(array(1,2)));
-    var_dump(getSize(666666));
+    var_dump(get_size("abc"));
+    var_dump(get_size(array(1,2)));
+    var_dump(get_size(666666));

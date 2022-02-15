@@ -7,6 +7,10 @@
 #include "php.h"
 #include "ext/standard/info.h"
 #include "php_say.h"
+
+#include "php_types.h"  //必须引入对应的文件头 否者编译会出现错误
+
+#include "php_children.h"
 /*******say简单的函数*****/
 PHP_FUNCTION(say)
 {
@@ -201,11 +205,7 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(my_function,NULL) /* For testing, remove later. */
 	PHP_FE(smart_counter,NULL) /* For testing, remove later. */
 	PHP_FE(getSize,NULL) /* For testing, remove later. */
-    //定义children对象的方法列表，可声明方法为静态方法或公开方法 start
-	ZEND_ME(children, learn, arginfo_children_learn, ZEND_ACC_PUBLIC )
-    ZEND_ME(children,toString,arginfo_return__void,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC )
-    ZEND_ME(children,__construct,arginfo_return__void, ZEND_ACC_PUBLIC)
-	//定义children对象的方法列表，可声明方法为静态方法或公开方法 end
+    PHP_FE(get_size,NULL) /* For testing, remove later. */
 	PHP_FE_END
 };
 /* }}} */
@@ -225,6 +225,12 @@ zend_module_entry say_module_entry = {
 	STANDARD_MODULE_PROPERTIES
 };
 /* }}} */
+
+//当模块启动时执行的方法
+PHP_MINIT_FUNCTION(say)
+{
+    init_class_untils();
+}
 
 #ifdef COMPILE_DL_SAY
 # ifdef ZTS

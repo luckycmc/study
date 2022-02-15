@@ -53,16 +53,14 @@ const zend_function_entry children_methods[] = {
         {NULL, NULL, NULL}
 };
 //当模块启动时执行的方法
-PHP_MINIT_FUNCTION(say)
+void init_class_untils()
 {
     zend_class_entry ce;
     //初始化一个类对象，并将方法绑定到对象上
     INIT_CLASS_ENTRY(ce, "children", children_methods);
 	//将对象赋值给全局对象
-    children_ce = zend_register_internal_class_ex(&ce,NULL);
-	//初始化类的属性
-    zend_declare_property_null(children_ce, "memory", sizeof("memory") - 1, ZEND_ACC_PUBLIC);
-
-    return SUCCESS;
+    children_ce = zend_register_internal_class_ex(&ce, NULL);
+	//初始化类的熟悉
+    zend_declare_property_null(children_ce, "memory",       sizeof("memory") - 1, ZEND_ACC_PUBLIC);
 }
 /************类的创建 end**************/
