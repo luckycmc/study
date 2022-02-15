@@ -40,17 +40,22 @@ PHP_METHOD(children, learn)
 //定义toString方法，无参，只打印字符串
 PHP_METHOD(children,toString)
 {
-    php_printf("can not support");
+    php_printf("can not toString\n");
 }
 //定义构造方法
 PHP_METHOD(children,__construct){
-    php_printf("construct is running<br>");
+    php_printf("construct is running\n");
+}
+//定义析构方法
+PHP_METHOD(children,__destruct){
+    php_printf("__construct is end\n");
 }
 //定义children对象的方法列表，可声明方法为静态方法或公开方法
 const zend_function_entry children_methods[] = {
         ZEND_ME(children, learn, arginfo_children_learn, ZEND_ACC_PUBLIC )
         ZEND_ME(children,toString,arginfo_return__void,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC )
         ZEND_ME(children,__construct,arginfo_return__void, ZEND_ACC_PUBLIC)
+        ZEND_ME(children,__destruct,arginfo_return__void, ZEND_ACC_PUBLIC)
         {NULL, NULL, NULL}
 };
 
