@@ -33,3 +33,69 @@ PHP_FUNCTION(get_size)
     }   
     RETURN_STR(result);
 }
+
+
+//gettype()来取得变量的类型的hello_typeof(): 判断对应变量的类型
+PHP_FUNCTION(hello_typeof)
+{
+     zval *userval = NULL;
+     if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z",&userval) == FAILURE){
+         RETURN_NULL();
+     }
+
+     switch(Z_TYPE_P(userval))
+     {
+        case IS_NULL:
+              RETVAL_STRING("NULL");
+              break;
+        case IS_TRUE:
+            RETVAL_STRING("true");
+            break;
+
+        case IS_FALSE:
+            RETVAL_STRING("false");
+            break;
+
+        case IS_LONG:
+            RETVAL_STRING("integer");
+            break;
+
+        case IS_DOUBLE:
+            RETVAL_STRING("double");
+            break;
+
+        case IS_STRING:
+            RETVAL_STRING("string");
+            break;
+
+        case IS_ARRAY:
+            RETVAL_STRING("array");
+            break;
+
+        case IS_OBJECT:
+            RETVAL_STRING("object");
+            break;
+
+        case IS_RESOURCE:
+            RETVAL_STRING("resource");
+            break;
+
+        default:
+            RETVAL_STRING("unknown type");
+     }
+}
+
+/*****
+ php 数组的实现
+ * **/
+PHP_FUNCTION(hello_get_arr)
+{
+    array_init(return_value);
+    add_next_index_null(return_value);
+    add_next_index_long(return_value, 42);
+    add_next_index_bool(return_value, 1);
+    add_next_index_double(return_value, 3.14);
+    add_next_index_string(return_value, "foo");
+    add_assoc_string(return_value, "mno", "baz");
+    add_assoc_bool(return_value, "ghi", 1);
+}

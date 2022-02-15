@@ -215,6 +215,7 @@ ZEND_END_ARG_INFO()
 /* }}} */
 
 /* {{{ say_functions[]
+   say 模块下的函数注册
  */
 static const zend_function_entry say_functions[] = {
 	PHP_FE(say, NULL)    /* For testing, remove later. */
@@ -225,6 +226,8 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(smart_counter,NULL) /* For testing, remove later. */
 	PHP_FE(getSize,NULL) /* For testing, remove later. */
     PHP_FE(get_size,NULL) /* For testing, remove later. */
+	PHP_FE(hello_typeof,NULL) /* For testing, remove later. */
+	PHP_FE(hello_get_arr,NULL)  // PHP数组的实现
 	PHP_FE_END
 };
 /* }}} */

@@ -6,6 +6,10 @@ PHP_FUNCTION(get_size);
 ZEND_BEGIN_ARG_INFO(arginfo_get_size ,0)
     ZEND_ARG_INFO(0, val)
 ZEND_END_ARG_INFO()
+//定义 hello_type 函数
+PHP_FUNCTION(hello_typeof);
 
+//定义一个数组
+PHP_FUNCTION(hello_get_arr);
 
 #endif
