@@ -7,6 +7,7 @@
 #include "php_children.h"
 /************类的创建 start*************/
 //定义全局类对象
+zend_class_entry ce;
 zend_class_entry *children_ce;
 
 //定义learn方法接受的参数
@@ -52,10 +53,10 @@ const zend_function_entry children_methods[] = {
         ZEND_ME(children,__construct,arginfo_return__void, ZEND_ACC_PUBLIC)
         {NULL, NULL, NULL}
 };
+
 //当模块启动时执行的方法
 void init_class_untils()
 {
-    zend_class_entry ce;
     //初始化一个类对象，并将方法绑定到对象上
     INIT_CLASS_ENTRY(ce, "children", children_methods);
 	//将对象赋值给全局对象

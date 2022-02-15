@@ -175,6 +175,25 @@ PHP_RINIT_FUNCTION(say)
 }
 /* }}} */
 
+//当模块启动时执行的方法 
+/******
+ 犯了一个错误 没有吧初始化加入到模块中导致类的加载不存在
+ * */
+PHP_MINIT_FUNCTION(say)
+{   
+    init_class_untils();
+    return SUCCESS;
+}
+PHP_MSHUTDOWN_FUNCTION(say)
+{
+    return SUCCESS;
+}
+
+PHP_RSHUTDOWN_FUNCTION(say)
+{
+    return SUCCESS;
+}
+
 /* {{{ PHP_MINFO_FUNCTION
  */
 PHP_MINFO_FUNCTION(say)
@@ -216,7 +235,7 @@ zend_module_entry say_module_entry = {
 	STANDARD_MODULE_HEADER,
 	"say",					/* Extension name */
 	say_functions,			/* zend_function_entry */
-	NULL,							/* PHP_MINIT - Module initialization */
+	PHP_MINIT(say),						/* PHP_MINIT - Module initialization */
 	NULL,							/* PHP_MSHUTDOWN - Module shutdown */
 	PHP_RINIT(say),			/* PHP_RINIT - Request initialization */
 	NULL,							/* PHP_RSHUTDOWN - Request shutdown */
@@ -226,11 +245,7 @@ zend_module_entry say_module_entry = {
 };
 /* }}} */
 
-//当模块启动时执行的方法
-PHP_MINIT_FUNCTION(say)
-{
-    init_class_untils();
-}
+
 
 #ifdef COMPILE_DL_SAY
 # ifdef ZTS
