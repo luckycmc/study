@@ -158,7 +158,7 @@ typedef uintptr_t zend_type;
 	ZEND_TYPE_ENCODE_CLASS_CONST_Q2(ZEND_TYPE_ENCODE_CLASS_CONST_ ##allow_null, class_name)
 #define ZEND_TYPE_ENCODE_CLASS_CONST(class_name, allow_null) \
 	ZEND_TYPE_ENCODE_CLASS_CONST_Q1(allow_null, class_name)
-
+//对应的值
 typedef union _zend_value {
 	zend_long         lval;				/* long value */
 	double            dval;				/* double value */
@@ -166,26 +166,31 @@ typedef union _zend_value {
 	zend_string      *str;
 	zend_array       *arr;
 	zend_object      *obj;
-	zend_resource    *res;
+	zend_resource    *res;         //资源类型
 	zend_reference   *ref;
 	zend_ast_ref     *ast;
 	zval             *zv;
-	void             *ptr;
-	zend_class_entry *ce;
-	zend_function    *func;
+	void             *ptr;        // 可以指向任意类型
+	zend_class_entry *ce;          // 类
+	zend_function    *func;        // 方法
 	struct {
 		uint32_t w1;
 		uint32_t w2;
 	} ww;
 } zend_value;
-
+/************php 变量 start****************/
+/****************
+ * 一个变量占用16个直接 zval
+ * /
+/************php 变量 end****************/
+// 对应的类型
 struct _zval_struct {
 	zend_value        value;			/* value */
 	union {
 		struct {
 			ZEND_ENDIAN_LOHI_3(
 				zend_uchar    type,			/* active type */
-				zend_uchar    type_flags,
+				zend_uchar    type_flags,  //变量类型特有的标记
 				union {
 					uint16_t  call_info;    /* call info for EX(This) */
 					uint16_t  extra;        /* not further specified */
@@ -194,7 +199,7 @@ struct _zval_struct {
 		uint32_t type_info;
 	} u1;
 	union {
-		uint32_t     next;                 /* hash collision chain */
+		uint32_t     next;                 /* hash collision chain */ //数组中解决冲突使用
 		uint32_t     cache_slot;           /* cache slot (for RECV_INIT) */
 		uint32_t     opline_num;           /* opline number (for FAST_CALL) */
 		uint32_t     lineno;               /* line number (for ast nodes) */
@@ -205,7 +210,7 @@ struct _zval_struct {
 		uint32_t     property_guard;       /* single property guard */
 		uint32_t     constant_flags;       /* constant flags */
 		uint32_t     extra;                /* not further specified */
-	} u2;
+	} u2;    
 };
 
 typedef struct _zend_refcounted_h {
