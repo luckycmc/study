@@ -11,6 +11,10 @@
 #include "php_types.h"  //必须引入对应的文件头 否者编译会出现错误
 
 #include "php_children.h"
+
+#include "php_callback.h"
+
+#include "php_tinyswoole.h" //引入对应的头部
 /*******say简单的函数*****/
 PHP_FUNCTION(say)
 {
@@ -182,6 +186,8 @@ PHP_RINIT_FUNCTION(say)
 PHP_MINIT_FUNCTION(say)
 {   
     init_class_untils();
+	//执行swoole 服务端函数
+	init_class_tinyswoole_untils();
     return SUCCESS;
 }
 PHP_MSHUTDOWN_FUNCTION(say)
@@ -228,6 +234,8 @@ static const zend_function_entry say_functions[] = {
     PHP_FE(get_size,NULL) /* For testing, remove later. */
 	PHP_FE(hello_typeof,NULL) /* For testing, remove later. */
 	PHP_FE(hello_get_arr,NULL)  // PHP数组的实现
+	PHP_FE(hello_callback,NULL)  // 回调函数
+	PHP_FE(hello_thread,NULL) //
 	PHP_FE_END
 };
 /* }}} */

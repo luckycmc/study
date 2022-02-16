@@ -223,7 +223,7 @@ typedef struct _zend_refcounted_h {
 struct _zend_refcounted {
 	zend_refcounted_h gc;
 };
-
+// 字符串结构体
 struct _zend_string {
 	zend_refcounted_h gc;
 	zend_ulong        h;                /* hash value */
@@ -238,7 +238,7 @@ typedef struct _Bucket {
 } Bucket;
 
 typedef struct _zend_array HashTable;
-
+//数组类型的结构体
 struct _zend_array {
 	zend_refcounted_h gc;
 	union {

@@ -7,6 +7,7 @@
         "slowlog.h": "c",
         "php_swoole.h": "c",
         "fmacros.h": "c",
-        "php_children.h": "c"
+        "php_children.h": "c",
+        "php.h": "c"
     }
 }
