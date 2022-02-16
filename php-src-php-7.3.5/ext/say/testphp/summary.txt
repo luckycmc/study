@@ -1,0 +1,9 @@
+b ZEND_ECHO_SPEC_CV_HANDLER  PHP 变量调试断点
+
+r zval.php 运行对应的文件
+
+n  继续下行执行
+
+p 打印对应的数据
+
+c  继续往下执行运行代码
