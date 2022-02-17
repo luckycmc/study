@@ -230,15 +230,18 @@ struct _zend_string {
 	size_t            len;
 	char              val[1];
 };
-
+//数组的基本结构key =>value 和当前元素的索引值 也就是h
 typedef struct _Bucket {
-	zval              val;
-	zend_ulong        h;                /* hash value (or numeric index)   */
-	zend_string      *key;              /* string key or NULL for numerics */
+	zval              val;   //存储的具体value，这里嵌入了一个zval，而不是一个指针
+	zend_ulong        h;      /* hash value (or numeric index)   */ //key根据times 33计算得到的哈希值，或者是数值索引编号
+	zend_string      *key;    /* string key or NULL for numerics */ //存储元素的key
 } Bucket;
 
-typedef struct _zend_array HashTable;
+typedef struct _zend_array HashTable; //hash table
 //数组类型的结构体
+/************
+ * 当将一个元素从哈希表删除时并不会将对应的Bucket移除，而是将Bucket存储的zval修改为IS_UNDEF
+ * */
 struct _zend_array {
 	zend_refcounted_h gc;
 	union {
@@ -251,14 +254,14 @@ struct _zend_array {
 		} v;
 		uint32_t flags;
 	} u;
-	uint32_t          nTableMask;
-	Bucket           *arData;
-	uint32_t          nNumUsed;
-	uint32_t          nNumOfElements;
-	uint32_t          nTableSize;
-	uint32_t          nInternalPointer;
-	zend_long         nNextFreeElement;
-	dtor_func_t       pDestructor;
+	uint32_t          nTableMask; //哈希值计算掩码，等于nTableSize的负值(nTableMask = -nTableSize) 最小为8
+	Bucket           *arData;    // //存储元素数组，指向第一个Bucket
+	uint32_t          nNumUsed;      //已用Bucket数
+	uint32_t          nNumOfElements; //哈希表有效元素数
+	uint32_t          nTableSize;       //哈希表总大小，为2的n次方  n的值怎么确定呢
+	uint32_t          nInternalPointer;  //内部的指针，用于HashTable遍历
+	zend_long         nNextFreeElement; //下一个可用的数值索引,如:arr[] = 1;arr["a"] = 2;arr[] = 3;  则nNextFreeElement = 2;
+	dtor_func_t       pDestructor;  // 析构函数
 };
 
 /*
