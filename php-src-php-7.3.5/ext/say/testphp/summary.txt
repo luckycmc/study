@@ -11,6 +11,19 @@ c  继续往下执行运行代码
 打印对应的断点才能调试对应的信息
 
 
+/************词法分析语法分析的过程**********/
+
+ b php_execute_script    //执行脚本
+
+ b open_file_for_scanning  //解析文件
+
+ b zendparse             //语法分析
+
+ b zendlex               //词法分析
+
+
+1.PHP-fpm 主进程干掉 worker 进程依然能工作  master 进程只是做管理工作
+
 1.知识盲点位运算掌握不够好
 
 1.什么是哈希表
@@ -34,3 +47,5 @@ c  继续往下执行运行代码
         槽(slot/bucket)：哈希表中用于保存数据的一个单元，也就是数据真正存放的容器。
         哈希函数(hash function)：将key映射(map)到数据应该存放的slot所在位置的函数。
         哈希冲突(hash collision)：哈希函数将两个不同的key映射到同一个索引的情况。
+
+
