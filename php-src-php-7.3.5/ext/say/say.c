@@ -184,7 +184,8 @@ PHP_RINIT_FUNCTION(say)
  犯了一个错误 没有吧初始化加入到模块中导致类的加载不存在
  * */
 PHP_MINIT_FUNCTION(say)
-{   
+{    
+	//class children 的注册
     init_class_untils();
 	//执行swoole 服务端函数
 	init_class_tinyswoole_untils();
@@ -222,6 +223,7 @@ ZEND_END_ARG_INFO()
 
 /* {{{ say_functions[]
    say 模块下的函数注册
+   每一个php_FE都是一个结构体
  */
 static const zend_function_entry say_functions[] = {
 	PHP_FE(say, NULL)    /* For testing, remove later. */

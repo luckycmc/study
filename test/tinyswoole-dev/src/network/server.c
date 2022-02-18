@@ -54,7 +54,7 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-
+    // 主线程创建reactor
     if (tswReactor_create(main_reactor, MAXEVENTS) < 0) {
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;

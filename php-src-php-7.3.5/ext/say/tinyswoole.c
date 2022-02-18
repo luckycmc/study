@@ -39,7 +39,7 @@ PHP_METHOD(tinyswoole_server, start)
     zval *ip;
     zval *port;
 
-    printf("running server...\n");
+    printf("tcp server running server...\n");
 
     ip = tsw_zend_read_property(tinyswoole_ce, getThis(), "ip", sizeof("ip") - 1, 0);
     port = tsw_zend_read_property(tinyswoole_ce, getThis(), "port", sizeof("port") - 1, 0);
