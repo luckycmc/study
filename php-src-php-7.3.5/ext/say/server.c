@@ -8,9 +8,30 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define LISTENQ 10
-#define MAX_BUF_SIZE 1024
+#include "server.h"
 
+int saySocketCreate()
+{
+     return socket(AF_INET, SOCK_STREAM, 0);
+}
+int saySocketBind(int sock,char *host, int port)
+{
+    int ret;
+    struct sockaddr_in servaddr;
+    bzero(&servaddr, sizeof(servaddr));
+    inet_aton(host, &(servaddr.sin_addr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(port);
+    ret = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
+    if (ret < 0) {
+        spprintf("%s", strerror(errno));
+        return TSW_ERR; 
+    }
+
+    return ret;
+}
+
+//暂时先不用保留但是
 int server(char *ip, int port)
 {
     int listenfd;

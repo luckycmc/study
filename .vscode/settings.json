@@ -8,6 +8,9 @@
         "php_swoole.h": "c",
         "fmacros.h": "c",
         "php_children.h": "c",
-        "php.h": "c"
+        "php.h": "c",
+        "process_pool.h": "c",
+        "php_tinyswoole.h": "c",
+        "server.h": "c"
     }
 }
