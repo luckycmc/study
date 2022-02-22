@@ -64,9 +64,9 @@ void init_class_untils()
 {
     //初始化一个类对象，并将方法绑定到对象上
     INIT_CLASS_ENTRY(ce, "children", children_methods);
-	//将对象赋值给全局对象
+	//注册全局类
     children_ce = zend_register_internal_class_ex(&ce, NULL);
-	//初始化类的熟悉
-    zend_declare_property_null(children_ce, "memory",       sizeof("memory") - 1, ZEND_ACC_PUBLIC);
+	//初始化类的属性 也就是注册类的属性
+    zend_declare_property_null(children_ce, "memory",sizeof("memory") - 1, ZEND_ACC_PUBLIC);
 }
 /************类的创建 end**************/

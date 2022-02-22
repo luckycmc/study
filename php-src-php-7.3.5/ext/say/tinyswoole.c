@@ -123,7 +123,7 @@ void init_class_tinyswoole_untils()
     zend_declare_property_null(tinyswoole_ce, "port", sizeof("port") - 1, ZEND_ACC_PRIVATE);
 
 }
-//初始化服务类
+//初始化服务类全局的对象属性
 sayServer *say_tinyswoole_init()
 {   
     sayServer *serv;

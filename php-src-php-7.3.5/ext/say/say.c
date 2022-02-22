@@ -66,7 +66,7 @@ PHP_FUNCTION(smart_counter)
   
     sum = arg_add1 + arg_add2;
   
-    RETURN_LONG(sum);
+    RETURN_LONG(sum); //返回长整形数据
 }
 /***函数类型 start**/
 
