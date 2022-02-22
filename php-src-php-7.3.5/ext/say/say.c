@@ -237,7 +237,7 @@ static const zend_function_entry say_functions[] = {
 	PHP_FE(hello_typeof,NULL) /* For testing, remove later. */
 	PHP_FE(hello_get_arr,NULL)  // PHP数组的实现
 	PHP_FE(hello_callback,NULL)  // 回调函数
-	PHP_FE(hello_thread,NULL) //
+	PHP_FE(hello_thread,NULL) // 线程函数
 	PHP_FE_END
 };
 /* }}} */
