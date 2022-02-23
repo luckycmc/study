@@ -1,6 +1,6 @@
 #include "epoll.h"
 #include "log.h"
-
+//设置fd为非阻塞
 static int setnonblocking(int fd)
 {
     int old_option;
@@ -15,26 +15,26 @@ static int setnonblocking(int fd)
 
     return TSW_OK;
 }
-
+//epoll_reactor 添加
 static int tswReactorEpoll_add(tswReactor *reactor, int fd, int tsw_event_type, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev))
 {
-    if (tsw_event_type == TSW_EVENT_READ) {
+    if (tsw_event_type == TSW_EVENT_READ) {  //读
         if (epoll_add(reactor, fd, EPOLLIN | EPOLLET, tswReactor_handler) < 0) {
             tswWarn("epoll_add error: %s", strerror(errno));
             return TSW_ERR;
         }
     }
-    if (tsw_event_type == TSW_EVENT_WRITE) {
+    if (tsw_event_type == TSW_EVENT_WRITE) { //写
         if (epoll_add(reactor, fd, EPOLLOUT | EPOLLET, tswReactor_handler) < 0) {
             tswWarn("epoll_add error: %s", strerror(errno));
             return TSW_ERR;
         }
     }
-    reactor->event_num++;
+    reactor->event_num++;  // reactor 事件的个数
 
     return TSW_OK;
 }
-
+//设置reactor fd的类型
 static int tswReactorEpoll_set(tswReactor *reactor, int fd, int event_type)
 {
     tswReactorEpoll *reactor_epoll_object = reactor->object;
@@ -48,7 +48,7 @@ static int tswReactorEpoll_set(tswReactor *reactor, int fd, int event_type)
 
     return TSW_OK;
 }
-
+//摘除对应的fd
 static int tswReactorEpoll_del(tswReactor *reactor, int fd)
 {
     tswReactorEpoll *reactor_epoll_object = reactor->object;
@@ -59,7 +59,7 @@ static int tswReactorEpoll_del(tswReactor *reactor, int fd)
     }
     return TSW_OK;
 }
-
+//等待reactor 就绪事件
 static int tswReactorEpoll_wait(tswReactor *reactor)
 {
     int nfds;
@@ -82,7 +82,7 @@ static int tswReactorEpoll_wait(tswReactor *reactor)
 
     return nfds;
 }
-
+//释放对应的reactor 
 static int tswReactorEpoll_free(tswReactor *reactor)
 {
     tswReactorEpoll *reactor_epoll_object = reactor->object;
@@ -90,7 +90,7 @@ static int tswReactorEpoll_free(tswReactor *reactor)
     free(reactor_epoll_object->events);
     free(reactor_epoll_object);
 }
-
+//reactor 初始化
 int tswReactorEpoll_create(tswReactor *reactor, int max_event_num)
 {
     tswReactorEpoll *reactor_epoll_object;
@@ -126,7 +126,7 @@ int tswReactorEpoll_create(tswReactor *reactor, int max_event_num)
 
     return TSW_OK;
 }
-
+//reactor fd 事件类型 对应的回调函数 添加到对应的reactor中
 int epoll_add(tswReactor *reactor, int fd, int event_type, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev))
 {
     struct epoll_event e;
@@ -139,12 +139,13 @@ int epoll_add(tswReactor *reactor, int fd, int event_type, int (*tswReactor_hand
     // setnonblocking(fd);
     tswev->fd = fd;
     tswev->event = event_type;
+    //绑定对应的事件句柄也就是回调函数
     if (reactor->setHandler(tswev, tswReactor_handler) < 0) {
         return TSW_ERR;
     }
-    e.data.ptr = tswev;
+    e.data.ptr = tswev;    //用户自己创建对应的额回调函数
     e.events = event_type;
-
+     
     if (epoll_ctl(reactor_epoll_object->epfd, EPOLL_CTL_ADD, fd, &e) < 0) {
         tswWarn("epoll_ctl error: %s", strerror(errno));
         return TSW_ERR;

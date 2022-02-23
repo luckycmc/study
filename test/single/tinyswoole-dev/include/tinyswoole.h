@@ -70,7 +70,7 @@ typedef struct _tswEvent {
 	int event;
 	int (*event_handler)(tswReactor *reactor, tswEvent *tswev); // specific event handler
 } tswEvent;
-
+//数据的头部
 struct _tswDataHead {
 	uint16_t len;	// data len
 	uint16_t from_id; // reactor id
@@ -112,14 +112,14 @@ struct _tswReactor {
 int tswReactor_create(tswReactor *reactor, int max_event_num);
 int tswReactorEpoll_create(tswReactor *reactor, int max_event_num);
 int tswReactor_setHandler(tswEvent *tswev, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev));
-
+//连接结构体
 struct _tswConnection {
 	int connfd;
 	uint32_t session_id;
 	uint32_t from_reactor_id;
 	int serv_sock;
 };
-
+//产生的session
 struct _tswSession {
     uint32_t session_id;
     int connfd;
@@ -139,7 +139,7 @@ struct _tswWorkerG {
 	int pipe_master;
 	int pipe_worker;
 };
-
+//管道通讯
 struct _tswPipe {
 	void *object;
 
@@ -147,7 +147,7 @@ struct _tswPipe {
     int (*getFd)(tswPipe *pipe, int isWriteFd);
 	int (*write)(tswPipe *pipe, void *send, int length);
 };
-
+//unixsocket 管道
 struct _tswPipeUnsock {
     int socks[2]; // socks[0]: worker, socks[1]: master
 };

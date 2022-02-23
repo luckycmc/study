@@ -116,11 +116,12 @@ PHP_METHOD(tinyswoole_server, on)
 
 	memcpy(property_name, "on", 2);
 	for (i = 0; i < PHP_SERVER_CALLBACK_NUM; i++) {
+		 // 忽略大小写比较字符串
 		// Update the properties of the server class if the callback function event name of the first parameter matches
 		if (strncasecmp(callback_name[i], Z_STRVAL(*name), Z_STRLEN(*name)) == 0) {
 			memcpy(property_name + 2, callback_name[i], Z_STRLEN(*name));
 			property_name_len = Z_STRLEN(*name) + 2;
-			property_name[property_name_len] = 0;
+			property_name[property_name_len] = 0;                                                
 			// Update the callback function to the corresponding property
 			zend_update_property(tinyswoole_server_ce_ptr, server_object, property_name, property_name_len, callable);
 			// Store callback function
@@ -142,8 +143,9 @@ PHP_METHOD(tinyswoole_server, start)
 	tswServer *serv;
 
 	serv = TSwooleG.serv;
+	//注册回调函数
 	php_tswoole_register_callback(serv);
-
+    //启动对应的服务器
 	tswServer_start(serv);
 }
 // 发送数据
@@ -176,7 +178,7 @@ void php_tswoole_register_callback(tswServer *serv)
 	serv->onMasterStart = tswServer_master_onStart;
 	serv->onReactorStart = tswServer_reactor_onStart;
 }
-//启动服务器的会点函数
+//启动服务器的会回调次函数
 void php_tswoole_onStart(tswServer *serv)
 {
 	zval  retval;
@@ -221,6 +223,6 @@ void php_tswoole_onReceive(tswServer *serv, tswEventData *event_data)
 	args[0] = *server_object;
 	args[1] = *zfd;
 	args[2] = *zdata;
-
+    //执行对应的函数
 	call_user_function_ex(EG(function_table), NULL, php_tsw_server_callbacks[TSW_SERVER_CB_onReceive], &retval, 3, args, 0, NULL);
 }

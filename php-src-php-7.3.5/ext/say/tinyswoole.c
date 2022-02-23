@@ -14,7 +14,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_tinyswoole__construct, 0, 0, 2)
     ZEND_ARG_INFO(0, ip)
     ZEND_ARG_INFO(0, port)
 ZEND_END_ARG_INFO()
-
+//读取类的属性
 static inline zval* tsw_zend_read_property(zend_class_entry *class_ptr, zval *obj, const char *s, int len, int silent)
 {
     zval rv;
@@ -86,17 +86,17 @@ PHP_METHOD(tinyswoole_server,set)
     } else {
 		serv->worker_num = 4;
 	}
-     printf("server reactor_num is %d\n", SaywooleG.serv->reactor_num);
+     //printf("server reactor_num is %d\n", SaywooleG.serv->reactor_num);
 }
-
+// 服务器启动
 PHP_METHOD(tinyswoole_server, start)
 {
     zval *ip;
     zval *port;
     sayServer *serv;
-    printf("tcp server running server...\n");
+    //printf("tcp server running server...\n");
 
-    printf("server worker_num is %d\n", SaywooleG.serv->worker_num);
+    //printf("server worker_num is %d\n", SaywooleG.serv->worker_num);
     
     ip = tsw_zend_read_property(tinyswoole_ce, getThis(), "ip", sizeof("ip") - 1, 0);
     port = tsw_zend_read_property(tinyswoole_ce, getThis(), "port", sizeof("port") - 1, 0);
@@ -104,7 +104,7 @@ PHP_METHOD(tinyswoole_server, start)
     //server(Z_STRVAL(*ip), Z_LVAL(*port));
     printf("ip is %s\n", Z_STRVAL(*ip));
 }
-
+//注册类的方法
 zend_function_entry tinyswoole_method[]=
 {
     ZEND_ME(tinyswoole_server, __construct, arginfo_tinyswoole__construct, ZEND_ACC_PUBLIC)
@@ -112,7 +112,7 @@ zend_function_entry tinyswoole_method[]=
     ZEND_ME(tinyswoole_server, start, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
-
+//类初始化
 void init_class_tinyswoole_untils()
 {
     zend_class_entry ce;

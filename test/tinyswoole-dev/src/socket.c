@@ -1,7 +1,7 @@
 #include "tinyswoole.h"
 #include "socket.h"
 #include "log.h"
-
+// socket 创建
 int tswSocket_create(int type)
 {
     int _domain;
@@ -20,7 +20,7 @@ int tswSocket_create(int type)
 
     return socket(_domain, _type, 0);
 }
-
+// socket 的绑定
 int tswSocket_bind(int sock, int type, char *host, int port)
 {
     int ret;
