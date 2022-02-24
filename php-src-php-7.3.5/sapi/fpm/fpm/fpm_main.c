@@ -1593,7 +1593,7 @@ int main(int argc, char *argv[])
 #endif
 
 	zend_signal_startup();
-
+    //注册SAPI:将全局变量sapi_module设置为cgi_sapi_module
 	sapi_startup(&cgi_sapi_module);
 	cgi_sapi_module.php_ini_path_override = NULL;
 	cgi_sapi_module.php_ini_ignore_cwd = 1;

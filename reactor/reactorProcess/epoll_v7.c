@@ -151,7 +151,7 @@ int accept_cb(int fd, int events, void *arg) {
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
 	si->sockfd = clientfd;
 	si->callback = recv_cb;
-	ev.data.ptr = si;
+	ev.data.ptr = si;   
 	
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
 	
@@ -218,6 +218,7 @@ int main(int argc, char *argv[]) {
 			if (eventloop->events[i].events & EPOLLIN) {
 				//printf("sockitem\n");
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
+				//出发对应的回调函数 也就是当前fd 用户态设置的回调函数 //保存触发事件的某个文件描述符相关的数据
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 
 			}

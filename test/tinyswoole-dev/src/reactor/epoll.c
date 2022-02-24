@@ -142,7 +142,7 @@ int epoll_add(tswReactor *reactor, int fd, int event_type, int (*tswReactor_hand
     if (reactor->setHandler(tswev, tswReactor_handler) < 0) {
         return TSW_ERR;
     }
-    e.data.ptr = tswev;
+    e.data.ptr = tswev;      //ptr 是epoll_data union 是一个void *ptr 空指针可以指向任何数据类型
     e.events = event_type;
 
     if (epoll_ctl(reactor_epoll_object->epfd, EPOLL_CTL_ADD, fd, &e) < 0) {
