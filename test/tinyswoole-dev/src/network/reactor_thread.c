@@ -112,7 +112,7 @@ int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
     n = read(tswev->fd, &event_data, sizeof(event_data));
     session_id = event_data.info.fd;
     session = &(TSwooleG.serv->session_list[session_id]);
-
+    //数据直接发送给用户
     send(session->connfd, event_data.data, event_data.info.len, 0);
     if (reactor->del(reactor, tswev->fd) < 0) {
         tswWarn("%s", "reactor del error");

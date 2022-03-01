@@ -143,9 +143,9 @@ int epoll_add(tswReactor *reactor, int fd, int event_type, int (*tswReactor_hand
     if (reactor->setHandler(tswev, tswReactor_handler) < 0) {
         return TSW_ERR;
     }
-    e.data.ptr = tswev;    //用户自己创建对应的额回调函数
-    e.events = event_type;
-     
+    e.data.ptr = tswev;       //用户自己创建对应指定的回调函数
+    e.events = event_type;    //事件类型
+    //加入到对应的 epoll 管理fd中 
     if (epoll_ctl(reactor_epoll_object->epfd, EPOLL_CTL_ADD, fd, &e) < 0) {
         tswWarn("epoll_ctl error: %s", strerror(errno));
         return TSW_ERR;

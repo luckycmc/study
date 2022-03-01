@@ -136,7 +136,7 @@ void zend_eval_const_expr(zend_ast **ast_ptr);
 void zend_const_expr_to_zval(zval *result, zend_ast *ast);
 
 typedef int (*user_opcode_handler_t) (zend_execute_data *execute_data);
-//指令对应的结构体如下:
+//指令对应的结构体如下: 指令由操作码和操作数组成
 struct _zend_op {
 	const void *handler;   //操作执行的函数
 	znode_op op1;          //操作数1
@@ -144,7 +144,7 @@ struct _zend_op {
 	znode_op result;            //返回值
 	uint32_t extended_value;   //扩展值
 	uint32_t lineno;          //行号
-	zend_uchar opcode;        //opcode值
+	zend_uchar opcode;        //opcode值 指令类型（此类型并不代表字符串、数组等数据类型；其表示此操作数是常量，临时变量，编译变量等）
 	zend_uchar op1_type;     //操作数1的类型
 	zend_uchar op2_type;      //操作数2的类型
 	zend_uchar result_type;  //返回值类型
@@ -404,9 +404,9 @@ struct _zend_op_array {
 	int cache_size;     /* number of run_time_cache_slots * sizeof(void*) */
 	int last_var;       /* number of CV variables */
 	uint32_t T;         /* number of temporary variables */
-	uint32_t last;      /* number of opcodes */
+	uint32_t last;      /* number of opcodes */    //下面oplines数组大小
 
-	zend_op *opcodes;
+	zend_op *opcodes;        //oplines数组，存放所有指令
 	void **run_time_cache;
 	HashTable *static_variables;
 	zend_string **vars; /* names of CV variables */

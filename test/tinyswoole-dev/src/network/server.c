@@ -78,7 +78,7 @@ static int tswServer_start_proxy(tswServer *serv)
     if (serv->onStart != NULL) {
         serv->onStart(serv);
     }
-    //主进程监听 listenfd 出发accept 回调函数
+    //主进程监听 listenfd 出发accept 回调函数  是否有数据到来
     if (main_reactor->add(main_reactor, serv->serv_sock, TSW_EVENT_READ, tswServer_master_onAccept) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -179,7 +179,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     }
 
     serv->status->accept_count++;
-
+    //reactor 线程取模 根据不同的fd 对应不同的reactor 线程
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
@@ -193,7 +193,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
 
     serv->onConnect(serv->status->accept_count);
-    //有数据到来了 注册数据接受的函数 onReceive
+    //有数据到来了 注册数据接受的函数 onReceive  由reactor线程 接受用户数据
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
