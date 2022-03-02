@@ -23,6 +23,8 @@ extern zend_module_entry study_module_entry;
 #ifdef ZTS
 #include "TSRM.h"
 #endif
+//协成类初始化
+void study_coroutine_util_init();
 
 /**
  * Declare any global variables you may need between the BEGIN and END macros here
