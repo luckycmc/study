@@ -16,8 +16,9 @@
 
 //保存一个IO 状态
 struct sockitem { //
-	int sockfd;
-	int (*callback)(int fd, int events, void *arg);
+	int sockfd;  //对应的socket fd
+
+	int (*callback)(int fd, int events, void *arg); //反应堆对应的回调函数
 
 	char recvbuffer[BUFFER_LENGTH]; //
 	char sendbuffer[BUFFER_LENGTH];
@@ -32,8 +33,6 @@ struct reactor {
 
 	int epfd;
 	struct epoll_event events[512];
-	
-	
 
 };
 
@@ -157,7 +156,19 @@ int accept_cb(int fd, int events, void *arg) {
 	
 	return clientfd;
 }
-
+/**
+  typedef union epoll_data {
+    void* ptr;             //空指针联合体用户可以自定义处理
+    int     fd;            //对应放入fd
+    uint32_t  u32;
+    uint64_t  u64;
+  } epoll_data_t;
+  
+  struct epoll_event {
+    uint32_t  events;    // epoll events
+   epoll_data_t  data;  // user data variable
+ };
+**/
 int main(int argc, char *argv[]) {
 
 	if (argc < 2) {
@@ -198,13 +209,13 @@ int main(int argc, char *argv[]) {
 	
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
 	si->sockfd = sockfd;
-	si->callback = accept_cb;
-	ev.data.ptr = si;
-	
+	si->callback = accept_cb; // 设置对应的回调函数
+	ev.data.ptr = si; //存放用户自定义的功能处理 ptr是一个 void * 指针
+	//对应的socket 加入到epoll 中去
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, sockfd, &ev);
 
 	while (1) {
-
+        //进入到事件循环
 		int nready = epoll_wait(eventloop->epfd, eventloop->events, 512, -1);
 		if (nready < -1) {
 			break;
@@ -217,6 +228,7 @@ int main(int argc, char *argv[]) {
 
 			if (eventloop->events[i].events & EPOLLIN) {
 				//printf("sockitem\n");
+				//还原当前的fd 设置的回调函数并触发
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
 				//出发对应的回调函数 也就是当前fd 用户态设置的回调函数 //保存触发事件的某个文件描述符相关的数据
 				si->callback(si->sockfd, eventloop->events[i].events, si);
@@ -224,7 +236,7 @@ int main(int argc, char *argv[]) {
 			}
 
 			if (eventloop->events[i].events & EPOLLOUT) {
-
+               
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 

@@ -1,6 +1,6 @@
 #include "epoll.h"
 #include "log.h"
-
+//设施socket 节点
 static int setnonblocking(int fd)
 {
     int old_option;
@@ -15,7 +15,7 @@ static int setnonblocking(int fd)
 
     return TSW_OK;
 }
-
+//添加socket 节点
 static int tswReactorEpoll_add(tswReactor *reactor, int fd, int tsw_event_type, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev))
 {
     if (tsw_event_type == TSW_EVENT_READ) {
@@ -34,7 +34,7 @@ static int tswReactorEpoll_add(tswReactor *reactor, int fd, int tsw_event_type, 
 
     return TSW_OK;
 }
-
+//设置socket set节点 
 static int tswReactorEpoll_set(tswReactor *reactor, int fd, int event_type)
 {
     tswReactorEpoll *reactor_epoll_object = reactor->object;
@@ -59,7 +59,7 @@ static int tswReactorEpoll_del(tswReactor *reactor, int fd)
     }
     return TSW_OK;
 }
-
+// wait epol等待节点
 static int tswReactorEpoll_wait(tswReactor *reactor)
 {
     int nfds;

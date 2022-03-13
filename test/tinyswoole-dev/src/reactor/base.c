@@ -13,7 +13,7 @@ int tswReactor_create(tswReactor *reactor, int max_event_num)
     reactor->id = 0;
     return TSW_OK;
 }
-
+//设置回调函数句柄
 int tswReactor_setHandler(tswEvent *tswev, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev))
 {
     tswev->event_handler = tswReactor_handler;
