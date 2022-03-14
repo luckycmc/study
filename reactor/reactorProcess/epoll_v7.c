@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
 
 	eventloop->epfd = epoll_create(1);
 	
-	struct epoll_event ev;
+	struct epoll_event ev; // 对应的事件初始化 为当前的fd设置对应的事件操作系统内置的结构体
 	ev.events = EPOLLIN;
 	
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
