@@ -36,7 +36,7 @@ struct reactor {
 
 };
 
-
+//全局 eventloop
 struct reactor *eventloop = NULL;
 
 
