@@ -49,7 +49,7 @@ int send_cb(int fd, int events, void *arg) {
 
 	send(fd, si->sendbuffer, si->slength, 0); //
 
-	struct epoll_event ev;
+	struct epoll_event ev;  //对应的事件
 	ev.events = EPOLLIN | EPOLLET;
 	//ev.data.fd = clientfd;
 	si->sockfd = fd;
@@ -234,7 +234,7 @@ int main(int argc, char *argv[]) {
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 
 			}
-
+            
 			if (eventloop->events[i].events & EPOLLOUT) {
                
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
