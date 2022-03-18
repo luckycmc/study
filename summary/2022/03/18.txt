@@ -1,0 +1,3 @@
+1.可读是 buffer 中有数据 recv
+2.可写是 buffer 中有空地方可以写数据send
+3.recv  返回为负一  出现错误的时候
