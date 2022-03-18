@@ -48,35 +48,35 @@ typedef struct _tswPipeUnsock tswPipeUnsock;
 
 #define TSW_IPC_MAX_SIZE 8192
 #define TSW_BUFFER_SIZE (TSW_IPC_MAX_SIZE - sizeof(tswDataHead))
-
+// 服务器结构体
 struct _tswServerG {
 	tswServer *serv;
 };
-
+// 线程参数
 struct _tswThreadParam {
 	void *object;
 	int pti; // Used to mark the threads, counting from 0
 };
-
+// raector epoll
 struct _tswReactorEpoll {
 	int epfd;
 	struct epoll_event *events; // for epoll_wait()
 };
 
 #define MAXEVENTS 64
-
+// fd 对应的事件和相应回调函数
 typedef struct _tswEvent {
 	int fd;
 	int event;
 	int (*event_handler)(tswReactor *reactor, tswEvent *tswev); // specific event handler
 } tswEvent;
-
+//数据的头部结构体
 struct _tswDataHead {
 	uint16_t len;	// data len
 	uint16_t from_id; // reactor id
 	uint16_t fd; // session id
 };
-
+//事件数据
 struct _tswEventData {
 	tswDataHead info;
 	char data[TSW_BUFFER_SIZE];
@@ -112,34 +112,34 @@ struct _tswReactor {
 int tswReactor_create(tswReactor *reactor, int max_event_num);
 int tswReactorEpoll_create(tswReactor *reactor, int max_event_num);
 int tswReactor_setHandler(tswEvent *tswev, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev));
-
+//连接
 struct _tswConnection {
 	int connfd;
 	uint32_t session_id;
 	uint32_t from_reactor_id;
 	int serv_sock;
 };
-
+// serssion 
 struct _tswSession {
     uint32_t session_id;
     int connfd;
     uint32_t reactor_id;
 	int serv_sock;
 };
-
+// server 接受连接的个数
 struct _tswServerStatus {
     uint32_t accept_count;
 };
 
 /*
- * in every worker process
+ * in every worker process 全局的
 */
 struct _tswWorkerG {
     uint32_t id; // worker_id
 	int pipe_master;
 	int pipe_worker;
 };
-
+// 创建具体的管道
 struct _tswPipe {
 	void *object;
 
@@ -147,11 +147,11 @@ struct _tswPipe {
     int (*getFd)(tswPipe *pipe, int isWriteFd);
 	int (*write)(tswPipe *pipe, void *send, int length);
 };
-
+//管道读写
 struct _tswPipeUnsock {
     int socks[2]; // socks[0]: worker, socks[1]: master
 };
-
+//管道的创建
 int tswPipeUnsock_create(tswPipe *pipe);
 
 #endif /* TINYSWOOLE_H_ */
