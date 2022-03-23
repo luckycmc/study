@@ -15,7 +15,7 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-
+//工作进程把数据投递给 reactor线程
 int tswWorker_sendToReactor(tswEventData *event_data)
 {
     write(TSwooleWG.pipe_worker, event_data, sizeof(event_data->info) + event_data->info.len);

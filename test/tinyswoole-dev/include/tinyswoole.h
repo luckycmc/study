@@ -104,6 +104,7 @@ struct _tswReactor {
 	
 	int (*wait)(tswReactor *reactor); // Waiting for events
 	int (*free)(tswReactor *reactor); // free the reactor manager
+	//设置事情回调函数
 	int (*setHandler)(tswEvent *tswev, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev)); // set event handler
 
 	uint16_t id; // reactor id

@@ -2,15 +2,15 @@
 #define PROCESS_POOL_H_
 
 #include "tinyswoole.h"
-
+//工作进程
 struct _tswWorker {
 	pid_t pid;
 	int worker_id;
 	int pipe_master;
 	int pipe_worker;
-	tswPipe *pipe_object;
+	tswPipe *pipe_object; //管道
 };
-
+//进程池
 struct _tswProcessPool {
 	int worker_num;
 	tswPipe *pipes;
