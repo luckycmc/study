@@ -18,12 +18,12 @@
 #define SERVER_PORT			8888
 
 typedef int NCALLBACK(int ,int, void*);
-
+//吧IO转换成事件
 struct ntyevent {
 	int fd;
 	int events;
 	void *arg;
-	int (*callback)(int fd, int events, void *arg);
+	int (*callback)(int fd, int events, void *arg); //每一种IO类型对应的回调函数
 	
 	int status; //判断有没有加入到epoll中去
 	char buffer[BUFFER_LENGTH];
@@ -113,15 +113,19 @@ int recv_cb(int fd, int events, void *arg) {
 		nty_event_add(reactor->epfd, EPOLLOUT, ev);
 		
 		
-	} else if (len == 0) {
+	} else if (len == 0) { // 客户端已经关闭了
 
 		close(ev->fd);
 		nty_event_del(reactor->epfd,EPOLLIN,ev);
 		//读完了需要删除掉
 		printf("[fd=%d] pos[%ld], closed\n", fd, ev-reactor->events);
 		 
-	} else {
-
+	} else { //出错误了
+        
+		//情况比较复杂
+		if(errno == EAGAIN || errno == EWOULDBLOCK){
+            continue;
+		}
 		close(ev->fd);
 		printf("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
 		
@@ -130,7 +134,7 @@ int recv_cb(int fd, int events, void *arg) {
 	return len;
 }
 
-
+//发送数据给客户端
 int send_cb(int fd, int events, void *arg) {
 
 	struct ntyreactor *reactor = (struct ntyreactor*)arg;
@@ -155,7 +159,7 @@ int send_cb(int fd, int events, void *arg) {
 
 	return len;
 }
-// 连接accept 客户端
+// 连接accept 客户端 ，也就是当有连接到来的时候
 int accept_cb(int fd, int events, void *arg) {
 
 	struct ntyreactor *reactor = (struct ntyreactor*)arg;
@@ -227,13 +231,13 @@ int init_sock(short port) {
 	return fd;
 }
 
-
+// reactor 初始化
 int ntyreactor_init(struct ntyreactor *reactor) {
 
 	if (reactor == NULL) return -1;
 	memset(reactor, 0, sizeof(struct ntyreactor));
 
-	reactor->epfd = epoll_create(1);
+	reactor->epfd = epoll_create(1); //创建epoll 
 	if (reactor->epfd <= 0) {
 		printf("create epfd in %s err %s\n", __func__, strerror(errno));
 		return -2;
@@ -246,7 +250,7 @@ int ntyreactor_init(struct ntyreactor *reactor) {
 		return -3;
 	}
 }
-
+//关闭reactor 
 int ntyreactor_destory(struct ntyreactor *reactor) {
 
 	close(reactor->epfd);
@@ -334,6 +338,7 @@ int main(int argc, char *argv[]) {
 	int sockfd = init_sock(port);
 
 	struct ntyreactor *reactor = (struct ntyreactor*)malloc(sizeof(struct ntyreactor));
+	//reactor 初始化
 	ntyreactor_init(reactor);
 	
 	ntyreactor_addlistener(reactor, sockfd, accept_cb);
