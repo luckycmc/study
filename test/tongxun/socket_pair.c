@@ -1,4 +1,3 @@
-
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>         
@@ -50,7 +49,7 @@ int main()
                 buf[_s]='\0';
                 printf("child -> father %s\n",buf);
             }
-            
+
             strcpy(buf,"hello world");
             write(fd[0],buf,strlen(buf));
         }              
