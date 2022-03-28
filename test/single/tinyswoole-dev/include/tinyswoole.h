@@ -148,7 +148,7 @@ struct _tswPipe {
 	int (*write)(tswPipe *pipe, void *send, int length);
 };
 //unixsocket 管道
-struct _tswPipeUnsock {
+struct _tswPipeUnsock { //双攻通讯
     int socks[2]; // socks[0]: worker, socks[1]: master
 };
 

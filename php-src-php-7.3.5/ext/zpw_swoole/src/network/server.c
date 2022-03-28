@@ -41,7 +41,6 @@ tswServer *tswServer_new(void)
 }
 
 /*
-  创建reactor 线程
  * Create reactor threads
 */
 static int tswServer_start_proxy(tswServer *serv)
@@ -55,36 +54,34 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-    // 主线程创建reactor
+
     if (tswReactor_create(main_reactor, MAXEVENTS) < 0) {
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-    //创建reactor线程
+
     if (tswReactorThread_create(serv) < 0) {
         tswWarn("%s", "tswReactorThread_create error");
         return TSW_ERR;
     }
-    //reactor线程启动
+
     if (tswReactorThread_start(serv) < 0) {
         tswWarn("%s", "tswReactorThread_start error");
         return TSW_ERR;
     }
-   /*监听socket*/
+
     if (listen(serv->serv_sock, LISTENQ) < 0) {
         tswWarn("%s", strerror(errno));
     }
-    /**启动onStart回调函数**/
     if (serv->onStart != NULL) {
         serv->onStart(serv);
     }
-    //主进程监听 listenfd 出发accept 回调函数  是否有连接的到来 如果有链接的到来 
-    //则有回调函数tswServer_master_onAccept 处理
+
     if (main_reactor->add(main_reactor, serv->serv_sock, TSW_EVENT_READ, tswServer_master_onAccept) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
     }
-    /****主线程进入事件循环 等待客户端连接 ***/
+
     for (;;) {
         int nfds;
 
@@ -93,14 +90,13 @@ static int tswServer_start_proxy(tswServer *serv)
             tswWarn("%s", "master thread epoll wait error");
             return TSW_ERR;
         }
-        
-        for (int i = 0; i < nfds; i++) {
+         int i;
+        for (i = 0; i < nfds; i++) {
             tswReactorThread *tsw_reactor_thread;
             tswReactorEpoll *reactor_epoll_object = main_reactor->object;
-            
+
             tswEvent *tswev = (tswEvent *)reactor_epoll_object->events[i].data.ptr;
             tswDebug("%s", "master thread handler the event");
-            //触发注册的回调函数
             if (tswev->event_handler(main_reactor, tswev) < 0) {
                 tswWarn("%s", "event_handler error");
                 continue;
@@ -112,13 +108,13 @@ static int tswServer_start_proxy(tswServer *serv)
 
     return TSW_OK;
 }
-//服务器正式启动
+
 int tswServer_start(tswServer *serv)
 {
     tswProcessPool *pool;
     tswPipe *pipe;
 
-    serv->onMasterStart(); //主进程回调 也就是主线程回调
+    serv->onMasterStart();
     pool = (tswProcessPool *)malloc(sizeof(tswProcessPool));
     if (pool == NULL) {
         tswWarn("%s", "malloc error");
@@ -128,8 +124,8 @@ int tswServer_start(tswServer *serv)
         tswWarn("%s", "tswProcessPool_create error");
         return TSW_ERR;
     }
-    /**************为每个进程创建读写管道********/
-    for (int i = 0; i < serv->worker_num; i++) {
+    int i;
+    for ( i = 0; i < serv->worker_num; i++) {
         tswPipeUnsock *object;
 
         pipe = &pool->pipes[i];
@@ -142,17 +138,17 @@ int tswServer_start(tswServer *serv)
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
     }
-    /************启动工作进程*************/
-    for (int i = 0; i < serv->worker_num; i++) {
+     
+    for (i = 0; i < serv->worker_num; i++) {
         if (tswServer_create_worker(serv, pool, i) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
             return TSW_ERR;
         }
     }
-   //进程池的相关信息
+
     tswProcessPool_info(pool);
     serv->process_pool = pool;
-    /*************tswServer_start_代理****************/
+
     if (tswServer_start_proxy(serv) < 0) {
         tswWarn("%s", "tswServer_start_proxy error");
         return TSW_ERR;
@@ -180,7 +176,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     }
 
     serv->status->accept_count++;
-    //reactor 线程取模 根据不同的fd 对应不同的reactor 线程
+
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
@@ -194,7 +190,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
 
     serv->onConnect(serv->status->accept_count);
-    //有数据到来了 注册数据接受的函数 onReceive  由reactor线程 接受用户数据 
+
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -202,7 +198,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-//reactor线程接受数据 并且投递给工作进程
+
 int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;
@@ -225,7 +221,7 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
     event_data.info.from_id = reactor->id;
     event_data.info.fd = TSwooleG.serv->connection_list[tswev->fd].session_id;
     worker_id = tswev->fd % TSwooleG.serv->process_pool->worker_num;
-    //reactor线程吧数据投递给工作进程
+
     if (tswReactorThread_sendToWorker(TSwooleG.serv, &event_data, worker_id) < 0) {
         tswWarn("%s", "tswReactorThread_sendToWorker error");
         return TSW_ERR;
@@ -233,7 +229,7 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-//主进程回调
+
 void tswServer_master_onStart(void)
 {
     tswDebug("%s", "master thread started successfully");

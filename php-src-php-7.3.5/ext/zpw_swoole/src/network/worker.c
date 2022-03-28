@@ -6,7 +6,7 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;
     tswEventData event_data;
-
+     printf ("tswev->fd is %d\n", tswev->fd);
     // tswev->fd represents the pipe_worker
     n = read(tswev->fd, &event_data, sizeof(event_data));
     if (event_data.info.len > 0) {
@@ -15,13 +15,13 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-//工作进程把数据投递给 reactor线程
+
 int tswWorker_sendToReactor(tswEventData *event_data)
 {
     write(TSwooleWG.pipe_worker, event_data, sizeof(event_data->info) + event_data->info.len);
     return TSW_OK;
 }
-//工作进程进入事件循环
+
 int tswWorker_loop()
 {
     tswReactor *main_reactor;
@@ -36,7 +36,7 @@ int tswWorker_loop()
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-    //工作进程 注册 接受管道的数据的回调函数
+
     if (main_reactor->add(main_reactor, TSwooleWG.pipe_worker, TSW_EVENT_READ, tswWorker_onPipeReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -50,11 +50,11 @@ int tswWorker_loop()
             tswWarn("%s", "master thread epoll wait error");
             return TSW_ERR;
         }
-        
-        for (int i = 0; i < nfds; i++) {
+        int i;
+        for (i = 0; i < nfds; i++) {
             int connfd;
             tswReactorEpoll *reactor_epoll_object = main_reactor->object;
-            //获取对应注册的事件的回调函数
+
             tswEvent *tswev = (tswEvent *)reactor_epoll_object->events[i].data.ptr;
             tswDebug("worker process [%d] handle the data", TSwooleWG.id);
             if (tswev->event_handler(main_reactor, tswev) < 0) {

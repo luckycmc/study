@@ -8,28 +8,30 @@
 
 tswServerG TSwooleG;
 tswWorkerG TSwooleWG;
-
+/** 
+ * server 结构体
+ * */
 struct _tswServer {
     int serv_sock;
 
-    void (*onStart)(tswServer *serv);
-    void (*onConnect)(int fd);
-    void (*onReceive)(tswServer *serv, tswEventData *event_data);
-    void (*onClose)(void);
+    void (*onStart)(tswServer *serv);  // 服务器启动
+    void (*onConnect)(int fd);        //有连接到来
+    void (*onReceive)(tswServer *serv, tswEventData *event_data); // 接受数据
+    void (*onClose)(void); //服务端关闭
 
-    void (*onMasterStart)(void);
+    void (*onMasterStart)(void);  //主进程启动
 
-    int reactor_num;
+    int reactor_num;  // reactor 线程数
     tswReactorThread *reactor_threads;
-    void (*onReactorStart)(int reactor_id);
+    void (*onReactorStart)(int reactor_id);  //线程启动
 
-    int worker_num;
-    tswProcessPool *process_pool;
+    int worker_num; //工作进程的数量
+    tswProcessPool *process_pool;  // 进程池
 
-    tswConnection *connection_list;
+    tswConnection *connection_list; //连接
     tswSession *session_list;
-    tswServerStatus *status;
-    int reactor_pipe_num;
+    tswServerStatus *status;  //服务器的状态
+    int reactor_pipe_num; //管道的个数
 };
 
 /*
