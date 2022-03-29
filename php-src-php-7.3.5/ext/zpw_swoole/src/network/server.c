@@ -108,7 +108,7 @@ static int tswServer_start_proxy(tswServer *serv)
 
     return TSW_OK;
 }
-
+// 服务器启动
 int tswServer_start(tswServer *serv)
 {
     tswProcessPool *pool;

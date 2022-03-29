@@ -8,7 +8,7 @@
 
 tswServerG TSwooleG;
 tswWorkerG TSwooleWG;
-
+// server 服务器结构体
 struct _tswServer {
     int serv_sock;
 

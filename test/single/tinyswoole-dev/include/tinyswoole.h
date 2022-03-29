@@ -64,7 +64,7 @@ struct _tswReactorEpoll {
 };
 
 #define MAXEVENTS 64
-
+//fd 对应的事件 
 typedef struct _tswEvent {
 	int fd;
 	int event;
