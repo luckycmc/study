@@ -3,7 +3,9 @@
 #include "server.h"
 #include "tinyswoole.h"
 #include "process_pool.h"
-
+/******
+ * reactor 线程的事件循环
+ * */
 static int tswReactorThread_loop(tswThreadParam *param)
 {
     int pti = param->pti;
@@ -11,7 +13,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
     tswReactor *reactor = &(serv->reactor_threads[pti].reactor);
 
     reactor->id = pti;
-    for (;;) {
+    while (1) {
         int nfds;
 
         nfds = reactor->wait(reactor);
@@ -33,7 +35,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
         }
     }
 }
-
+// reacor 线程启动
 int tswReactorThread_create(tswServer *serv)
 {
     tswReactorThread *thread;
@@ -54,7 +56,9 @@ int tswReactorThread_create(tswServer *serv)
 
     return TSW_OK;
 }
-
+/******
+ * reactor 线程启动 并且进入事件循环
+ */
 int tswReactorThread_start(tswServer *serv)
 {
     pthread_t pidt;
@@ -81,16 +85,19 @@ int tswReactorThread_start(tswServer *serv)
 
     return TSW_OK;
 }
-
+/******
+ *  reactor 线程把数据 投递给worker 进程 并加入到事件循环中
+ * */
 int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int worker_id)
 {
-    int pipe_master;
+    int pipe_master;    // 进程下的proc/进程/fd/的 
     tswReactor *reactor;
 
     pipe_master = serv->process_pool->workers[worker_id].pipe_master;
     write(pipe_master, (void *)event_data, sizeof(event_data->info) + event_data->info.len);
 
     reactor = &(serv->reactor_threads[event_data->info.from_id].reactor);
+    //设置对应的回调函数 tswReactorThread_onPipeReceive worker进程处理好的数据 投递给客户端
     if (reactor->add(reactor, pipe_master, TSW_EVENT_READ, tswReactorThread_onPipeReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -98,7 +105,9 @@ int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int
 
     return TSW_OK;
 }
-
+/*******
+ *  接受worker 进程发送过来的数据 投递给用户
+ */
 int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;
