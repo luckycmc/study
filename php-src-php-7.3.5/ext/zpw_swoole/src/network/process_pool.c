@@ -4,9 +4,12 @@
 #include "tinyswoole.h"
 #include "server.h"
 
-
+/**
+进程池内存申请
+*/
 int tswProcessPool_create(tswProcessPool *pool, int worker_num)
-{
+{   
+    /*******可能会存在bug*******/
     pool->workers = (tswWorker *)malloc(sizeof(tswWorker) * worker_num);
     if (pool->workers == NULL) {
         tswWarn("%s", "malloc error");
@@ -21,7 +24,7 @@ int tswProcessPool_create(tswProcessPool *pool, int worker_num)
 
     return TSW_OK;
 }
-
+// worker 进程的创建
 int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id)
 {
     pid_t pid;
@@ -46,7 +49,7 @@ int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id
 	
     return TSW_OK;
 }
-
+// 工作进程的信息
 void tswProcessPool_info(const tswProcessPool *pool)
 {
     tswWorker *worker = pool->workers;
