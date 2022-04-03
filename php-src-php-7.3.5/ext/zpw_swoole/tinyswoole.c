@@ -60,7 +60,9 @@ zend_function_entry tinyswoole_server_methods[] = {
  */
 zend_class_entry tinyswoole_server_ce;
 zend_class_entry *tinyswoole_server_ce_ptr; // Without thread safety protection
-
+/**
+  模块初始化阶段注册对应的类
+**/
 PHP_MINIT_FUNCTION(tinyswoole)
 {
     /**
