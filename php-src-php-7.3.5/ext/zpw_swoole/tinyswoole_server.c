@@ -10,7 +10,7 @@
 zval *php_tsw_server_callbacks[PHP_SERVER_CALLBACK_NUM];
 zend_fcall_info_cache *php_tsw_server_caches[PHP_SERVER_CALLBACK_NUM];
 
-
+// 构造方法的设置
 PHP_METHOD(tinyswoole_server, __construct)
 {
 	char *serv_host;
@@ -46,7 +46,9 @@ PHP_METHOD(tinyswoole_server, __construct)
 	zend_update_property_string(tinyswoole_server_ce_ptr, server_object, ZEND_STRL("ip"), serv_host);
 	zend_update_property_long(tinyswoole_server_ce_ptr, server_object, ZEND_STRL("port"), serv_port);
 }
-
+/**
+  设置服务器的 对应的参数
+**/
 PHP_METHOD(tinyswoole_server, set)
 {
 	zval *zset = NULL;
@@ -82,7 +84,9 @@ PHP_METHOD(tinyswoole_server, set)
 		serv->reactor_num = 4;
 	}
 }
-
+/**
+  服务器接口设置 对应的回调函数
+**/
 PHP_METHOD(tinyswoole_server, on)
 {
 	int i;
@@ -127,7 +131,9 @@ PHP_METHOD(tinyswoole_server, on)
 
 	RETURN_TRUE;
 }
-
+/**
+ 对外接口服务器启动
+**/
 PHP_METHOD(tinyswoole_server, start)
 {
 	zval *sock;
@@ -138,7 +144,9 @@ PHP_METHOD(tinyswoole_server, start)
 
 	tswServer_start(serv);
 }
-
+/**
+  server 发送数据给客户端
+**/
 PHP_METHOD(tinyswoole_server, send)
 {
 	zval *zfd;
@@ -152,7 +160,9 @@ PHP_METHOD(tinyswoole_server, send)
 
 	RETURN_LONG(ret);
 }
-
+/**
+  注册swoole回调函数
+**/
 void php_tswoole_register_callback(tswServer *serv)
 {
 	if (php_tsw_server_callbacks[TSW_SERVER_CB_onStart] != NULL) {
@@ -168,7 +178,9 @@ void php_tswoole_register_callback(tswServer *serv)
 	serv->onMasterStart = tswServer_master_onStart;
 	serv->onReactorStart = tswServer_reactor_onStart;
 }
-
+/**
+  当swoole启动的时候
+*/
 void php_tswoole_onStart(tswServer *serv)
 {
 	zval  retval;
