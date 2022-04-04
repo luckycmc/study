@@ -115,7 +115,7 @@ int tswServer_start(tswServer *serv)
     tswProcessPool *pool;
     tswPipe *pipe;
 
-    serv->onMasterStart();
+    serv->onMasterStart(); //回调onMaster进程回调
     pool = (tswProcessPool *)malloc(sizeof(tswProcessPool));
     if (pool == NULL) {
         tswWarn("%s", "malloc error");
@@ -135,12 +135,12 @@ int tswServer_start(tswServer *serv)
             tswWarn("%s", "tswPipeUnsock_create error");
             return TSW_ERR;
         }
-        //主进程 和工作进程
+        //主进程 和工作进程 管道的创建  用于进程之间的通讯
         pool->workers[i].pipe_master = pipe->getFd(pipe, TSW_PIPE_MASTER);
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
     }
-     
+    //工作进程的创建  
     for (i = 0; i < serv->worker_num; i++) {
         if (tswServer_create_worker(serv, pool, i) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
@@ -148,7 +148,7 @@ int tswServer_start(tswServer *serv)
         }
     }
 
-    tswProcessPool_info(pool);
+    tswProcessPool_info(pool); //进程池的相关信息
     serv->process_pool = pool;
 
     if (tswServer_start_proxy(serv) < 0) {
@@ -172,6 +172,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     tswReactor *sub_reactor;
 
     len = sizeof(cliaddr);
+    //接受客户端的连接
     connfd = accept(tswev->fd, (struct sockaddr *)&cliaddr, &len);
     if (connfd < 0) {
         tswWarn("%s", "accept error");
@@ -179,7 +180,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     }
 
     serv->status->accept_count++;
-
+   //取模的方式获取对应的reactor 去处理
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
