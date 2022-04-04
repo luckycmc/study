@@ -35,7 +35,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
         }
     }
 }
-// reacor 线程启动
+// reacor 线程启动 根据reactor线程创建对应的 reactor模型
 int tswReactorThread_create(tswServer *serv)
 {
     tswReactorThread *thread;
@@ -77,6 +77,7 @@ int tswReactorThread_start(tswServer *serv)
         param->object = serv;
 
         serv->onReactorStart(i);
+        //创建对应的线程 进入事件循环
         if (pthread_create(&pidt, NULL, (void * (*)(void *))tswReactorThread_loop, (void *)param) < 0) {
             tswWarn("%s", "pthread_create error");
         }
