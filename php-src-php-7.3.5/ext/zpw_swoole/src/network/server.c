@@ -41,6 +41,7 @@ tswServer *tswServer_new(void)
 }
 
 /*
+  创建reactor线程
  * Create reactor threads
 */
 static int tswServer_start_proxy(tswServer *serv)
@@ -54,17 +55,17 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-
+    // main reactor 的创建
     if (tswReactor_create(main_reactor, MAXEVENTS) < 0) {
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-
+    //reactor线程的创建
     if (tswReactorThread_create(serv) < 0) {
         tswWarn("%s", "tswReactorThread_create error");
         return TSW_ERR;
     }
-
+    //reactor线程的启动
     if (tswReactorThread_start(serv) < 0) {
         tswWarn("%s", "tswReactorThread_start error");
         return TSW_ERR;
@@ -76,7 +77,7 @@ static int tswServer_start_proxy(tswServer *serv)
     if (serv->onStart != NULL) {
         serv->onStart(serv);
     }
-
+    //主线程进入事件循环 监听 listen fd 回调 accpet的函数 
     if (main_reactor->add(main_reactor, serv->serv_sock, TSW_EVENT_READ, tswServer_master_onAccept) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -94,7 +95,7 @@ static int tswServer_start_proxy(tswServer *serv)
         for (i = 0; i < nfds; i++) {
             tswReactorThread *tsw_reactor_thread;
             tswReactorEpoll *reactor_epoll_object = main_reactor->object;
-
+            //获取对的fd 事件然后 触发对应的回调函数
             tswEvent *tswev = (tswEvent *)reactor_epoll_object->events[i].data.ptr;
             tswDebug("%s", "master thread handler the event");
             if (tswev->event_handler(main_reactor, tswev) < 0) {
@@ -104,7 +105,7 @@ static int tswServer_start_proxy(tswServer *serv)
         }
     }
 
-    close(serv->serv_sock);
+    close(serv->serv_sock); // 关闭listenfd
 
     return TSW_OK;
 }
@@ -129,11 +130,12 @@ int tswServer_start(tswServer *serv)
         tswPipeUnsock *object;
 
         pipe = &pool->pipes[i];
-
+        //通讯管道的创建
         if (tswPipeUnsock_create(pipe) < 0) {
             tswWarn("%s", "tswPipeUnsock_create error");
             return TSW_ERR;
         }
+        //主进程 和工作进程
         pool->workers[i].pipe_master = pipe->getFd(pipe, TSW_PIPE_MASTER);
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
@@ -158,6 +160,7 @@ int tswServer_start(tswServer *serv)
 }
 
 /*
+   reactor 线程 来接受对应的 连接  accept
  * reactor: Used to manage handle in tswEvent
 */
 int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
@@ -188,9 +191,9 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].connfd = connfd;
     serv->session_list[serv->status->accept_count].reactor_id = sub_reactor->id;
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
-
+    //触发对应的连接事件
     serv->onConnect(serv->status->accept_count);
-
+   /***注册到对应的 sub_reactor reactor线程中去**/
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -221,7 +224,7 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
         free(tswev);
         reactor->event_num -= 1;
         return TSW_OK;
-    }else if (n < 0){
+    }else if (n < 0){  //出现错误
     
         rerturn TSW_ERR;
     }
