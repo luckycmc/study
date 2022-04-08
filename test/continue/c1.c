@@ -31,6 +31,7 @@
      context_t中指向的uc_link.如果uc_link为NULL, 则线程退出。
    
     简单说来，  getcontext获取当前上下文，setcontext设置当前上下文，
+
      swapcontext切换上下文，makecontext创建一个新的上下文。
    
 */
@@ -40,28 +41,36 @@
       协成：主动让出控制权，上下文切换，栈维护要自己搞
 
     因此协成实现的关键
+
        上下文的维护
        栈的维护  栈是C语言运行的基础
        栈 ：函数内部的临时变量，参数，返回值
+       栈基  栈指针 esp ebp ip 指针 和栈的大小
 */
+void test_go()
+{
+    printf("Testing\n");
+}
+
 int  main()
 {
      ucontext_t context; //创建协成变量
 
      //保存当前协成的上下文
-     getcontext(&context);
+     getcontext(&context);  // 1.执行
      puts("Hello world");
      printf("协成切换\n");
      //模拟切换
      sleep(1);
-      printf("协成恢复\n");
+     printf("协成恢复\n");
      //恢复当前协成的上下文
      /**
       。其实是程序通过getcontext先保存了一个上下文,然后输出"Hello world",
       在通过setcontext恢复到getcontext的地方，重新执行代码，
       所以导致程序不断的输出”Hello world“
      */
-     setcontext(&context);
+     //test_go();
+     setcontext(&context); // 恢复到1 执行的地方
      return 0;
 
 }
