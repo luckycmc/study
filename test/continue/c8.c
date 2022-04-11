@@ -3,10 +3,11 @@
 #include <unistd.h>
 #include <ucontext.h>
 
-ucontext_t ctx_main, ctx_f1, ctx_f2;
+ucontext_t ctx_main, ctx_f1, ctx_f2; //创建两个结构体变量
 
 void fun1( void ) {
 	printf("fun1() start\n");
+	sleep(1);
     //切换执行顺序
 	swapcontext(&ctx_f1, &ctx_f2);//切换至f2上下文
 	printf("fun1() end\n");
