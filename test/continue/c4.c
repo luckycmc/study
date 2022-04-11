@@ -40,7 +40,7 @@ typedef struct env{
       ucontext_t ucon;  //协成上下文结构体
       struct env *next,*prev;  //前置和后置节点
       int task_id ;//协成id
-      int run_status;  //协成的运行环境
+      int run_status;  //协成的运行状态
 
 }env;
 
@@ -66,7 +66,7 @@ static void task(funType func){
      
        env *node = (env *)malloc(sizeof(env)); //创建指向空间
 
-       node->task_id = pid++;
+       node->task_id = pid++; //任务id+1
        node->func    = func; //执行对应的回调函数
        node->run_status = RUN_START ;// 执行 状态
 
@@ -93,7 +93,7 @@ static void task(funType func){
        //建立一个新的上下文
        makecontext(&node->ucon,exec,0); 
 }
-//执行具体的协成
+//执行具体的协成 以链表的方式执行和存放
 static int run()
 {
      //设置当前协成的辅助节点
@@ -121,7 +121,7 @@ static int run()
                  }
                  //释放对应的堆栈
                  free(current_node->ucon.uc_stack.ss_sp);
-                 free(context_t中指向的uc_link);
+                 free("context_t中指向的uc_link");
           }else{
               
                 current_list = current_list->next; //指针节点后移
