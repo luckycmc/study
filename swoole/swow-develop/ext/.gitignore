@@ -1,0 +1,57 @@
+# ide
+.idea
+.project
+.cproject
+.settings
+
+# builder
+.autotools
+acinclude.m4
+aclocal.m4
+autom4te.cache
+build
+install-sh
+libtool
+ltmain.sh
+missing
+mkinstalldirs
+modules
+*.la
+*lo
+*loT
+*.a
+*.o
+*.dep
+*.deps
+*.libs
+*.log
+Makefile*
+tmp-php.ini
+x64/**
+x86/**
+
+# tests
+run-tests.php
+run-tests-x.php
+/tests/*/*
+/tests/*/*/*
+!/tests/*/*/
+!/tests/*/*.phpt
+!/tests/*/*.inc
+!/tests/*/*/*.phpt
+!/tests/*/*/*.inc
+!/tests/include/*
+!/tests/include/lib/*
+
+# config
+config*
+!config.m4
+!config.w32
+
+# others
+/debug
+
+# clangd
+**/.cache
+**/compile_commands.json
+**/compile_flags.txt

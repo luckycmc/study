@@ -1,0 +1,101 @@
+{
+    "name": "swow/swow",
+    "description": "Coroutine-based concurrency library for PHP",
+    "keywords": [
+        "swow",
+        "coroutine",
+        "async",
+        "event",
+        "http",
+        "websocket",
+        "server",
+        "client",
+        "libcat",
+        "libuv"
+    ],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "twose",
+            "email": "twosee@php.net"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/swow/swow"
+    },
+    "require": {
+        "php": ">=8.0",
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "3.4.*",
+        "phan/phan": "^5.3",
+        "phpstan/phpstan": "^1.4",
+        "phpunit/phpunit": "=9.5.16",
+        "rector/rector": "^0.12.8",
+        "vimeo/psalm": "^4.22"
+    },
+    "replace": {
+        "swow/swow-library": "*",
+        "swow/swow-stub": "*",
+        "swow/swow-util": "*",
+        "swow/php-stub-generator": "*"
+    },
+    "suggest": {
+        "ext-swow": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Swow\\": "lib/swow-library/src/",
+            "Swow\\Util\\": "lib/swow-util/src/"
+        },
+        "files": [
+            "lib/swow-library/src/functions.php",
+            "lib/swow-library/src/Debug/functions.php",
+            "lib/swow-util/src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SwowTest\\": "lib/swow-library/tests"
+        },
+        "classmap": [
+            "lib/php-stub-generator/src"
+        ]
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "scripts": {
+        "swow-php": [ "@php tools/php-wrapper.php" ],
+        "cs-check": [ "@php vendor/bin/php-cs-fixer fix --dry-run --diff" ],
+        "cs-fix": [ "@php vendor/bin/php-cs-fixer fix" ],
+        "rector": [ "@php vendor/bin/rector process --config=tools/rector.php" ],
+        "phan": [ "@swow-php vendor/bin/phan" ],
+        "phpstan": [ "@php vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon" ],
+        "psalm": [ "@php vendor/bin/psalm" ],
+        "sync-extension": [ "@php -n tools/sync-extension.php" ],
+        "build-extension": [ "@php bin/swow-builder" ],
+        "rebuild-extension": [ "@build-extension --rebuild" ],
+        "rebuild-debug-extension": [ "@build-extension --rebuild --debug" ],
+        "install-extension": [ "@build-extension --install" ],
+        "install-debug-extension": [ "@install-extension --debug" ],
+        "reinstall-extension": [ "@rebuild-extension --install" ],
+        "reinstall-debug-extension": [ "@rebuild-debug-extension --install" ],
+        "test-extension": [ "@php tools/test-extension.php" ],
+        "test-library": [ "@swow-php vendor/bin/phpunit --configuration lib/swow-library lib/swow-library" ],
+        "test": [ "@test-extension", "@test-library" ],
+        "gen-stub": [ 
+            "@swow-php lib/php-stub-generator/bin/gen-stub.php --noinspection --stub-file=lib/swow-stub/src/Swow.php swow lib/swow-stub/src/Swow.php",
+            "@php tools/stub-fixer.php lib/swow-stub/src/Swow.php"
+        ],
+        "update-arginfo": [ "@php -n lib/php-stub-generator/bin/update-arginfo.php --cache-path=ext/build --stub-file=lib/swow-stub/src/Swow.php swow ext/src ext/build" ],
+        "update-mime-types": [ "@php -n tools/update-mime-types.php" ],
+        "split": [ "@php -n tools/split.php" ]
+    },
+    "bin": [
+        "bin/swow-builder"
+    ]
+}
