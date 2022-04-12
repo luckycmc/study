@@ -21,7 +21,7 @@
            uc_mcontext保存的上下文的特定机器表示，包括调用线程的特定寄存器等。
     2.对应的操作函数
       int getcontext(ucontext_t *ucp);
-      初始化ucp结构体，将当前的上下文保存到ucp中
+      初始化ucp结构体，将当前的上下文保存到cpu中
 
      int setcontext(const ucontext_t *ucp);
      设置当前的上下文为ucp，setcontext的上下文ucp应该通过getcontext或者makecontext取得，
@@ -70,7 +70,7 @@ int  main()
       所以导致程序不断的输出”Hello world“
      */
      //test_go();
-     setcontext(&context); // 恢复到1 执行的地方
+     setcontext(&context); // 恢复到1 执行的地方执行流跳转到对应的之前保存的地方
      return 0;
 
 }

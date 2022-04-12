@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <ucontext.h>
 
-ucontext_t ctx_main, ctx_f1, ctx_f2; //创建两个结构体变量
+ucontext_t ctx_main, ctx_f1, ctx_f2; //创建三个个结构体变量
 
 void fun1( void ) {
 	printf("fun1() start\n");
@@ -24,11 +24,11 @@ int main( void ) {
 	char stack1[1024*8];
 	char stack2[1024*8];
 	
-	getcontext(&ctx_f1);
-	getcontext(&ctx_f2);
+	getcontext(&ctx_f1); // 获取ctx_f1上下文
+	getcontext(&ctx_f2); // 获取ctx_f2上下文
    /*******************修改对应的上下文信息 start********************/
-	ctx_f1.uc_stack.ss_sp    = stack1;
-	ctx_f1.uc_stack.ss_size  = 1024*8;
+	ctx_f1.uc_stack.ss_sp    = stack1; // 栈的自制空间
+	ctx_f1.uc_stack.ss_size  = 1024*8; //栈的大小
 	ctx_f1.uc_stack.ss_flags = 0;
 	ctx_f1.uc_link = &ctx_f2;//f1设置后继上下文为f2
 	makecontext(&ctx_f1, fun1, 0);//设置入口函数
