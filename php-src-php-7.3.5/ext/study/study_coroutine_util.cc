@@ -31,7 +31,7 @@ PHP_METHOD(study_coroutine_util,create)
 
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
-     
+       //静态和公有的属性
        PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_FE_END
 };
