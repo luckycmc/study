@@ -3,17 +3,17 @@ using namespace std;
 class Box
 {
 	public:
-		double  length;         //�� 
-		double  breadth;        // ����
-		double   height;         // �߶�
-		//������Ա����
+		double  length;         //锟斤拷 
+		double  breadth;        // 锟斤拷锟斤拷
+		double   height;         // 锟竭讹拷
+		//锟斤拷锟斤拷锟斤拷员锟斤拷锟斤拷
 		double getVolue(void);
 		void setLength( double len );
         void setBreadth( double bre );
         void setHeighth( double hei ); 
 }; 
 
-//��Ա�����Ķ���
+//锟斤拷员锟斤拷锟斤拷锟侥讹拷锟斤拷
 
 double Box::getVolue(void)
 {
@@ -42,6 +42,6 @@ int main()
 	b1.setHeighth(2.0);
 	b1.setLength(2.0); 
 	volume = b1.getVolue();
-	cout << "Box1 �������" << volume <<endl;
+	cout << "Box1 的体积是" << volume <<endl;
 }
 
