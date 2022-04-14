@@ -30,12 +30,12 @@ void Coroutine::set_task(void *_task)
 {
     task = _task;
 }
-
+//创建协成
 long Coroutine::create(coroutine_func_t fn, void* args)
 {
-    return (new Coroutine(fn, args))->run();
+    return (new Coroutine(fn, args))->run();//执行对应的协成函数
 }
-
+//让出当前协成
 void Coroutine::yield()
 {
     assert(current == this);
@@ -43,7 +43,7 @@ void Coroutine::yield()
     current = origin;
     ctx.swap_out();
 }
-
+//恢复对应的协成
 void Coroutine::resume()
 {
     assert(current != this);
