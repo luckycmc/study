@@ -3,7 +3,7 @@
 
 using study::PHPCoroutine;
 using study::Coroutine;
-
+//把获取的当前协程存入一个无序字典user_yield_coros里面。
 static std::unordered_map<long, Coroutine *> user_yield_coros;
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_void, 0, 0, 0)
@@ -42,15 +42,22 @@ PHP_FUNCTION(study_coroutine_create)
     long cid = PHPCoroutine::create(&fcc, fci.param_count, fci.params);
     RETURN_LONG(cid);
 }
-
-PHP_METHOD(study_coroutine_util, yield)
+/**
+   当前协成让出
+ */
+PHP_METHOD(study_coroutine_util,yield)
 {
-    Coroutine* co = Coroutine::get_current();
-    user_yield_coros[co->get_cid()] = co;
-    co->yield();
-    RETURN_TRUE;
+     //获取当前协成的堆栈信息
+     Coroutine* co = Coroutine::get_current();
+     user_yield_coros[co->get_cid()] = co; //保存当前协成的的信息
+     co->yield(); //让出当前协成
+     RETURN_TRUE;
 }
+/**
 
+  恢复当前协成
+ * 
+ */
 PHP_METHOD(study_coroutine_util, resume)
 {
     zend_long cid = 0;
@@ -59,19 +66,22 @@ PHP_METHOD(study_coroutine_util, resume)
         Z_PARAM_LONG(cid)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
-    auto coroutine_iterator = user_yield_coros.find(cid);
+    auto coroutine_iterator = user_yield_coros.find(cid); //自动查找协成对应的堆栈
     if (coroutine_iterator == user_yield_coros.end())
     {
-        php_error_docref(NULL, E_WARNING, "resume error");
+        php_error_docref(NULL, E_WARNING, "resume error");  //找不到错误提示
         RETURN_FALSE;
     }
 
     Coroutine* co = coroutine_iterator->second;
-    user_yield_coros.erase(cid);
+    user_yield_coros.erase(cid); //清除当前的信息
     co->resume();
     RETURN_TRUE;
 }
-
+/**
+ 获取当期协成的id
+ * 
+ */
 PHP_METHOD(study_coroutine_util, getCid)
 {
     Coroutine* co = Coroutine::get_current();
@@ -113,7 +123,10 @@ PHP_METHOD(study_coroutine_util, defer)
 
     PHPCoroutine::defer(defer_fci_fcc);
 }
-
+/**
+ * 模拟IO阻塞
+ * 
+ */
 PHP_METHOD(study_coroutine_util, sleep)
 {
     double seconds;
@@ -131,11 +144,13 @@ PHP_METHOD(study_coroutine_util, sleep)
     PHPCoroutine::sleep(seconds);
     RETURN_TRUE;
 }
-
+//当前类对应的操作方法
 static const zend_function_entry study_coroutine_util_methods[] =
-{
+{   
     ZEND_FENTRY(create, ZEND_FN(study_coroutine_create), arginfo_study_coroutine_create, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    //注册yield 方法
     PHP_ME(study_coroutine_util, yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    //注册 resume 方法
     PHP_ME(study_coroutine_util, resume, arginfo_study_coroutine_resume, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(study_coroutine_util, getCid, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(study_coroutine_util, isExist, arginfo_study_coroutine_isExist, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
@@ -145,6 +160,8 @@ static const zend_function_entry study_coroutine_util_methods[] =
 };
 
 /**
+ * 
+ *Study\Coroutine 类的注册
  * Define zend class entry
  */
 zend_class_entry study_coroutine_ce;
