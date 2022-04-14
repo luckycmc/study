@@ -11,6 +11,8 @@
         "php.h": "c",
         "process_pool.h": "c",
         "php_tinyswoole.h": "c",
-        "server.h": "c"
+        "server.h": "c",
+        "context.h": "c",
+        "asm_context.h": "c"
     }
 }

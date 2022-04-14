@@ -1,6 +1,8 @@
 #include "study_coroutine.h"
+#include "coroutine.h"
 
 using Study::PHPCoroutine;
+using Study::Coroutine;
 
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv)
 {
@@ -29,7 +31,7 @@ void PHPCoroutine::save_vm_stack(php_coro_task *task)
       task->execute_data = EG(current_execute_data);
 }
 
-php_coro_task PHPCoroutin::main_task = {0};
+php_coro_task PHPCoroutine::main_task = {0};
 //获取当前PHP 的协程栈
 php_coro_task* PHPCoroutine::get_task()
 {   
