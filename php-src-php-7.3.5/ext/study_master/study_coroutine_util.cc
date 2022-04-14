@@ -66,10 +66,10 @@ PHP_METHOD(study_coroutine_util, resume)
         Z_PARAM_LONG(cid)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
-    auto coroutine_iterator = user_yield_coros.find(cid); //自动查找协成对应的堆栈
-    if (coroutine_iterator == user_yield_coros.end())
+    auto coroutine_iterator = user_yield_coros.find(cid); //自动查找协成的堆栈
+    if (coroutine_iterator == user_yield_coros.end())  //找不到
     {
-        php_error_docref(NULL, E_WARNING, "resume error");  //找不到错误提示
+        php_error_docref(NULL, E_WARNING, "resume error"); 
         RETURN_FALSE;
     }
 
@@ -84,14 +84,17 @@ PHP_METHOD(study_coroutine_util, resume)
  */
 PHP_METHOD(study_coroutine_util, getCid)
 {
-    Coroutine* co = Coroutine::get_current();
+    Coroutine* co = Coroutine::get_current(); //获取当前的协程的信息
     if (co == nullptr)
     {
         RETURN_LONG(-1);
     }
-    RETURN_LONG(co->get_cid());
+    RETURN_LONG(co->get_cid());// 当前协成对应的id
 }
-
+/**
+ 当前的协程是否存在
+ * 
+ */
 PHP_METHOD(study_coroutine_util, isExist)
 {
     zend_long cid = 0;
