@@ -154,7 +154,7 @@ void PHPCoroutine::on_resume(void *arg)
     save_task(current_task);
     restore_task(task);
 }
-
+//关闭当前协成
 void PHPCoroutine::on_close(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
@@ -183,7 +183,7 @@ inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
     EG(vm_stack_page_size) = task->vm_stack_page_size;
     EG(current_execute_data) = task->execute_data;
 }
-
+// 延时执行对应的协程函数
 void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
 {
     php_coro_task *task = (php_coro_task *)get_task();
@@ -193,7 +193,7 @@ void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
     }
     task->defer_tasks->push(defer_fci_fcc);
 }
-
+//模拟IO阻塞
 int PHPCoroutine::sleep(double seconds)
 {
     Coroutine::sleep(seconds);
