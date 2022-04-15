@@ -13,7 +13,7 @@ struct php_study_fci_fcc
     zend_fcall_info fci;
     zend_fcall_info_cache fcc;
 };
-//PHP的参数
+//PHP的参数 结构体
 struct php_coro_args
 {
     zend_fcall_info_cache *fci_cache;

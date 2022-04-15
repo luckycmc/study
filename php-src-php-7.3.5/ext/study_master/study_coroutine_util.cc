@@ -108,7 +108,7 @@ PHP_METHOD(study_coroutine_util, isExist)
     is_exist = (coroutine_iterator != Coroutine::coroutines.end());
     RETURN_BOOL(is_exist);
 }
-
+//注册defer h函数
 PHP_METHOD(study_coroutine_util, defer)
 {
     zend_fcall_info fci = empty_fcall_info;
