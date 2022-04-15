@@ -14,7 +14,7 @@ void PHPCoroutine::init()
     Coroutine::set_on_resume(on_resume);
     Coroutine::set_on_close(on_close);
 }
-
+//创建PHP 协成函数的执行
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv)
 {
     php_coro_args php_coro_args;
@@ -25,7 +25,7 @@ long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval 
 
     return Coroutine::create(create_func, (void*) &php_coro_args);
 }
-
+//获取当前PHP栈的信息
 php_coro_task* PHPCoroutine::get_task()
 {
     php_coro_task *task = (php_coro_task *) Coroutine::get_current_task();
@@ -39,7 +39,7 @@ void PHPCoroutine::save_task(php_coro_task *task)
 {
     save_vm_stack(task);
 }
-
+//保存PHP栈的信息
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
     task->vm_stack_top = EG(vm_stack_top);
@@ -122,7 +122,7 @@ void PHPCoroutine::create_func(void *arg)
 
     zval_ptr_dtor(retval);
 }
-
+// PHP栈初始化
 void PHPCoroutine::vm_stack_init(void)
 {
     uint32_t size = DEFAULT_PHP_STACK_PAGE_SIZE;
@@ -138,15 +138,15 @@ void PHPCoroutine::vm_stack_init(void)
     EG(vm_stack_end) = EG(vm_stack)->end;
     EG(vm_stack_page_size) = size;
 }
-
+//切换协成
 void PHPCoroutine::on_yield(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
     php_coro_task *origin_task = get_origin_task(task);
-    save_task(task);
-    restore_task(origin_task);
+    save_task(task);  //保存当前的栈
+    restore_task(origin_task); //加载之前的栈
 }
-
+//恢复协成
 void PHPCoroutine::on_resume(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
