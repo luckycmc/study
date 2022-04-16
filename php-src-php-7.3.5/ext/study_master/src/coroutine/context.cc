@@ -20,8 +20,8 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         stError("%s", e.what());
     }
 
-    void* sp = (void*) ((char*) stack_ + stack_size_);
-    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
+    void* sp = (void*) ((char*) stack_ + stack_size_);  // sp指针
+    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func); //创建协成的上下文
 }
 //析构方法
 Context::~Context()
@@ -47,8 +47,8 @@ bool Context::swap_out()
 //执行用户的函数
 void Context::context_func(void *arg)
 {
-    Context *_this = (Context *) arg;
-    _this->fn_(_this->private_data_);
+    Context *_this = (Context *) arg;  //参数
+    _this->fn_(_this->private_data_);  //对应用户函数
     _this->end_ = true;
-    _this->swap_out();
+    _this->swap_out(); //协成切换
 }
