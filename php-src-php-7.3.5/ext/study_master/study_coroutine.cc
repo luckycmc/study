@@ -21,8 +21,8 @@ long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval 
     php_coro_args.fci_cache = fci_cache;
     php_coro_args.argv = argv;
     php_coro_args.argc = argc;
-    save_task(get_task());
-
+    save_task(get_task()); //保存当前协成的信息 也就是主协成
+    //创建协成
     return Coroutine::create(create_func, (void*) &php_coro_args);
 }
 //获取当前PHP栈的信息

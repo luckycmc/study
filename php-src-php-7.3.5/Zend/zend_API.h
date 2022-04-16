@@ -38,15 +38,18 @@ typedef struct _zend_function_entry {
 	uint32_t num_args;
 	uint32_t flags;
 } zend_function_entry;
-
+/**
+ * 
+ *函数结构体 
+ */
 typedef struct _zend_fcall_info {
-	size_t size;
-	zval function_name;
-	zval *retval;
-	zval *params;
-	zend_object *object;
-	zend_bool no_separation;
-	uint32_t param_count;
+	size_t size;            // size是结构体zend_fcall_info的大小，通过sizeof(fci)计算得到。
+	zval function_name;     //function_name是函数的名字
+	zval *retval;            //retval是用来存放函数返回值的。
+	zval *params;            //params用来存放我们需要传递给函数的参数，它是一个zval数组。
+	zend_object *object;     // object当这个函数是属于某个类的时候会用到，指向这个类。
+	zend_bool no_separation; //no_separation表示zend_call_function内部要不要释放我们的参数引用计数（
+	uint32_t param_count; 是传递给函数的参数个数。
 } zend_fcall_info;
 
 typedef struct _zend_fcall_info_cache {

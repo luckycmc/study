@@ -157,8 +157,11 @@ static const zend_function_entry study_coroutine_util_methods[] =
     PHP_ME(study_coroutine_util, resume, arginfo_study_coroutine_resume, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     //注册getCid()获取当前的属性
     PHP_ME(study_coroutine_util, getCid, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    //注册协成方法是否存在
     PHP_ME(study_coroutine_util, isExist, arginfo_study_coroutine_isExist, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    // defer 方法
     PHP_ME(study_coroutine_util, defer, arginfo_study_coroutine_defer, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    //模拟IO阻塞
     PHP_ME(study_coroutine_util, sleep, arginfo_study_coroutine_sleep, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
@@ -176,5 +179,6 @@ void study_coroutine_util_init()
     PHPCoroutine::init();
     INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
     study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
+    //注册短命名函数
     zend_register_class_alias("SCo", study_coroutine_ce_ptr);
 }
