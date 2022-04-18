@@ -3,12 +3,13 @@ Make sure that the comment is aligned:
 [  --enable-study           Enable study support])
 
 # AC_CANONICAL_HOST
-
+## 后期使用
+###STUDY_SHARED_LIBADD = -Wl,-rpath,/usr/local/lib/ -L/usr/local/lib/ -luv
 if test "$PHP_STUDY" != "no"; then
-
-    # PHP_ADD_LIBRARY_WITH_PATH(uv, /usr/local/lib/, STUDY_SHARED_LIBADD)
-    # PHP_SUBST(STUDY_SHARED_LIBADD)
-
+    ########新增加的2行
+        # PHP_ADD_LIBRARY_WITH_PATH(uv, /usr/local/lib/, STUDY_SHARED_LIBADD)
+        # PHP_SUBST(STUDY_SHARED_LIBADD)
+    ########新增加的2行
     PHP_ADD_LIBRARY(pthread)
     STUDY_ASM_DIR="thirdparty/boost/asm/"
     CFLAGS="-Wall -pthread $CFLAGS"

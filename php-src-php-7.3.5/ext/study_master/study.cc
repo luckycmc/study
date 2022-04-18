@@ -80,6 +80,7 @@ PHP_MINIT_FUNCTION(study)
     study_coroutine_util_init();
     study_coro_server_init(module_number);
     study_coro_channel_init();
+     //socket 类的创建
     study_coro_socket_init(module_number);
     study_runtime_init();
     return SUCCESS;

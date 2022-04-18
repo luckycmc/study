@@ -161,7 +161,7 @@ static PHP_METHOD(study_coro_socket, accept)
     ZVAL_OBJ(return_value, &(conn_socket_t->std));
     zend_update_property_long(study_coro_socket_ce_ptr, return_value, ZEND_STRL("fd"), conn_socket_t->socket->get_fd());
 }
-
+//socket 接受数据
 static PHP_METHOD(study_coro_socket, recv)
 {
     ssize_t ret;
@@ -193,7 +193,7 @@ static PHP_METHOD(study_coro_socket, recv)
     Socket::read_buffer[ret] = '\0';
     RETURN_STRING(Socket::read_buffer);
 }
-
+// socket 发送数据
 static PHP_METHOD(study_coro_socket, send)
 {
     ssize_t ret;
@@ -216,7 +216,7 @@ static PHP_METHOD(study_coro_socket, send)
     }
     RETURN_LONG(ret);
 }
-
+//socket 关闭
 static PHP_METHOD(study_coro_socket, close)
 {
     int ret;
