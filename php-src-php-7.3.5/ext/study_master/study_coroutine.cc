@@ -21,7 +21,7 @@ long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval 
     php_coro_args.fci_cache = fci_cache;
     php_coro_args.argv = argv;
     php_coro_args.argc = argc;
-    save_task(get_task()); //保存当前协成的信息 也就是主协成
+    save_task(get_task()); //保存当前协成的信息 也就是主协成的上下文
     //创建协成
     return Coroutine::create(create_func, (void*) &php_coro_args);
 }
@@ -48,7 +48,7 @@ void PHPCoroutine::save_vm_stack(php_coro_task *task)
     task->vm_stack_page_size = EG(vm_stack_page_size);
     task->execute_data = EG(current_execute_data);
 }
-
+//创建用户空间函数
 void PHPCoroutine::create_func(void *arg)
 {
     int i;

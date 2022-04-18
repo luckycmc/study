@@ -3,10 +3,12 @@
 
 using study::Coroutine;
 
-Coroutine* Coroutine::current = nullptr;
-long Coroutine::last_cid = 0;
+Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
+long Coroutine::last_cid = 0;   //初始化栈帧为0
+// 设置map 模板
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
-size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE;
+size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE; //栈的大小
+/**协成切换的指针函数**/
 st_coro_on_swap_t Coroutine::on_yield = nullptr;
 st_coro_on_swap_t Coroutine::on_resume = nullptr;
 st_coro_on_swap_t Coroutine::on_close = nullptr;
@@ -15,12 +17,12 @@ void* Coroutine::get_current_task()
 {
     return current ? current->get_task() : nullptr;
 }
-
+// 获取当前PHP 栈
 void* Coroutine::get_task()
 {
     return task;
 }
-
+// 获取当前协成
 Coroutine* Coroutine::get_current()
 {
     return current;
@@ -28,7 +30,7 @@ Coroutine* Coroutine::get_current()
 
 void Coroutine::set_task(void *_task)
 {
-    task = _task;
+    task = _task; //设置协成
 }
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)

@@ -28,7 +28,7 @@ Context::~Context()
 {
     if (swap_ctx_)
     {
-        delete[] stack_;
+        delete[] stack_; //释放当前栈的内存空间
         stack_ = nullptr;
     }
 }
@@ -49,6 +49,6 @@ void Context::context_func(void *arg)
 {
     Context *_this = (Context *) arg;  //参数
     _this->fn_(_this->private_data_);  //对应用户函数
-    _this->end_ = true;
+    _this->end_ = true; //执行结束
     _this->swap_out(); //协成切换
 }
