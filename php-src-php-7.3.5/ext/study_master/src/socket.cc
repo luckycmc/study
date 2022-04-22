@@ -1,6 +1,6 @@
 #include "socket.h"
 #include "log.h"
-
+// socket
 int stSocket_create(int domain, int type, int protocol)
 {
     int on = 1;
@@ -15,7 +15,7 @@ int stSocket_create(int domain, int type, int protocol)
 
     return sock;
 }
-
+// bind
 int stSocket_bind(int sock, int type, char *host, int port)
 {
     int ret;
@@ -44,7 +44,7 @@ int stSocket_bind(int sock, int type, char *host, int port)
 
     return ret;
 }
-
+//接受客户端的连接
 int stSocket_accept(int sock)
 {
     int connfd;
@@ -60,7 +60,7 @@ int stSocket_accept(int sock)
 
     return connfd;
 }
-
+//关闭socket
 int stSocket_close(int fd)
 {
     int ret;
@@ -72,7 +72,7 @@ int stSocket_close(int fd)
     }
     return ret;
 }
-
+//监听socket
 int stSocket_listen(int sock, int backlog)
 {
     int ret;
@@ -84,7 +84,7 @@ int stSocket_listen(int sock, int backlog)
     }
     return ret;
 }
-
+//接受数据
 ssize_t stSocket_recv(int sock, void *buf, size_t len, int flag)
 {
     ssize_t ret;
@@ -96,7 +96,7 @@ ssize_t stSocket_recv(int sock, void *buf, size_t len, int flag)
     }
     return ret;
 }
-
+//发送数据
 ssize_t stSocket_send(int sock, const void *buf, size_t len, int flag)
 {
     ssize_t ret;
@@ -108,7 +108,12 @@ ssize_t stSocket_send(int sock, const void *buf, size_t len, int flag)
     }
     return ret;
 }
-
+/**
+   设置socket 为非阻塞
+ * 
+ * @param sock 
+ * @return int 
+ */
 int stSocket_set_nonblock(int sock)
 {
     int flags;

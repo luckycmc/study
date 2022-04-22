@@ -97,7 +97,7 @@ static PHP_METHOD(study_coro_socket, __construct)
 
     zend_update_property_long(study_coro_socket_ce_ptr, getThis(), ZEND_STRL("fd"), socket_t->socket->get_fd());
 }
-
+//绑定
 static PHP_METHOD(study_coro_socket, bind)
 {
     zend_long port;
@@ -119,7 +119,7 @@ static PHP_METHOD(study_coro_socket, bind)
     }
     RETURN_TRUE;
 }
-
+//监听
 static PHP_METHOD(study_coro_socket, listen)
 {
     zend_long backlog = 512;
@@ -140,7 +140,7 @@ static PHP_METHOD(study_coro_socket, listen)
     }
     RETURN_TRUE;
 }
-
+//接受客户端连接
 static PHP_METHOD(study_coro_socket, accept)
 {
     coro_socket *server_socket_t;
