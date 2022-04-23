@@ -78,6 +78,7 @@ PHP_FUNCTION(study_event_wait)
 PHP_MINIT_FUNCTION(study)
 {  
     study_coroutine_util_init();
+    //协成服务器初始化
     study_coro_server_init(module_number);
     study_coro_channel_init();
      //socket 类的创建

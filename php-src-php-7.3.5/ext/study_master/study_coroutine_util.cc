@@ -24,10 +24,11 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_defer, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0)
 ZEND_END_ARG_INFO()
-
+/**sleep 的参数接口 start**/
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_sleep, 0, 0, 1)
     ZEND_ARG_INFO(0, seconds)
 ZEND_END_ARG_INFO()
+/**sleep 的参数接口 start**/
 
 PHP_FUNCTION(study_coroutine_create)
 {
@@ -133,7 +134,7 @@ PHP_METHOD(study_coroutine_util, defer)
 PHP_METHOD(study_coroutine_util, sleep)
 {
     double seconds;
-    
+    //解析参数
     ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_DOUBLE(seconds)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
@@ -161,7 +162,7 @@ static const zend_function_entry study_coroutine_util_methods[] =
     PHP_ME(study_coroutine_util, isExist, arginfo_study_coroutine_isExist, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     // defer 方法
     PHP_ME(study_coroutine_util, defer, arginfo_study_coroutine_defer, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-    //模拟IO阻塞
+    //模拟IO阻塞 注册类方法 静态的和公用的  
     PHP_ME(study_coroutine_util, sleep, arginfo_study_coroutine_sleep, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
