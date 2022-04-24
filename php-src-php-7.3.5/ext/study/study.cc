@@ -6,7 +6,7 @@ PHP_MINIT_FUNCTION(study)
     
     return SUCCESS;
 }
-
+//  src/coroutine/coroutine.cc 代码可能有问题导致编译不能成功
 PHP_MSHUTDOWN_FUNCTION(study)
 {
     return SUCCESS;
