@@ -115,7 +115,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coro_server_ser_handler, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0)
 ZEND_END_ARG_INFO()
-
+//构造方法
 PHP_METHOD(study_coro_server, __construct)
 {
     zend_long port;
@@ -129,11 +129,11 @@ PHP_METHOD(study_coro_server, __construct)
 
     server_t = (coro_serv *)study_coro_server_fetch_object(Z_OBJ_P(getThis()));
     server_t->serv = new Server(Z_STRVAL_P(zhost), port);
-
+    //参数和对应的属性赋值
     zend_update_property_string(study_coro_server_ce_ptr, getThis(), ZEND_STRL("host"), Z_STRVAL_P(zhost));
     zend_update_property_long(study_coro_server_ce_ptr, getThis(), ZEND_STRL("port"), port);
 }
-
+//服务器启动接口
 PHP_METHOD(study_coro_server, start)
 {
     coro_serv *server_t;
@@ -145,7 +145,7 @@ PHP_METHOD(study_coro_server, start)
     }
     RETURN_TRUE;
 }
-
+//关闭服务器接口
 PHP_METHOD(study_coro_server, shutdown)
 {
     coro_serv *server_t;
@@ -172,7 +172,7 @@ PHP_METHOD(study_coro_server, set_handler)
     server_t = (coro_serv *)study_coro_server_fetch_object(Z_OBJ_P(getThis()));
     server_t->serv->set_handler(handle_fci_fcc);
 }
-
+//协成服务器注册对应的方法
 static const zend_function_entry study_coroutine_server_coro_methods[] =
 {
     PHP_ME(study_coro_server, __construct, arginfo_study_coro_server_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR) // ZEND_ACC_CTOR is used to declare that this method is a constructor of this class.
@@ -181,7 +181,7 @@ static const zend_function_entry study_coroutine_server_coro_methods[] =
     PHP_ME(study_coro_server, set_handler, arginfo_study_coro_server_ser_handler, ZEND_ACC_PUBLIC)
     PHP_FE_END
 };
-
+//协成服务器初始化
 void study_coro_server_init(int module_number)
 {
     INIT_NS_CLASS_ENTRY(study_coro_server_ce, "Study", "Coroutine\\Server", study_coroutine_server_coro_methods);
@@ -189,7 +189,7 @@ void study_coro_server_init(int module_number)
     memcpy(&study_coro_server_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     study_coro_server_ce_ptr = zend_register_internal_class(&study_coro_server_ce TSRMLS_CC); // Registered in the Zend Engine
     ST_SET_CLASS_CUSTOM_OBJECT(study_coro_server, study_coro_server_create_object, study_coro_server_free_object, coro_serv, std);
-
+    /*注册属性 都是公共的方法*/
     zend_declare_property_string(study_coro_server_ce_ptr, ZEND_STRL("host"), "", ZEND_ACC_PUBLIC);
     zend_declare_property_long(study_coro_server_ce_ptr, ZEND_STRL("port"), -1, ZEND_ACC_PUBLIC);
     zend_declare_property_long(study_coro_server_ce_ptr, ZEND_STRL("errCode"), 0, ZEND_ACC_PUBLIC);

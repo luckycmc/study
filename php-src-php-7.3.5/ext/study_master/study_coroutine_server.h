@@ -16,11 +16,11 @@ private:
     bool running = false;
 
 public:
-    Server(char *host, int port);
-    ~Server();
-    bool start();
-    bool shutdown();
-    void set_handler(php_study_fci_fcc *_handler);
+    Server(char *host, int port); // socket 类构造方法
+    ~Server(); //析构方法
+    bool start();  //启动
+    bool shutdown(); // 关闭
+    void set_handler(php_study_fci_fcc *_handler); //设置对应的函数
     php_study_fci_fcc* get_handler();
 };
 }
