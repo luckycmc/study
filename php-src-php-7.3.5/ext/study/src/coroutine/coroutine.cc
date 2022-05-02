@@ -32,6 +32,12 @@ void Coroutine::set_task(void *_task)
 {
     task = _task; //设置协成
 }
+//让出当前协成
+void Coroutine::yield()
+{
+   current = origin;
+   ctx.swap_out();
+}
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)
 {

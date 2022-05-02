@@ -2,7 +2,7 @@
 #include "study.h"
 
 using namespace Study;
-
+//协成上下文 构造方法执行
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {

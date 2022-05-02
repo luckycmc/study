@@ -1,10 +1,19 @@
 #include "study_coroutine.h"
+#include <unordered_map>
+using Study::PHPCoroutine;
+using Study::Coroutine;
+
+static std::unordered_map<long, Coroutine *> user_yield_coros;
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0)
 ZEND_END_ARG_INFO()
 
-using Study::PHPCoroutine;
+//获取yield参数
+ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_void, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+
 static PHP_METHOD(study_coroutine_util, create);
 //协成创建的函数
 PHP_METHOD(study_coroutine_util,create)
@@ -28,11 +37,21 @@ PHP_METHOD(study_coroutine_util,create)
 
       PHPCoroutine::create(&fcc, fci.param_count, fci.params);
 }
-
+//切换入口
+PHP_METHOD(study_coroutine_util, yield)
+{
+    //获取当前协成的堆栈信息
+    Coroutine* co = Coroutine::get_current();
+    //保存对应的堆栈信息
+    user_yield_coros[co->get_cid()] = co;
+    co->yield();//协成切换
+    RETURN_TRUE;
+}
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
        //静态和公有的属性
        PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       PHP_ME(study_coroutine_util, yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_FE_END
 };
 
