@@ -7,11 +7,9 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {
     swap_ctx_ = nullptr;
-
     stack_ = (char*) malloc(stack_size_); //栈的大小
-    
     void* sp = (void*) ((char*) stack_ + stack_size_); //sp指针
-    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
+    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func); //设置当前协成的上下文
 }
 
 /**

@@ -1,11 +1,13 @@
 #include "coroutine.h"
 
 using Study::Coroutine;
+using namespace std;
 
 Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
 long Coroutine::last_cid = 0;   //初始化栈帧为0
 // 设置map 模板
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
+
 size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE; //栈的大小
 /**协成切换的指针函数**/
 

@@ -4,6 +4,8 @@
 using Study::PHPCoroutine;
 using Study::Coroutine;
 
+php_coro_task PHPCoroutine::main_task = {0};
+//协成创建入口
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv)
 {
     php_coro_args php_coro_args;
@@ -20,7 +22,7 @@ void PHPCoroutine::save_task(php_coro_task *task)
 {
     save_vm_stack(task);
 }
-// PHP的栈
+// PHP的栈 保存当前的PHP 栈帧
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      
@@ -31,13 +33,13 @@ void PHPCoroutine::save_vm_stack(php_coro_task *task)
       task->execute_data = EG(current_execute_data);
 }
 
-php_coro_task PHPCoroutine::main_task = {0};
+
 //获取当前PHP 的协程栈
 php_coro_task* PHPCoroutine::get_task()
 {   
     php_coro_task *task = (php_coro_task*)Coroutine::get_current_task();
 
-    return task?task:nullptr;
+    return task?task:&main_task; //当前协成存在则返回当前协成否则返回 主协成
 }
 //协程函数的创建
 void PHPCoroutine::create_func(void *arg)
@@ -75,7 +77,7 @@ void PHPCoroutine::create_func(void *arg)
 
     EG(current_execute_data) = call;
 
-    save_vm_stack(task);
+    save_vm_stack(task); //保存当前的PHP栈帧
 
     task->co = Coroutine::get_current();
     task->co->set_task((void *) task);

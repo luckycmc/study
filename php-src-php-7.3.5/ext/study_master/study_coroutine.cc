@@ -61,7 +61,8 @@ void PHPCoroutine::create_func(void *arg)
     zend_execute_data *call;
     zval _retval, *retval = &_retval;
 
-    vm_stack_init(); // get a new php stack
+    vm_stack_init(); // get a new php stack 因为要创建一个协成了
+
     call = (zend_execute_data *) (EG(vm_stack_top));
     task = (php_coro_task *) EG(vm_stack_top);
     EG(vm_stack_top) = (zval *) ((char *) call + PHP_CORO_TASK_SLOT * sizeof(zval));
@@ -70,7 +71,7 @@ void PHPCoroutine::create_func(void *arg)
         ZEND_CALL_TOP_FUNCTION | ZEND_CALL_ALLOCATED,
         func, argc, fci_cache.called_scope, fci_cache.object
     );
-
+    // 获取对应的参数
     for (i = 0; i < argc; ++i)
     {
         zval *param;
