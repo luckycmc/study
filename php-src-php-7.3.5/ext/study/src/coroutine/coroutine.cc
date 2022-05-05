@@ -38,6 +38,13 @@ void Coroutine::yield()
    current = origin;
    ctx.swap_out();
 }
+//恢复当前协成
+void Coroutine::resume()
+{
+    origin = current;
+    current = this;
+    ctx.swap_in();
+}
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)
 {
