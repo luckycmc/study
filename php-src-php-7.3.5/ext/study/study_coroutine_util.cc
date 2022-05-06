@@ -40,7 +40,8 @@ PHP_METHOD(study_coroutine_util,create)
       }
       *return_value = result; */
 
-      PHPCoroutine::create(&fcc, fci.param_count, fci.params);
+      long cid = PHPCoroutine::create(&fcc, fci.param_count, fci.params);
+      RETURN_LONG(cid);
 }
 //切换入口
 PHP_METHOD(study_coroutine_util, yield)
@@ -62,19 +63,32 @@ PHP_METHOD(study_coroutine_util, resume)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
     auto coroutine_iterator = user_yield_coros.find(cid);
+    //判断是都查到最后
+    if (coroutine_iterator == user_yield_coros.end())
+    {
+        php_error_docref(NULL, E_WARNING, "resume error");
+        RETURN_FALSE;
+    }
 
     Coroutine* co = coroutine_iterator->second;
     user_yield_coros.erase(cid);
     co->resume(); //恢复当前协程运行
     RETURN_TRUE;
 }
-
+//获取当前的协程id
+PHP_METHOD(study_coroutine_util,getCid)
+{
+    Coroutine* co = Coroutine::get_current();
+    RETURN_LONG(co->get_cid());
+}
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
        //静态和公有的属性
        PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_ME(study_coroutine_util, yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_ME(study_coroutine_util, resume, arginfo_study_coroutine_resume, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //注册获取协程ID
+       PHP_ME(study_coroutine_util, getCid, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_FE_END
 };
 
