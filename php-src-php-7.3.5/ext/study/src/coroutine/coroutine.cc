@@ -44,6 +44,15 @@ void Coroutine::resume()
     origin = current;
     current = this;
     ctx.swap_in();
+    //如果当前协成结束直接删除即可
+    if (ctx.is_end())
+    {
+        cid = current->get_cid();
+        printf("in resume method: co[%ld] end\n", cid);
+        current = origin;
+        coroutines.erase(cid);
+        delete this;
+    }
 }
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)

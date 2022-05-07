@@ -24,6 +24,7 @@ void Context::context_func(void *arg)
       */
      Context *_this = (Context *) arg;
      _this->fn_(_this->private_data_);
+     _this->end_ = true;//协程开始运行
      _this->swap_out();
 }
 /**
