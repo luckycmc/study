@@ -63,7 +63,7 @@ PHP_METHOD(study_coroutine_util, resume)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
     auto coroutine_iterator = user_yield_coros.find(cid);
-    //判断是都查到最后
+    //判断是都查到最后,执行到最后不在执行
     if (coroutine_iterator == user_yield_coros.end())
     {
         php_error_docref(NULL, E_WARNING, "resume error");
@@ -85,7 +85,9 @@ PHP_METHOD(study_coroutine_util,getCid)
 const zend_function_entry study_coroutine_util_methods[] = {
        //静态和公有的属性
        PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //切换当前协成
        PHP_ME(study_coroutine_util, yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //恢复当前协成
        PHP_ME(study_coroutine_util, resume, arginfo_study_coroutine_resume, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        //注册获取协程ID
        PHP_ME(study_coroutine_util, getCid, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)

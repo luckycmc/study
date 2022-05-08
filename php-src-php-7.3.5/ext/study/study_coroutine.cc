@@ -22,7 +22,7 @@ void PHPCoroutine::save_task(php_coro_task *task)
 {
     save_vm_stack(task);
 }
-// PHP的栈 保存当前的PHP 栈帧
+// PHP的栈 保存当前的PHP 栈帧,先获取在保存
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      
@@ -79,9 +79,9 @@ void PHPCoroutine::create_func(void *arg)
 
     save_vm_stack(task); //保存当前的PHP栈帧
 
-    task->co = Coroutine::get_current();
+    task->co = Coroutine::get_current();//获取当前的协成
     task->co->set_task((void *) task);
-
+    //判断是否是用户函数
     if (func->type == ZEND_USER_FUNCTION)
     {
         ZVAL_UNDEF(retval);
