@@ -27,9 +27,10 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_defer, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0) //参数为函数
 ZEND_END_ARG_INFO()
 
-static PHP_METHOD(study_coroutine_util, create);
+//static PHP_METHOD(study_coroutine_util, create); 展示先删除2022-05-09
 //协成创建的函数
-PHP_METHOD(study_coroutine_util,create)
+//PHP_METHOD(study_coroutine_util,create)  之前的
+PHP_FUNCTION(study_coroutine_create) //用函数代替
 {
       // zend_fcall_info就是用来接收我们创建协程的时候传递的那个函数
       zend_fcall_info fci       = empty_fcall_info;
@@ -130,7 +131,9 @@ PHP_METHOD(study_coroutine_util, defer)
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
        //静态和公有的属性
-       PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //替换成函数把上面的
+       ZEND_FENTRY(create, ZEND_FN(study_coroutine_create), arginfo_study_coroutine_create, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC) // ZEND_FENTRY这行是新增的
        //切换当前协成
        PHP_ME(study_coroutine_util, yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        //恢复当前协成
@@ -156,4 +159,6 @@ void study_coroutine_util_init()
     // INIT_NS_CLASS_ENTRY 注册带命名空间的 类  INIT_CLASS_ENTRY(ce, "children", children_methods);//注册不带命名空间的类
     INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
     study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
+    //注册别名
+    zend_register_class_alias("SCo", study_coroutine_ce_ptr); // 新增的代码
 }
