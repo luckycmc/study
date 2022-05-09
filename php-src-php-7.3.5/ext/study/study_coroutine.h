@@ -4,8 +4,16 @@
 #include "php_study.h"
 #include "coroutine.h"
 
+#include <stack>
+
 #define DEFAULT_PHP_STACK_PAGE_SIZE       8192
 #define PHP_CORO_TASK_SLOT ((int)((ZEND_MM_ALIGNED_SIZE(sizeof(php_coro_task)) + ZEND_MM_ALIGNED_SIZE(sizeof(zval)) - 1) / ZEND_MM_ALIGNED_SIZE(sizeof(zval))))
+// 定义传参
+struct php_study_fci_fcc
+{
+    zend_fcall_info fci;
+    zend_fcall_info_cache fcc;
+};
 
 // 定义一个协程参数结构体
 struct php_coro_args
@@ -24,7 +32,10 @@ struct php_coro_task
     size_t vm_stack_page_size;       //栈的大小 是协程栈页大小。
     zend_execute_data *execute_data;  // current coroutine stack frame 是当前协程栈的栈帧。
     Study::Coroutine *co;
+    //栈结构体
+    std::stack<php_study_fci_fcc *> *defer_tasks;
 };
+
 
 #define DEFAULT_PHP_STACK_PAGE_SIZE       8192  //我们把我们定义好的默认PHP栈一页的大小赋值给size
 
@@ -34,6 +45,7 @@ namespace Study
     {
            public: 
                   static long create(zend_fcall_info_cache *fci_cache,uint32_t argc,zval *argv);
+                  static void defer(php_study_fci_fcc *defer_fci_fcc);
            protected:
                    /**对应的属性***/
                    static php_coro_task main_task;

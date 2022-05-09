@@ -81,6 +81,8 @@ void PHPCoroutine::create_func(void *arg)
 
     task->co = Coroutine::get_current();//获取当前的协成
     task->co->set_task((void *) task);
+     //defer
+    task->defer_tasks = nullptr;
     //判断是否是用户函数
     if (func->type == ZEND_USER_FUNCTION)
     {
@@ -89,7 +91,30 @@ void PHPCoroutine::create_func(void *arg)
         zend_init_func_execute_data(call, &func->op_array, retval);
         zend_execute_ex(EG(current_execute_data));
     }
+    /****************defer 函数接口 start**********************/
+    task = get_task(); //获取当前栈
+    std::stack<php_study_fci_fcc*> *defer_tasks = task->defer_tasks;
+    // defer 栈弹出
+    if (defer_tasks) {
+        php_study_fci_fcc *defer_fci_fcc;
+        zval result;
+        while(!defer_tasks->empty())
+        {
+            defer_fci_fcc = defer_tasks->top();
+            defer_tasks->pop();
+            defer_fci_fcc->fci.retval = &result;
 
+            if (zend_call_function(&defer_fci_fcc->fci, &defer_fci_fcc->fcc) != SUCCESS)
+            {
+                php_error_docref(NULL, E_WARNING, "defer execute error");
+                return;
+            }
+            efree(defer_fci_fcc);
+        }
+        delete defer_tasks;
+        task->defer_tasks = nullptr;
+    }
+    /****************defer 函数接口 end**********************/
     zval_ptr_dtor(retval);
 }
 //得到一个新的PHP 栈
@@ -115,4 +140,14 @@ void PHPCoroutine::vm_stack_init(void)
     EG(vm_stack_page_size) = size;
      /*这段代码的作用是去修改现在的PHP栈，让它指向我们申请出来的新的PHP栈空间。 end*/
 
+}
+//协成defer 的实现
+void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
+{
+    php_coro_task *task = (php_coro_task *)get_task();
+    if (task->defer_tasks == nullptr)
+    {
+        task->defer_tasks = new std::stack<php_study_fci_fcc *>;
+    }
+    task->defer_tasks->push(defer_fci_fcc);
 }
