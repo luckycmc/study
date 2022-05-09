@@ -27,6 +27,12 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_defer, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0) //参数为函数
 ZEND_END_ARG_INFO()
 
+
+//sleep 模拟阻塞的实现
+ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_sleep, 0, 0, 1)
+    ZEND_ARG_INFO(0, seconds)
+ZEND_END_ARG_INFO()
+
 //static PHP_METHOD(study_coroutine_util, create); 展示先删除2022-05-09
 //协成创建的函数
 //PHP_METHOD(study_coroutine_util,create)  之前的
@@ -127,6 +133,24 @@ PHP_METHOD(study_coroutine_util, defer)
 
     PHPCoroutine::defer(defer_fci_fcc);
 }
+//模拟IO阻塞
+PHP_METHOD(study_coroutine_util, sleep)
+{
+    double seconds;
+    
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_DOUBLE(seconds)
+    ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
+
+    if (UNEXPECTED(seconds < 0.001))
+    {
+        php_error_docref(NULL, E_WARNING, "Timer must be greater than or equal to 0.001");
+        RETURN_FALSE;
+    }
+
+    PHPCoroutine::sleep(seconds);
+    RETURN_TRUE;
+}
 
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
@@ -144,6 +168,8 @@ const zend_function_entry study_coroutine_util_methods[] = {
        PHP_ME(study_coroutine_util, isExist, arginfo_study_coroutine_isExist, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        //协程defer的注册
        PHP_ME(study_coroutine_util, defer, arginfo_study_coroutine_defer, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //注册sleep
+       PHP_ME(study_coroutine_util, sleep, arginfo_study_coroutine_sleep, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_FE_END
 };
 
