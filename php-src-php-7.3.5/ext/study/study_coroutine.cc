@@ -41,7 +41,7 @@ php_coro_task* PHPCoroutine::get_task()
 
     return task?task:&main_task; //当前协成存在则返回当前协成否则返回 主协成
 }
-//协程函数的创建
+//协程函数的创建 PHPCoroutine::create_func是用来创建协程任务的 我们可以了解为这是一个辅助函数，辅助我们去创建协程
 void PHPCoroutine::create_func(void *arg)
 {
     int i;
