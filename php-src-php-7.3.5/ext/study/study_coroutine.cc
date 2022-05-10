@@ -152,8 +152,16 @@ void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
     task->defer_tasks->push(defer_fci_fcc);
 }
 //实现sleep 模拟IO阻塞
-int PHPCoroutine::sleep()
+int PHPCoroutine::sleep(double seconds)
 {
-    std::cout << seconds << endl;
+    //printf("sleep %f\n",seconds);
+    Coroutine::sleep(seconds);
     return 0;
+}
+//协成调度接口
+int PHPCoroutine::scheduler()
+{
+    while (1)
+    {
+    }
 }

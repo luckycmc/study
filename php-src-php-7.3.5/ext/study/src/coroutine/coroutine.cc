@@ -59,3 +59,22 @@ long Coroutine::create(coroutine_func_t fn, void* args)
 {
     return (new Coroutine(fn, args))->run();//执行对应的协成函数
 }
+//时间一到恢复
+static void sleep_timeout(uv_timer_t *timer)
+{
+    ((Coroutine *) timer->data)->resume();
+}
+//模拟阻塞IO
+int Coroutine::sleep(double seconds)
+{
+    Coroutine* co = Coroutine::get_current();
+
+    uv_timer_t timer;
+    timer.data = co;
+    uv_timer_init(uv_default_loop(), &timer);
+    uv_timer_start(&timer, sleep_timeout, seconds * 1000, 0);
+   
+    co->yield();
+    return 0;
+}
+

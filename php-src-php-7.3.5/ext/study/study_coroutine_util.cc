@@ -151,6 +151,15 @@ PHP_METHOD(study_coroutine_util, sleep)
     PHPCoroutine::sleep(seconds);
     RETURN_TRUE;
 }
+//协成调度接口
+PHP_METHOD(study_coroutine_util, scheduler)
+{
+    if (PHPCoroutine::scheduler() < 0)
+    {
+        RETURN_FALSE;
+    }
+    RETURN_TRUE;
+}
 
 //定义类和方法
 const zend_function_entry study_coroutine_util_methods[] = {
@@ -170,6 +179,8 @@ const zend_function_entry study_coroutine_util_methods[] = {
        PHP_ME(study_coroutine_util, defer, arginfo_study_coroutine_defer, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        //注册sleep
        PHP_ME(study_coroutine_util, sleep, arginfo_study_coroutine_sleep, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+       //协成调度接口
+       PHP_ME(study_coroutine_util, scheduler, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
        PHP_FE_END
 };
 
