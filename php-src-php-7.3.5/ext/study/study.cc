@@ -32,8 +32,8 @@ PHP_FUNCTION(study_coroutine_create);
 
 PHP_MINIT_FUNCTION(study)
 {   
-    study_coroutine_util_init();
-    
+    study_coroutine_util_init();//协成初始化
+    study_coroutine_server_coro_init(); //服务器初始化
     return SUCCESS;
 }
 //  src/coroutine/coroutine.cc 代码可能有问题导致编译不能成功
