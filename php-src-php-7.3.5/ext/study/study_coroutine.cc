@@ -163,12 +163,12 @@ typedef enum {
     UV_CLOCK_PRECISE = 0,  /* Use the highest resolution clock available. */
     UV_CLOCK_FAST = 1      /* Use the fastest clock with <= 1ms granularity. */
 } uv_clocktype_t;
-
+/************引入 libuv start 库******************/
 extern "C" void uv__run_timers(uv_loop_t* loop);
 extern "C" uint64_t uv__hrtime(uv_clocktype_t type);
 extern "C" int uv__next_timeout(const uv_loop_t* loop);
+/************引入 libuv end 库******************/
 
-//协成调度接口
 int PHPCoroutine::scheduler()
 {
     int timeout; // 增加的代码
@@ -190,3 +190,5 @@ int PHPCoroutine::scheduler()
 
     return 0;
 }
+
+
