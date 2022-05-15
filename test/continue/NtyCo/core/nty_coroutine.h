@@ -177,7 +177,7 @@ typedef struct _nty_coroutine {
 	proc_coroutine func; 
 	void *arg;
 	void *data;
-	size_t stack_size;
+	size_t stack_size;   //是每一个协成独立的根本没有独立的栈 协成没办法根本独立
 	size_t last_stack_size;
 	
 	nty_coroutine_status status;

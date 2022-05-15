@@ -49,7 +49,7 @@ static pthread_once_t sched_key_once = PTHREAD_ONCE_INIT;
 
 //new_ctx --> rdi , 
 //cur_ctx --> rsi
-
+//协成之间的代码切换 也就是寄存器之间的切换
 int _switch(nty_cpu_ctx *new_ctx, nty_cpu_ctx *cur_ctx);
 
 #ifdef __i386__
@@ -146,7 +146,7 @@ void nty_coroutine_free(nty_coroutine *co) {
 	}
 
 }
-
+//协成初始化
 static void nty_coroutine_init(nty_coroutine *co) {
 
 	void **stack = (void **)(co->stack + co->stack_size);
@@ -160,7 +160,7 @@ static void nty_coroutine_init(nty_coroutine *co) {
 	co->status = BIT(NTY_COROUTINE_STATUS_READY);
 	
 }
-
+//当初当前协成
 void nty_coroutine_yield(nty_coroutine *co) {
 	co->ops = 0;
 	_switch(&co->sched->ctx, &co->ctx);
@@ -178,7 +178,7 @@ static inline void nty_coroutine_madvise(nty_coroutine *co) {
 	}
 	co->last_stack_size = current_stack;
 }
-
+//恢复当前协成
 int nty_coroutine_resume(nty_coroutine *co) {
 	
 	if (co->status & BIT(NTY_COROUTINE_STATUS_NEW)) {
