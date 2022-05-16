@@ -25,6 +25,13 @@ extern zend_module_entry study_module_entry;
 #endif
 //协成类初始化
 void study_coroutine_util_init();
+void study_coroutine_server_coro_init(); //服务器初始化
+// st_zend_read_property是用来读取对象的某个属性的函数
+inline zval *st_zend_read_property(zend_class_entry *class_ptr, zval *obj, const char *s, int len, int silent)
+{
+    zval rv;
+    return zend_read_property(class_ptr, obj, s, len, silent, &rv);
+}
 
 /**
  * Declare any global variables you may need between the BEGIN and END macros here
