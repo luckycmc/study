@@ -1,5 +1,5 @@
 #include "socket.h"
-
+#include "log.h"
 //创建socket 套接字
 
 int stSocket_create(int type)
@@ -51,7 +51,7 @@ int stSocket_bind(int sock, int type, char *host, int port)
 
     return ret;
 }
-
+//接受连接
 int stSocket_accept(int sock)
 {
     int connfd;
@@ -63,12 +63,36 @@ int stSocket_accept(int sock)
     
     return connfd;
 }
-
+// server监听的封装
 int stSocket_listen(int sock)
 {
     int ret;
 
     ret = listen(sock, 512);
+    if (ret < 0)
+    {
+        stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+    }
+    return ret;
+}
+//接受客户端的数据
+ssize_t stSocket_recv(int sock, void *buf, size_t len, int flag)
+{
+    ssize_t ret;
+
+    ret = recv(sock, buf, len, flag);
+    if (ret < 0)
+    {
+        stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+    }
+    return ret;
+}
+//发送数据给客户端
+ssize_t stSocket_send(int sock, void *buf, size_t len, int flag)
+{
+    ssize_t ret;
+
+    ret = send(sock, buf, len, flag);
     if (ret < 0)
     {
         stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
