@@ -21,7 +21,7 @@ int tcp_init()
     //绑定地址信息
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(9999);
+    addr.sin_port = htons(PORT);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     int fd = bind(lfd,(struct sockaddr*)&addr,sizeof(addr));
     if (fd == -1)
@@ -31,7 +31,7 @@ int tcp_init()
     }
     //开始监听
     listen(lfd,SOMAXCONN);
-
+     printf("listen port is %d\n",PORT);
     printf("tcp_init-> lfd = %d\n",lfd);
     return lfd;
 }

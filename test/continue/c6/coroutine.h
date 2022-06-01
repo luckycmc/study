@@ -13,6 +13,7 @@
 
 #define CORSZ   1024
 #define STACKSZ 1024*64
+#define PORT 9999 
 enum States
 {
     DEAD,       //死亡
