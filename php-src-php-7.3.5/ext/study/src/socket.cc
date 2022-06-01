@@ -99,3 +99,8 @@ ssize_t stSocket_send(int sock, void *buf, size_t len, int flag)
     }
     return ret;
 }
+//等待事件的到来
+
+
+
+
