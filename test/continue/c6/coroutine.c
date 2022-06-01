@@ -158,4 +158,9 @@ int schedule_finished(schedule_t* s)
     }
     return 1;
 }
-
+/***** 缺少协成调度器 需要和协成调取器绑定 start*****/
+void schedule_reactor()
+{
+    
+}
+/***** 缺少协成调度器 需要和协成调取器绑定 end*****/

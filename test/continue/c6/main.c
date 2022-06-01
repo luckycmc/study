@@ -109,17 +109,17 @@ void* handle(schedule_t* s, void* argc)
         memset(buf, 0x00, sizeof(buf));
         int r = read(cfd, buf, 1024);
         printf("read = %d\n",r);
-        if (r == -1)
+        if (r == -1)  //还没有数据
         {
             //读取错误就让出CPU
             printf("handle -> coroutine_yield\n");
-            coroutine_yield(s);
+            coroutine_yield(s); //让出对应的cpu
         }
-        else if (r == 0){
+        else if (r == 0){  //客户端关闭了
             //读到结尾就结束
             printf("read end\n");
             break;
-            }
+        }
         else 
         {
             //从cfd中读到buf,并且输出

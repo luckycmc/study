@@ -60,5 +60,8 @@ void schedule_destroy(schedule_t* s);
 //判断协程是否运行完毕
 int schedule_finished(schedule_t* s);
 
+/**基于reactord调度 start**/
+void schedule_reactor();
+/**基于reactord调度 end**/
 #endif /*__COROUTINE_H__*/
 
