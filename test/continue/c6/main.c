@@ -107,7 +107,7 @@ void* handle(schedule_t* s, void* argc)
         sleep(3);
         printf("handle while\n");
         memset(buf, 0x00, sizeof(buf));
-        int r = read(cfd, buf, 1024);
+        int r = read(cfd, buf, 1024); //读取缓冲区的数据
         printf("read = %d\n",r);
         if (r == -1)  //还没有数据
         {
@@ -118,9 +118,10 @@ void* handle(schedule_t* s, void* argc)
         else if (r == 0){  //客户端关闭了
             //读到结尾就结束
             printf("read end\n");
+            close(r); //关闭对应的fd
             break;
         }
-        else 
+        else  
         {
             //从cfd中读到buf,并且输出
             printf("recv: %s\n",buf);

@@ -97,18 +97,18 @@ void coroutine_yield(schedule_t* s)
     if (s->current_id != -1)//有协程运行
     {
         printf("current_id = %d suspend -> (&c->ctx,&s->ctx_main)\n",s->current_id);
-        coroutine_t* c = s->coroutines[s->current_id];
+        coroutine_t* c = s->coroutines[s->current_id]; //保存调取器的信息
         c->state = SUSPEND;//设置成挂起状态
         s->current_id = -1;
         swapcontext(&c->ctx,&s->ctx_main);//保存当前协程的上下文信息，切换到主函数上下文运行
     }
 }
 
-//还原CPU
-void coroutine_resume(schedule_t* s,int id)
+//还原CPU 恢复对应的协程
+void coroutine_resume(schedu    le_t* s,int id)
 {
     printf("coroutine_resume\n");
-    coroutine_t* c = s->coroutines[id];
+    coroutine_t* c = s->coroutines[id];  //获取对应的协程信息
     if (c != NULL && c->state == SUSPEND)//存在协程，并且状态为挂起状态
     {
         printf("current_id = %d running -> (&s->ctx_main,&c->ctx)\n",s->current_id);
