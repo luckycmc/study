@@ -118,6 +118,7 @@ void* handle(schedule_t* s, void* argc)
         else if (r == 0){  //客户端关闭了
             //读到结尾就结束
             printf("read end\n");
+            //同时也要释放对应的协程
             close(r); //关闭对应的fd
             break;
         }
@@ -131,7 +132,7 @@ void* handle(schedule_t* s, void* argc)
                 printf("exit\n");
                 break;
              }
-            //将buf里的数据写入cfd中
+            //将buf里的数据写入cfd中 回复当前对应的协程
             write(cfd, buf, r);
         }
     }

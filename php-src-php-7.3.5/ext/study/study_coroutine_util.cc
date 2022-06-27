@@ -55,7 +55,7 @@ PHP_FUNCTION(study_coroutine_create) //用函数代替
           return;
       }
       *return_value = result; */
-
+      // PHP和扩展的粘合成
       long cid = PHPCoroutine::create(&fcc, fci.param_count, fci.params);
       RETURN_LONG(cid);
 }

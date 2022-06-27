@@ -8,11 +8,11 @@ int main()
 		int   age;
 		char  group;
 		float score;
-	}stu1 ={"Tom",12,8,'A',136.5},*pstu=&stu1; //¶¨ÒåÖ¸Õë½á¹¹Ìå
+	}stu1 ={"Tom",12,8,'A',136.5},*pstu=&stu1; //å®šä¹‰æŒ‡é’ˆç»“æž„ä½“
 	
-	//¶ÁÈ¡½á¹¹Ìå³ÉÔ±µÄÖµ
-    printf("%sµÄÑ§ºÅÊÇ%d£¬ÄêÁäÊÇ%d£¬ÔÚ%c×é£¬½ñÄêµÄ³É¼¨ÊÇ%.1f£¡\n", (*pstu).name, (*pstu).num, (*pstu).age, (*pstu).group, (*pstu).score);
-    printf("%sµÄÑ§ºÅÊÇ%d£¬ÄêÁäÊÇ%d£¬ÔÚ%c×é£¬½ñÄêµÄ³É¼¨ÊÇ%.1f£¡\n", pstu->name, pstu->num, pstu->age, pstu->group, pstu->score); 
+	//è¯»å–ç»“æž„ä½“æˆå‘˜çš„å€¼
+    printf("%sçš„å­¦å·æ˜¯%dï¼Œå¹´é¾„æ˜¯%dï¼Œåœ¨%cç»„ï¼Œä»Šå¹´çš„æˆç»©æ˜¯%.1fï¼\n", (*pstu).name, (*pstu).num, (*pstu).age, (*pstu).group, (*pstu).score);
+    printf("%sçš„å­¦å·æ˜¯%dï¼Œå¹´é¾„æ˜¯%dï¼Œåœ¨%cç»„ï¼Œä»Šå¹´çš„æˆç»©æ˜¯%.1fï¼\n", pstu->name, pstu->num, pstu->age, pstu->group, pstu->score); 
     
     return 0;
 }
