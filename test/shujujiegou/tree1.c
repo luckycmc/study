@@ -1,26 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 /**
-  http://www.manongjc.com/detail/23-sxdvrgseptzimvp.html À´Ô´ 
+  http://www.manongjc.com/detail/23-sxdvrgseptzimvp.html æ¥æº 
 **/ 
 /**
-  ÊıµÄ½Úµã 
+  æ•°çš„èŠ‚ç‚¹ 
 **/
 typedef struct node {
 	int data;
-	struct node *left; //Ê÷µÄ×ó½Úµã
-	struct node *right; //Ê÷µÄÓÒ½Úµã 
+	struct node *left; //æ ‘çš„å·¦èŠ‚ç‚¹
+	struct node *right; //æ ‘çš„å³èŠ‚ç‚¹ 
 }Node; 
 
-//Ê÷µÄ¸ù½Úµã
+//æ ‘çš„æ ¹èŠ‚ç‚¹
 typedef struct tree{
 	Node *root;
 }Tree; 
 
-//ÏòÊ÷ÖĞ²åÈëÊı¾İ
+//å‘æ ‘ä¸­æ’å…¥æ•°æ®
 void insert(Tree* tree,int value) 
 {
-	/*´´½¨Ò»¸ö½Úµã*/
+	/*åˆ›å»ºä¸€ä¸ªèŠ‚ç‚¹*/
 	Node* node = (Node*)malloc(sizeof(Node));
 	if(node == NULL){
 		return ; 
@@ -29,29 +29,29 @@ void insert(Tree* tree,int value)
 	node->left = NULL;
 	node->right = NULL;
 	
-	//ÅĞ¶ÏÊ÷ÊÇ²»ÊÇ¿ÕµÄ
+	//åˆ¤æ–­æ ‘æ˜¯ä¸æ˜¯ç©ºçš„
 	 if (tree->root == NULL){
 	 	 
 	 	 tree->root = node;
 	 }else{
-	 	Node *temp = tree->root; /*´ÓÊ÷¸ù¿ªÊ¼*/
+	 	Node *temp = tree->root; /*ä»æ ‘æ ¹å¼€å§‹*/
 	 	while(temp != NULL){
 	 		
-	 		  if(value <temp->data){  /*Ğ¡ÓÚ¾Í½ø×ó¶ù×Ó*/
-	 		  	     //±éÀúÁË×îºóµÄ½Úµã 
+	 		  if(value <temp->data){  /*å°äºå°±è¿›å·¦å„¿å­*/
+	 		  	     //éå†äº†æœ€åçš„èŠ‚ç‚¹ 
 	 		  	     if(temp->left == NULL){
 	 		  	     	temp->left = node;
 	 		  	     	return;
 					}else{
-						temp = temp->left;// ³ÖĞøÏò×ó±ßÕÒ 
+						temp = temp->left;// æŒç»­å‘å·¦è¾¹æ‰¾ 
 					} 
-			   }else{ /*·ñÔò½øÓÒ¶ù×Ó*/
+			   }else{ /*å¦åˆ™è¿›å³å„¿å­*/
 			   	   if(temp->right == NULL)
 	                {
 	                    temp->right = node;
 	                    return;
 	                }
-	                else /*¼ÌĞøÅĞ¶Ï*/
+	                else /*ç»§ç»­åˆ¤æ–­*/
 	                {
 	                    temp = temp->right;
 	                }
@@ -61,8 +61,8 @@ void insert(Tree* tree,int value)
 }
 
 /*
- ±éÀúÒ»Õû¿ÅÊ÷
- ÖĞĞò±éÀú:ÏÈ×óºó¸ùÔÙÓÒ
+ éå†ä¸€æ•´é¢—æ ‘
+ ä¸­åºéå†:å…ˆå·¦åæ ¹å†å³
  */
 void traverse(Node* node)
 {
@@ -74,7 +74,7 @@ void traverse(Node* node)
     }
 }
 
-/*Ïú»ÙÒ»¿ÃÊ÷*/
+/*é”€æ¯ä¸€æ£µæ ‘*/
 void distory_tree(Node* node)
 {
     
@@ -87,15 +87,15 @@ void distory_tree(Node* node)
         node = NULL;
     }
 }
-/*Ö÷º¯Êı*/
+/*ä¸»å‡½æ•°*/
 int main()
 {
     int i = 0;
     Tree tree;
-    tree.root = NULL;/*´´½¨Ò»¸ö¿ÕÊ÷*/
+    tree.root = NULL;/*åˆ›å»ºä¸€ä¸ªç©ºæ ‘*/
     int n;
     printf("input total num:\n");
-    /*ÊäÈën¸öÊı²¢´´½¨Õâ¸öÊ÷*/
+    /*è¾“å…¥nä¸ªæ•°å¹¶åˆ›å»ºè¿™ä¸ªæ ‘*/
     scanf("%d",&n);
     for(i = 0; i < n; i++)
     {
@@ -103,10 +103,10 @@ int main()
         scanf("%d",&temp);
         insert(&tree, temp);
     }
-    /*±éÀúÕû¸öÊ÷*/
+    /*éå†æ•´ä¸ªæ ‘*/
     traverse(tree.root);
     
-    /*Ïú»ÙÒ»¿ÃÊ÷*/
+    /*é”€æ¯ä¸€æ£µæ ‘*/
     distory_tree(tree.root);
     return 0;
 }
