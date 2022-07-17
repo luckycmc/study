@@ -1,0 +1,2 @@
+<?php
+Study\Coroutine::create();

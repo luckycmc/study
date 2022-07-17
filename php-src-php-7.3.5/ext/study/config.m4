@@ -5,10 +5,6 @@ Make sure that the comment is aligned:
 # AC_CANONICAL_HOST
 
 if test "$PHP_STUDY" != "no"; then
-    ########新增加的2行
-        PHP_ADD_LIBRARY_WITH_PATH(uv, /usr/local/lib/, STUDY_SHARED_LIBADD)
-        PHP_SUBST(STUDY_SHARED_LIBADD)
-    ########新增加的2行
     PHP_ADD_LIBRARY(pthread)
     STUDY_ASM_DIR="thirdparty/boost/asm/"
     CFLAGS="-Wall -pthread $CFLAGS"
@@ -54,16 +50,8 @@ if test "$PHP_STUDY" != "no"; then
         study.cc \
         study_coroutine.cc \
         study_coroutine_util.cc \
-        src/coroutine/coroutine.cc \
-        src/coroutine/context.cc \
         ${STUDY_ASM_DIR}make_${STUDY_CONTEXT_ASM_FILE} \
-        ${STUDY_ASM_DIR}jump_${STUDY_CONTEXT_ASM_FILE} \
-        study_server_coro.cc\
-        src/socket.cc \
-        src/log.cc \
-        src/error.cc \
-        src/core/base.cc\
-        src/coroutine/socket.cc
+        ${STUDY_ASM_DIR}jump_${STUDY_CONTEXT_ASM_FILE}
     "
 
     PHP_NEW_EXTENSION(study, $study_source_file, $ext_shared, ,, cxx)
@@ -81,3 +69,4 @@ if test "$PHP_STUDY" != "no"; then
     PHP_ADD_BUILD_DIR($ext_builddir/thirdparty/boost)
     PHP_ADD_BUILD_DIR($ext_builddir/thirdparty/boost/asm)
 fi
+
