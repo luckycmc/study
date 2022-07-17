@@ -8,8 +8,24 @@ ZEND_END_ARG_INFO()
 static PHP_METHOD(study_coroutine_util,create);
 
 PHP_METHOD(study_coroutine_util,create)
-{
-    php_printf("success\n");
+{  
+     // zend_fcall_info 就是用来接收我们创建协程的时候传递的那个函数
+    zend_fcall_info fci = empty_fcall_info;
+    zend_fcall_info_cache fcc = empty_fcall_info_cache;
+    zval result;
+
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_FUNC(fci, fcc)
+    ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
+    
+    fci.retval = &result;
+    //执行对应的函数
+    if(zend_call_function(&fci,&fcc) != SUCCESS){
+         printf("you must is function\n");
+         return;
+    }
+
+    *return_value = result;
 }
 
 //方法注册

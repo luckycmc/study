@@ -1,2 +1,7 @@
 <?php
-Study\Coroutine::create();
+function task()
+{
+    echo "study extension success\n";
+}
+
+Study\Coroutine::create('task');
