@@ -16,6 +16,7 @@ PHP_METHOD(study_coroutine_util,create)
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_FUNC(fci, fcc)
+        Z_PARAM_VARIADIC('*', fci.params, fci.param_count)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
     
     fci.retval = &result;
