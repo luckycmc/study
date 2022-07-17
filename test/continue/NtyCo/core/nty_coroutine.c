@@ -160,7 +160,7 @@ static void nty_coroutine_init(nty_coroutine *co) {
 	co->status = BIT(NTY_COROUTINE_STATUS_READY);
 	
 }
-//当初当前协成
+//当初当前协成 当初当前协成
 void nty_coroutine_yield(nty_coroutine *co) {
 	co->ops = 0;
 	_switch(&co->sched->ctx, &co->ctx);

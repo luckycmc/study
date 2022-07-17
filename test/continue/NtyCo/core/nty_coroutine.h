@@ -123,7 +123,7 @@ typedef struct _nty_coroutine_queue nty_coroutine_queue;
 typedef struct _nty_coroutine_rbtree_sleep nty_coroutine_rbtree_sleep;
 typedef struct _nty_coroutine_rbtree_wait nty_coroutine_rbtree_wait;
 
-
+//对应的寄存器结构体
 typedef struct _nty_cpu_ctx {
 	void *esp; //
 	void *ebp;
@@ -138,7 +138,7 @@ typedef struct _nty_cpu_ctx {
 	void *r5;
 } nty_cpu_ctx;
 
-///
+///调度
 typedef struct _nty_schedule {
 	uint64_t birth;
 	nty_cpu_ctx ctx;
