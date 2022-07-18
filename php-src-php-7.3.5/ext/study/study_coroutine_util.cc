@@ -1,4 +1,5 @@
 #include "study_coroutine.h"
+using Study::PHPCoroutine;
 //声明宏定义
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create,0,0,1)
    ZEND_ARG_CALLABLE_INFO(0,func,0)
@@ -25,8 +26,8 @@ PHP_METHOD(study_coroutine_util,create)
          printf("you must is function\n");
          return;
     }
-
-    *return_value = result;
+    //创建协成
+    PHPCoroutine::create(&fcc, fci.param_count, fci.params);
 }
 
 //方法注册
