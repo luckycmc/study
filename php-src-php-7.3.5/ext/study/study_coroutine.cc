@@ -1,7 +1,8 @@
 #include "study_coroutine.h"
 using Study::PHPCoroutine;
+using Study::Coroutine;
 
-
+php_coro_task PHPCoroutine::main_task = {0}; //主协成 也即是主进程
 
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *argv)
 {
@@ -32,5 +33,6 @@ void PHPCoroutine::save_vm_stack(php_coro_task *task)
 //暂时先返回一个空指针
 php_coro_task* PHPCoroutine::get_task()
 {
-    return nullptr;
+    php_coro_task *task = (php_coro_task *) Coroutine::get_current_task();
+    return task?task:&main_task;
 }
