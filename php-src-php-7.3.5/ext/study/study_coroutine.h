@@ -3,6 +3,7 @@
 
 #include "php_study.h"
 
+#define DEFAULT_PHP_STACK_SIZE 8192
 //定义协成参数结构体
 struct php_coro_args
 {
@@ -33,6 +34,8 @@ class PHPCoroutine
       static void save_task(php_coro_task *task);
       static void save_vm_stack(php_coro_task *task);
       static php_coro_task* get_task();
+      static void create_func(void *arg);
+      static void vm_stack_init(void); //PHP栈初始化
 };
 }
 

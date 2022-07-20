@@ -4,7 +4,7 @@ using Study::Coroutine;
 using namespace std;
 
 Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
-long Coroutine::last_cid = 0;   //初始化栈帧为0
+long Coroutine::last_cid = 0;   //初始化协成的id0
 // 设置map 模板
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
 
