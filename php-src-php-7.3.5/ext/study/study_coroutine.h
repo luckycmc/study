@@ -2,8 +2,9 @@
 #define STUDY_COROUTINE_H
 
 #include "php_study.h"
-
+#include "coroutine.h"
 #define DEFAULT_PHP_STACK_SIZE 8192
+#define PHP_CORO_TASK_SLOT ((int)((ZEND_MM_ALIGNED_SIZE(sizeof(php_coro_task)) + ZEND_MM_ALIGNED_SIZE(sizeof(zval)) - 1) / ZEND_MM_ALIGNED_SIZE(sizeof(zval))))
 //定义协成参数结构体
 struct php_coro_args
 {
@@ -18,6 +19,7 @@ struct php_coro_task
     zval *vm_stack_end;        //是协程栈栈底。  
     zend_vm_stack vm_stack;    //是协程栈指针。 
     size_t vm_stack_page_size;           //是协程栈页大小。
+    Study::Coroutine *co;
     zend_execute_data *execute_data;   //是当前协程栈的栈帧。
 };
 namespace Study

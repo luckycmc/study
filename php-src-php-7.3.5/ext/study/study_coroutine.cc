@@ -1,4 +1,5 @@
 #include "study_coroutine.h"
+
 using Study::PHPCoroutine;
 using Study::Coroutine;
 
@@ -38,7 +39,7 @@ php_coro_task* PHPCoroutine::get_task()
     return task?task:&main_task;
 }
 //对应的执行函数
-void PHPCoroutine::create_func()
+void PHPCoroutine::create_func(void *arg)
 {
     int i;
     php_coro_args *php_arg = (php_coro_args *) arg;
