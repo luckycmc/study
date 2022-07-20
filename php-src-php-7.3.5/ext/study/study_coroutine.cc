@@ -11,9 +11,10 @@ long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *
     php_coro_args.argc = argc;
     php_coro_args.argv = argv;
     
-    save_task(get_task());
+    save_task(get_task());//保存当前的栈空间
+    
 
-    return 0; //这里本应该返回协成的id 但是我们还没有到这一步，所以先返回0
+   // return 0; //这里本应该返回协成的id 但是我们还没有到这一步，所以先返回0
 }
 //保存当前协成的栈帧
 void PHPCoroutine::save_task(php_coro_task *task)
