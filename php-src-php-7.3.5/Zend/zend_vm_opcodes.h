@@ -73,7 +73,7 @@ ZEND_API const char* ZEND_FASTCALL zend_get_opcode_name(zend_uchar opcode);
 ZEND_API uint32_t ZEND_FASTCALL zend_get_opcode_flags(zend_uchar opcode);
 
 END_EXTERN_C()
-
+// PHP虚拟机对外提供186种指令 加、减、乘、除等
 #define ZEND_NOP                               0
 #define ZEND_ADD                               1
 #define ZEND_SUB                               2
