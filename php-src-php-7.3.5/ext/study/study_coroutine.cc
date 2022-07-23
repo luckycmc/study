@@ -23,7 +23,8 @@ void PHPCoroutine::save_task(php_coro_task *task)
      save_vm_stack(task);
 }
 
-//保存数据
+//保存当前栈的数据信息 zend_vm 也是有想用的堆栈信息 
+// 通过全局函数EG获取对应的信息 EG 是PHP 提供的
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      task->vm_stack_top = EG(vm_stack_top);

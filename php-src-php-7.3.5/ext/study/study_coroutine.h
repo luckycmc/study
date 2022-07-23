@@ -12,7 +12,7 @@ struct php_coro_args
      zval *argv;   
      uint32_t argc; //参数个数
 };
-// save the coroutine stack info 
+// save the coroutine stack info  保存的协程状态信息结构体php_coro_task 保存PHP的栈
 struct php_coro_task
 {
     zval *vm_stack_top;        //是协程栈栈顶。
@@ -33,9 +33,9 @@ class PHPCoroutine
     
       static php_coro_task main_task;
 
-      static void save_task(php_coro_task *task);
-      static void save_vm_stack(php_coro_task *task);
-      static php_coro_task* get_task();
+      static void save_task(php_coro_task *task);  //保存 PHP 栈
+      static void save_vm_stack(php_coro_task *task); //保存PHP栈的内容
+      static php_coro_task* get_task();   //获取PHP 栈的内容
       static void create_func(void *arg);
       static void vm_stack_init(void); //PHP栈初始化
 };

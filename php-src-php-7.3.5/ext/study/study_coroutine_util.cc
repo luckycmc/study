@@ -23,8 +23,10 @@ PHP_METHOD(study_coroutine_util,create)
     fci.retval = &result;
     //执行对应的函数
     if(zend_call_function(&fci,&fcc) != SUCCESS){
-         printf("you must is function\n");
+        
          return;
+    }else{
+         printf("go function is executed successfully\n");
     }
     //创建协成
     PHPCoroutine::create(&fcc, fci.param_count, fci.params);
