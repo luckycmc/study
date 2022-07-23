@@ -13,6 +13,7 @@
         "php_tinyswoole.h": "c",
         "server.h": "c",
         "context.h": "c",
-        "asm_context.h": "c"
+        "asm_context.h": "c",
+        "study.h": "c"
     }
 }
