@@ -27,28 +27,10 @@ ZEND_END_ARG_INFO()
 /***测试接口 start***/
 #include <stdio.h>
 #include <iostream>
-#include <uv.h>
 
 using namespace std;
 
-uint64_t repeat = 0;
 
-static void callback(uv_timer_t *handle)
-{
-    repeat = repeat + 1;
-    cout << "repeat count:" << repeat << endl;
-}
-
-PHP_FUNCTION(study_timer_test)
-{
-        uv_loop_t *loop = uv_default_loop();
-    uv_timer_t timer_req;
-    uv_timer_init(loop, &timer_req);
-    
-    uv_timer_start(&timer_req, callback, 1000, 1000);
-        uv_run(loop, UV_RUN_DEFAULT);
-}
-/***测试接口 end***/
 /*************PHP 函数接口注册 start**************/
 PHP_FUNCTION(study_coroutine_create);
 
@@ -115,7 +97,6 @@ const zend_function_entry study_functions[] = {
     PHP_FE(study_event_init, arginfo_study_void)
     PHP_FE(study_event_wait, arginfo_study_void)
     //增加测试代码
-    PHP_FE(study_timer_test, NULL) // 新增加的一行
     PHP_FE_END
 };
 // study 模块注册
