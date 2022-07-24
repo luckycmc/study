@@ -11,8 +11,19 @@ void Printss()
     printf("ssss");
     
 }
+struct A {
+	int id;
+};
 int main()
 {
-	Printss();
+	//Printss();
+	struct A *a,*b;
+	a = (struct A *)malloc(sizeof(struct A));
+	a->id =100;
+	
+	b = (struct A *)malloc(sizeof(struct A));
+	b->id =101;
+	 printf("a 的地址：%p \n", &a);
+    printf("b 的地址：%p \n", &b);
     return 0;
 }
