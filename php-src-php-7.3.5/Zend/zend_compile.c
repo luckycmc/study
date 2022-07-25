@@ -1689,7 +1689,7 @@ ZEND_API void zend_activate_auto_globals(void) /* {{{ */
 	} ZEND_HASH_FOREACH_END();
 }
 /* }}} */
-
+//获取token 值
 int ZEND_FASTCALL zendlex(zend_parser_stack_elem *elem) /* {{{ */
 {
 	zval zv;
@@ -8203,7 +8203,11 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+/**
+ * 编译当前节点 
+ * 
+ * @param ast 
+ */
 void zend_compile_stmt(zend_ast *ast) /* {{{ */
 {
 	if (!ast) {
@@ -8316,7 +8320,12 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+/**
+ * 编译表达式
+ * 
+ * @param result 
+ * @param ast 
+ */
 void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 {
 	/* CG(zend_lineno) = ast->lineno; */

@@ -30,7 +30,11 @@
 #define ZEND_AST_SPECIAL_SHIFT      6
 #define ZEND_AST_IS_LIST_SHIFT      7
 #define ZEND_AST_NUM_CHILDREN_SHIFT 8
-
+/**
+ * @brief 
+ * 
+ * ast 抽象语法书的类型
+ */
 enum _zend_ast_kind {
 	/* special nodes */
 	ZEND_AST_ZVAL = 1 << ZEND_AST_SPECIAL_SHIFT,
@@ -177,7 +181,9 @@ typedef struct _zend_ast_zval {
 	zval val;
 } zend_ast_zval;
 
-/* Separate structure for function and class declaration, as they need extra information. */
+/* Separate structure for function and class declaration, as they need extra information. 
+    另外函数、类还会用到另外一种ast节点结构：
+ */
 typedef struct _zend_ast_decl {
 	zend_ast_kind kind;
 	zend_ast_attr attr; /* Unused - for structure compatibility */
