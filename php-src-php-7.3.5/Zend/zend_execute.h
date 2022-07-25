@@ -141,9 +141,9 @@ ZEND_API int zend_use_undefined_constant(zend_string *name, zend_ast_attr attr, 
 
 /* dedicated Zend executor functions - do not use! */
 struct _zend_vm_stack {
-	zval *top;
-	zval *end;
-	zend_vm_stack prev;
+	zval *top;              //栈顶位置
+	zval *end;              //栈底位置
+	zend_vm_stack prev;     //pre是指向上一个栈的指针
 };
 
 #define ZEND_VM_STACK_HEADER_SLOTS \

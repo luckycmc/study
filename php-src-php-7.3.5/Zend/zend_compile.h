@@ -402,13 +402,13 @@ struct _zend_op_array {
 	/* END of common elements */
 
 	int cache_size;     /* number of run_time_cache_slots * sizeof(void*) */
-	int last_var;       /* number of CV variables */
+	int last_var;       /* number of CV variables //变量类型为IS_CV的个数*/
 	uint32_t T;         /* number of temporary variables */
 	uint32_t last;      /* number of opcodes */    //下面oplines数组大小
 
 	zend_op *opcodes;        //oplines数组，存放所有指令
 	void **run_time_cache;
-	HashTable *static_variables;
+	HashTable *static_variables;  //静态变量
 	zend_string **vars; /* names of CV variables */
 
 	uint32_t *refcount;
@@ -422,7 +422,7 @@ struct _zend_op_array {
 	uint32_t line_start;
 	uint32_t line_end;
 	zend_string *doc_comment;
-
+    ////常量个数；常量数组
 	int last_literal;
 	zval *literals;
 
@@ -482,15 +482,15 @@ typedef enum _zend_call_kind {
 	ZEND_CALL_TOP_FUNCTION,		/* direct VM call to function from external C code */
 	ZEND_CALL_TOP_CODE			/* direct VM call to "main" code from external C code */
 } zend_call_kind;
-
+//php  在栈上执行的数据为zend_execute_data
 struct _zend_execute_data {
-	const zend_op       *opline;           /* executed opline                */
-	zend_execute_data   *call;             /* current call                   */
+	const zend_op       *opline;           /* executed opline 要执行的指令                */
+	zend_execute_data   *call;             /* current call     current call              */
 	zval                *return_value;
-	zend_function       *func;             /* executed function              */
+	zend_function       *func;             /* executed function 执行函数             */
 	zval                 This;             /* this + call_info + num_args    */
-	zend_execute_data   *prev_execute_data;
-	zend_array          *symbol_table;
+	zend_execute_data   *prev_execute_data; //prev_execute_data;前一个栈针
+	zend_array          *symbol_table;   /*符号表*/
 #if ZEND_EX_USE_RUN_TIME_CACHE
 	void               **run_time_cache;   /* cache op_array->run_time_cache */
 #endif

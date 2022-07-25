@@ -18,7 +18,7 @@
    |          Xinchen Hui <xinchen.h@zend.com>                            |
    +----------------------------------------------------------------------+
 */
-
+// php基本数据类型的定义
 #ifndef ZEND_TYPES_H
 #define ZEND_TYPES_H
 
