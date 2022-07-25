@@ -617,11 +617,13 @@ static zend_op_array *zend_compile(int type)
 
 	return op_array;
 }
-
+/*
+  1.解析对应的PHP文件
+*/
 ZEND_API zend_op_array *compile_file(zend_file_handle *file_handle, int type)
 {
 	zend_lex_state original_lex_state;
-	zend_op_array *op_array = NULL;
+	zend_op_array *op_array = NULL; /*编译出的opcodes*/
 	zend_save_lexical_state(&original_lex_state);
 
 	if (open_file_for_scanning(file_handle)==FAILURE) {

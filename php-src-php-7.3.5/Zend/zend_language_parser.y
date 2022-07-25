@@ -259,7 +259,7 @@ static YYSIZE_T zend_yytnamerr(char*, const char*);
 
 %type <str> backup_doc_comment
 
-%% /* Rules */
+%% /* Rules 开始PHP的语法解析*/
 
 start:
 	top_statement_list	{ CG(ast) = $1; }
@@ -275,7 +275,7 @@ reserved_non_modifiers:
 	| T_CLASS_C | T_TRAIT_C | T_FUNC_C | T_METHOD_C | T_LINE | T_FILE | T_DIR | T_NS_C
 ;
 
-semi_reserved:
+semi_reserved: 
 	  reserved_non_modifiers
 	| T_STATIC | T_ABSTRACT | T_FINAL | T_PRIVATE | T_PROTECTED | T_PUBLIC
 ;
