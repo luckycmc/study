@@ -7,7 +7,6 @@ Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
 long Coroutine::last_cid = 0;   //初始化协成的id0
 // 设置map 模板
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
-
 size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE; //栈的大小
 /**协成切换的指针函数**/
 
@@ -24,8 +23,8 @@ void* Coroutine::get_task()
 }
 // 获取当前协成
 Coroutine* Coroutine::get_current()
-{
-    return current;
+{   
+   return current;
 }
 
 void Coroutine::set_task(void *_task)
