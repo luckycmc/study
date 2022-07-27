@@ -30,12 +30,13 @@ PHP_METHOD(study_coroutine_util,create)
     
     fci.retval = &result;
     //执行对应的函数
-    if(zend_call_function(&fci,&fcc) != SUCCESS){
-        
+    /*if(zend_call_function(&fci,&fcc) != SUCCESS){
+        printf("-----------------------------");
          return;
-    }
+    }*/
     //创建协成
-    PHPCoroutine::create(&fcc, fci.param_count, fci.params);
+    long cid =PHPCoroutine::create(&fcc, fci.param_count, fci.params);
+    RETURN_LONG(cid);
 }
 //协成切换
 PHP_METHOD(study_coroutine_util, yield)

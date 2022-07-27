@@ -10,4 +10,4 @@ echo "main coroutine" . PHP_EOL;
 Study\Coroutine::create('task', 1, 'a');
 echo "main coroutine" . PHP_EOL;
 Study\Coroutine::create('task', 2, 'b');
-echo "main coroutine" . PHP_EOL;
+echo "main coroutine end......." . PHP_EOL;
