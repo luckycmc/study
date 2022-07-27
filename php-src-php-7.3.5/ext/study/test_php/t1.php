@@ -15,5 +15,5 @@ function task($n, $a, $b)
 
 echo "main coroutine" . PHP_EOL;
 Study\Coroutine::create('task', 1, 'a', 'b');
-//echo "main coroutine" . PHP_EOL;
-//Study\Coroutine::create('task', 2, 'c', 'd');
+echo "main coroutine" . PHP_EOL;
+Study\Coroutine::create('task', 2, 'c', 'd');

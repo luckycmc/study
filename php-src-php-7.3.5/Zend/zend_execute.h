@@ -212,7 +212,7 @@ static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, ze
 	}
 	return used_stack * sizeof(zval);
 }
-
+// 分配内存栈帧
 static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame(uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
 	uint32_t used_stack = zend_vm_calc_used_stack(num_args, func);
@@ -265,7 +265,11 @@ static zend_always_inline void zend_vm_stack_free_args(zend_execute_data *call)
 		} while (--num_args);
 	}
 }
-
+/**************
+ * 具体释放栈帧的数据
+ *  如果当前栈帧有其他栈帧 修改指针指向其他栈帧
+ * 没有赋值为空
+ */
 static zend_always_inline void zend_vm_stack_free_call_frame_ex(uint32_t call_info, zend_execute_data *call)
 {
 	ZEND_ASSERT_VM_STACK_GLOBAL;
@@ -285,7 +289,7 @@ static zend_always_inline void zend_vm_stack_free_call_frame_ex(uint32_t call_in
 
 	ZEND_ASSERT_VM_STACK_GLOBAL;
 }
-
+//释放栈帧
 static zend_always_inline void zend_vm_stack_free_call_frame(zend_execute_data *call)
 {
 	zend_vm_stack_free_call_frame_ex(ZEND_CALL_INFO(call), call);

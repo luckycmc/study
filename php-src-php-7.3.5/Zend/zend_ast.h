@@ -30,15 +30,12 @@
 #define ZEND_AST_SPECIAL_SHIFT      6
 #define ZEND_AST_IS_LIST_SHIFT      7
 #define ZEND_AST_NUM_CHILDREN_SHIFT 8
-<<<<<<< HEAD
 //抽象语法书的类型
-=======
 /**
  * @brief 
  * 
  * ast 抽象语法书的类型
  */
->>>>>>> 959ed7293aacc27c038c7ddc87a18563e732b853
 enum _zend_ast_kind {
 	/* special nodes */
 	ZEND_AST_ZVAL = 1 << ZEND_AST_SPECIAL_SHIFT,

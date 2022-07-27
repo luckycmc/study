@@ -10,7 +10,7 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {
     swap_ctx_ = nullptr;
-
+    
     try
     {
         stack_ = new char[stack_size_];

@@ -40974,6 +40974,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UN
 	zval *variable_ptr;
 
 	SAVE_OPLINE();
+	//从literals数组中获取op2对应的值，也就是值2
 	value = RT_CONSTANT(opline, opline->op2);
 	variable_ptr = EX_VAR(opline->op1.var);
 
@@ -60860,8 +60861,12 @@ zend_leave_helper_SPEC_LABEL:
 	}
 	zend_error_noreturn(E_CORE_ERROR, "Arrived at end of main loop which shouldn't happen");
 }
-
-ZEND_API void zend_execute(zend_op_array *op_array, zval *return_value)
+/**
+ * /执行指令的入口
+ * op_array 是指令
+ * return_value 返回值
+ */
+ZEND_API vo**id zend_execute(zend_op_array *op_array, zval *return_value)
 {
 	zend_execute_data *execute_data;
 

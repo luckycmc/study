@@ -5,7 +5,7 @@ using namespace Study;
 //协成上下文 构造方法执行
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
-{
+{     
     swap_ctx_ = nullptr;
     stack_ = (char*) malloc(stack_size_); //栈的大小
     void* sp = (void*) ((char*) stack_ + stack_size_); //sp指针 void *private_data_;
