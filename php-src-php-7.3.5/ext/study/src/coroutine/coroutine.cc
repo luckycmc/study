@@ -25,7 +25,8 @@ void* Coroutine::get_task()
 // 获取当前协成
 Coroutine* Coroutine::get_current()
 {   
-    return current;
+
+   return current;
 }
 
 void Coroutine::set_task(void *_task)
