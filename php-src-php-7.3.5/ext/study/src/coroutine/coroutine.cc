@@ -41,7 +41,8 @@ void Coroutine::yield()
 }
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)
-{   
+{    
+    //new Coroutine(fn, args) 创建一个协成对象
     return (new Coroutine(fn, args))->run();//执行对应的协成函数
 }
 

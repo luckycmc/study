@@ -27,7 +27,7 @@ void PHPCoroutine::save_task(php_coro_task *task)
 // 通过全局函数EG获取对应的信息 EG 是PHP 提供的
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
-     task->vm_stack_top = EG(vm_stack_top);
+     task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息
      task->vm_stack_end = EG(vm_stack_end);
      task->vm_stack     = EG(vm_stack);
      task->vm_stack_page_size = EG(vm_stack_page_size);
@@ -56,7 +56,7 @@ void PHPCoroutine::create_func(void *arg)
     call = (zend_execute_data *) (EG(vm_stack_top));
     task = (php_coro_task *) EG(vm_stack_top);
     EG(vm_stack_top) = (zval *) ((char *) call + PHP_CORO_TASK_SLOT * sizeof(zval));
-
+    //将要执行的数据入栈
     call = zend_vm_stack_push_call_frame(
         ZEND_CALL_TOP_FUNCTION | ZEND_CALL_ALLOCATED,
         func, argc, fci_cache.called_scope, fci_cache.object
@@ -69,11 +69,11 @@ void PHPCoroutine::create_func(void *arg)
         param = ZEND_CALL_ARG(call, i + 1);
         ZVAL_COPY(param, arg);
     }
-
+    //符号表
     call->symbol_table = NULL;
-
+    //初始化call这个zend_execute_data之后，我们把它赋值给EG(current_execute_data)
     EG(current_execute_data) = call;
-    //保存当前的栈帧
+    //把当前的协程栈信息保存在task里面。
     save_vm_stack(task);
 
     task->co = Coroutine::get_current();
@@ -83,7 +83,10 @@ void PHPCoroutine::create_func(void *arg)
     {
         ZVAL_UNDEF(retval);
         EG(current_execute_data) = NULL;
-        zend_init_func_execute_data(call, &func->op_array, retval);
+        //zend_init_func_execute_data的作用是去初始化zend_execute_data
+        zend_init_func_execute_data(call, &func->op_array, retval); //初始化执行栈
+        //zend_execute_ex的作用就是去循环执行executor_globals.current_execute_data指向的opline。
+        //此时，这些opline就是我们用户空间传递的函数。
         zend_execute_ex(EG(current_execute_data));
     }
 
@@ -93,14 +96,16 @@ void PHPCoroutine::create_func(void *arg)
 //申请一个新的PHP 栈
 void PHPCoroutine::vm_stack_init(void)
 {
-    uint32_t size = DEFAULT_PHP_STACK_SIZE;
-    zend_vm_stack page = (zend_vm_stack) emalloc(size);
-    //栈顶和栈的底部
+    uint32_t size = DEFAULT_PHP_STACK_SIZE; // 8M
+    zend_vm_stack page = (zend_vm_stack) emalloc(size);//分配一块栈空间
+    //栈顶和栈的底部page->top的作用是指向目前的栈顶，这个top会随着栈里面的数据而不断的变化。
+    //压栈，top往靠近end的方向移动个；出栈，top往远离end的方向移动。
+    //page->end的作用就是用来标识PHP栈的边界，以防'栈溢出'。这个page->end可以作为是否要扩展PHP栈的依据
     page->top = ZEND_VM_STACK_ELEMENTS(page);
     page->end = (zval*) ((char*) page + size);
     page->prev = NULL;  //上一个栈指针
     
-    // 吧当前的栈针信息保存到EG 中
+    // 当前的栈针信息保存到EG 中 用作当前函数执行  去修改现在的PHP栈，让它指向我们申请出来的新的PHP栈空间
     EG(vm_stack) = page;
     EG(vm_stack)->top++;
     EG(vm_stack_top) = EG(vm_stack)->top;
