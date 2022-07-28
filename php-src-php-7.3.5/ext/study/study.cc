@@ -38,8 +38,9 @@ PHP_MINFO_FUNCTION(study)
 }
 
 const zend_function_entry study_functions[] = {
-    //注册替换函数
-    //PHP_FE(study_coroutine_create, arginfo_study_coroutine_create)
+    //注册替换函数 替换对应的类
+    PHP_FE(study_coroutine_create, arginfo_study_coroutine_create)
+    PHP_FALIAS(sgo, study_coroutine_create, arginfo_study_coroutine_create)
     PHP_FE_END
 };
 

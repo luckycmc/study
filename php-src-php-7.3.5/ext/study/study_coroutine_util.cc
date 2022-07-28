@@ -7,8 +7,8 @@ using Study::Coroutine;
 static std::unordered_map<long, Coroutine*> user_yield_coros;
 
 //声明宏定义create()
-ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create,0,0,1)
-   ZEND_ARG_CALLABLE_INFO(0,func,0)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create, 0, 0, 1)
+    ZEND_ARG_CALLABLE_INFO(0, func, 0)
 ZEND_END_ARG_INFO()
 
 //协成切换参数 yeild()
@@ -31,9 +31,8 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_defer, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 // 声明函数方法
-static PHP_METHOD(study_coroutine_util,create);
 
-PHP_METHOD(study_coroutine_util,create)
+PHP_FUNCTION(study_coroutine_create)
 {  
      // zend_fcall_info 就是用来接收我们创建协程的时候传递的那个函数
     zend_fcall_info fci = empty_fcall_info;
@@ -122,7 +121,8 @@ PHP_METHOD(study_coroutine_util,defer)
 //方法注册
 const zend_function_entry study_coroutine_util_methods [] = 
 {   
-    PHP_ME(study_coroutine_util,create,arginfo_study_coroutine_create,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    ZEND_FENTRY(create, ZEND_FN(study_coroutine_create), arginfo_study_coroutine_create, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+   
     PHP_ME(study_coroutine_util,yield, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(study_coroutine_util,resume, arginfo_study_coroutine_resume, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(study_coroutine_util, getCid, arginfo_study_coroutine_void, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
@@ -142,4 +142,5 @@ zend_class_entry *study_coroutine_ce_ptr;
  {
      INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
      study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
+     zend_register_class_alias("SCo", study_coroutine_ce_ptr); // 新增的代码
  }
