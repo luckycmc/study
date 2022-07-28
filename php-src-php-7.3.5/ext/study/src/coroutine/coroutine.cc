@@ -39,6 +39,22 @@ void Coroutine::yield()
    current = origin;
    ctx.swap_out();
 }
+//恢复当前协成
+void Coroutine::resume()
+{
+    origin = current;
+    current = this;  //执行当前的协程对象
+    ctx.swap_in();
+    //判断协成是否结束
+    if (ctx.is_end())
+    {
+        cid = current->get_cid();
+        printf("in resume method: co[%ld] end\n", cid);
+        current = origin;
+        coroutines.erase(cid);
+        delete this;
+    }
+}
 //创建协成 协成类
 long Coroutine::create(coroutine_func_t fn, void* args)
 {    
