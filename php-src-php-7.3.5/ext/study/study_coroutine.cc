@@ -78,7 +78,7 @@ void PHPCoroutine::create_func(void *arg)
 
     task->co = Coroutine::get_current();
     task->co->set_task((void *) task);
-
+    task->defer_tasks = nullptr; //deder 使用的赋值为空
     if (func->type == ZEND_USER_FUNCTION)
     {
         ZVAL_UNDEF(retval);
@@ -88,6 +88,29 @@ void PHPCoroutine::create_func(void *arg)
         //zend_execute_ex的作用就是去循环执行executor_globals.current_execute_data指向的opline。
         //此时，这些opline就是我们用户空间传递的函数。
         zend_execute_ex(EG(current_execute_data));
+    }
+    //判断是都有defer 函数注册有注入则实现函数调用
+    task = get_task();
+    std::stack<php_study_fci_fcc*> *defer_tasks = task->defer_tasks;
+
+    if (defer_tasks) {
+        php_study_fci_fcc *defer_fci_fcc;
+        zval result;
+        while(!defer_tasks->empty())
+        {
+            defer_fci_fcc = defer_tasks->top();
+            defer_tasks->pop();
+            defer_fci_fcc->fci.retval = &result;
+
+            if (zend_call_function(&defer_fci_fcc->fci, &defer_fci_fcc->fcc) != SUCCESS)
+            {
+                php_error_docref(NULL, E_WARNING, "defer execute error");
+                return;
+            }
+            efree(defer_fci_fcc);
+        }
+        delete defer_tasks;
+        task->defer_tasks = nullptr;
     }
 
     zval_ptr_dtor(retval);
@@ -112,4 +135,14 @@ void PHPCoroutine::vm_stack_init(void)
     EG(vm_stack_end) = EG(vm_stack)->end;
     EG(vm_stack_page_size) = size;
 
+}
+//实现defer
+void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
+{
+    php_coro_task *task = (php_coro_task *)get_task();
+    if (task->defer_tasks == nullptr)
+    {
+        task->defer_tasks = new std::stack<php_study_fci_fcc *>;
+    }
+    task->defer_tasks->push(defer_fci_fcc);
 }
