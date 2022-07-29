@@ -1,54 +1,70 @@
-#ifndef TIMER_H
-#define TIMER_H
+#include "timer.h"
 
-#include "study.h"
+using Study::Timer;
+using Study::TimerManager;
 
-typedef void (*timer_func_t)(void*);
+TimerManager Study::timer_manager;
 
-namespace Study
+const uint64_t Timer::MILLI_SECOND = 1;
+const uint64_t Timer::SECOND = 1000;
+
+uint64_t Timer::get_current_ms()
 {
-class TimerManager;
-
-class Timer
-{
-friend class TimerManager;
-friend class CompareTimerPointer;
-public:
-    static const uint64_t MILLI_SECOND;
-    static const uint64_t SECOND;
-    Timer(uint64_t _timeout, timer_func_t _callback, void *_private_data, TimerManager *_timer_manager);
-    static uint64_t get_current_ms();
-    
-private:
-    uint64_t timeout = 0;
-    uint64_t exec_msec = 0;
-    timer_func_t callback;
-    void *private_data;
-    TimerManager *timer_manager = nullptr;
-};
-
-class CompareTimerPointer
-{
-public:
-    bool operator () (Timer* &timer1, Timer* &timer2) const
-    {
-        return timer1->exec_msec > timer2->exec_msec;
-    }
-};
-
-class TimerManager
-{
-public:
-    TimerManager();
-    ~TimerManager();
-    void add_timer(int64_t _timeout, timer_func_t _callback, void *_private_data);
-    int64_t get_next_timeout();
-    void run_timers();
-private:
-    std::priority_queue<Timer*, std::vector<Timer*>, CompareTimerPointer> timers;
-};
-
-extern TimerManager timer_manager;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-#endif	/* TIMER_H */
+Timer::Timer(uint64_t _timeout, timer_func_t _callback, void *_private_data, TimerManager *_timer_manager):
+    timeout(_timeout), callback(_callback), private_data(_private_data), timer_manager(_timer_manager)
+{
+    exec_msec = get_current_ms() + _timeout;
+}
+
+TimerManager::TimerManager()
+{
+}
+
+TimerManager::~TimerManager()
+{
+}
+
+void TimerManager::add_timer(int64_t _timeout, timer_func_t _callback, void *_private_data)
+{
+    Timer *timer = new Timer(_timeout, _callback, _private_data, this);
+    timers.push(timer);
+}
+
+int64_t TimerManager::get_next_timeout()
+{
+    int64_t diff;
+
+    if (timers.empty())
+    {
+        return -1;
+    }
+    Timer *t = timers.top();
+
+    diff = t->exec_msec - Timer::get_current_ms();
+    return diff < 0 ? 0 : diff;
+}
+
+void TimerManager::run_timers()
+{
+    uint64_t now = Timer::get_current_ms();
+    while (true)
+    {
+        if (timers.empty())
+        {
+            break;
+        }
+        Timer *t = timers.top();
+        if (now < t->exec_msec)
+        {
+            break;
+        }
+        timers.pop();
+        t->callback(t->private_data);
+        delete t;
+    }
+}
