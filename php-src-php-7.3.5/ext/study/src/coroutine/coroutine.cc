@@ -1,4 +1,5 @@
 #include "coroutine.h"
+#include "timer.h"
 
 using Study::Coroutine;
 
@@ -61,10 +62,20 @@ long Coroutine::create(coroutine_func_t fn, void* args)
     //new Coroutine(fn, args) 创建一个协成对象
     return (new Coroutine(fn, args))->run();//执行对应的协成函数
 }
+//超时恢复
+static void sleep_timeout(void *param)
+{
+    ((Coroutine *) param)->resume();
+}
 
 //模拟阻塞IO
 int Coroutine::sleep(double seconds)
 {
+    Coroutine* co = Coroutine::get_current();
+
+    timer_manager.add_timer(seconds * Timer::SECOND, sleep_timeout, (void*)co);
+   
+    co->yield();
     return 0;
 }
 
