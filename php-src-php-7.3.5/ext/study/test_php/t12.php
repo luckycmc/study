@@ -1,4 +1,5 @@
 <?php
+study_event_init();
 Sgo(function () {
     echo "co1 before sleep" . PHP_EOL;
     SCo::sleep(1000);
@@ -10,3 +11,4 @@ Sgo(function () {
     SCo::sleep(2000);
     echo "co2 after sleep" . PHP_EOL;
 });
+study_event_wait();
