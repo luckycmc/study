@@ -12,6 +12,8 @@ PHP_FUNCTION(study_coroutine_create);
 PHP_MINIT_FUNCTION(study)
 {   
     study_coroutine_util_init();
+    //服务器初始化
+    study_coroutine_server_coro_init(); // 新增加的代码
     return SUCCESS;
 }
 //  src/coroutine/coroutine.cc 代码可能有问题导致编译不能成功

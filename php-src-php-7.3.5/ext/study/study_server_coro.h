@@ -3,6 +3,8 @@
 
 #include "php_study.h"
 #include "error.h"
+#include "socket.h"
+
 //初始化函数
 
 #endif    /* STUDY_SERVER_CORO_H */
