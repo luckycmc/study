@@ -1,4 +1,5 @@
 #include "study_server_coro.h"
+
 /**
  * @brief 
  *  定义class endtry
@@ -40,7 +41,7 @@ PHP_METHOD(study_coroutine_server_coro,__construct)
         Z_PARAM_LONG(zport)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
-    sock = stSocket_create(ST_SOCK_TCP);
+    sock = stSocket_create(AF_INET, SOCK_STREAM, 0);
     stSocket_bind(sock, ST_SOCK_TCP, Z_STRVAL_P(zhost), zport);
     stSocket_listen(sock); // 修改的地方
 

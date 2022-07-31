@@ -1,7 +1,6 @@
 <?php
 
+//绑定服务器进行压测
 $serv = new Study\Coroutine\Server("127.0.0.1", 8080);
 
-$sock = $serv->accept();
-$buf = $serv->recv($sock);
-$serv->send($sock, $buf);
+var_dump($serv);
