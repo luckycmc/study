@@ -93,12 +93,13 @@ ssize_t stSocket_send(int sock, const void *buf, size_t len, int flag)
 int stSocket_set_nonblock(int sock)
 {
     int flags;
-
+    // 用来获取这个socket原来的一些属性。
     flags = fcntl(sock, F_GETFL, 0);
     if (flags < 0) {
         stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
         return -1;
     }
+    //用来在原来的属性上加上非阻塞的属性。
     flags = fcntl(sock, F_SETFL, flags | O_NONBLOCK);
     if (flags < 0) {
         stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));

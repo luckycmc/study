@@ -30,7 +30,7 @@ ZEND_END_ARG_INFO()
  */
 zend_class_entry study_coroutine_server_coro_ce;
 zend_class_entry *study_coroutine_server_coro_ce_ptr;
-
+//构造方法接口
 PHP_METHOD(study_coroutine_server_coro, __construct)
 {
     zval *zhost;
@@ -41,7 +41,7 @@ PHP_METHOD(study_coroutine_server_coro, __construct)
         Z_PARAM_ZVAL(zhost)
         Z_PARAM_LONG(zport)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
-
+    //使用协成话socket
     Socket *sock = new Socket(AF_INET, SOCK_STREAM, 0);
 
     sock->bind(ST_SOCK_TCP, Z_STRVAL_P(zhost), zport);
@@ -53,19 +53,19 @@ PHP_METHOD(study_coroutine_server_coro, __construct)
     zend_update_property_string(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("host"), Z_STRVAL_P(zhost));
     zend_update_property_long(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("port"), zport);
 }
-
+//接受客户端连接
 PHP_METHOD(study_coroutine_server_coro, accept)
 {
     zval *zsock;
     Socket *sock;
     int connfd;
-
+    // 读取到我们在构造函数里面设置的Socket对象。然后，我们再调用这个对象的accept方法
     zsock = st_zend_read_property(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("zsock"), 0);
     sock = (Socket *)Z_PTR_P(zsock);
     connfd = sock->accept();
     RETURN_LONG(connfd);
 }
-
+//接受客户端发送的数据
 PHP_METHOD(study_coroutine_server_coro, recv)
 {
     ssize_t ret;
@@ -82,13 +82,13 @@ PHP_METHOD(study_coroutine_server_coro, recv)
 
     Socket *conn = new Socket(fd);
     ret = conn->recv(Socket::read_buffer, Socket::read_buffer_len);
-    if (ret == 0)
+    if (ret == 0) //客户端关闭
     {
         zend_update_property_long(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("errCode"), ST_ERROR_SESSION_CLOSED_BY_CLIENT);
         zend_update_property_string(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("errMsg"), st_strerror(ST_ERROR_SESSION_CLOSED_BY_CLIENT));
         RETURN_FALSE;
     }
-    if (ret < 0)
+    if (ret < 0) //出现错误
     {
         php_error_docref(NULL, E_WARNING, "recv error");
         RETURN_FALSE;
