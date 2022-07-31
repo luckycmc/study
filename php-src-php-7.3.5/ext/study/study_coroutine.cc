@@ -1,7 +1,7 @@
 #include "study_coroutine.h"
 
-using Study::PHPCoroutine;
-using Study::Coroutine;
+using study::PHPCoroutine;
+using study::Coroutine;
 
 php_coro_task PHPCoroutine::main_task = {0}; //主协成 也即是主进程
 
@@ -112,7 +112,10 @@ void PHPCoroutine::create_func(void *arg)
         delete defer_tasks;
         task->defer_tasks = nullptr;
     }
-
+    /**释放 PHP的栈 start**/
+    zend_vm_stack stack = EG(vm_stack); // 增加的代码
+    efree(stack); // 增加的代码
+    /**释放 PHP的栈 end**/
     zval_ptr_dtor(retval);
 }
 

@@ -1,12 +1,19 @@
 #include "coroutine_socket.h"
+#include "coroutine.h"
 #include "socket.h"
-#include "coroutine.h" // 增加的一行
-using Study::Coroutine; // 增加的一行
-using Study::coroutine::Socket; // 新增的一行
+#include "log.h"
 
-//socket 的创建
+using study::Coroutine;
+using study::coroutine::Socket;
+
+char * Socket::read_buffer = nullptr;
+size_t Socket::read_buffer_len = 0;
+char * Socket::write_buffer = nullptr;
+size_t Socket::write_buffer_len = 0;
+
 Socket::Socket(int domain, int type, int protocol)
 {
+   
     sockfd = stSocket_create(domain, type, protocol);
     if (sockfd < 0)
     {
@@ -14,85 +21,133 @@ Socket::Socket(int domain, int type, int protocol)
     }
     stSocket_set_nonblock(sockfd);
 }
-//cocket 绑定
+
+Socket::Socket(int fd)
+{
+    sockfd = fd;
+    stSocket_set_nonblock(sockfd);
+}
+
+Socket::~Socket()
+{
+}
+
 int Socket::bind(int type, char *host, int port)
 {
     return stSocket_bind(sockfd, type, host, port);
 }
-//socket 监听
+
 int Socket::listen()
 {
     return stSocket_listen(sockfd);
 }
-//socket 接受客户端连接
+
 int Socket::accept()
 {
     int connfd;
 
-    connfd = stSocket_accept(sockfd);
-    if (connfd < 0 && errno == EAGAIN)
+    do
     {
-        wait_event(ST_EVENT_READ);
         connfd = stSocket_accept(sockfd);
-    }
+    } while (connfd < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
 
     return connfd;
 }
-//等待事件到来
+
+ssize_t Socket::recv(void *buf, size_t len)
+{
+    int ret;
+
+    do
+    {
+        ret = stSocket_recv(sockfd, buf, len, 0);
+    } while (ret < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
+
+    return ret;
+}
+
+ssize_t Socket::send(const void *buf, size_t len)
+{
+    int ret;
+
+    do
+    {
+        ret = stSocket_send(sockfd, buf, len, 0);
+    } while (ret < 0 && errno == EAGAIN && wait_event(ST_EVENT_WRITE));
+    
+    return ret;
+}
+
+int Socket::close()
+{
+    return stSocket_close(sockfd);
+}
+
 bool Socket::wait_event(int event)
 {
     long id;
     Coroutine* co;
     epoll_event *ev;
 
-    co = Coroutine::get_current(); //获取到当前的这个协程。
+    co = Coroutine::get_current();
     id = co->get_cid();
-    // 用来判断这个协程需要等待那种类型的事件，目前是支持READ和WRITE。
+
+    if (!StudyG.poll)
+    {
+        init_stPoll();
+    }
+
     ev = StudyG.poll->events;
+
     ev->events = event == ST_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
     epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
+    (StudyG.poll->event_num)++;
 
     co->yield();
+
+    if (epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
+    {
+        stError("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return false;
+    }
     return true;
 }
-//接受客户端的数据
-ssize_t Socket::recv(void *buf, size_t len)
-{
-    int ret;
 
-    ret = stSocket_recv(sockfd, buf, len, 0);
-    if (ret < 0 && errno == EAGAIN)
+int Socket::init_read_buffer()
+{
+    if (!read_buffer)
     {
-        wait_event(ST_EVENT_READ);
-        ret = stSocket_recv(sockfd, buf, len, 0);
+        try
+        {
+            read_buffer = new char[65536];
+        }
+        catch(const std::bad_alloc& e)
+        {
+            stError("%s", e.what());
+        }
+        
+        read_buffer_len = 65536;
     }
-    return ret;
-}
-//发送数据给客户端
-ssize_t Socket::send(const void *buf, size_t len)
-{
-    int ret;
 
-    ret = stSocket_send(sockfd, buf, len, 0);
-    if (ret < 0 && errno == EAGAIN)
+    return 0;
+}
+
+int Socket::init_write_buffer()
+{
+    if (!write_buffer)
     {
-        wait_event(ST_EVENT_WRITE);
-        ret = stSocket_send(sockfd, buf, len, 0);
+        try
+        {
+            write_buffer = new char[65536];
+        }
+        catch(const std::bad_alloc& e)
+        {
+            stError("%s", e.what());
+        }
+        
+        write_buffer_len = 65536;
     }
-    return ret;
+
+    return 0;
 }
-//关闭客户端
-int Socket::close()
-{
-    return stSocket_close(sockfd);
-}
-//析构函数
-Socket::~Socket()
-{
-}
-
-
-
-
-

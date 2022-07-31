@@ -1,7 +1,7 @@
 #include "context.h"
 #include "study.h"
 
-using namespace Study;
+using study::Context;
 //协成上下文 构造方法执行
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
@@ -49,4 +49,13 @@ bool Context::swap_in()
 {
     jump_fcontext(&swap_ctx_, ctx_, (intptr_t) this, true);
     return true;
+}
+//协成结束后释放对应的内存
+Context::~Context()
+{
+    if (swap_ctx_)
+    {
+        free(stack_);
+        stack_ = NULL;
+    }
 }
