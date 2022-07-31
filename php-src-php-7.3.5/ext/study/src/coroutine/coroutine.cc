@@ -13,6 +13,7 @@ std::unordered_map<long, Coroutine*> Coroutine::coroutines;
 /**协成切换的指针函数**/
 st_coro_on_swap_t Coroutine::on_yield = nullptr;
 st_coro_on_swap_t Coroutine::on_resume = nullptr;
+st_coro_on_swap_t Coroutine::on_close = nullptr; // 新增的一行
 /*********coroutine/coroutine.cc 有问题********/   
 
 void* Coroutine::get_current_task()
@@ -50,8 +51,9 @@ void Coroutine::resume()
     //判断协成是否结束
     if (ctx.is_end())
     {
-        cid = current->get_cid();
-        printf("in resume method: co[%ld] end\n", cid);
+        //cid = current->get_cid();
+        //printf("in resume method: co[%ld] end\n", cid);
+        on_close(task); // 新增的一行
         current = origin;
         coroutines.erase(cid);
         delete this;
@@ -88,5 +90,9 @@ void Coroutine::set_on_yield(st_coro_on_swap_t func)
 void Coroutine::set_on_resume(st_coro_on_swap_t func)
 {
     on_resume = func;
+}
+void Coroutine::set_on_close(st_coro_on_swap_t func)
+{
+    on_close = func;
 }
 

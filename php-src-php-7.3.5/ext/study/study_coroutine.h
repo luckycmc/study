@@ -65,6 +65,7 @@ class PHPCoroutine
       //restore_vm_stack用来重新加载PHP栈。
       static inline void restore_task(php_coro_task *task);
       static inline void restore_vm_stack(php_coro_task *task);
+      static void on_close(void *arg);
 };
 }
 

@@ -113,10 +113,6 @@ void PHPCoroutine::create_func(void *arg)
         delete defer_tasks;
         task->defer_tasks = nullptr;
     }
-    /**释放 PHP的栈 start**/
-    zend_vm_stack stack = EG(vm_stack); // 增加的代码
-    efree(stack); // 增加的代码
-    /**释放 PHP的栈 end**/
     zval_ptr_dtor(retval);
 }
 
@@ -191,9 +187,21 @@ inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
     EG(vm_stack_page_size) = task->vm_stack_page_size;
     EG(current_execute_data) = task->execute_data;
 }
+//释放协成栈
+void PHPCoroutine::on_close(void *arg)
+{
+    php_coro_task *task = (php_coro_task *) arg;
+    php_coro_task *origin_task = get_origin_task(task);
+    zend_vm_stack stack = EG(vm_stack);
+    php_printf("%p\n", stack);
+    efree(stack);
+    restore_task(origin_task);
+}
+
 // PHPCoroutine::init就是去设置保存、加载PHP栈的回调函数。
 void PHPCoroutine::init()
 {
     Coroutine::set_on_yield(on_yield);
     Coroutine::set_on_resume(on_resume);
+    Coroutine::set_on_close(on_close);
 }
