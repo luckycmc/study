@@ -97,7 +97,7 @@ PHP_METHOD(study_coroutine_server_coro, recv)
     Socket::read_buffer[ret] = '\0';
     RETURN_STRING(Socket::read_buffer);
 }
-
+//发送数据给客户端
 PHP_METHOD(study_coroutine_server_coro, send)
 {
     ssize_t ret;
@@ -117,10 +117,10 @@ PHP_METHOD(study_coroutine_server_coro, send)
         php_error_docref(NULL, E_WARNING, "send error");
         RETURN_FALSE;
     }
-    delete conn;
+    delete conn; //删除这个对象
     RETURN_LONG(ret);
 }
-
+//关闭服务器
 PHP_METHOD(study_coroutine_server_coro, close)
 {
     int ret;
@@ -145,7 +145,7 @@ PHP_METHOD(study_coroutine_server_coro, close)
     delete sock;
     RETURN_LONG(ret);
 }
-
+//注册类的函数
 static const zend_function_entry study_coroutine_server_coro_methods[] =
 {
     PHP_ME(study_coroutine_server_coro, __construct, arginfo_study_coroutine_server_coro_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR) // ZEND_ACC_CTOR is used to declare that this method is a constructor of this class.
@@ -155,7 +155,7 @@ static const zend_function_entry study_coroutine_server_coro_methods[] =
     PHP_ME(study_coroutine_server_coro, close, arginfo_study_coroutine_server_coro_close, ZEND_ACC_PUBLIC)
     PHP_FE_END
 };
-
+// server  初始化
 void study_coroutine_server_coro_init()
 {
     zval zsock;
