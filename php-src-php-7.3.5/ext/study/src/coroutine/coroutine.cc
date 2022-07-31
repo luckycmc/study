@@ -11,7 +11,8 @@ size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE; //栈的大小
 // 设置map 模板
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
 /**协成切换的指针函数**/
-
+st_coro_on_swap_t Coroutine::on_yield = nullptr;
+st_coro_on_swap_t Coroutine::on_resume = nullptr;
 /*********coroutine/coroutine.cc 有问题********/   
 
 void* Coroutine::get_current_task()
@@ -77,5 +78,15 @@ int Coroutine::sleep(double seconds)
    
     co->yield();
     return 0;
+}
+
+void Coroutine::set_on_yield(st_coro_on_swap_t func)
+{
+    on_yield = func;
+}
+
+void Coroutine::set_on_resume(st_coro_on_swap_t func)
+{
+    on_resume = func;
 }
 

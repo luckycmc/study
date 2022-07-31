@@ -161,7 +161,9 @@ zend_class_entry study_coroutine_ce;
 zend_class_entry *study_coroutine_ce_ptr;
 //协成法法初始化
  void study_coroutine_util_init()
- {
+ {  
+      PHPCoroutine::init(); // 新增的一行
+      
      INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
      study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
      zend_register_class_alias("SCo", study_coroutine_ce_ptr); // 新增的代码
