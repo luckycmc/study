@@ -1,5 +1,6 @@
 #include "context.h"
 #include "study.h"
+#include "log.h"
 
 using study::Context;
 //协成上下文 构造方法执行
@@ -7,10 +8,18 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {     
     swap_ctx_ = nullptr;
-    stack_ = (char*) malloc(stack_size_); //栈的大小
-    void* sp = (void*) ((char*) stack_ + stack_size_); //sp指针 void *private_data_;
-    //栈指针和栈的大小 以及栈的 入口地址
-    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func); //设置当前协成的上下文
+
+    try
+    {
+        stack_ = new char[stack_size_];
+    }
+    catch(const std::bad_alloc& e)
+    {
+        stError("%s", e.what());
+    }
+
+    void* sp = (void*) ((char*) stack_ + stack_size_);
+    ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
 /**
@@ -55,7 +64,7 @@ Context::~Context()
 {
     if (swap_ctx_)
     {
-        free(stack_);
-        stack_ = NULL;
+       delete[]stack_;
+       stack_ = nullptr;
     }
 }
