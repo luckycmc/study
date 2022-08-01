@@ -46,10 +46,10 @@ class PHPCoroutine
       static void init();
       //get_origin_task获取上一个任务的task结构
       static inline php_coro_task* get_origin_task(php_coro_task *task)
-    {
+     {
         Coroutine *co = task->co->get_origin();
         return co ? (php_coro_task *) co->get_task() : &main_task;
-    }
+     }
     protected:
       static php_coro_task main_task;
 

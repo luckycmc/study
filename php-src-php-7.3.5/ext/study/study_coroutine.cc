@@ -5,7 +5,7 @@ using study::PHPCoroutine;
 using study::Coroutine;
 
 php_coro_task PHPCoroutine::main_task = {0}; //主协成 也即是主进程
-
+// 
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *argv)
 {
     php_coro_args php_coro_args;
@@ -195,7 +195,7 @@ void PHPCoroutine::on_close(void *arg)
     zend_vm_stack stack = EG(vm_stack);
     //php_printf("%p\n", stack);
     efree(stack);
-    restore_task(origin_task);
+    restore_task(origin_task); //恢复上一个PHP的栈帧
 }
 
 // PHPCoroutine::init就是去设置保存、加载PHP栈的回调函数。

@@ -1,5 +1,4 @@
 <?php
-
 study_event_init();
 
 Sgo(function ()

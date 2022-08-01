@@ -45,7 +45,7 @@ PHP_METHOD(study_coroutine_server_coro, __construct)
     Socket *sock = new Socket(AF_INET, SOCK_STREAM, 0);
 
     sock->bind(ST_SOCK_TCP, Z_STRVAL_P(zhost), zport);
-    sock->listen();
+    sock->listen(512);
     //更新当前类的属性
     ZVAL_PTR(&zsock, sock);
 

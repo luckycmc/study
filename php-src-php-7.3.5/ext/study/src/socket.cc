@@ -71,7 +71,7 @@ ssize_t stSocket_recv(int sock, void *buf, size_t len, int flag)
     ssize_t ret;
 
     ret = recv(sock, buf, len, flag);
-    if (ret < 0)
+    if (ret < 0 && errno != EAGAIN)
     {
         stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }

@@ -44,7 +44,7 @@ int Socket::bind(int type, char *host, int port)
     return stSocket_bind(sockfd, type, host, port);
 }
 
-int Socket::listen()
+int Socket::listen(int backlog)
 {
     return stSocket_listen(sockfd);
 }
@@ -61,7 +61,7 @@ int Socket::accept()
 
     } while (connfd < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
 
-    return connfd;
+     return connfd;
 }
 //读取数据
 /*
@@ -104,7 +104,7 @@ bool Socket::wait_event(int event)
     Coroutine* co;
     epoll_event *ev;
 
-    co = Coroutine::get_current(); //获取到当前的这个协程
+    co = Coroutine::get_current();
     id = co->get_cid();
 
     if (!StudyG.poll)
@@ -116,11 +116,10 @@ bool Socket::wait_event(int event)
 
     ev->events = event == ST_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
-    //加入到epoll 中
     epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
     (StudyG.poll->event_num)++;
 
-    co->yield(); //切换当前协成
+    co->yield();
 
     if (epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
     {
