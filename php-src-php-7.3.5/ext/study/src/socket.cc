@@ -89,7 +89,7 @@ ssize_t stSocket_send(int sock, const void *buf, size_t len, int flag)
     }
     return ret;
 }
-//设置非阻塞的fd
+//设置非阻塞的fd 以便于协成调度
 int stSocket_set_nonblock(int sock)
 {
     int flags;

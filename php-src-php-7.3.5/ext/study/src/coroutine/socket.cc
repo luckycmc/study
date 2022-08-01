@@ -10,6 +10,13 @@ char * Socket::read_buffer = nullptr;
 size_t Socket::read_buffer_len = 0;
 char * Socket::write_buffer = nullptr;
 size_t Socket::write_buffer_len = 0;
+/**
+ * 所以，虽然通过协程，可以通过同步的方式编写高性能的服务器，但是，我们只有掌握了协程的原理，才可以避免一些坑。
+ * 
+ * @param domain 
+ * @param type 
+ * @param protocol 
+ */
 //创建socket
 Socket::Socket(int domain, int type, int protocol)
 {
@@ -65,7 +72,7 @@ int Socket::accept()
 ssize_t Socket::recv(void *buf, size_t len)
 {
     int ret;
-
+     // 加一个while 这是对协程化接口的一种同步，确保前面的函数执行成功了，再继续后面的函数。
     do
     {
         ret = stSocket_recv(sockfd, buf, len, 0);
@@ -73,7 +80,7 @@ ssize_t Socket::recv(void *buf, size_t len)
 
     return ret;
 }
-//发送数据给对应的客户端
+//发送数据给对应的客户端 逻辑和recv一致
 ssize_t Socket::send(const void *buf, size_t len)
 {
     int ret;
@@ -122,7 +129,7 @@ bool Socket::wait_event(int event)
     }
     return true;
 }
-
+//初始化读缓冲区
 int Socket::init_read_buffer()
 {
     if (!read_buffer)
@@ -141,7 +148,7 @@ int Socket::init_read_buffer()
 
     return 0;
 }
-
+//初始化写缓冲区
 int Socket::init_write_buffer()
 {
     if (!write_buffer)

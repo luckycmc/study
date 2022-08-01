@@ -10,17 +10,17 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_server_coro_construct, 0, 0, 2)
     ZEND_ARG_INFO(0, host)
     ZEND_ARG_INFO(0, port)
 ZEND_END_ARG_INFO()
-
+// recv 参数
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_server_coro_recv, 0, 0, 2)
     ZEND_ARG_INFO(0, fd)
     ZEND_ARG_INFO(0, length)
 ZEND_END_ARG_INFO()
-
+// send 参数
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_server_coro_send, 0, 0, 2)
     ZEND_ARG_INFO(0, fd)
     ZEND_ARG_INFO(0, data)
 ZEND_END_ARG_INFO()
-
+// 关闭参数
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_server_coro_close, 0, 0, 1)
     ZEND_ARG_INFO(0, fd)
 ZEND_END_ARG_INFO()
@@ -46,7 +46,7 @@ PHP_METHOD(study_coroutine_server_coro, __construct)
 
     sock->bind(ST_SOCK_TCP, Z_STRVAL_P(zhost), zport);
     sock->listen();
-
+    //更新当前类的属性
     ZVAL_PTR(&zsock, sock);
 
     zend_update_property(study_coroutine_server_coro_ce_ptr, getThis(), ZEND_STRL("zsock"), &zsock);
@@ -78,7 +78,7 @@ PHP_METHOD(study_coroutine_server_coro, recv)
         Z_PARAM_LONG(length)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
-    Socket::init_read_buffer();
+    Socket::init_read_buffer();// 初始化读取buffer
 
     Socket *conn = new Socket(fd);
     ret = conn->recv(Socket::read_buffer, Socket::read_buffer_len);
@@ -93,7 +93,7 @@ PHP_METHOD(study_coroutine_server_coro, recv)
         php_error_docref(NULL, E_WARNING, "recv error");
         RETURN_FALSE;
     }
-    delete conn;
+    delete conn; //释放当前对象
     Socket::read_buffer[ret] = '\0';
     RETURN_STRING(Socket::read_buffer);
 }
@@ -111,7 +111,7 @@ PHP_METHOD(study_coroutine_server_coro, send)
     ZEND_PARSE_PARAMETERS_END_EX(RETURN_FALSE);
 
     Socket *conn = new Socket(fd);
-    ret = conn->send(data, length);
+    ret = conn->send(data, length);// 发送数据给客户端
     if (ret < 0)
     {
         php_error_docref(NULL, E_WARNING, "send error");
@@ -136,7 +136,7 @@ PHP_METHOD(study_coroutine_server_coro, close)
     }
 
     Socket *sock = new Socket(fd);
-    ret = sock->close();
+    ret = sock->close(); //关闭客户端
     if (ret < 0)
     {
         php_error_docref(NULL, E_WARNING, "close error");
@@ -159,10 +159,10 @@ static const zend_function_entry study_coroutine_server_coro_methods[] =
 void study_coroutine_server_coro_init()
 {
     zval zsock;
-
+    //注册带命名空间的类
     INIT_NS_CLASS_ENTRY(study_coroutine_server_coro_ce, "Study", "Coroutine\\Server", study_coroutine_server_coro_methods);
     study_coroutine_server_coro_ce_ptr = zend_register_internal_class(&study_coroutine_server_coro_ce TSRMLS_CC); // Registered in the Zend Engine
-
+   // 注册属性
     zend_declare_property(study_coroutine_server_coro_ce_ptr, ZEND_STRL("zsock"), &zsock, ZEND_ACC_PUBLIC);
     zend_declare_property_string(study_coroutine_server_coro_ce_ptr, ZEND_STRL("host"), "", ZEND_ACC_PUBLIC);
     zend_declare_property_long(study_coroutine_server_coro_ce_ptr, ZEND_STRL("port"), -1, ZEND_ACC_PUBLIC);
