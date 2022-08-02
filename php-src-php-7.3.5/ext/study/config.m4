@@ -60,7 +60,9 @@ if test "$PHP_STUDY" != "no"; then
         src/error.cc \
         src/core/base.cc\
         src/timer.cc\
-         src/coroutine/socket.cc
+        src/coroutine/socket.cc\
+        study_coroutine_channel.cc
+        src/coroutine/channel.cc
     "
 
     PHP_NEW_EXTENSION(study, $study_source_file, $ext_shared, ,, cxx)
