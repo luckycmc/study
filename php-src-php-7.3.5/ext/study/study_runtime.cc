@@ -12,7 +12,7 @@ extern PHP_METHOD(study_coroutine_util, sleep);
 static void hook_func(const char *name, size_t name_len, zif_handler handler);
 //对应的接口
 static PHP_METHOD(study_runtime, enableCoroutine)
-{
+{   //ZEND_STRL 会生成 sleep  和他的长度
     hook_func(ZEND_STRL("sleep"), zim_study_coroutine_util_sleep);
 }
 
