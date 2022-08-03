@@ -22,6 +22,8 @@ PHP_MINIT_FUNCTION(study)
     //channel
     study_coro_channel_init(); // 新增的一行
     study_coro_socket_init(module_number); // 新增的一行
+    //hook类初始化
+    study_runtime_init(); // 新增的代码
     return SUCCESS;
 }
 PHP_FUNCTION(study_event_init)
