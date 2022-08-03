@@ -51,6 +51,7 @@ if test "$PHP_STUDY" != "no"; then
         study_coroutine.cc \
         study_coroutine_util.cc \
         study_coroutine_socket.cc \
+        study_coroutine_server.cc \
         src/coroutine/coroutine.cc \
         src/coroutine/context.cc \
         ${STUDY_ASM_DIR}make_${STUDY_CONTEXT_ASM_FILE} \

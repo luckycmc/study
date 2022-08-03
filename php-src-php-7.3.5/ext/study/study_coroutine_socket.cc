@@ -71,6 +71,15 @@ static void study_coro_socket_free_object(zend_object *object)
     }
     zend_object_std_dtor(&sock->std);
 }
+//php_study_init_socket_object的作用是去初始化一个自定义的PHP对象，并且让zsocket这个容器指向自定义对象里面的std对象
+void php_study_init_socket_object(zval *zsocket, Socket *socket)
+{
+    zend_object *object = study_coro_socket_create_object(study_coro_socket_ce_ptr);
+
+    coro_socket *socket_t = (coro_socket *) study_coro_socket_fetch_object(object);
+    socket_t->socket = socket;
+    ZVAL_OBJ(zsocket, object);
+}
 
 //接口的构造函数
 static PHP_METHOD(study_coro_socket, __construct)
