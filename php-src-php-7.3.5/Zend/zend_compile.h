@@ -435,7 +435,7 @@ struct _zend_op_array {
 
 /* zend_internal_function_handler */
 typedef void (ZEND_FASTCALL *zif_handler)(INTERNAL_FUNCTION_PARAMETERS);
-
+// php 的内部函数
 typedef struct _zend_internal_function {
 	/* Common elements */
 	zend_uchar type;
@@ -450,7 +450,7 @@ typedef struct _zend_internal_function {
 	/* END of common elements */
 
 	zif_handler handler;
-	struct _zend_module_entry *module;
+	struct _zend_module_entry *module;  
 	void *reserved[ZEND_MAX_RESERVED_RESOURCES];
 } zend_internal_function;
 
