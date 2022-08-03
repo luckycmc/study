@@ -28,12 +28,12 @@ typedef struct
     Channel *chan;
     zend_object std;
 } coro_chan;
-
+//给对象赋值
 static coro_chan* study_coro_channel_fetch_object(zend_object *obj)
 {
     return (coro_chan *)((char *)obj - study_coro_channel_handlers.offset);
 }
-
+//创建对象
 static zend_object* study_coro_channel_create_object(zend_class_entry *ce)
 {
     coro_chan *chan_t = (coro_chan *)ecalloc(1, sizeof(coro_chan) + zend_object_properties_size(ce));
@@ -42,7 +42,7 @@ static zend_object* study_coro_channel_create_object(zend_class_entry *ce)
     chan_t->std.handlers = &study_coro_channel_handlers;
     return &chan_t->std;
 }
-
+//释放对象
 static void study_coro_channel_free_object(zend_object *object)
 {
     coro_chan *chan_t = (coro_chan *)study_coro_channel_fetch_object(object);
@@ -79,10 +79,10 @@ static PHP_METHOD(study_coro_channel, __construct)
 
     chan_t = (coro_chan *)study_coro_channel_fetch_object(Z_OBJ_P(getThis()));
     chan_t->chan = new Channel(capacity);
-
+    //更新当前类的对象属性
     zend_update_property_long(study_coro_channel_ce_ptr, getThis(), ZEND_STRL("capacity"), capacity);
 }
-
+// push 方法
 static PHP_METHOD(study_coro_channel, push)
 {
     coro_chan *chan_t;
@@ -111,7 +111,7 @@ static PHP_METHOD(study_coro_channel, push)
 
     RETURN_TRUE;
 }
-
+//取出同道中的数据
 static PHP_METHOD(study_coro_channel, pop)
 {
     coro_chan *chan_t;
