@@ -54,11 +54,11 @@ int stSocket_accept(int sock)
     return connfd;
 }
 // server监听的封装
-int stSocket_listen(int sock)
+int stSocket_listen(int sock,int backlog)
 {
     int ret;
 
-    ret = listen(sock, 512);
+    ret = listen(sock, backlog);
     if (ret < 0)
     {
         stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));

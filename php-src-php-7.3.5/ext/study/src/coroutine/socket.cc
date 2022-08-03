@@ -46,10 +46,10 @@ int Socket::bind(int type, char *host, int port)
 
 int Socket::listen(int backlog)
 {
-    return stSocket_listen(sockfd);
+    return stSocket_listen(sockfd,backlog);
 }
 /***bind和listen这两个函数并不会阻塞 end***/
-int Socket::accept()
+Socket* Socket::accept()
 {
     int connfd;
 
@@ -61,7 +61,7 @@ int Socket::accept()
 
     } while (connfd < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
 
-     return connfd;
+     return (new Socket(connfd));
 }
 //读取数据
 /*
@@ -120,7 +120,7 @@ bool Socket::wait_event(int event)
     (StudyG.poll->event_num)++;
 
     co->yield();
-
+     //这个地方可能存在问题需要处理
     if (epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
     {
         stError("Error has occurred: (errno %d) %s", errno, strerror(errno));

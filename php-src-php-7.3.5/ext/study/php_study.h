@@ -27,7 +27,7 @@ extern zend_module_entry study_module_entry;
 void study_coroutine_util_init();      //协成公用的方法
 void study_coroutine_server_coro_init(); //服务器初始化
 void study_coro_channel_init(); //channel 初始化
-
+void study_coro_socket_init(int module_number); //socket 初始化
 // st_zend_read_property是用来读取对象的某个属性的函数
 inline zval *st_zend_read_property(zend_class_entry *class_ptr, zval *obj, const char *s, int len, int silent)
 {
