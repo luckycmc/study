@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <zend.h>
 #include <zend_vm_opcodes.h>
-
+//zend_vm_opcode_names 的名字
 static const char *zend_vm_opcodes_names[199] = {
 	"ZEND_NOP",
 	"ZEND_ADD",
@@ -223,7 +223,7 @@ static const char *zend_vm_opcodes_names[199] = {
 	"ZEND_ISSET_ISEMPTY_CV",
 	"ZEND_FETCH_LIST_W",
 };
-
+//偏移量
 static uint32_t zend_vm_opcodes_flags[199] = {
 	0x00000000,
 	0x00000707,
@@ -425,13 +425,14 @@ static uint32_t zend_vm_opcodes_flags[199] = {
 	0x00020101,
 	0x00000701,
 };
-
+// 获取opcode 的名字
 ZEND_API const char* ZEND_FASTCALL zend_get_opcode_name(zend_uchar opcode) {
 	if (UNEXPECTED(opcode > ZEND_VM_LAST_OPCODE)) {
 		return NULL;
 	}
 	return zend_vm_opcodes_names[opcode];
 }
+//获取标志位
 ZEND_API uint32_t ZEND_FASTCALL zend_get_opcode_flags(zend_uchar opcode) {
 	if (UNEXPECTED(opcode > ZEND_VM_LAST_OPCODE)) {
 		opcode = ZEND_NOP;

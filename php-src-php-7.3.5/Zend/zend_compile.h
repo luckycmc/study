@@ -455,7 +455,7 @@ typedef struct _zend_internal_function {
 } zend_internal_function;
 
 #define ZEND_FN_SCOPE_NAME(function)  ((function) && (function)->common.scope ? ZSTR_VAL((function)->common.scope->name) : "")
-
+//用户自定义的函数
 union _zend_function {
 	zend_uchar type;	/* MUST be the first element of this struct! */
 	uint32_t   quick_arg_flags;
@@ -475,7 +475,7 @@ union _zend_function {
 	zend_op_array op_array;
 	zend_internal_function internal_function;
 };
-
+//函数的类型
 typedef enum _zend_call_kind {
 	ZEND_CALL_NESTED_FUNCTION,	/* stackless VM call to function */
 	ZEND_CALL_NESTED_CODE,		/* stackless VM call to include/require/eval */
@@ -486,7 +486,7 @@ typedef enum _zend_call_kind {
 struct _zend_execute_data {
 	const zend_op       *opline;           /* executed opline 要执行的指令                */
 	zend_execute_data   *call;             /* current call     current call              */
-	zval                *return_value;
+	zval                *return_value;     //返回值
 	zend_function       *func;             /* executed function 执行函数             */
 	zval                 This;             /* this + call_info + num_args    */
 	zend_execute_data   *prev_execute_data; //prev_execute_data;前一个栈针
@@ -837,7 +837,7 @@ int zend_add_literal(zend_op_array *op_array, zval *zv);
 void zend_assert_valid_class_name(const zend_string *const_name);
 
 /* BEGIN: OPCODES */
-
+//加载对应的opcodes
 #include "zend_vm_opcodes.h"
 
 /* END: OPCODES */
@@ -992,7 +992,7 @@ static zend_always_inline int zend_check_arg_send_type(const zend_function *zf, 
 
 
 END_EXTERN_C()
-
+//PHP 类中的魔术方法
 #define ZEND_CLONE_FUNC_NAME		"__clone"
 #define ZEND_CONSTRUCTOR_FUNC_NAME	"__construct"
 #define ZEND_DESTRUCTOR_FUNC_NAME	"__destruct"
