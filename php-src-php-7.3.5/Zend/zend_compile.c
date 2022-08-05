@@ -8182,24 +8182,25 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 	if (!ast) {
 		return;
 	}
-
+     //  //第一次进来一定是这种类型
 	if (ast->kind == ZEND_AST_STMT_LIST) {
 		zend_ast_list *list = zend_ast_get_list(ast);
 		uint32_t i;
 		for (i = 0; i < list->children; ++i) {
-			zend_compile_top_stmt(list->child[i]);
+			zend_compile_top_stmt(list->child[i]); ////list各child语句相互独立，递归编译
 		}
 		return;
 	}
-
+    //各语句编译入口
 	zend_compile_stmt(ast);
 
 	if (ast->kind != ZEND_AST_NAMESPACE && ast->kind != ZEND_AST_HALT_COMPILER) {
 		zend_verify_namespace();
 	}
+	////function、class两种情况的处理，非常关键的一步操作，后面分析函数、类实现的章节再详细分析
 	if (ast->kind == ZEND_AST_FUNC_DECL || ast->kind == ZEND_AST_CLASS) {
 		CG(zend_lineno) = ((zend_ast_decl *) ast)->end_lineno;
-		zend_do_early_binding();
+		zend_do_early_binding();//很重要!!!
 	}
 }
 /* }}} */
@@ -8219,7 +8220,7 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 	if ((CG(compiler_options) & ZEND_COMPILE_EXTENDED_INFO) && !zend_is_unticked_stmt(ast)) {
 		zend_do_extended_info();
 	}
-
+    //各个节点的类型
 	switch (ast->kind) {
 		case ZEND_AST_STMT_LIST:
 			zend_compile_stmt_list(ast);

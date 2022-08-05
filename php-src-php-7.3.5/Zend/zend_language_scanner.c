@@ -620,7 +620,7 @@ static zend_op_array *zend_compile(int type)
 
 	return op_array;
 }
-
+//文件编译开始
 ZEND_API zend_op_array *compile_file(zend_file_handle *file_handle, int type)
 {
 	zend_lex_state original_lex_state;
@@ -635,6 +635,7 @@ ZEND_API zend_op_array *compile_file(zend_file_handle *file_handle, int type)
 			zend_message_dispatcher(ZMSG_FAILED_INCLUDE_FOPEN, file_handle->filename);
 		}
 	} else {
+		//编译用户的函数
 		op_array = zend_compile(ZEND_USER_FUNCTION);
 	}
 
