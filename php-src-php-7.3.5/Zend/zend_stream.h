@@ -33,7 +33,7 @@ typedef size_t (*zend_stream_reader_t)(void* handle, char *buf, size_t len);
 typedef void   (*zend_stream_closer_t)(void* handle);
 
 #define ZEND_MMAP_AHEAD 32
-
+//文件类型
 typedef enum {
 	ZEND_HANDLE_FILENAME,
 	ZEND_HANDLE_FD,
@@ -41,7 +41,7 @@ typedef enum {
 	ZEND_HANDLE_STREAM,
 	ZEND_HANDLE_MAPPED
 } zend_stream_type;
-
+// 内存映射
 typedef struct _zend_mmap {
 	size_t      len;
 	size_t      pos;
@@ -50,7 +50,7 @@ typedef struct _zend_mmap {
 	void                  *old_handle;
 	zend_stream_closer_t   old_closer;
 } zend_mmap;
-
+// stream 的操作
 typedef struct _zend_stream {
 	void        *handle;
 	int         isatty;
@@ -59,7 +59,7 @@ typedef struct _zend_stream {
 	zend_stream_fsizer_t   fsizer;
 	zend_stream_closer_t   closer;
 } zend_stream;
-
+// 文件句柄
 typedef struct _zend_file_handle {
 	union {
 		int           fd;

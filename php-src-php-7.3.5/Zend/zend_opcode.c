@@ -501,7 +501,14 @@ static void zend_sort_live_ranges(zend_op_array *op_array) {
 	zend_sort(op_array->live_range, op_array->last_live_range, sizeof(zend_live_range),
 			(compare_func_t) cmp_live_range, (swap_func_t) swap_live_range);
 }
-
+/**
+ * (1)将IS_CONST、IS_VAR、IS_TMP_VAR类型的操作数、返回值转化为内存偏移量，与上面提到的IS_CV变量的处理一样，
+ * 其中IS_CONST类型起始值为0，然后按照编号依次递增sizeof(zval)，而IS_VAR、IS_TMP_VAR唯一的不同时它的初始值接着IS_CV的，
+ * 简单的讲就是先安排PHP变量的，然后接着才是各条语句的中间值、返回值
+ * 
+ * @param op_array 
+ * @return ZEND_API 
+ */
 ZEND_API int pass_two(zend_op_array *op_array)
 {
 	zend_op *opline, *end;
