@@ -431,11 +431,11 @@ static uint32_t get_temporary_variable(zend_op_array *op_array) /* {{{ */
 	return (uint32_t)op_array->T++;
 }
 /* }}} */
-
+//在op_array中查找相应的 val变量
 static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 	int i = 0;
 	zend_ulong hash_value = zend_string_hash_val(name);
-
+    //遍历op_array.vars检查此变量是否已存在
 	while (i < op_array->last_var) {
 		if (ZSTR_VAL(op_array->vars[i]) == ZSTR_VAL(name) ||
 		    (ZSTR_H(op_array->vars[i]) == hash_value &&
@@ -444,6 +444,7 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		}
 		i++;
 	}
+	 //这是一个新变量
 	i = op_array->last_var;
 	op_array->last_var++;
 	if (op_array->last_var > CG(context).vars_size) {
@@ -2107,12 +2108,14 @@ static void zend_check_live_ranges(zend_op *opline) /* {{{ */
 	}
 }
 /* }}} */
-
+// 下面就是根据这俩值生成opcode的过程。
 static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode *op2) /* {{{ */
 {
-	zend_op *opline = get_next_op(CG(active_op_array));
+	zend_op *opline = get_next_op(CG(active_op_array)); //当前zend_op_array下生成一条新的指令
 	opline->opcode = opcode;
-
+    
+	//将op1、op2内容拷贝到zend_op中，设置op_type
+    //如果znode.op_type == IS_CONST，则会将znode.u.contstant值转移到zend_op_array.literals中
 	if (op1 != NULL) {
 		SET_NODE(opline->op1, op1);
 	}
@@ -2122,7 +2125,7 @@ static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode
 	}
 
 	zend_check_live_ranges(opline);
-
+    ////如果此指令有返回值则想变量那样为返回值编号（后面分配局部变量时将根据这个编号索引）
 	if (result) {
 		zend_make_var_result(result, opline);
 	}
@@ -2956,7 +2959,7 @@ zend_bool zend_list_has_assign_to_self(zend_ast *list_ast, zend_ast *expr_ast) /
 	return 0;
 }
 /* }}} */
-
+//编译赋值
 void zend_compile_assign(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast *var_ast = ast->child[0];
@@ -3059,9 +3062,10 @@ void zend_compile_assign_ref(znode *result, zend_ast *ast) /* {{{ */
 	zend_op *opline;
 	uint32_t offset;
 
-	if (is_this_fetch(target_ast)) {
+	if (is_this_fetch(target_ast)) { //  //检查变量名是否为this，变量名不能是this
 		zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
 	}
+	// //比如这样写：my_function() = 123;即：将函数的返回值作为变量名将报错
 	zend_ensure_writable_variable(target_ast);
 
 	offset = zend_delayed_compile_begin();
@@ -8183,20 +8187,21 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 		return;
 	}
 
-	if (ast->kind == ZEND_AST_STMT_LIST) {
+	if (ast->kind == ZEND_AST_STMT_LIST) {  //第一次进来一定是这种类型
 		zend_ast_list *list = zend_ast_get_list(ast);
 		uint32_t i;
 		for (i = 0; i < list->children; ++i) {
-			zend_compile_top_stmt(list->child[i]);
+			zend_compile_top_stmt(list->child[i]); //list各child语句相互独立，递归编译
 		}
 		return;
 	}
-
+    //各语句编译入口
 	zend_compile_stmt(ast);
 
 	if (ast->kind != ZEND_AST_NAMESPACE && ast->kind != ZEND_AST_HALT_COMPILER) {
 		zend_verify_namespace();
 	}
+	//function、class两种情况的处理，非常关键的一步操作，后面分析函数、类实现的章节再详细分析
 	if (ast->kind == ZEND_AST_FUNC_DECL || ast->kind == ZEND_AST_CLASS) {
 		CG(zend_lineno) = ((zend_ast_decl *) ast)->end_lineno;
 		zend_do_early_binding();
@@ -8205,7 +8210,7 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 /* }}} */
 /**
  * 编译当前节点 
- * 
+ *  end_compile_stmt编译当前节点：
  * @param ast 
  */
 void zend_compile_stmt(zend_ast *ast) /* {{{ */
@@ -8219,7 +8224,7 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 	if ((CG(compiler_options) & ZEND_COMPILE_EXTENDED_INFO) && !zend_is_unticked_stmt(ast)) {
 		zend_do_extended_info();
 	}
-
+     // 主要根据不同的节点类型(kind)作不同的处理
 	switch (ast->kind) {
 		case ZEND_AST_STMT_LIST:
 			zend_compile_stmt_list(ast);

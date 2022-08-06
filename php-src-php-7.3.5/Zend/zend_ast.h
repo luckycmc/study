@@ -34,7 +34,7 @@
 /**
  * @brief 
  * 
- * ast 抽象语法书的类型
+ * ast 抽象语法书的类型 抽象语法树的类型
  */
 enum _zend_ast_kind {
 	/* special nodes */
@@ -53,7 +53,7 @@ enum _zend_ast_kind {
 	ZEND_AST_ARRAY,
 	ZEND_AST_ENCAPS_LIST,
 	ZEND_AST_EXPR_LIST,
-	ZEND_AST_STMT_LIST,
+	ZEND_AST_STMT_LIST, //表达式
 	ZEND_AST_IF,
 	ZEND_AST_SWITCH_LIST,
 	ZEND_AST_CATCH_LIST,
