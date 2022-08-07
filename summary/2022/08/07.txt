@@ -24,3 +24,7 @@ p language_scanner_globals  关注yy_cursor
 
 
 $a 
+
+语法解析器从start开始调用，然后层层匹配各个规则，
+   语法解析器根据命中的语法规则创建AST节点，最后将生成的AST根节点赋到 CG(ast) ：
+   命中 语法规则后 生成对应的ast 抽象语法数根据语法规则把数据插入 对应数的各个几点中

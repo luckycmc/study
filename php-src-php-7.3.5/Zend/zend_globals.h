@@ -65,7 +65,7 @@ typedef struct _zend_vm_stack *zend_vm_stack;
 typedef struct _zend_ini_entry zend_ini_entry;
 
 
-struct _zend_compiler_globals { //执行的全局变量
+struct _zend_compiler_globals { //编译的全局变量
 	zend_stack loop_var_stack;
 
 	zend_class_entry *active_class_entry;
@@ -128,6 +128,7 @@ struct _zend_compiler_globals { //执行的全局变量
 };
 
 /**
+  执行的全局变量
   是PHP整个生命周期中最主要的一个结构，是一个全局变量，在main执行前分配(非ZTS下)，
   直到PHP退出，它记录着当前请求全部的信息，经常见到的一个宏EG操作的就是这个结构。
 **/
@@ -241,7 +242,7 @@ struct _zend_executor_globals {
 #define EG_FLAGS_INITIAL				(0)
 #define EG_FLAGS_IN_SHUTDOWN			(1<<0)
 #define EG_FLAGS_OBJECT_STORE_NO_REUSE	(1<<1)
-
+//扫描文件时候的全局变量
 struct _zend_ini_scanner_globals {
 	zend_file_handle *yy_in;
 	zend_file_handle *yy_out;
