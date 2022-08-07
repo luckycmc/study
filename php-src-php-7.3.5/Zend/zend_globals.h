@@ -65,7 +65,7 @@ typedef struct _zend_vm_stack *zend_vm_stack;
 typedef struct _zend_ini_entry zend_ini_entry;
 
 
-struct _zend_compiler_globals {
+struct _zend_compiler_globals { //执行的全局变量
 	zend_stack loop_var_stack;
 
 	zend_class_entry *active_class_entry;
@@ -127,7 +127,10 @@ struct _zend_compiler_globals {
 #endif
 };
 
-
+/**
+  是PHP整个生命周期中最主要的一个结构，是一个全局变量，在main执行前分配(非ZTS下)，
+  直到PHP退出，它记录着当前请求全部的信息，经常见到的一个宏EG操作的就是这个结构。
+**/
 struct _zend_executor_globals {
 	zval uninitialized_zval;
 	zval error_zval;
@@ -137,24 +140,26 @@ struct _zend_executor_globals {
 	zend_array **symtable_cache_limit;
 	zend_array **symtable_cache_ptr;
 
-	zend_array symbol_table;		/* main symbol table */
+	zend_array symbol_table;		/* main symbol table  PHP全局变量哈希*/
 
-	HashTable included_files;	/* files already included */
+	HashTable included_files;	/* files already included  已将include的脚本*/
 
-	JMP_BUF *bailout;
+	JMP_BUF *bailout;  //
 
 	int error_reporting;
 	int exit_status;
 
-	HashTable *function_table;	/* function symbol table */
-	HashTable *class_table;		/* class table */
-	HashTable *zend_constants;	/* constants table */
+	HashTable *function_table;	/* function symbol table  用户自定义函数 内置函数 代用函数*/
+	HashTable *class_table;		/* class table  new class 的类从这里面查找*/
+	HashTable *zend_constants;	/* constants table  常量符号表*/
 
 	zval          *vm_stack_top;
 	zval          *vm_stack_end;
 	zend_vm_stack  vm_stack;
 	size_t         vm_stack_page_size;
-
+    /**
+	  指正在执行的运行栈
+	*/
 	struct _zend_execute_data *current_execute_data;
 	zend_class_entry *fake_scope; /* used to avoid checks accessing properties */
 
@@ -166,8 +171,8 @@ struct _zend_executor_globals {
 	uint32_t persistent_functions_count;
 	uint32_t persistent_classes_count;
 
-	HashTable *in_autoload;
-	zend_function *autoload_func;
+	HashTable *in_autoload;      //在类加载中会用到
+	zend_function *autoload_func;   //自动加载回掉函数
 	zend_bool full_tables_cleanup;
 
 	/* for extended information support */
@@ -182,7 +187,7 @@ struct _zend_executor_globals {
 #endif
 
 	HashTable regular_list;
-	HashTable persistent_list;
+	HashTable persistent_list;  //持久化符号表
 
 	int user_error_handler_error_reporting;
 	zval user_error_handler;
@@ -199,7 +204,7 @@ struct _zend_executor_globals {
 
 	int lambda_count;
 
-	HashTable *ini_directives;
+	HashTable *ini_directives;    // php.ini配置项
 	HashTable *modified_ini_directives;
 	zend_ini_entry *error_reporting_ini_entry;
 

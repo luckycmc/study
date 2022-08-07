@@ -51370,7 +51370,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_NULL_HANDLER(ZEND_OPCODE_HANDL
 # define ZEND_VM_RETURN()        goto HYBRID_HALT_LABEL
 #endif
 
-
+//这一步开始具体执行opcode指令，这里调用的是zend_execute_ex
 ZEND_API void execute_ex(zend_execute_data *ex)
 {
 	DCL_OPLINE
@@ -60870,10 +60870,10 @@ ZEND_API vo**id zend_execute(zend_op_array *op_array, zval *return_value)
 {
 	zend_execute_data *execute_data;
 
-	if (EG(exception) != NULL) {
+	if (EG(exception) != NULL) { //异常处理
 		return;
 	}
-
+    // //分配zend_execute_data
 	execute_data = zend_vm_stack_push_call_frame(ZEND_CALL_TOP_CODE | ZEND_CALL_HAS_SYMBOL_TABLE,
 		(zend_function*)op_array, 0, zend_get_called_scope(EG(current_execute_data)), zend_get_this_object(EG(current_execute_data)));
 	if (EG(current_execute_data)) {
@@ -60881,9 +60881,12 @@ ZEND_API vo**id zend_execute(zend_op_array *op_array, zval *return_value)
 	} else {
 		execute_data->symbol_table = &EG(symbol_table);
 	}
-	EX(prev_execute_data) = EG(current_execute_data);
+	EX(prev_execute_data) = EG(current_execute_data);//行程链表
+	// //初始化execute_data
 	i_init_code_execute_data(execute_data, op_array, return_value);
+	//执行opcode
 	zend_execute_ex(execute_data);
+	////释放execute_data:销毁所有的PHP变量
 	zend_vm_stack_free_call_frame(execute_data);
 }
 
@@ -65190,7 +65193,7 @@ static const void *zend_vm_get_opcode_handler_func(zend_uchar opcode, const zend
 }
 
 #endif
-
+//设置opcode的handle	
 ZEND_API void ZEND_FASTCALL zend_vm_set_opcode_handler(zend_op* op)
 {
 	zend_uchar opcode = zend_user_opcodes[op->opcode];

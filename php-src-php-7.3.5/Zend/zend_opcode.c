@@ -657,11 +657,14 @@ ZEND_API int pass_two(zend_op_array *op_array)
 				break;
 			}
 		}
+		//如果是IS_CONST会将数组下标转化为内存偏移量，与IS_CV那种处理方式相同
+        //所以这里实际就是将0、1、2...转为为16、32、48...（即：编号*sizeof(zval)
 		if (opline->op1_type == IS_CONST) {
 			ZEND_PASS_TWO_UPDATE_CONSTANT(op_array, opline, opline->op1);
 		} else if (opline->op1_type & (IS_VAR|IS_TMP_VAR)) {
 			opline->op1.var = (uint32_t)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, op_array->last_var + opline->op1.var);
 		}
+		
 		if (opline->op2_type == IS_CONST) {
 			ZEND_PASS_TWO_UPDATE_CONSTANT(op_array, opline, opline->op2);
 		} else if (opline->op2_type & (IS_VAR|IS_TMP_VAR)) {
@@ -670,6 +673,7 @@ ZEND_API int pass_two(zend_op_array *op_array)
 		if (opline->result_type & (IS_VAR|IS_TMP_VAR)) {
 			opline->result.var = (uint32_t)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, op_array->last_var + opline->result.var);
 		}
+		//设置此opcode的处理handler
 		ZEND_VM_SET_OPCODE_HANDLER(opline);
 		opline++;
 	}

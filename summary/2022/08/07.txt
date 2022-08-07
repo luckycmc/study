@@ -1,0 +1,26 @@
+1.单独存在的词块不能完整表达语义，还需要语法分析器，它会检查语法，匹配Token，
+对Token进行关联，组织串联后的产物就是AST.AST 分为多种类型,对应PHP语法，比如赋值语句，
+生成的抽象语法树节点是ZEND_AST_ASSIGN，赋值语句的左右会被作为ZEND_AST_ASSIGN
+类型节点的孩子（AST是PHP7才加入的，解耦了编译器和解释器）.
+<?php
+$a = 1;  //解析token的值
+
+gdb 中的C命令 是继续执行 到下一个断点
+
+1.php 的词法分析
+  调试断点:
+    1.php_execute_script 
+
+    2.把当前的文件读取出来
+     open_file_for_scanning
+
+    3.zendparse
+
+    4.zendlex
+    
+    b switch (yyn)   zend_language_parser 4287行 打个断点
+
+p language_scanner_globals  关注yy_cursor
+
+
+$a 
