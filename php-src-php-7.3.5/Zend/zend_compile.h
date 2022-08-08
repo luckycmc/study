@@ -63,7 +63,10 @@ typedef struct _zend_op zend_op;
 # define ZEND_USE_ABS_CONST_ADDR    0
 # define ZEND_EX_USE_RUN_TIME_CACHE 1
 #endif
-
+/**
+  每个操作数都可以理解为函数的参数，返回值result是hanlder函数对操作数op1和op2计算后的结果。
+  op1、op2和result对应的类型都是znode_op，其定义为一个联合体：
+**/
 typedef union _znode_op {
 	uint32_t      constant;
 	uint32_t      var;
