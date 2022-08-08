@@ -2108,7 +2108,7 @@ static void zend_check_live_ranges(zend_op *opline) /* {{{ */
 	}
 }
 /* }}} */
-// 下面就是根据这俩值生成opcode的过程。
+// 下面就是根据这俩值生成opcode的过程。例如assign opcode = 38
 static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode *op2) /* {{{ */
 {
 	zend_op *opline = get_next_op(CG(active_op_array)); //当前zend_op_array下生成一条新的指令
@@ -2597,7 +2597,7 @@ static zend_bool is_this_fetch(zend_ast *ast) /* {{{ */
 	return 0;
 }
 /* }}} */
-
+//编译简单的变量
 static void zend_compile_simple_var(znode *result, zend_ast *ast, uint32_t type, int delayed) /* {{{ */
 {
 	if (is_this_fetch(ast)) {
@@ -2959,11 +2959,16 @@ zend_bool zend_list_has_assign_to_self(zend_ast *list_ast, zend_ast *expr_ast) /
 	return 0;
 }
 /* }}} */
-//编译赋值
+/**
+ * @brief 
+ *  编译赋值 
+ * @param result 
+ * @param ast 
+ */
 void zend_compile_assign(znode *result, zend_ast *ast) /* {{{ */
 {
-	zend_ast *var_ast = ast->child[0];
-	zend_ast *expr_ast = ast->child[1];
+	zend_ast *var_ast = ast->child[0];  //变量名
+	zend_ast *expr_ast = ast->child[1]; //变量值表达式
 
 	znode var_node, expr_node;
 	zend_op *opline;
@@ -2972,17 +2977,17 @@ void zend_compile_assign(znode *result, zend_ast *ast) /* {{{ */
 	if (is_this_fetch(var_ast)) {
 		zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
 	}
-
+    //确定变量是否是可写的
 	zend_ensure_writable_variable(var_ast);
 
 	switch (var_ast->kind) {
 		case ZEND_AST_VAR:
 		case ZEND_AST_STATIC_PROP:
-			offset = zend_delayed_compile_begin();
-			zend_delayed_compile_var(&var_node, var_ast, BP_VAR_W);
-			zend_compile_expr(&expr_node, expr_ast);
-			zend_delayed_compile_end(offset);
-			zend_emit_op(result, ZEND_ASSIGN, &var_node, &expr_node);
+			offset = zend_delayed_compile_begin(); //开始的偏移量
+			zend_delayed_compile_var(&var_node, var_ast, BP_VAR_W); //声明变量
+			zend_compile_expr(&expr_node, expr_ast); //编译表达式
+			zend_delayed_compile_end(offset);  //声明结束
+			zend_emit_op(result, ZEND_ASSIGN, &var_node, &expr_node);//生成opcode
 			return;
 		case ZEND_AST_DIM:
 			offset = zend_delayed_compile_begin();
@@ -8179,28 +8184,20 @@ void zend_const_expr_to_zval(zval *result, zend_ast *ast) /* {{{ */
 	orig_ast->kind = 0;
 }
 /* }}} */
-
+/******
+ * 递归调用跟节点知道找到编译的字节点
+ **/
 /* Same as compile_stmt, but with early binding */
 void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 {
 	if (!ast) {
 		return;
 	}
-<<<<<<< HEAD
-     //  //第一次进来一定是这种类型
-	if (ast->kind == ZEND_AST_STMT_LIST) {
-		zend_ast_list *list = zend_ast_get_list(ast);
-		uint32_t i;
-		for (i = 0; i < list->children; ++i) {
-			zend_compile_top_stmt(list->child[i]); ////list各child语句相互独立，递归编译
-=======
-
 	if (ast->kind == ZEND_AST_STMT_LIST) {  //第一次进来一定是这种类型
 		zend_ast_list *list = zend_ast_get_list(ast);
 		uint32_t i;
 		for (i = 0; i < list->children; ++i) {
 			zend_compile_top_stmt(list->child[i]); //list各child语句相互独立，递归编译
->>>>>>> 57f3aabe0cc479f0121d46f6d676820cfbe395cf
 		}
 		return;
 	}
@@ -8210,11 +8207,6 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 	if (ast->kind != ZEND_AST_NAMESPACE && ast->kind != ZEND_AST_HALT_COMPILER) {
 		zend_verify_namespace();
 	}
-<<<<<<< HEAD
-	////function、class两种情况的处理，非常关键的一步操作，后面分析函数、类实现的章节再详细分析
-=======
-	//function、class两种情况的处理，非常关键的一步操作，后面分析函数、类实现的章节再详细分析
->>>>>>> 57f3aabe0cc479f0121d46f6d676820cfbe395cf
 	if (ast->kind == ZEND_AST_FUNC_DECL || ast->kind == ZEND_AST_CLASS) {
 		CG(zend_lineno) = ((zend_ast_decl *) ast)->end_lineno;
 		zend_do_early_binding();//很重要!!!
@@ -8224,6 +8216,7 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 /**
  * 编译当前节点 
  *  end_compile_stmt编译当前节点：
+ * 也就是编译子节点
  * @param ast 
  */
 void zend_compile_stmt(zend_ast *ast) /* {{{ */
@@ -8237,11 +8230,10 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 	if ((CG(compiler_options) & ZEND_COMPILE_EXTENDED_INFO) && !zend_is_unticked_stmt(ast)) {
 		zend_do_extended_info();
 	}
-<<<<<<< HEAD
     //各个节点的类型
-=======
+
      // 主要根据不同的节点类型(kind)作不同的处理
->>>>>>> 57f3aabe0cc479f0121d46f6d676820cfbe395cf
+
 	switch (ast->kind) {
 		case ZEND_AST_STMT_LIST:
 			zend_compile_stmt_list(ast);

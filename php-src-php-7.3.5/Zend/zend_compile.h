@@ -83,8 +83,8 @@ typedef struct _znode { /* used only during compilation */
 	zend_uchar op_type;
 	zend_uchar flag;
 	union {
-		znode_op op;
-		zval constant; /* replaced by literal/zv */
+		znode_op op;  // zend_op 执行的指令结构体
+		zval constant; /* replaced by literal/zv */ //zval 结构体
 	} u;
 } znode;
 
@@ -387,9 +387,11 @@ typedef struct _zend_internal_function_info {
 	zend_bool return_reference;
 	zend_bool _is_variadic;
 } zend_internal_function_info;
-
+/*
+  op_array 存放指令的集合
+*/
 struct _zend_op_array {
-	/* Common elements */
+	/* Common elements common是普通函数或类成员方法对应的opcodes快速访问时使用的字段 */
 	zend_uchar type;
 	zend_uchar arg_flags[3]; /* bitset of arg_info.pass_by_reference */
 	uint32_t fn_flags;
@@ -399,7 +401,7 @@ struct _zend_op_array {
 	uint32_t num_args;
 	uint32_t required_num_args;
 	zend_arg_info *arg_info;
-	/* END of common elements */
+	/* common是普通函数或类成员方法对应的opcodes快速访问时使用的字段 END of common elements */
 
 	int cache_size;     /* number of run_time_cache_slots * sizeof(void*) */
 	int last_var;       /* number of CV variables //变量类型为IS_CV的个数*/
