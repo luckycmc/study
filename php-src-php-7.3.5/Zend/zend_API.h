@@ -28,15 +28,17 @@
 #include "zend_variables.h"
 #include "zend_execute.h"
 
-
+/** 
+ * php 对外提供的一些接口共外界开始使用
+ **/
 BEGIN_EXTERN_C()
-
+// PHP 函数的声明
 typedef struct _zend_function_entry {
 	const char *fname;
-	zif_handler handler;
-	const struct _zend_internal_arg_info *arg_info;
-	uint32_t num_args;
-	uint32_t flags;  //标志位属性
+	zif_handler handler; // 对应的函数 也是回调函数
+	const struct _zend_internal_arg_info *arg_info;  //参数信息
+	uint32_t num_args;  // 参数个数
+	uint32_t flags;     //标志位属性 public privit
 } zend_function_entry;
 /**
  * 
@@ -194,7 +196,7 @@ typedef struct _zend_fcall_info_cache {
 		class_container.name = zend_string_init_interned(class_name, class_name_len, 1); \
 		class_container.info.internal.builtin_functions = functions;	\
 	}
-
+// 绑定当前的类 和类对应的内置方法 例如 构造方法和魔术方法
 #define INIT_CLASS_ENTRY_INIT_METHODS(class_container, functions) \
 	{															\
 		class_container.constructor = NULL;						\

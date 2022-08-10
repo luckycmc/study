@@ -78,13 +78,15 @@ typedef union _znode_op {
 	zval          *zv;
 #endif
 } znode_op;
-
+/** @
+ * 编译阶段使用的
+ **/
 typedef struct _znode { /* used only during compilation */
-	zend_uchar op_type;
+	zend_uchar op_type;  //op_type对应的是变量的类型
 	zend_uchar flag;
 	union {
-		znode_op op;  // zend_op 执行的指令结构体
-		zval constant; /* replaced by literal/zv */ //zval 结构体
+		znode_op op;  // zend_op 执行的指令结构体 u是联合体，u.op是操作数的类型
+		zval constant; /* replaced by literal/zv */ //zval 结构体 zval constant用来存常量
 	} u;
 } znode;
 

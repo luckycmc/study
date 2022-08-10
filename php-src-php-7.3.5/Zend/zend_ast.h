@@ -38,8 +38,8 @@
  */
 enum _zend_ast_kind {
 	/* special nodes */
-	ZEND_AST_ZVAL = 1 << ZEND_AST_SPECIAL_SHIFT, //64
-	ZEND_AST_CONSTANT,
+	ZEND_AST_ZVAL = 1 << ZEND_AST_SPECIAL_SHIFT, //64 代表这个节点存放的是个zval值
+	ZEND_AST_CONSTANT, 
 	ZEND_AST_ZNODE,
 
 	/* declaration nodes */
@@ -55,9 +55,6 @@ enum _zend_ast_kind {
 	ZEND_AST_EXPR_LIST,
 
 	ZEND_AST_STMT_LIST, // 132 表达式
-
-	ZEND_AST_STMT_LIST, //表达式
-	
 	ZEND_AST_IF,
 	ZEND_AST_SWITCH_LIST,
 	ZEND_AST_CATCH_LIST,
@@ -76,7 +73,7 @@ enum _zend_ast_kind {
 	ZEND_AST_CONSTANT_CLASS,
 
 	/* 1 child node */
-	ZEND_AST_VAR = 1 << ZEND_AST_NUM_CHILDREN_SHIFT,  //变量
+	ZEND_AST_VAR = 1 << ZEND_AST_NUM_CHILDREN_SHIFT,  //变量 代表该节点是个变量
 	ZEND_AST_CONST,
 	ZEND_AST_UNPACK,
 	ZEND_AST_UNARY_PLUS,
@@ -115,7 +112,7 @@ enum _zend_ast_kind {
 	ZEND_AST_STATIC_PROP,
 	ZEND_AST_CALL,
 	ZEND_AST_CLASS_CONST,
-	ZEND_AST_ASSIGN,        // 517
+	ZEND_AST_ASSIGN,        // 517 赋值操作
 	ZEND_AST_ASSIGN_REF,
 	ZEND_AST_ASSIGN_OP,
 	ZEND_AST_BINARY_OP,
@@ -295,7 +292,7 @@ static zend_always_inline zend_ast_list *zend_ast_get_list(zend_ast *ast) {
 	ZEND_ASSERT(zend_ast_is_list(ast));
 	return (zend_ast_list *) ast;
 }
-
+//获取ast 中的zval 值
 static zend_always_inline zval *zend_ast_get_zval(zend_ast *ast) {
 	ZEND_ASSERT(ast->kind == ZEND_AST_ZVAL);
 	return &((zend_ast_zval *) ast)->val;

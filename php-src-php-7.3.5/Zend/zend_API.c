@@ -3695,7 +3695,7 @@ static inline zend_string *zval_make_interned_string(zval *zv) /* {{{ */
 	}
 	return Z_STR_P(zv);
 }
-
+//声明属性并且 挂载到对应的 类中
 ZEND_API int zend_declare_property_ex(zend_class_entry *ce, zend_string *name, zval *property, int access_type, zend_string *doc_comment) /* {{{ */
 {
 	zend_property_info *property_info, *property_info_ptr;
@@ -3803,7 +3803,7 @@ ZEND_API int zend_declare_property_bool(zend_class_entry *ce, const char *name, 
 	return zend_declare_property(ce, name, name_length, &property, access_type);
 }
 /* }}} */
-
+// 声明类的属性为长整形
 ZEND_API int zend_declare_property_long(zend_class_entry *ce, const char *name, size_t name_length, zend_long value, int access_type) /* {{{ */
 {
 	zval property;

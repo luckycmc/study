@@ -31,7 +31,7 @@
 #include "zend_language_scanner.h"
 #include "zend_inheritance.h"
 #include "zend_vm.h"
-
+//设置znode 的值
 #define SET_NODE(target, src) do { \
 		target ## _type = (src)->op_type; \
 		if ((src)->op_type == IS_CONST) { \
@@ -2980,12 +2980,12 @@ void zend_compile_assign(znode *result, zend_ast *ast) /* {{{ */
     //确定变量是否是可写的
 	zend_ensure_writable_variable(var_ast);
 
-	switch (var_ast->kind) {
+	switch (var_ast->kind) {  //此时的表示 $a 就是一个变量
 		case ZEND_AST_VAR:
 		case ZEND_AST_STATIC_PROP:
 			offset = zend_delayed_compile_begin(); //开始的偏移量
-			zend_delayed_compile_var(&var_node, var_ast, BP_VAR_W); //声明变量
-			zend_compile_expr(&expr_node, expr_ast); //编译表达式
+			zend_delayed_compile_var(&var_node, var_ast, BP_VAR_W);  //生成变量名的znode，这个结构只在这个地方临时用，所以直接分配在stack上
+			zend_compile_expr(&expr_node, expr_ast); //递归编译变量值表达式，最终需要得到一个ZEND_AST_ZVAL的节点
 			zend_delayed_compile_end(offset);  //声明结束
 			zend_emit_op(result, ZEND_ASSIGN, &var_node, &expr_node);//生成opcode
 			return;
@@ -8193,6 +8193,7 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 	if (!ast) {
 		return;
 	}
+	//从跟节点开始编译
 	if (ast->kind == ZEND_AST_STMT_LIST) {  //第一次进来一定是这种类型
 		zend_ast_list *list = zend_ast_get_list(ast);
 		uint32_t i;
@@ -8225,7 +8226,7 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 		return;
 	}
 
-	CG(zend_lineno) = ast->lineno;
+	CG(zend_lineno) = ast->lineno;  //记录整体编译的行号
 
 	if ((CG(compiler_options) & ZEND_COMPILE_EXTENDED_INFO) && !zend_is_unticked_stmt(ast)) {
 		zend_do_extended_info();
@@ -8324,8 +8325,8 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 		default:
 		{
 			znode result;
-			zend_compile_expr(&result, ast);
-			zend_do_free(&result);
+			zend_compile_expr(&result, ast); //表达式编译
+			zend_do_free(&result); // 释放对应result
 		}
 	}
 
@@ -8346,9 +8347,9 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 	CG(zend_lineno) = zend_ast_get_lineno(ast);
 
 	switch (ast->kind) {
-		case ZEND_AST_ZVAL:
-			ZVAL_COPY(&result->u.constant, zend_ast_get_zval(ast));
-			result->op_type = IS_CONST;
+		case ZEND_AST_ZVAL:     // 如果是zval则直接 
+			ZVAL_COPY(&result->u.constant, zend_ast_get_zval(ast));//将变量值复制到znode.u.constant中
+			result->op_type = IS_CONST; //类型为IS_CONST，这种value后面将会保存在zend_op_array.literals中
 			return;
 		case ZEND_AST_ZNODE:
 			*result = *zend_ast_get_znode(ast);
@@ -8362,7 +8363,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_STATIC_CALL:
 			zend_compile_var(result, ast, BP_VAR_R);
 			return;
-		case ZEND_AST_ASSIGN:
+		case ZEND_AST_ASSIGN:  // $a = 1对应的赋值操作
 			zend_compile_assign(result, ast);
 			return;
 		case ZEND_AST_ASSIGN_REF:
@@ -8504,7 +8505,7 @@ void zend_compile_var(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 	}
 }
 /* }}} */
-
+// 延迟编译var
 void zend_delayed_compile_var(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 {
 	switch (ast->kind) {
