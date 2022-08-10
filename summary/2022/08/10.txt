@@ -3,3 +3,20 @@ php 栈的执行
   2.指定相应的指针执行位置
   3.执行指令也就是opcode 执行完毕释放当前的分配的运行栈
   4.释放内存 销毁局部变量
+
+PHP虚拟机的执行PHP 代码和 物理机的执行原理类似
+  1.为当前作用域分配一块内存，充当运行栈，zend_execute_data结构、所有局部变量、中间变量等等都在此内存上分配(分配你内存空间)
+  2.始化全局变量符号表，然后将全局执行位置指针EG(current_execute_data)指向step1新分配的zend_execute_data，
+    然后将zend_execute_data.opline指向op_array的起始位置（设置指令的起始的位置,相当于物理机的pc指针）
+  3. 从EX(opline)开始调用各opcode的C处理handler(即_zend_op.handler)，每执行完一条opcode将EX(opline)++继续执行下一条，
+     直到执行完全部opcode，(顺序执行对应的一条条指令,也就是对应的opcode),这是顺序结构的执行方式,当然也有特殊的执行方式
+     函数/类成员方法调用、if的执行过程：
+       3.1 if语句将根据条件的成立与否决定EX(opline) + offset所加的偏移量，实现跳转
+       3.2函数的跳转方式 
+             如果是函数调用，则首先从EG(function_table)中根据function_name取出此function对应的编译完成的zend_op_array，
+             然后像step1一样新分配一个zend_execute_data结构，将EG(current_execute_data)赋值给新结构的prev_execute_data
+             ，再将EG(current_execute_data)指向新的zend_execute_data，最后从新的zend_execute_data.opline开始执行，
+             切换到函数内部，函数执行完以后将EG(current_execute_data)重新指向EX(prev_execute_data)，释放分配的运行栈，
+             销毁局部变量，继续从原来函数调用的位置执行
+        3.3类方法的调用与函数基本相同
+   4.全部opcode执行完成后将step1分配的内存释放，这个过程会将所有的局部变量"销毁"，执行阶段结束     
