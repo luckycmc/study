@@ -2574,7 +2574,7 @@ ZEND_API zend_function * ZEND_FASTCALL zend_fetch_function_str(const char *name,
 	}
 	return NULL;
 } /* }}} */
-
+//初始化 execute的数据信息
 static zend_always_inline void i_init_code_execute_data(zend_execute_data *execute_data, zend_op_array *op_array, zval *return_value) /* {{{ */
 {
 	ZEND_ASSERT(EX(func) == (zend_function*)op_array);
@@ -2583,7 +2583,7 @@ static zend_always_inline void i_init_code_execute_data(zend_execute_data *execu
 	EX(call) = NULL;
 	EX(return_value) = return_value;
 
-	zend_attach_symbol_table(execute_data);
+	zend_attach_symbol_table(execute_data); // //将全局变量添加到EG(symbol_table)中一份，因为此处的execute_data是PHP脚本最初的那个，不是function的，所以所有的变量都是全局的
 
 	if (!op_array->run_time_cache) {
 		op_array->run_time_cache = emalloc(op_array->cache_size);

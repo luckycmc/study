@@ -2495,7 +2495,7 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_BOOL_NOT_SPEC_CON
 	}
 	ZEND_VM_NEXT_OPCODE();
 }
-
+//输出常量的handler
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ECHO_SPEC_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -40965,7 +40965,7 @@ assign_dim_error:
 	/* assign_dim has two opcodes! */
 	ZEND_VM_NEXT_OPCODE_EX(1, 2);
 }
-
+//对应的复值 assigngn    操作
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UNUSED_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -40976,7 +40976,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UN
 	SAVE_OPLINE();
 	//从literals数组中获取op2对应的值，也就是值2
 	value = RT_CONSTANT(opline, opline->op2);
-	variable_ptr = EX_VAR(opline->op1.var);
+	variable_ptr = EX_VAR(opline->op1.var); // 对应的变量就是 $a 中的a
 
 	if (IS_CV == IS_VAR && UNEXPECTED(Z_ISERROR_P(variable_ptr))) {
 
@@ -60866,23 +60866,24 @@ zend_leave_helper_SPEC_LABEL:
  * op_array 是指令
  * return_value 返回值
  */
-ZEND_API vo**id zend_execute(zend_op_array *op_array, zval *return_value)
+ZEND_API void zend_execute(zend_op_array *op_array, zval *return_value)
 {
 	zend_execute_data *execute_data;
 
 	if (EG(exception) != NULL) { //异常处理
 		return;
 	}
-    // //分配zend_execute_data
+    // //分配zend_execute_data vm_stack 入栈操作
 	execute_data = zend_vm_stack_push_call_frame(ZEND_CALL_TOP_CODE | ZEND_CALL_HAS_SYMBOL_TABLE,
 		(zend_function*)op_array, 0, zend_get_called_scope(EG(current_execute_data)), zend_get_this_object(EG(current_execute_data)));
+	//构建符号表
 	if (EG(current_execute_data)) {
 		execute_data->symbol_table = zend_rebuild_symbol_table();
 	} else {
 		execute_data->symbol_table = &EG(symbol_table);
 	}
-	EX(prev_execute_data) = EG(current_execute_data);//行程链表
-	// //初始化execute_data
+	EX(prev_execute_data) = EG(current_execute_data);//初始化执行栈 把相应的堆栈形成关联
+	// //初始化execute_data 
 	i_init_code_execute_data(execute_data, op_array, return_value);
 	//执行opcode
 	zend_execute_ex(execute_data);

@@ -190,13 +190,13 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(ui
 	zend_execute_data *call = (zend_execute_data*)EG(vm_stack_top);
 
 	ZEND_ASSERT_VM_STACK_GLOBAL;
-
+    //当前的vm_stack是否足够用
 	if (UNEXPECTED(used_stack > (size_t)(((char*)EG(vm_stack_end)) - (char*)call))) {
-		call = (zend_execute_data*)zend_vm_stack_extend(used_stack);
+		call = (zend_execute_data*)zend_vm_stack_extend(used_stack); //开辟一块新的vm_stack空间
 		ZEND_ASSERT_VM_STACK_GLOBAL;
 		zend_vm_init_call_frame(call, call_info | ZEND_CALL_ALLOCATED, func, num_args, called_scope, object);
 		return call;
-	} else {
+	} else { //空间够用，直接分配
 		EG(vm_stack_top) = (zval*)((char*)call + used_stack);
 		zend_vm_init_call_frame(call, call_info, func, num_args, called_scope, object);
 		return call;
@@ -205,9 +205,9 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(ui
 
 static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, zend_function *func)
 {
-	uint32_t used_stack = ZEND_CALL_FRAME_SLOT + num_args;
+	uint32_t used_stack = ZEND_CALL_FRAME_SLOT + num_args; //内部函数临时变量
 
-	if (EXPECTED(ZEND_USER_CODE(func->type))) {
+	if (EXPECTED(ZEND_USER_CODE(func->type))) {//在PHP 脚本中写的函数
 		used_stack += func->op_array.last_var + func->op_array.T - MIN(func->op_array.num_args, num_args);
 	}
 	return used_stack * sizeof(zval);

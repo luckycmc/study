@@ -119,7 +119,7 @@ struct _zend_class_entry {
 	int default_static_members_count;     //静态属性数，static
 	zval *default_properties_table;         //普通属性值数组
 	zval *default_static_members_table;     //静态属性值数组
-	zval *static_members_table;
+	zval *static_members_table;            // 静态成员函数
 	HashTable function_table;                 //成员方法哈希表
 	HashTable properties_info;                //成员属性基本信息哈希表，key为成员名，value为zend_property_info
 	HashTable constants_table;                //常量哈希表，通过constant定义的
@@ -153,12 +153,12 @@ struct _zend_class_entry {
 	int (*serialize)(zval *object, unsigned char **buffer, size_t *buf_len, zend_serialize_data *data);
 	int (*unserialize)(zval *object, zend_class_entry *ce, const unsigned char *buf, size_t buf_len, zend_unserialize_data *data);
 
-	uint32_t num_interfaces;
-	uint32_t num_traits;
+	uint32_t num_interfaces;  // 接口
+	uint32_t num_traits;     // triat 机制
 	zend_class_entry **interfaces;
 
 	zend_class_entry **traits;
-	zend_trait_alias **trait_aliases;
+	zend_trait_alias **trait_aliases; // 别名
 	zend_trait_precedence **trait_precedences;
 
 	union {
@@ -169,8 +169,8 @@ struct _zend_class_entry {
 			zend_string *doc_comment;
 		} user;
 		struct {
-			const struct _zend_function_entry *builtin_functions;
-			struct _zend_module_entry *module;
+			const struct _zend_function_entry *builtin_functions; //绑定函数
+			struct _zend_module_entry *module; //模块
 		} internal;
 	} info;
 };
