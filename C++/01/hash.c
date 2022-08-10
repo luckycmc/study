@@ -113,3 +113,5 @@ int main()
 	  printf("29在哈希表中的位置是:%d\n",result);
 	  return 1;
 } 
+
+// https://www.cnblogs.com/shuly/p/12198455.html 
