@@ -139,7 +139,7 @@ PHP_METHOD(study_coroutine_util, sleep)
     PHPCoroutine::sleep(seconds);
     RETURN_TRUE;
 }
-//方法注册
+//注册当类的方法 和类绑定在一起 并且设置相应的操作权限
 const zend_function_entry study_coroutine_util_methods [] = 
 {   
     ZEND_FENTRY(create, ZEND_FN(study_coroutine_create), arginfo_study_coroutine_create, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)

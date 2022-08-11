@@ -51,7 +51,7 @@ typedef struct _zend_fcall_info {
 	zval *params;            //params用来存放我们需要传递给函数的参数，它是一个zval数组。
 	zend_object *object;     // object当这个函数是属于某个类的时候会用到，指向这个类。
 	zend_bool no_separation; //no_separation表示zend_call_function内部要不要释放我们的参数引用计数（
-	uint32_t param_count; //是传递给函数的参数个数。
+	uint32_t param_count;   //是传递给函数的参数个数。
 } zend_fcall_info;
 
 typedef struct _zend_fcall_info_cache {

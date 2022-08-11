@@ -2711,7 +2711,7 @@ ZEND_API int zend_next_free_module(void) /* {{{ */
 	return zend_hash_num_elements(&module_registry) + 1;
 }
 /* }}} */
-
+//注册内部类
 static zend_class_entry *do_register_internal_class(zend_class_entry *orig_class_entry, uint32_t ce_flags) /* {{{ */
 {
 	zend_class_entry *class_entry = malloc(sizeof(zend_class_entry));
@@ -2719,7 +2719,7 @@ static zend_class_entry *do_register_internal_class(zend_class_entry *orig_class
 	*class_entry = *orig_class_entry;
 
 	class_entry->type = ZEND_INTERNAL_CLASS;
-	zend_initialize_class_data(class_entry, 0);
+	zend_initialize_class_data(class_entry, 0); //初始化类的相关信息
 	class_entry->ce_flags = ce_flags | ZEND_ACC_CONSTANTS_UPDATED;
 	class_entry->info.internal.module = EG(current_module);
 
@@ -2729,7 +2729,7 @@ static zend_class_entry *do_register_internal_class(zend_class_entry *orig_class
 
 	lowercase_name = zend_string_tolower_ex(orig_class_entry->name, 1);
 	lowercase_name = zend_new_interned_string(lowercase_name);
-	zend_hash_update_ptr(CG(class_table), lowercase_name, class_entry);
+	zend_hash_update_ptr(CG(class_table), lowercase_name, class_entry); //更新类表的数据信息
 	zend_string_release_ex(lowercase_name, 1);
 	return class_entry;
 }

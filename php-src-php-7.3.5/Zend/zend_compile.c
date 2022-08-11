@@ -1160,7 +1160,7 @@ ZEND_API zend_class_entry *do_bind_inherited_class(const zend_op_array *op_array
 	return ce;
 }
 /* }}} */
-
+//绑定函数和相应的类库
 void zend_do_early_binding(void) /* {{{ */
 {
 	zend_op *opline = &CG(active_op_array)->opcodes[CG(active_op_array)->last-1];
@@ -1171,19 +1171,19 @@ void zend_do_early_binding(void) /* {{{ */
 	}
 
 	switch (opline->opcode) {
-		case ZEND_DECLARE_FUNCTION:
+		case ZEND_DECLARE_FUNCTION: //绑定函数
 			if (do_bind_function(CG(active_op_array), opline, CG(function_table), 1) == FAILURE) {
 				return;
 			}
 			table = CG(function_table);
 			break;
-		case ZEND_DECLARE_CLASS:
+		case ZEND_DECLARE_CLASS: //绑定类
 			if (do_bind_class(CG(active_op_array), opline, CG(class_table), 1) == NULL) {
 				return;
 			}
 			table = CG(class_table);
 			break;
-		case ZEND_DECLARE_INHERITED_CLASS:
+		case ZEND_DECLARE_INHERITED_CLASS: //绑定带继承的类
 			{
 				zval *parent_name;
 				zend_class_entry *ce;
@@ -6014,19 +6014,20 @@ static void zend_begin_func_decl(znode *result, zend_op_array *op_array, zend_as
 	zend_string_release_ex(lcname, 0);
 }
 /* }}} */
-
+// PHP 中函数的编译
 void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast_decl *decl = (zend_ast_decl *) ast;
-	zend_ast *params_ast = decl->child[0];
-	zend_ast *uses_ast = decl->child[1];
-	zend_ast *stmt_ast = decl->child[2];
-	zend_ast *return_type_ast = decl->child[3];
-	zend_bool is_method = decl->kind == ZEND_AST_METHOD;
-
+	zend_ast *params_ast = decl->child[0]; //参数列表
+	zend_ast *uses_ast = decl->child[1];  //use列表
+	zend_ast *stmt_ast = decl->child[2];   //函数内部
+	zend_ast *return_type_ast = decl->child[3];  //返回值类型
+	zend_bool is_method = decl->kind == ZEND_AST_METHOD; //是否为成员函数
+    //这里保存当前正在编译的zend_op_array：CG(active_op_array)，然后重新为函数生成一个新的zend_op_array，
+    //函数编译完再将旧的还原
 	zend_op_array *orig_op_array = CG(active_op_array);
 	zend_op_array *op_array = zend_arena_alloc(&CG(arena), sizeof(zend_op_array));
-	zend_oparray_context orig_oparray_context;
+	zend_oparray_context orig_oparray_context;  //获取当前的上下文
 
 	init_op_array(op_array, ZEND_USER_FUNCTION, INITIAL_OP_ARRAY_SIZE);
 
@@ -6034,7 +6035,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	op_array->fn_flags |= decl->flags;
 	op_array->line_start = decl->start_lineno;
 	op_array->line_end = decl->end_lineno;
-	if (decl->doc_comment) {
+	if (decl->doc_comment) {  //反射用到的注释
 		op_array->doc_comment = zend_string_copy(decl->doc_comment);
 	}
 	if (decl->kind == ZEND_AST_CLOSURE) {
@@ -6052,7 +6053,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	}
 
 	CG(active_op_array) = op_array;
-
+    /************上下文开始 ************/
 	zend_oparray_context_begin(&orig_oparray_context);
 
 	if (CG(compiler_options) & ZEND_COMPILE_EXTENDED_INFO) {
@@ -6074,7 +6075,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 		zend_emit_op(NULL, ZEND_GENERATOR_CREATE, NULL, NULL);
 	}
 	if (uses_ast) {
-		zend_compile_closure_uses(uses_ast);
+		zend_compile_closure_uses(uses_ast); //闭包函数编译
 	}
 	zend_compile_stmt(stmt_ast);
 
@@ -6095,7 +6096,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	/* Pop the loop variable stack separator */
 	zend_stack_del_top(&CG(loop_var_stack));
 
-	CG(active_op_array) = orig_op_array;
+	CG(active_op_array) = orig_op_array; //回复上一个op_array
 }
 /* }}} */
 
@@ -8206,8 +8207,9 @@ void zend_compile_top_stmt(zend_ast *ast) /* {{{ */
 	zend_compile_stmt(ast);
 
 	if (ast->kind != ZEND_AST_NAMESPACE && ast->kind != ZEND_AST_HALT_COMPILER) {
-		zend_verify_namespace();
+		zend_verify_namespace(); 
 	}
+	//函数编译完成后 函数和类 要进行相应的注册 注册到相应的hash表中
 	if (ast->kind == ZEND_AST_FUNC_DECL || ast->kind == ZEND_AST_CLASS) {
 		CG(zend_lineno) = ((zend_ast_decl *) ast)->end_lineno;
 		zend_do_early_binding();//很重要!!!

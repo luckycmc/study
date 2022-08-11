@@ -11,14 +11,14 @@
 
 typedef int Status;
 
-//hash ½á¹¹Ìå
+//hash ç»“æ„ä½“
 typedef struct {
-	int *elem;   //»ùÖ·
-	int count;   //µ±Ç°Êı¾İÔªËØ¸öÊı
+	int *elem;   //åŸºå€
+	int count;   //å½“å‰æ•°æ®å…ƒç´ ä¸ªæ•°
 }HashTable; 
 
-int m =0;//É¢ÁĞ±íµÄ³¤¶È
-//hashTable ³õÊ¼»¯ 
+int m =0;//æ•£åˆ—è¡¨çš„é•¿åº¦
+//hashTable åˆå§‹åŒ– 
 int init(HashTable *hashTable)
 {
 	 int i; m = HASHSIZE;
@@ -35,44 +35,44 @@ int init(HashTable *hashTable)
 	 }
 	 return 1;
 }
-//hash º¯Êı ÇóÓà 
+//hash å‡½æ•° æ±‚ä½™ 
 int hash(int data)
 {
 	return data%m;
 } 
-//Êı¾İ²åÈëhashTable
+//æ•°æ®æ’å…¥hashTable
 void insert(HashTable *hashTable,int data)
 {
-	  int hashAddress = hash(data); //·µ»ØµÄµØÖ·²»ÔÚÏŞ¶¨·¶Î§ÄÚ 
-	  //µØÖ··¢Éú³åÍ» ==NULLKEY ËµÃ÷»¹Ã»ÓĞ±»Õ¼ÓÃ ·ñÔòßÂÊ¹ÓÃÁË  {13,29,27,28,26,30,38}
-	  while(hashTable->elem[hashAddress] != NULLKEY) //µ±Ç°Êı×éÒÑ¾­ÓĞÊı¾İ´æÔÚÁË 
+	  int hashAddress = hash(data); //è¿”å›çš„åœ°å€ä¸åœ¨é™å®šèŒƒå›´å†… 
+	  //åœ°å€å‘ç”Ÿå†²çª ==NULLKEY è¯´æ˜è¿˜æ²¡æœ‰è¢«å ç”¨ å¦åˆ™å‘—ä½¿ç”¨äº†  {13,29,27,28,26,30,38}
+	  while(hashTable->elem[hashAddress] != NULLKEY) //å½“å‰æ•°ç»„å·²ç»æœ‰æ•°æ®å­˜åœ¨äº† 
 	  {
-	  	   //ÀûÓÃ¿ª·ÅĞÔÌ½²âÑ°Ö··¢ 
-	  	   hashAddress = (++hashAddress)%m; //Ö±µ½ÕÒµ½Ò»¸öºÏÊÊµÄÎªÖ¹ 
+	  	   //åˆ©ç”¨å¼€æ”¾æ€§æ¢æµ‹å¯»å€å‘ 
+	  	   hashAddress = (++hashAddress)%m; //ç›´åˆ°æ‰¾åˆ°ä¸€ä¸ªåˆé€‚çš„ä¸ºæ­¢ 
 	  	   printf("data is %d---",data);
 	  	   printf("hashAdress is %d\n",hashAddress);
 	  } 
 	 
-	  //²åÈëÖµ
+	  //æ’å…¥å€¼
 	  hashTable->elem[hashAddress] = data;
 } 
-//Êı¾İ²éÕÒ
+//æ•°æ®æŸ¥æ‰¾
 int search(HashTable *hashTable,int data)
 {
-	  //ÏÈÇóhashµØÖ·
+	  //å…ˆæ±‚hashåœ°å€
 	  int hashAdress = hash(data);
 	  
-	  //½â¾ö·¢Éú³åÍ»µÄÊı¾İ
+	  //è§£å†³å‘ç”Ÿå†²çªçš„æ•°æ®
 	  while(hashTable->elem[hashAdress] != data)
 	  {
-	  	   //ÀûÓÃ¿ª·Å¶¨Ö·µÄÏßĞÔÌ½²â·¨½â¾ö³åÍ» 
+	  	   //åˆ©ç”¨å¼€æ”¾å®šå€çš„çº¿æ€§æ¢æµ‹æ³•è§£å†³å†²çª 
 		    hashAdress=(++hashAdress)%m; 
 		  
 		    if (hashTable->elem[hashAdress]==NULLKEY||hashAdress==hash(data)) return -1; 
 	  } 
-	  return 1;//Êı¾İ²éÕÒ³É¹¦ 
+	  return 1;//æ•°æ®æŸ¥æ‰¾æˆåŠŸ 
 } 
-//Êı¾İÕ¹ÏÖ 
+//æ•°æ®å±•ç° 
 void display(HashTable *hashTable)
 {
 	  int i; 
@@ -85,32 +85,32 @@ void display(HashTable *hashTable)
 	  
 	  printf("\n//==============================//\n"); 
 }
-//Ö÷º¯Êı 
+//ä¸»å‡½æ•° 
 int main()
 {    
       int i,j,result; 
 	  HashTable hashTable; 
 	  int arr[HASHSIZE]={13,29,27,28,26,30,38}; 
 	  
-	  printf("***************Hash¹şÏ£Ëã·¨***************\n"); 
+	  printf("***************Hashå“ˆå¸Œç®—æ³•***************\n"); 
 	  
-	  //³õÊ¼»¯¹şÏ£±í 
+	  //åˆå§‹åŒ–å“ˆå¸Œè¡¨ 
 	  init(&hashTable); 
 	  
-	  //²åÈëÊı¾İ 
+	  //æ’å…¥æ•°æ® 
 	  for (i=0;i<HASHSIZE;i++) 
 	  { 
 	     insert(&hashTable,arr[i]); 
 	  } 
-	  //´òÓ¡¶ÔÓ¦µÄÊı¾İ 
+	  //æ‰“å°å¯¹åº”çš„æ•°æ® 
 	  display(&hashTable); 
-	  //²éÕÒ¶ÔÓ¦µÄÊı¾İ
+	  //æŸ¥æ‰¾å¯¹åº”çš„æ•°æ®
 	  result = search(&hashTable,34);	 
 	  if(result == -1){
-	  	    printf("¶Ô²»Æğ£¬Ã»ÓĞÕÒµ½£¡\n");
+	  	    printf("å¯¹ä¸èµ·ï¼Œæ²¡æœ‰æ‰¾åˆ°ï¼\n");
 	  	    return -1;
 	  }
-	  printf("29ÔÚ¹şÏ£±íÖĞµÄÎ»ÖÃÊÇ:%d\n",result);
+	  printf("29åœ¨å“ˆå¸Œè¡¨ä¸­çš„ä½ç½®æ˜¯:%d\n",result);
 	  return 1;
 } 
 

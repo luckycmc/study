@@ -155,7 +155,7 @@ struct _zend_class_entry {
 
 	uint32_t num_interfaces;  // 接口
 	uint32_t num_traits;     // triat 机制
-	zend_class_entry **interfaces;
+	zend_class_entry **interfaces; //抽象类
 
 	zend_class_entry **traits;
 	zend_trait_alias **trait_aliases; // 别名
@@ -166,7 +166,7 @@ struct _zend_class_entry {
 			zend_string *filename;
 			uint32_t line_start;
 			uint32_t line_end;
-			zend_string *doc_comment;
+			zend_string *doc_comment;  //文档也就是注释
 		} user;
 		struct {
 			const struct _zend_function_entry *builtin_functions; //绑定函数
