@@ -109,8 +109,11 @@ int main()
        switch(input)
        {
           case 1: 
-                printf("请选择 key 和 value\n");
-                scanf("%c %c",&key,&value);
+                printf("请输入 :key\n");
+                scanf(" %c",&key);
+                printf("请输入 value:\n");
+                scanf(" %c",&value);
+                //数据插入
                 insert(H,key,value);
                 break;
            case 2: 
