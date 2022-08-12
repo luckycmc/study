@@ -423,7 +423,7 @@ struct _zend_op_array {
 	int last_live_range;
 	int last_try_catch;
 	zend_live_range *live_range;
-	zend_try_catch_element *try_catch_array;
+	zend_try_catch_element *try_catch_array; // try_catch_array 异常抛出
 
 	zend_string *filename;
 	uint32_t line_start;

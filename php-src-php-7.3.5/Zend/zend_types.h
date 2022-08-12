@@ -360,7 +360,7 @@ typedef struct _HashTableIterator {
 	HashTable    *ht;
 	HashPosition  pos;
 } HashTableIterator;
-
+//对象 类中会用的
 struct _zend_object {
 	zend_refcounted_h gc;
 	uint32_t          handle; // TODO: may be removed ???
@@ -369,14 +369,14 @@ struct _zend_object {
 	HashTable        *properties;
 	zval              properties_table[1];
 };
-
+//资源类型
 struct _zend_resource {
 	zend_refcounted_h gc;
 	int               handle; // TODO: may be removed ???
 	int               type;
 	void             *ptr;
 };
-
+// 引用
 struct _zend_reference {
 	zend_refcounted_h gc;
 	zval              val;

@@ -51,12 +51,11 @@ int insert(HashTable H,char *key,char *value)
           P = L; 
           L = L->next;
      }
-     T=(LinkList)malloc(sizeof(Node)); 
+     T=(LinkList)malloc(sizeof(Node)); //申请内存空间
 	 T->key=key;
 	 T->value=value;
 	 T->next = NULL;
 	 P->next = T;
-
 	 printf("%d,%s,%s,%s\n",index,key,value,H[index]->value);
      printf("******************************\n");
 	 return 1;
@@ -102,9 +101,9 @@ int main()
 	init(H); //初始化hash表 
     int input = 0; char key[name_Max];char value[name_Max];     
     do{
-       menu();
+        menu();
         printf("请选择->");
-       scanf("%d",&input);
+        scanf("%d",&input);
        
        switch(input)
        {
@@ -123,7 +122,7 @@ int main()
                showData();
                break;
            case 0:
-               printf("退出hash表");
+               printf("退出hash表\n");
                break;
            default:
               break;

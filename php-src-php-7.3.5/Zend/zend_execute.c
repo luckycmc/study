@@ -2467,7 +2467,7 @@ static zend_always_inline void zend_init_cvs(uint32_t first, uint32_t last EXECU
 		} while (--count);
 	}
 }
-
+//函数执行数据
 static zend_always_inline void i_init_func_execute_data(zend_op_array *op_array, zval *return_value, zend_bool may_be_trampoline EXECUTE_DATA_DC) /* {{{ */
 {
 	uint32_t first_extra_arg, num_args;
@@ -2482,8 +2482,8 @@ static zend_always_inline void i_init_func_execute_data(zend_op_array *op_array,
 	EX(return_value) = return_value;
 
 	/* Handle arguments */
-	first_extra_arg = op_array->num_args;
-	num_args = EX_NUM_ARGS();
+	first_extra_arg = op_array->num_args;//函数的总参数数量，示例中为3
+	num_args = EX_NUM_ARGS(); //实际传入参数数量，示例中为2
 	if (UNEXPECTED(num_args > first_extra_arg)) {
 		if (!may_be_trampoline || EXPECTED(!(op_array->fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE))) {
 			zend_copy_extra_args(EXECUTE_DATA_C);
@@ -2501,7 +2501,7 @@ static zend_always_inline void i_init_func_execute_data(zend_op_array *op_array,
 	zend_init_cvs(num_args, op_array->last_var EXECUTE_DATA_CC);
 
 	EX_LOAD_RUN_TIME_CACHE(op_array);
-
+    // //EG(current_execute_data)为执行器当前执行空间，将执行器切到函数内
 	EG(current_execute_data) = execute_data;
 #if defined(ZEND_VM_FP_GLOBAL_REG) && ((ZEND_VM_KIND == ZEND_VM_KIND_CALL) || (ZEND_VM_KIND == ZEND_VM_KIND_HYBRID))
 	EX(opline) = opline;
@@ -2579,7 +2579,7 @@ static zend_always_inline void i_init_code_execute_data(zend_execute_data *execu
 {
 	ZEND_ASSERT(EX(func) == (zend_function*)op_array);
 
-	EX(opline) = op_array->opcodes;
+	EX(opline) = op_array->opcodes;  //把指令集复制给 opline
 	EX(call) = NULL;
 	EX(return_value) = return_value;
 

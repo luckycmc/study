@@ -51379,7 +51379,7 @@ ZEND_API void execute_ex(zend_execute_data *ex)
 	const zend_op *orig_opline = opline;
 #endif
 #ifdef ZEND_VM_FP_GLOBAL_REG
-	zend_execute_data *orig_execute_data = execute_data;
+	zend_execute_data *orig_execute_data = execute_data; //切换当前执行栈
 	execute_data = ex;
 #else
 	zend_execute_data *execute_data = ex;

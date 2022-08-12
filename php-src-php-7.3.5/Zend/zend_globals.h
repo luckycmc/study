@@ -268,7 +268,7 @@ typedef enum {
 	ON_FEEDBACK,
 	ON_STOP
 } zend_php_scanner_event;
-
+//PHP 扫描文件的全局配置
 struct _zend_php_scanner_globals {
 	zend_file_handle *yy_in;
 	zend_file_handle *yy_out;

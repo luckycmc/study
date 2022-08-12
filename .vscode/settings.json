@@ -14,6 +14,7 @@
         "server.h": "c",
         "context.h": "c",
         "asm_context.h": "c",
-        "study.h": "c"
+        "study.h": "c",
+        "zend_vm.h": "c"
     }
 }
