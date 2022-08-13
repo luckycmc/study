@@ -4694,7 +4694,7 @@ void zend_compile_label(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+// while 编译
 void zend_compile_while(zend_ast *ast) /* {{{ */
 {
 	zend_ast *cond_ast = ast->child[0];
@@ -4718,7 +4718,7 @@ void zend_compile_while(zend_ast *ast) /* {{{ */
 	zend_end_loop(opnum_cond, NULL);
 }
 /* }}} */
-
+// do while 编译
 void zend_compile_do_while(zend_ast *ast) /* {{{ */
 {
 	zend_ast *stmt_ast = ast->child[0];
@@ -4762,7 +4762,7 @@ void zend_compile_expr_list(znode *result, zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+// for 编译
 void zend_compile_for(zend_ast *ast) /* {{{ */
 {
 	zend_ast *init_ast = ast->child[0];
@@ -4931,7 +4931,7 @@ void zend_compile_if(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+// switch 编译
 static zend_uchar determine_switch_jumptable_type(zend_ast_list *cases) {
 	uint32_t i;
 	zend_uchar common_type = IS_UNDEF;
@@ -5706,7 +5706,7 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 	zend_set_function_arg_flags((zend_function*)op_array);
 }
 /* }}} */
-
+// 编译闭包函数
 static void zend_compile_closure_binding(znode *closure, zend_op_array *op_array, zend_ast *uses_ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(uses_ast);
@@ -6201,7 +6201,7 @@ static void zend_compile_method_ref(zend_ast *ast, zend_trait_method_reference *
 	}
 }
 /* }}} */
-
+// trait 声明
 static void zend_compile_trait_precedence(zend_ast *ast) /* {{{ */
 {
 	zend_ast *method_ref_ast = ast->child[0];
@@ -6221,7 +6221,7 @@ static void zend_compile_trait_precedence(zend_ast *ast) /* {{{ */
 	zend_add_to_list(&CG(active_class_entry)->trait_precedences, precedence);
 }
 /* }}} */
-
+// trait 别名
 static void zend_compile_trait_alias(zend_ast *ast) /* {{{ */
 {
 	zend_ast *method_ref_ast = ast->child[0];
@@ -6777,7 +6777,7 @@ void zend_compile_const_decl(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}}*/
-
+// 命名空间
 void zend_compile_namespace(zend_ast *ast) /* {{{ */
 {
 	zend_ast *name_ast = ast->child[0];
@@ -7128,7 +7128,7 @@ static zend_bool zend_try_ct_eval_array(zval *result, zend_ast *ast) /* {{{ */
 	return 1;
 }
 /* }}} */
-
+// 对比 比较
 void zend_compile_binary_op(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast *left_ast = ast->child[0];
