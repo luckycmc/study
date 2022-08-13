@@ -139,7 +139,7 @@ void zend_compile_expr(znode *node, zend_ast *ast);
 void zend_compile_var(znode *node, zend_ast *ast, uint32_t type);
 void zend_eval_const_expr(zend_ast **ast_ptr);
 void zend_const_expr_to_zval(zval *result, zend_ast *ast);
-
+//对应的opcode 的指针函数
 typedef int (*user_opcode_handler_t) (zend_execute_data *execute_data);
 //指令对应的结构体如下: 指令由操作码和操作数组成
 struct _zend_op {
@@ -155,7 +155,7 @@ struct _zend_op {
 	zend_uchar result_type;  //返回值类型
 };
 
-
+//break 和continue 元素
 typedef struct _zend_brk_cont_element {
 	int start;
 	int cont;
@@ -163,12 +163,12 @@ typedef struct _zend_brk_cont_element {
 	int parent;
 	zend_bool is_switch;
 } zend_brk_cont_element;
-
+// php 标签
 typedef struct _zend_label {
 	int brk_cont;
 	uint32_t opline_num;
 } zend_label;
-
+// try cache 元素
 typedef struct _zend_try_catch_element {
 	uint32_t try_op;
 	uint32_t catch_op;  /* ketchup! */
@@ -187,7 +187,7 @@ typedef struct _zend_live_range {
 	uint32_t start;
 	uint32_t end;
 } zend_live_range;
-
+// zend_oparray_context 的上下文
 /* Compilation context that is different for each op array. */
 typedef struct _zend_oparray_context {
 	uint32_t   opcodes_size;
@@ -340,7 +340,7 @@ typedef struct _zend_oparray_context {
 #define ZEND_ACC_CALL_VIA_HANDLER     ZEND_ACC_CALL_VIA_TRAMPOLINE
 
 char *zend_visibility_string(uint32_t fn_flags);
-
+//类的属性信息
 typedef struct _zend_property_info {
 	uint32_t offset; /* property offset for object properties or
 	                      property index for static properties */

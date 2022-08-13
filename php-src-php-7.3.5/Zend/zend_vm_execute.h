@@ -60873,10 +60873,11 @@ ZEND_API void zend_execute(zend_op_array *op_array, zval *return_value)
 	if (EG(exception) != NULL) { //异常处理
 		return;
 	}
-    // //分配zend_execute_data vm_stack 入栈操作
+    // //分配zend_execute_data vm_stack 入栈操作 分配一块内存充当执行栈zend_execute_data结构、所有局部变量、中间变量等等都在此内存上分配
 	execute_data = zend_vm_stack_push_call_frame(ZEND_CALL_TOP_CODE | ZEND_CALL_HAS_SYMBOL_TABLE,
 		(zend_function*)op_array, 0, zend_get_called_scope(EG(current_execute_data)), zend_get_this_object(EG(current_execute_data)));
-	//构建符号表
+	//构建符号表初始化全局变量符号表，然后将全局执行位置指针EG(current_execute_data)指向step1新分配的zend_execute_data，
+	// 然后将zend_execute_data.opline指向op_array的起始位置
 	if (EG(current_execute_data)) {
 		execute_data->symbol_table = zend_rebuild_symbol_table();
 	} else {

@@ -2525,7 +2525,7 @@ static void zend_compile_class_ref_ex(znode *result, zend_ast *name_ast, uint32_
 	}
 }
 /* }}} */
-
+// 编译变量的zval
 static int zend_try_compile_cv(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast *name_ast = ast->child[0];
@@ -8238,75 +8238,75 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
      // 主要根据不同的节点类型(kind)作不同的处理
 
 	switch (ast->kind) {
-		case ZEND_AST_STMT_LIST:
+		case ZEND_AST_STMT_LIST:     // list
 			zend_compile_stmt_list(ast);
 			break;
-		case ZEND_AST_GLOBAL:
+		case ZEND_AST_GLOBAL:   //global
 			zend_compile_global_var(ast);
 			break;
-		case ZEND_AST_STATIC:
+		case ZEND_AST_STATIC:   //static
 			zend_compile_static_var(ast);
 			break;
-		case ZEND_AST_UNSET:
+		case ZEND_AST_UNSET:   //unset 
 			zend_compile_unset(ast);
 			break;
-		case ZEND_AST_RETURN:
+		case ZEND_AST_RETURN:    //return
 			zend_compile_return(ast);
 			break;
-		case ZEND_AST_ECHO:
+		case ZEND_AST_ECHO:    //echo 
 			zend_compile_echo(ast);
 			break;
-		case ZEND_AST_THROW:
+		case ZEND_AST_THROW:  //throw
 			zend_compile_throw(ast);
 			break;
 		case ZEND_AST_BREAK:
-		case ZEND_AST_CONTINUE:
+		case ZEND_AST_CONTINUE:  // for 语句中的 break 和continue
 			zend_compile_break_continue(ast);
 			break;
-		case ZEND_AST_GOTO:
+		case ZEND_AST_GOTO:   // goto 跳转
 			zend_compile_goto(ast);
 			break;
-		case ZEND_AST_LABEL:
+		case ZEND_AST_LABEL:   //标签
 			zend_compile_label(ast);
 			break;
-		case ZEND_AST_WHILE:
+		case ZEND_AST_WHILE:  // while 循环
 			zend_compile_while(ast);
 			break;
-		case ZEND_AST_DO_WHILE:
+		case ZEND_AST_DO_WHILE:  // do... while()循环
 			zend_compile_do_while(ast);
 			break;
-		case ZEND_AST_FOR:
+		case ZEND_AST_FOR:   // for 循环
 			zend_compile_for(ast);
 			break;
-		case ZEND_AST_FOREACH:
+		case ZEND_AST_FOREACH:  // foreach 循环
 			zend_compile_foreach(ast);
 			break;
-		case ZEND_AST_IF:
+		case ZEND_AST_IF:   // if
 			zend_compile_if(ast);
 			break;
-		case ZEND_AST_SWITCH:
+		case ZEND_AST_SWITCH:  //switch
 			zend_compile_switch(ast);
 			break;
-		case ZEND_AST_TRY:
+		case ZEND_AST_TRY:  // try
 			zend_compile_try(ast);
 			break;
 		case ZEND_AST_DECLARE:
 			zend_compile_declare(ast);
 			break;
 		case ZEND_AST_FUNC_DECL:
-		case ZEND_AST_METHOD:
+		case ZEND_AST_METHOD: // function class method
 			zend_compile_func_decl(NULL, ast);
 			break;
 		case ZEND_AST_PROP_DECL:
 			zend_compile_prop_decl(ast);
 			break;
-		case ZEND_AST_CLASS_CONST_DECL:
+		case ZEND_AST_CLASS_CONST_DECL: //class const
 			zend_compile_class_const_decl(ast);
 			break;
-		case ZEND_AST_USE_TRAIT:
+		case ZEND_AST_USE_TRAIT:  // trait 机制
 			zend_compile_use_trait(ast);
 			break;
-		case ZEND_AST_CLASS:
+		case ZEND_AST_CLASS:   // class 类
 			zend_compile_class_decl(ast);
 			break;
 		case ZEND_AST_GROUP_USE:
@@ -8318,10 +8318,10 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 		case ZEND_AST_CONST_DECL:
 			zend_compile_const_decl(ast);
 			break;
-		case ZEND_AST_NAMESPACE:
+		case ZEND_AST_NAMESPACE:  //命名空间
 			zend_compile_namespace(ast);
 			break;
-		case ZEND_AST_HALT_COMPILER:
+		case ZEND_AST_HALT_COMPILER: // compire 比较
 			zend_compile_halt_compiler(ast);
 			break;
 		default:
@@ -8353,7 +8353,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 			ZVAL_COPY(&result->u.constant, zend_ast_get_zval(ast));//将变量值复制到znode.u.constant中
 			result->op_type = IS_CONST; //类型为IS_CONST，这种value后面将会保存在zend_op_array.literals中
 			return;
-		case ZEND_AST_ZNODE:
+		case ZEND_AST_ZNODE:   // znode
 			*result = *zend_ast_get_znode(ast);
 			return;
 		case ZEND_AST_VAR:
@@ -8380,7 +8380,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_ASSIGN_OP:
 			zend_compile_compound_assign(result, ast);
 			return;
-		case ZEND_AST_BINARY_OP:
+		case ZEND_AST_BINARY_OP:  //比较
 			zend_compile_binary_op(result, ast);
 			return;
 		case ZEND_AST_GREATER:
@@ -8418,10 +8418,10 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_PRINT:
 			zend_compile_print(result, ast);
 			return;
-		case ZEND_AST_EXIT:
+		case ZEND_AST_EXIT: // exit
 			zend_compile_exit(result, ast);
 			return;
-		case ZEND_AST_YIELD:
+		case ZEND_AST_YIELD: // yield 
 			zend_compile_yield(result, ast);
 			return;
 		case ZEND_AST_YIELD_FROM:
@@ -8466,7 +8466,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+//编译变量
 void zend_compile_var(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 {
 	CG(zend_lineno) = zend_ast_get_lineno(ast);

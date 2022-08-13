@@ -93,7 +93,7 @@ ZEND_API void *zend_stack_base(const zend_stack *stack)
 	return stack->elements;
 }
 
-
+//计算栈的大小 栈顶
 ZEND_API int zend_stack_count(const zend_stack *stack)
 {
 	return stack->top;
