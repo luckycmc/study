@@ -3160,7 +3160,7 @@ void zend_compile_compound_assign(znode *result, zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+//编译函数参数
 uint32_t zend_compile_args(zend_ast *ast, zend_function *fbc) /* {{{ */
 {
 	zend_ast_list *args = zend_ast_get_list(ast);
@@ -3336,7 +3336,7 @@ void zend_compile_call_common(znode *result, zend_ast *args_ast, zend_function *
 	zend_do_extended_fcall_end();
 }
 /* }}} */
-
+// 编译函数名称
 zend_bool zend_compile_function_name(znode *name_node, zend_ast *name_ast) /* {{{ */
 {
 	zend_string *orig_name = zend_ast_get_str(name_ast);
@@ -3349,7 +3349,7 @@ zend_bool zend_compile_function_name(znode *name_node, zend_ast *name_ast) /* {{
 	return !is_fully_qualified && FC(current_namespace);
 }
 /* }}} */
-
+// 
 void zend_compile_ns_call(znode *result, znode *name_node, zend_ast *args_ast) /* {{{ */
 {
 	zend_op *opline = get_next_op(CG(active_op_array));
@@ -3466,7 +3466,7 @@ int zend_compile_func_cast(znode *result, zend_ast_list *args, uint32_t type) /*
 	return SUCCESS;
 }
 /* }}} */
-
+//编译函数定义
 int zend_compile_func_defined(znode *result, zend_ast_list *args) /* {{{ */
 {
 	zend_string *name;
@@ -4313,7 +4313,7 @@ static void zend_compile_static_var_common(zend_ast *var_ast, zval *value, uint3
 	opline->extended_value = (uint32_t)((char*)value - (char*)CG(active_op_array)->static_variables->arData) | by_ref;
 }
 /* }}} */
-
+//静态变量编译
 void zend_compile_static_var(zend_ast *ast) /* {{{ */
 {
 	zend_ast *var_ast = ast->child[0];
@@ -4507,7 +4507,7 @@ void zend_compile_return(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+// echo 编译
 void zend_compile_echo(zend_ast *ast) /* {{{ */
 {
 	zend_op *opline;
