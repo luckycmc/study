@@ -202,7 +202,7 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(ui
 		return call;
 	}
 }
-
+//计算使用栈的大小
 static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, zend_function *func)
 {
 	uint32_t used_stack = ZEND_CALL_FRAME_SLOT + num_args; //内部函数临时变量
@@ -220,7 +220,7 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame(uint3
 	return zend_vm_stack_push_call_frame_ex(used_stack, call_info,
 		func, num_args, called_scope, object);
 }
-
+//释放栈的参数
 static zend_always_inline void zend_vm_stack_free_extra_args_ex(uint32_t call_info, zend_execute_data *call)
 {
 	if (UNEXPECTED(call_info & ZEND_CALL_FREE_EXTRA_ARGS)) {

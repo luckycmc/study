@@ -154,10 +154,10 @@ struct _zend_executor_globals {
 	HashTable *class_table;		/* class table  new class 的类从这里面查找*/
 	HashTable *zend_constants;	/* constants table  常量符号表*/
 
-	zval          *vm_stack_top;
-	zval          *vm_stack_end;
-	zend_vm_stack  vm_stack;
-	size_t         vm_stack_page_size;
+	zval          *vm_stack_top;  //栈顶
+	zval          *vm_stack_end;  //栈底
+	zend_vm_stack  vm_stack;     //整个栈
+	size_t         vm_stack_page_size; //栈的页 大小
     /**
 	  指正在执行的运行栈
 	*/
