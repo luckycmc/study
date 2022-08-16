@@ -444,7 +444,7 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		}
 		i++;
 	}
-	 //这是一个新变量
+	 //这是一个新变量  添加进去
 	i = op_array->last_var;
 	op_array->last_var++;
 	if (op_array->last_var > CG(context).vars_size) {
@@ -452,7 +452,7 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		op_array->vars = erealloc(op_array->vars, CG(context).vars_size * sizeof(zend_string*));
 	}
 
-	op_array->vars[i] = zend_string_copy(name);
+	op_array->vars[i] = zend_string_copy(name); //数据copy进去
 	return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i);
 }
 /* }}} */
