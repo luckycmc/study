@@ -173,7 +173,7 @@ ZEND_API const zend_internal_function zend_pass_function = {
 #define ZEND_VM_STACK_PAGE_ALIGNED_SIZE(size, page_size) \
 	(((size) + ZEND_VM_STACK_HEADER_SLOTS * sizeof(zval) \
 	  + ((page_size) - 1)) & ~((page_size) - 1))
-
+//申请一个栈页的大小
 static zend_always_inline zend_vm_stack zend_vm_stack_new_page(size_t size, zend_vm_stack prev) {
 	zend_vm_stack page = (zend_vm_stack)emalloc(size);
 
@@ -182,7 +182,7 @@ static zend_always_inline zend_vm_stack zend_vm_stack_new_page(size_t size, zend
 	page->prev = prev;
 	return page;
 }
-
+// vm栈初始化
 ZEND_API void zend_vm_stack_init(void)
 {
 	EG(vm_stack_page_size) = ZEND_VM_STACK_PAGE_SIZE;
@@ -191,7 +191,7 @@ ZEND_API void zend_vm_stack_init(void)
 	EG(vm_stack_top) = EG(vm_stack)->top;
 	EG(vm_stack_end) = EG(vm_stack)->end;
 }
-
+//栈的执行初始化
 ZEND_API void zend_vm_stack_init_ex(size_t page_size)
 {
 	/* page_size must be a power of 2 */
@@ -201,7 +201,7 @@ ZEND_API void zend_vm_stack_init_ex(size_t page_size)
 	EG(vm_stack_top) = EG(vm_stack)->top;
 	EG(vm_stack_end) = EG(vm_stack)->end;
 }
-
+//销毁整个栈
 ZEND_API void zend_vm_stack_destroy(void)
 {
 	zend_vm_stack stack = EG(vm_stack);
@@ -212,7 +212,7 @@ ZEND_API void zend_vm_stack_destroy(void)
 		stack = p;
 	}
 }
-
+//执行栈扩容
 ZEND_API void* zend_vm_stack_extend(size_t size)
 {
 	zend_vm_stack stack;
@@ -229,7 +229,7 @@ ZEND_API void* zend_vm_stack_extend(size_t size)
 	EG(vm_stack_end) = stack->end;
 	return ptr;
 }
-
+//得到变量的值
 ZEND_API zval* zend_get_compiled_variable_value(const zend_execute_data *execute_data, uint32_t var)
 {
 	return EX_VAR(var);
@@ -812,7 +812,7 @@ static ZEND_COLD void zend_verify_arg_error(
 		zend_missing_arg_error(ptr);
 	}
 }
-
+//是否是一个空的常量
 static int is_null_constant(zend_class_entry *scope, zval *default_value)
 {
 	if (Z_TYPE_P(default_value) == IS_CONSTANT_AST) {
