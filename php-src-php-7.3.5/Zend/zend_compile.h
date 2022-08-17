@@ -557,7 +557,7 @@ struct _zend_execute_data {
 
 #define ZEND_CALL_VAR(call, n) \
 	((zval*)(((char*)(call)) + ((int)(n))))
-
+//获取变量和execute_data的部长 转换成zval 地址
 #define ZEND_CALL_VAR_NUM(call, n) \
 	(((zval*)(call)) + (ZEND_CALL_FRAME_SLOT + ((int)(n))))
 

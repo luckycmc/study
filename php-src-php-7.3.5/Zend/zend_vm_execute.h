@@ -40974,9 +40974,9 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UN
 	zval *variable_ptr;
 
 	SAVE_OPLINE();
-	//从literals数组中获取op2对应的值，也就是值2
-	value = RT_CONSTANT(opline, opline->op2);
-	variable_ptr = EX_VAR(opline->op1.var); // 对应的变量就是 $a 中的a
+	//从literals数组中获取op2对应的值，也就是值2  //从literals数组中获取op2对应的值，也就是值2
+	value = RT_CONSTANT(opline, opline->op2);  //获 value 在虚拟机上的地址 计算数据值相应的步长
+	variable_ptr = EX_VAR(opline->op1.var); // 对应的变量就是 $a 中的a 获取a 在栈中的地址
 
 	if (IS_CV == IS_VAR && UNEXPECTED(Z_ISERROR_P(variable_ptr))) {
 
@@ -40984,14 +40984,15 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UN
 			ZVAL_NULL(EX_VAR(opline->result.var));
 		}
 	} else {
+		//复制给对应的变量
 		value = zend_assign_to_variable(variable_ptr, value, IS_CONST);
-		if (UNEXPECTED(0)) {
+		if (UNEXPECTED(0)) { //条件为真复制数据
 			ZVAL_COPY(EX_VAR(opline->result.var), value);
 		}
 
 		/* zend_assign_to_variable() always takes care of op2, never free it! */
 	}
-
+    //继续执行下一个opcode
 	ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 }
 
