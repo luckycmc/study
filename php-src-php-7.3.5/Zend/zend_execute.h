@@ -202,7 +202,7 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(ui
 		return call;
 	}
 }
-//计算使用栈的大小
+//计算使用栈的大小 也就是计算函数 和函数参数的 会占用的空间
 static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, zend_function *func)
 {
 	uint32_t used_stack = ZEND_CALL_FRAME_SLOT + num_args; //内部函数临时变量
