@@ -428,7 +428,7 @@ ZEND_API zend_bool zend_is_compiling(void) /* {{{ */
 
 static uint32_t get_temporary_variable(zend_op_array *op_array) /* {{{ */
 {
-	return (uint32_t)op_array->T++;
+	return (uint32_t)op_array->T++;  // 位置往后++
 }
 /* }}} */
 //在op_array中查找相应的 val变量
@@ -444,16 +444,16 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		}
 		i++;
 	}
-	 //这是一个新变量  添加进去
+	 //这是一个新变量  添加进去  若不存在，则写入vars中，返回新插入的位置
 	i = op_array->last_var;
 	op_array->last_var++;
 	if (op_array->last_var > CG(context).vars_size) {
 		CG(context).vars_size += 16; /* FIXME */
 		op_array->vars = erealloc(op_array->vars, CG(context).vars_size * sizeof(zend_string*));
 	}
-
+     //gdb 调试的时候需要 打印看下
 	op_array->vars[i] = zend_string_copy(name); //数据copy进去
-	return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i);
+	return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i);//所以返回的是每个变量的偏移值，即80+16*i
 }
 /* }}} */
 
@@ -1935,8 +1935,8 @@ static void zend_adjust_for_fetch_type(zend_op *opline, znode *result, uint32_t 
 
 static inline void zend_make_var_result(znode *result, zend_op *opline) /* {{{ */
 {
-	opline->result_type = IS_VAR;
-	opline->result.var = get_temporary_variable(CG(active_op_array));
+	opline->result_type = IS_VAR; //返回值的类型设置为IS_VAR
+	opline->result.var = get_temporary_variable(CG(active_op_array));//这个是返回值的编号，对应T位置
 	GET_NODE(result, opline->result);
 }
 /* }}} */
@@ -2543,7 +2543,7 @@ static int zend_try_compile_cv(znode *result, zend_ast *ast) /* {{{ */
 			return FAILURE;
 		}
 
-		result->op_type = IS_CV;
+		result->op_type = IS_CV; //类型是一个变量
 		result->u.op.var = lookup_cv(CG(active_op_array), name);
 
 		if (UNEXPECTED(Z_TYPE_P(zv) != IS_STRING)) {
