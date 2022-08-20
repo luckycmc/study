@@ -7128,12 +7128,12 @@ static zend_bool zend_try_ct_eval_array(zval *result, zend_ast *ast) /* {{{ */
 	return 1;
 }
 /* }}} */
-// 对比 比较
+//  $b =$a+2; 加减乘除的处理
 void zend_compile_binary_op(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast *left_ast = ast->child[0];
 	zend_ast *right_ast = ast->child[1];
-	uint32_t opcode = ast->attr;
+	uint32_t opcode = ast->attr;  //通过attr区分加减乘除等等操作
 
 	znode left_node, right_node;
 	zend_compile_expr(&left_node, left_ast);
@@ -7150,7 +7150,7 @@ void zend_compile_binary_op(znode *result, zend_ast *ast) /* {{{ */
 		}
 	}
 
-	do {
+	do { // opcode 是否是相应的运算符
 		if (opcode == ZEND_IS_EQUAL || opcode == ZEND_IS_NOT_EQUAL) {
 			if (left_node.op_type == IS_CONST) {
 				if (Z_TYPE(left_node.u.constant) == IS_FALSE) {

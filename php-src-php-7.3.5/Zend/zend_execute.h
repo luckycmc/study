@@ -171,7 +171,7 @@ ZEND_API void zend_vm_stack_init(void);
 ZEND_API void zend_vm_stack_init_ex(size_t page_size);
 ZEND_API void zend_vm_stack_destroy(void);
 ZEND_API void* zend_vm_stack_extend(size_t size);
-
+//初始化vm的栈帧
 static zend_always_inline void zend_vm_init_call_frame(zend_execute_data *call, uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
 	call->func = func;
@@ -184,10 +184,10 @@ static zend_always_inline void zend_vm_init_call_frame(zend_execute_data *call, 
 	}
 	ZEND_CALL_NUM_ARGS(call) = num_args;
 }
-
+//相应的数据入栈
 static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(uint32_t used_stack, uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
-	zend_execute_data *call = (zend_execute_data*)EG(vm_stack_top);
+	zend_execute_data *call = (zend_execute_data*)EG(vm_stack_top);//返回的是栈的首地址
 
 	ZEND_ASSERT_VM_STACK_GLOBAL;
     //当前的vm_stack是否足够用
@@ -202,7 +202,7 @@ static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(ui
 		return call;
 	}
 }
-//计算使用栈的大小 也就是计算函数 和函数参数的 会占用的空间
+//计算使用栈的大小 也就是计算函数 和函数参数的 会占用的空间 也会是计算偏移量
 static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, zend_function *func)
 {
 	uint32_t used_stack = ZEND_CALL_FRAME_SLOT + num_args; //内部函数临时变量
@@ -215,7 +215,7 @@ static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, ze
 // 分配内存栈帧
 static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame(uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
-	uint32_t used_stack = zend_vm_calc_used_stack(num_args, func);
+	uint32_t used_stack = zend_vm_calc_used_stack(num_args, func); //函数和参数使用的空间
 
 	return zend_vm_stack_push_call_frame_ex(used_stack, call_info,
 		func, num_args, called_scope, object);
