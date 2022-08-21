@@ -245,7 +245,7 @@ static zend_always_inline void zend_vm_stack_free_extra_args(zend_execute_data *
 {
 	zend_vm_stack_free_extra_args_ex(ZEND_CALL_INFO(call), call);
 }
-
+//释放栈针的参数
 static zend_always_inline void zend_vm_stack_free_args(zend_execute_data *call)
 {
 	uint32_t num_args = ZEND_CALL_NUM_ARGS(call);

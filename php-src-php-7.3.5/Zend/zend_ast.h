@@ -50,9 +50,9 @@ enum _zend_ast_kind {
 
 	/* list nodes */
 	ZEND_AST_ARG_LIST = 1 << ZEND_AST_IS_LIST_SHIFT,
-	ZEND_AST_ARRAY,
+	ZEND_AST_ARRAY,        // array 数组
 	ZEND_AST_ENCAPS_LIST,
-	ZEND_AST_EXPR_LIST,
+	ZEND_AST_EXPR_LIST,   //表达式 例如 $a+1
 
 	ZEND_AST_STMT_LIST, // 132 表达式 
 	ZEND_AST_IF,
@@ -120,7 +120,7 @@ enum _zend_ast_kind {
 	ZEND_AST_GREATER_EQUAL,
 	ZEND_AST_AND,
 	ZEND_AST_OR,
-	ZEND_AST_ARRAY_ELEM,
+	ZEND_AST_ARRAY_ELEM,  // 525 array 中的元素
 	ZEND_AST_NEW,
 	ZEND_AST_INSTANCEOF,
 	ZEND_AST_YIELD,
@@ -154,7 +154,7 @@ enum _zend_ast_kind {
 
 	/* 4 child nodes */
 	ZEND_AST_FOR = 4 << ZEND_AST_NUM_CHILDREN_SHIFT,
-	ZEND_AST_FOREACH,
+	ZEND_AST_FOREACH,  // 1025 foreach
 };
 
 typedef uint16_t zend_ast_kind;
