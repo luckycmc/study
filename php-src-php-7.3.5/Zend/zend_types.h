@@ -212,7 +212,7 @@ struct _zval_struct {
 		uint32_t     extra;                /* not further specified */
 	} u2;    
 };
-
+//引用 gc 垃圾回收会用到
 typedef struct _zend_refcounted_h {
 	uint32_t         refcount;			/* reference counter 32-bit */
 	union {
