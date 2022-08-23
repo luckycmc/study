@@ -35,12 +35,12 @@
 #define SET_NODE(target, src) do { \
 		target ## _type = (src)->op_type; \
 		if ((src)->op_type == IS_CONST) { \
-			target.constant = zend_add_literal(CG(active_op_array), &(src)->u.constant); \
+			target.constant = zend_add_literal(CG(active_op_array), &(src)->u.constant); \  //常量数组中的位置
 		} else { \
-			target = (src)->u.op; \
+			target = (src)->u.op; \   //变量相关的
 		} \
 	} while (0)
-
+//得到node
 #define GET_NODE(target, src) do { \
 		(target)->op_type = src ## _type; \
 		if ((target)->op_type == IS_CONST) { \
@@ -425,10 +425,10 @@ ZEND_API zend_bool zend_is_compiling(void) /* {{{ */
 	return CG(in_compilation);
 }
 /* }}} */
-
+// 获取对应的临时变量
 static uint32_t get_temporary_variable(zend_op_array *op_array) /* {{{ */
 {
-	return (uint32_t)op_array->T++;  // 位置往后++
+	return (uint32_t)op_array->T++;  // 位置往后++ 临时变量的个数
 }
 /* }}} */
 //在op_array中查找相应的 val变量
@@ -1940,7 +1940,7 @@ static inline void zend_make_var_result(znode *result, zend_op *opline) /* {{{ *
 	GET_NODE(result, opline->result);
 }
 /* }}} */
-
+// 临时变量的 result
 static inline void zend_make_tmp_result(znode *result, zend_op *opline) /* {{{ */
 {
 	opline->result_type = IS_TMP_VAR;
@@ -2113,26 +2113,26 @@ static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode
 {
 	zend_op *opline = get_next_op(CG(active_op_array)); //当前zend_op_array下生成一条新的指令
 	opline->opcode = opcode;
-    
+    // op1和op2 都是指针操作
 	//将op1、op2内容拷贝到zend_op中，设置op_type
     //如果znode.op_type == IS_CONST，则会将znode.u.contstant值转移到zend_op_array.literals中
 	if (op1 != NULL) {
 		SET_NODE(opline->op1, op1);
 	}
-
+    
 	if (op2 != NULL) {
 		SET_NODE(opline->op2, op2);
 	}
 
 	zend_check_live_ranges(opline);
     ////如果此指令有返回值则想变量那样为返回值编号（后面分配局部变量时将根据这个编号索引）
-	if (result) {
+	if (result) {   //设置返回值
 		zend_make_var_result(result, opline);
 	}
 	return opline;
 }
 /* }}} */
-
+//编译带临时变量的 opline
 static zend_op *zend_emit_op_tmp(znode *result, zend_uchar opcode, znode *op1, znode *op2) /* {{{ */
 {
 	zend_op *opline = get_next_op(CG(active_op_array));
@@ -2358,7 +2358,7 @@ static void zend_emit_return_type_check(
 	}
 }
 /* }}} */
-
+// 虽然PHP 主函数没有return 但是编译的时候会默认一个return
 void zend_emit_final_return(int return_one) /* {{{ */
 {
 	znode zn;
@@ -2381,7 +2381,7 @@ void zend_emit_final_return(int return_one) /* {{{ */
 	ret->extended_value = -1;
 }
 /* }}} */
-
+//是否是一个变量
 static inline zend_bool zend_is_variable(zend_ast *ast) /* {{{ */
 {
 	return ast->kind == ZEND_AST_VAR || ast->kind == ZEND_AST_DIM
@@ -8363,7 +8363,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_CALL:
 		case ZEND_AST_METHOD_CALL:
 		case ZEND_AST_STATIC_CALL:
-			zend_compile_var(result, ast, BP_VAR_R);
+			zend_compile_var(result, ast, BP_VAR_R); //变量编译
 			return;
 		case ZEND_AST_ASSIGN:  // $a = 1对应的赋值操作
 			zend_compile_assign(result, ast);
@@ -8380,7 +8380,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_ASSIGN_OP:
 			zend_compile_compound_assign(result, ast);
 			return;
-		case ZEND_AST_BINARY_OP:  //比较
+		case ZEND_AST_BINARY_OP:  //运算操作
 			zend_compile_binary_op(result, ast);
 			return;
 		case ZEND_AST_GREATER:

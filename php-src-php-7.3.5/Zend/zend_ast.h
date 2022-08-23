@@ -292,7 +292,7 @@ static zend_always_inline zend_ast_list *zend_ast_get_list(zend_ast *ast) {
 	ZEND_ASSERT(zend_ast_is_list(ast));
 	return (zend_ast_list *) ast;
 }
-//获取ast 中的zval 值
+//获取ast 中的zval 值的地址
 static zend_always_inline zval *zend_ast_get_zval(zend_ast *ast) {
 	ZEND_ASSERT(ast->kind == ZEND_AST_ZVAL);
 	return &((zend_ast_zval *) ast)->val;

@@ -1067,11 +1067,11 @@ static zend_always_inline uint32_t zval_delref_p(zval* pz) {
 
 #define ZVAL_COPY(z, v)									\
 	do {												\
-		zval *_z1 = (z);								\
-		const zval *_z2 = (v);							\
-		zend_refcounted *_gc = Z_COUNTED_P(_z2);		\
-		uint32_t _t = Z_TYPE_INFO_P(_z2);				\
-		ZVAL_COPY_VALUE_EX(_z1, _z2, _gc, _t);			\
+		zval *_z1 = (z);								\  // z的值
+		const zval *_z2 = (v);							\  // v的值
+		zend_refcounted *_gc = Z_COUNTED_P(_z2);		\  // gc 引用的值
+		uint32_t _t = Z_TYPE_INFO_P(_z2);				\ // 位置
+		ZVAL_COPY_VALUE_EX(_z1, _z2, _gc, _t);			\ // copy 数据
 		if (Z_TYPE_INFO_REFCOUNTED(_t)) {				\
 			GC_ADDREF(_gc);								\
 		}												\

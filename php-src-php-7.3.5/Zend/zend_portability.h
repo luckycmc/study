@@ -102,7 +102,7 @@
 #endif
 
 #if ZEND_DEBUG
-# define ZEND_ASSERT(c)	assert(c)
+# define ZEND_ASSERT(c)	assert(c)     // assert()函数返回条件错误时终止执行
 #else
 # define ZEND_ASSERT(c) ZEND_ASSUME(c)
 #endif
