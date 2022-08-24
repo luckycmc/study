@@ -152,7 +152,7 @@ enum _zend_ast_kind {
 	ZEND_AST_PROP_ELEM,
 	ZEND_AST_CONST_ELEM,
 
-	/* 4 child nodes */
+	/* 4 child nodes */ //for 和foreach 都是4个子女
 	ZEND_AST_FOR = 4 << ZEND_AST_NUM_CHILDREN_SHIFT,
 	ZEND_AST_FOREACH,  // 1025 foreach
 };
