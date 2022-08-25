@@ -48,14 +48,14 @@ enum _zend_ast_kind {
 	ZEND_AST_METHOD,
 	ZEND_AST_CLASS,
 
-	/* list nodes */
+	/* list nodes */  //要进行 zend_ast_list转换
 	ZEND_AST_ARG_LIST = 1 << ZEND_AST_IS_LIST_SHIFT,
 	ZEND_AST_ARRAY,        // array 数组
 	ZEND_AST_ENCAPS_LIST,
 	ZEND_AST_EXPR_LIST,   //表达式 例如 $a+1
 
 	ZEND_AST_STMT_LIST, // 132 表达式 
-	ZEND_AST_IF,
+	ZEND_AST_IF,        //133 if
 	ZEND_AST_SWITCH_LIST,
 	ZEND_AST_CATCH_LIST,
 	ZEND_AST_PARAM_LIST,
@@ -100,13 +100,13 @@ enum _zend_ast_kind {
 	ZEND_AST_LABEL,
 	ZEND_AST_REF,
 	ZEND_AST_HALT_COMPILER,
-	ZEND_AST_ECHO,
+	ZEND_AST_ECHO,  // 282 echo  一个子女
 	ZEND_AST_THROW,
 	ZEND_AST_GOTO,
 	ZEND_AST_BREAK,
 	ZEND_AST_CONTINUE,
 
-	/* 2 child nodes */
+	/* 2 child nodes */  // 有两个子节点的可能会有一个没有
 	ZEND_AST_DIM = 2 << ZEND_AST_NUM_CHILDREN_SHIFT,
 	ZEND_AST_PROP,
 	ZEND_AST_STATIC_PROP,
@@ -115,7 +115,7 @@ enum _zend_ast_kind {
 	ZEND_AST_ASSIGN,        // 517 赋值操作 一般情况下赋值比较多点
 	ZEND_AST_ASSIGN_REF,
 	ZEND_AST_ASSIGN_OP,
-	ZEND_AST_BINARY_OP,
+	ZEND_AST_BINARY_OP,   // 表达式 比较
 	ZEND_AST_GREATER,
 	ZEND_AST_GREATER_EQUAL,
 	ZEND_AST_AND,
