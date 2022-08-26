@@ -4889,43 +4889,47 @@ void zend_compile_foreach(zend_ast *ast) /* {{{ */
 	opline = zend_emit_op(NULL, ZEND_FE_FREE, &reset_node, NULL);
 }
 /* }}} */
-
+// zend_compile_if() if 的编译过程
 void zend_compile_if(zend_ast *ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
 	uint32_t i;
 	uint32_t *jmp_opnums = NULL;
-
+    //用来保存每个分支在步骤(4)中的ZEND_JMP opcode
 	if (list->children > 1) {
 		jmp_opnums = safe_emalloc(sizeof(uint32_t), list->children - 1, 0);
 	}
-
+     //依次编译各个分支
 	for (i = 0; i < list->children; ++i) {
 		zend_ast *elem_ast = list->child[i];
-		zend_ast *cond_ast = elem_ast->child[0];
-		zend_ast *stmt_ast = elem_ast->child[1];
+		zend_ast *cond_ast = elem_ast->child[0]; // 条件
+		zend_ast *stmt_ast = elem_ast->child[1]; //声明
 
 		znode cond_node;
 		uint32_t opnum_jmpz;
 		if (cond_ast) {
+			//编译condition
 			zend_compile_expr(&cond_node, cond_ast);
+			//编译condition跳转opcode：ZEND_JMPZ
 			opnum_jmpz = zend_emit_cond_jump(ZEND_JMPZ, &cond_node, 0);
 		}
-
+        //编译表达式
 		zend_compile_stmt(stmt_ast);
-
+         //编译statement执行完后跳出if的opcode：ZEND_JMP(最后一个分支无需这条opcode)
 		if (i != list->children - 1) {
 			jmp_opnums[i] = zend_emit_jump(0);
 		}
 
 		if (cond_ast) {
+			//设置ZEND_JMPZ跳过opcode数
 			zend_update_jump_target_to_next(opnum_jmpz);
 		}
 	}
 
 	if (list->children > 1) {
+		//设置前面各分支statement执行完后应跳转的位置
 		for (i = 0; i < list->children - 1; ++i) {
-			zend_update_jump_target_to_next(jmp_opnums[i]);
+			zend_update_jump_target_to_next(jmp_opnums[i]);  //设置每组stmt最后一条jmp跳转为if外
 		}
 		efree(jmp_opnums);
 	}
