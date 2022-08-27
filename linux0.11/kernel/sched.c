@@ -100,6 +100,7 @@ void math_state_restore()
  *   NOTE!!  Task 0 is the 'idle' task, which gets called when no other
  * tasks can run. It can not be killed, and it cannot sleep. The 'state'
  * information in task[0] is never used.
+ 进程调度
  */
 void schedule(void)
 {
@@ -138,32 +139,32 @@ void schedule(void)
 				(*p)->counter = ((*p)->counter >> 1) +
 						(*p)->priority;
 	}
-	switch_to(next);
+	switch_to(next); //切换下一个进程
 }
-
-int sys_pause(void)
+// 就是切换了一下当前任务的状态，然后执行调度。
+int sys_pause(void) // pause 暂停停顿
 {
-	current->state = TASK_INTERRUPTIBLE;
-	schedule();
+	current->state = TASK_INTERRUPTIBLE; //进程的状态
+	schedule(); //调度
 	return 0;
 }
-
+// sleep_on()用于进程睡眠
 void sleep_on(struct task_struct **p)
 {
 	struct task_struct *tmp;
 
 	if (!p)
 		return;
-	if (current == &(init_task.task))
+	if (current == &(init_task.task)) //示当前CPU正在运行的进程，初始化的时候指向进程0。
 		panic("task[0] trying to sleep");
 	tmp = *p;
 	*p = current;
 	current->state = TASK_UNINTERRUPTIBLE;
-	schedule();
+	schedule(); //任务从新被唤醒才会往下执行 注意执行到schedule()方法时，下面的代码就不会执行了，需要等待调度才能运行
 	if (tmp)
-		tmp->state=0;
+		tmp->state=0; //设置为就绪态 先等的任务先执行
 }
-
+//唤醒睡眠的进程
 void interruptible_sleep_on(struct task_struct **p)
 {
 	struct task_struct *tmp;
@@ -184,11 +185,11 @@ repeat:	current->state = TASK_INTERRUPTIBLE;
 	if (tmp)
 		tmp->state=0;
 }
-
+//进程唤醒
 void wake_up(struct task_struct **p)
 {
 	if (p && *p) {
-		(**p).state=0;
+		(**p).state=0; // 设置为就绪态
 		*p=NULL;
 	}
 }

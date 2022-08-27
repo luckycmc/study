@@ -49,7 +49,7 @@ struct i387_struct {
 	long	fos;
 	long	st_space[20];	/* 8*10 bytes for each FP-reg = 80 bytes */
 };
-
+//进程的在cpu 上的信心 栈基,栈指针
 struct tss_struct {
 	long	back_link;	/* 16 high bits zero */
 	long	esp0;
@@ -76,11 +76,15 @@ struct tss_struct {
 	long	trace_bitmap;	/* bits: trace 0, bitmap 16-31 */
 	struct i387_struct i387;
 };
-
+/**
+	程序是指储存在外部存储(如硬盘)的一个可执行文件, 而进程是指处于执行期间的程序, 
+	进程包括 代码段(text section) 和 数据段(data section), 
+	除了代码段和数据段外, 进程一般还包含打开的文件, 要处理的信号和CPU上下文等等.
+**/
 struct task_struct {
 /* these are hardcoded - don't touch */
 	long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
-	long counter;
+	long counter;    //counter 调度时长
 	long priority;
 	long signal;
 	struct sigaction sigaction[32];
@@ -101,11 +105,11 @@ struct task_struct {
 	struct m_inode * root;
 	struct m_inode * executable;
 	unsigned long close_on_exec;
-	struct file * filp[NR_OPEN];
+	struct file * filp[NR_OPEN];  // 打开的文件
 /* ldt for this task 0 - zero 1 - cs 2 - ds&ss */
 	struct desc_struct ldt[3];
 /* tss for this task */
-	struct tss_struct tss;
+	struct tss_struct tss; // 进程状态描述符
 };
 
 /*
