@@ -643,7 +643,7 @@ static zend_always_inline uint32_t zval_gc_info(uint32_t gc_type_info) {
 
 #define Z_ISERROR(zval)				(Z_TYPE(zval) == _IS_ERROR)
 #define Z_ISERROR_P(zval_p)			Z_ISERROR(*(zval_p))
-
+//获取到zvl的值
 #define Z_LVAL(zval)				(zval).value.lval
 #define Z_LVAL_P(zval_p)			Z_LVAL(*(zval_p))
 
