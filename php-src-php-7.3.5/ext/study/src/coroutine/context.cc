@@ -17,8 +17,9 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
     {
         stError("%s", e.what());
     }
-
+    // sp指向内存最高地址处
     void* sp = (void*) ((char*) stack_ + stack_size_);
+    //make_fcontext函数用于创建一个执行上下文 ctx_ 是一个空指针 void *ptr  此时也是 context 的对象
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
