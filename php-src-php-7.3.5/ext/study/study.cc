@@ -92,7 +92,7 @@ zend_module_entry study_module_entry = {
     PHP_STUDY_VERSION,
     STANDARD_MODULE_PROPERTIES
 };
-
+// 函数打印 zif_加函数名
 #ifdef COMPILE_DL_STUDY
 ZEND_GET_MODULE(study)
 #endif
