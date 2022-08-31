@@ -9,7 +9,8 @@ ZEND_END_ARG_INFO()
 
 /***测试接口 start***/
 #include <stdio.h>
-
+// swoole 协成为为什么需要进行双栈切换 因为执行的handler 是C函数
+// 所以也需要保存相应的C栈 信息
 /***测试接口 end***/
 PHP_FUNCTION(study_coroutine_create);
 

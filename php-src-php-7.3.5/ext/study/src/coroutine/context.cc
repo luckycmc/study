@@ -7,7 +7,7 @@ using study::Context;
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {     
-    swap_ctx_ = nullptr;
+    swap_ctx_ = nullptr;  //默认空指针
 
     try
     {
@@ -20,6 +20,8 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
     // sp指向内存最高地址处
     void* sp = (void*) ((char*) stack_ + stack_size_);
     //make_fcontext函数用于创建一个执行上下文 ctx_ 是一个空指针 void *ptr  此时也是 context 的对象
+    // 申请对应的空间模拟一个栈的实现 (栈顶,栈的大小,函数的入口地址也就是栈的入口地址)
+    // 创建上下文:启动函数+执行栈
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
