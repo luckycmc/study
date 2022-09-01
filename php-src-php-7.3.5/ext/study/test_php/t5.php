@@ -17,5 +17,3 @@ echo "main coroutine" . PHP_EOL;
 Study\Coroutine::resume($cid1);
 echo "main coroutine" . PHP_EOL;
 Study\Coroutine::resume($cid2);
-echo "main coroutine" . PHP_EOL;
-Study\Coroutine::resume($cid2);
