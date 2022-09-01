@@ -43,9 +43,14 @@ void Coroutine::yield()
    ctx.swap_out();
 }
 //恢复当前协成
+/**
+ 协程之间可以通过Coroutine对象的origin字段形成一个类似链表的结构；Co::yield()换出当前协程时，会换入origin协程；
+ 在A协程种调用Co::resume()恢复B协程时，会换出A协程，换入B协程，同时标记A协程为B的origin协程；
+ * 
+ */
 void Coroutine::resume()
 {
-    origin = current;
+    origin = current;  //主程序中current为null
     current = this;  //执行当前的协程对象
     ctx.swap_in();
     //判断协成是否结束

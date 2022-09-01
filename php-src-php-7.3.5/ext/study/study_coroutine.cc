@@ -44,6 +44,7 @@ php_coro_task* PHPCoroutine::get_task()
 void PHPCoroutine::create_func(void *arg)
 {
     int i;
+    // 用户端传递过来的参数
     php_coro_args *php_arg = (php_coro_args *) arg;
     zend_fcall_info_cache fci_cache = *php_arg->fci_cache;
     zend_function *func = fci_cache.function_handler;
@@ -90,7 +91,7 @@ void PHPCoroutine::create_func(void *arg)
         //此时，这些opline就是我们用户空间传递的函数。
         zend_execute_ex(EG(current_execute_data));
     }
-    //判断是都有defer 函数注册有注入则实现函数调用
+    //判断是都有defer 函数注册有注入则实现函数调用 start************************************/
     task = get_task();
     std::stack<php_study_fci_fcc*> *defer_tasks = task->defer_tasks;
 
@@ -113,6 +114,7 @@ void PHPCoroutine::create_func(void *arg)
         delete defer_tasks;
         task->defer_tasks = nullptr;
     }
+     //判断是都有defer 函数注册有注入则实现函数调用  end**/
     zval_ptr_dtor(retval);
 }
 

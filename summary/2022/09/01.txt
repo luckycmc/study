@@ -1,0 +1,76 @@
+study 协程的上下文切换：
+  intptr_t jump_fcontext(fcontext_t *ofc, fcontext_t nfc, intptr_t vp, bool preserve_fpu = false);
+   jump_fcontext函数用于切换c栈上下文：
+
+  1）函数会将当前上下文（寄存器）保存在当前栈顶（push）（保存寄存器的内容到当前栈），
+     同时将%rsp寄存器内容保存在ofc地址；(保存栈顶的地址,回复时候 从这个寄存器的地址开始恢复)
+
+  2）函数从nfc地址处恢复%rsp寄存器内容，同时从栈顶恢复上下文信息（pop）。（也就是会是只有拿到当前栈顶的 地址
+    就可以恢复 数据到对应的寄存器上,恢复之前的数据在cpu上执行）
+
+    3)对应的汇编如下:
+    //-------------------保存当前c栈上下文-------------------
+    pushq  %rbp  /* save RBP */
+    pushq  %rbx  /* save RBX */
+    pushq  %r15  /* save R15 */
+    pushq  %r14  /* save R14 */
+    pushq  %r13  /* save R13 */
+    pushq  %r12  /* save R12 */
+
+    leaq  -0x8(%rsp), %rsp
+    stmxcsr  (%rsp)
+    fnstcw   0x4(%rsp)
+
+    //%rdi表示第一个参数，即ofc，保存%rsp到ofc地址处
+    movq  %rsp, (%rdi)
+
+
+    //-------------------从nfc中恢复上下文-------------------
+    //%rsi表示第二个参数，即nfc，从nfc地址处恢复%rsp
+    movq  %rsi, %rsp
+
+    ldmxcsr  (%rsp)
+    fldcw  0x4(%rsp)
+    leaq  0x8(%rsp), %rsp
+
+    popq  %r12  /* restrore R12 */
+    popq  %r13  /* restrore R13 */
+    popq  %r14  /* restrore R14 */
+    popq  %r15  /* restrore R15 */
+    popq  %rbx  /* restrore RBX */
+    popq  %rbp  /* restrore RBP */
+
+    //这里弹出的其实是之前保存的%rip
+    popq  %r8
+
+    //%rdx表示第三个参数，%rax用于存储函数返回值；
+    movq  %rdx, %rax
+    //%rdi用于存储第一个参数
+    movq  %rdx, %rdi
+
+    //跳转到%r8指向的地址
+    jmp  *%r8
+
+
+    总结一句话:就是 先保存cpu 上寄存器上的内容,切宝存%rsp 栈顶的地址,以便于恢复的时候从这个地方开始
+
+    观察jump_fcontext函数的汇编代码，可以看到保存上下文与恢复上下文的代码基本是对称的。
+    恢复上下文时"popq %r8"用于弹出上一次保存的程序计数器%rip的内容，
+    然而并没有看到保存寄存器%rip的代码。这是因为调用jump_fcontext函数时，底层call指令已经将%rip入栈了
+
+    /*****************协成 需要 c栈和PHP 栈 共同管理 start*****************/
+    每个协程都需要管理自己的c栈与php栈；
+    1.Context封装了c栈的管理操作;ctx_字段保存的是寄存器%rsp的内容（指向c栈栈顶位置）；
+          swap_ctx_字段保存的是将被换出的协程寄存器%rsp内容（即，将被换出的协程的c栈栈顶位置）；
+          SwapIn()对应协程换入操作；SwapOut()对应协程换出操作；
+    2.参考jump_fcontext实现，协程在换出时，会将寄存器%rip，%rbp等暂存在c栈栈顶；协程在换入时，
+         相应的会从栈顶恢复这些寄存器的内容；
+    3.Coroutine管理着协程所有内容；cid字段表示当前协程的ID；task字段指向当前协程的php_coro_task结构，
+          该结构中保存的是当前协程的php栈信息（vm_stack_top，execute_data等）；ctx字段指向的是当前协程的Context对象；
+          origin字段指向的是另一个协程Coroutine对象；yield()和resume()对应的是协程的换出换入操作；
+    4.注意到php_coro_task结构的co字段指向其对应的协程对象Coroutine；
+    5. Coroutine还有一些静态属性，静态属性的属于类属性，所有协程共享的；last_cid字段存储的是当前最大的协程ID，
+       创建协程时可用于生成协程ID；current字段指向的是当前正在运行的协程Coroutine对象；on_yield和on_resume是两个函数指针
+       ，用于实现php栈的切换操作，实际指向的是方法PHPCoroutine::on_yield和PHPCoroutine::on_resume；
+
+    /*****************协成 需要 c栈和PHP 栈 共同管理 start*****************/

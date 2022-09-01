@@ -9,7 +9,7 @@ ZEND_END_ARG_INFO()
 
 /***测试接口 start***/
 #include <stdio.h>
-// swoole 为什么有两个栈切换 handler 执行的是c函数 
+
 /***测试接口 end***/
 PHP_FUNCTION(study_coroutine_create);
 
@@ -92,7 +92,7 @@ zend_module_entry study_module_entry = {
     PHP_STUDY_VERSION,
     STANDARD_MODULE_PROPERTIES
 };
-
+// 函数打印 zif_加函数名
 #ifdef COMPILE_DL_STUDY
 ZEND_GET_MODULE(study)
 #endif
