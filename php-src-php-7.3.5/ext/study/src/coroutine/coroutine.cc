@@ -38,7 +38,9 @@ void Coroutine::set_task(void *_task)
 }
 //让出当前协成
 void Coroutine::yield()
-{
+{  
+  assert(current == this);
+   on_yield(task);
    current = origin;
    ctx.swap_out();
 }
@@ -49,7 +51,9 @@ void Coroutine::yield()
  * 
  */
 void Coroutine::resume()
-{
+{   
+    assert(current != this);
+    on_resume(task);
     origin = current;  //主程序中current为null
     current = this;  //执行当前的协程对象
     ctx.swap_in();
@@ -86,7 +90,10 @@ int Coroutine::sleep(double seconds)
     co->yield();
     return 0;
 }
-
+/**
+  on_yield和on_resume用来保存函数指针。
+  实际上就是study::PHPCoroutine::on_yield和study::PHPCoroutine::on_resume
+**/
 void Coroutine::set_on_yield(st_coro_on_swap_t func)
 {
     on_yield = func;

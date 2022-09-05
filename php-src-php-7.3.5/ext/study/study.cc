@@ -74,7 +74,7 @@ PHP_MINFO_FUNCTION(study)
     php_info_print_table_header(2, "study support", "enabled");
     php_info_print_table_end();
 }
-
+// 模块函数
 const zend_function_entry study_functions[] = {
     //注册替换函数 替换对应的类
     PHP_FE(study_coroutine_create, arginfo_study_coroutine_create)

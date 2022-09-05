@@ -40,7 +40,7 @@ php_coro_task* PHPCoroutine::get_task()
     php_coro_task *task = (php_coro_task *) Coroutine::get_current_task();
     return task?task:&main_task;
 }
-//对应的执行函数
+//对应的执行函数 对应的协成执行函数
 void PHPCoroutine::create_func(void *arg)
 {
     int i;
@@ -131,11 +131,12 @@ void PHPCoroutine::vm_stack_init(void)
     page->prev = NULL;  //上一个栈指针
     
     // 当前的栈针信息保存到EG 中 用作当前函数执行  去修改现在的PHP栈，让它指向我们申请出来的新的PHP栈空间
-    EG(vm_stack) = page;
+    EG(vm_stack) = page;  //整个栈  也就是 zend_vm_stack
     EG(vm_stack)->top++;
-    EG(vm_stack_top) = EG(vm_stack)->top;
-    EG(vm_stack_end) = EG(vm_stack)->end;
-    EG(vm_stack_page_size) = size;
+    /*当前栈的栈顶和栈底使用我们新的栈空间*/
+    EG(vm_stack_top) = EG(vm_stack)->top; //栈顶 EG(vm_stack) 是当前的page 新栈
+    EG(vm_stack_end) = EG(vm_stack)->end; // 
+    EG(vm_stack_page_size) = size; // 运行栈的大小
 
 }
 //实现defer
@@ -148,14 +149,14 @@ void PHPCoroutine::defer(php_study_fci_fcc *defer_fci_fcc)
     }
     task->defer_tasks->push(defer_fci_fcc);
 }
-
+//模拟阻塞
 int PHPCoroutine::sleep(double seconds)
 {
      Coroutine::sleep(seconds);
      return 0;
 }
 
-//PHP 栈的切换
+//PHP 栈的切换 挂起当前协成
 void PHPCoroutine::on_yield(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
@@ -163,7 +164,7 @@ void PHPCoroutine::on_yield(void *arg)
     save_task(task);
     restore_task(origin_task);
 }
-//php 栈的恢复
+//php 栈的恢复 恢复当前协成
 void PHPCoroutine::on_resume(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
@@ -179,7 +180,7 @@ void PHPCoroutine::restore_task(php_coro_task *task)
     restore_vm_stack(task);
 }
 /**
- * load PHP stack
+ * load PHP stack 加载当前的PHP执行栈
  */
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
