@@ -5,6 +5,7 @@
 using study::Context;
 //协成上下文 构造方法执行 
 // 在Coroutine的构造函数中完成了协程对象Coroutine的创建与初始化，以及Context对象的创建与初始化（创建了c栈）
+//参数fn是一个函数指针，指向该执行上下文的入口函数；
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
         fn_(fn), stack_size_(stack_size), private_data_(private_data)
 {     

@@ -3,7 +3,7 @@
 
 using study::Coroutine;
 
-
+// Coroutine管理着协程所有内容；
 Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
 
 long Coroutine::last_cid = 0;   //初始化协成的id0
@@ -39,7 +39,7 @@ void Coroutine::set_task(void *_task)
 //让出当前协成
 void Coroutine::yield()
 {  
-  assert(current == this);
+   assert(current == this);
    on_yield(task);
    current = origin;
    ctx.swap_out();
@@ -93,7 +93,10 @@ int Coroutine::sleep(double seconds)
 /**
   on_yield和on_resume用来保存函数指针。
   实际上就是study::PHPCoroutine::on_yield和study::PHPCoroutine::on_resume
+  on_yield和on_resume是两个函数指针，用于实现php栈的切换操作，
+  实际指向的是方法PHPCoroutine::on_yield和PHPCoroutine::on_resume；
 **/
+/**********用于 PHP 栈的切换 start************/
 void Coroutine::set_on_yield(st_coro_on_swap_t func)
 {
     on_yield = func;
@@ -107,4 +110,4 @@ void Coroutine::set_on_close(st_coro_on_swap_t func)
 {
     on_close = func;
 }
-
+/**********用于 PHP 栈的切换 end************/

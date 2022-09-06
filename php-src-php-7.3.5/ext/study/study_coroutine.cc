@@ -63,7 +63,7 @@ void PHPCoroutine::create_func(void *arg)
         ZEND_CALL_TOP_FUNCTION | ZEND_CALL_ALLOCATED,
         func, argc, fci_cache.called_scope, fci_cache.object
     );
-
+    // copy 对应的参数
     for (i = 0; i < argc; ++i)
     {
         zval *param;
@@ -180,7 +180,7 @@ void PHPCoroutine::restore_task(php_coro_task *task)
     restore_vm_stack(task);
 }
 /**
- * load PHP stack 加载当前的PHP执行栈
+ * load PHP stack 加载当前的PHP执行栈 执行
  */
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
