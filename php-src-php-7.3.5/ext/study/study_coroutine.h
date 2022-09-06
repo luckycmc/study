@@ -43,7 +43,7 @@ class PHPCoroutine
       static long create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv);
       static void defer(php_study_fci_fcc *defer_fci_fcc);
       static int sleep(double seconds);
-      static void init();
+      static void init(); // 初始化
       //get_origin_task获取上一个任务的task结构
       static inline php_coro_task* get_origin_task(php_coro_task *task)
      {
@@ -51,7 +51,7 @@ class PHPCoroutine
         return co ? (php_coro_task *) co->get_task() : &main_task;
      }
     protected:
-      static php_coro_task main_task;
+      static php_coro_task main_task;   
 
       static void save_task(php_coro_task *task);  //保存 PHP 栈
       static void save_vm_stack(php_coro_task *task); //保存PHP栈的内容

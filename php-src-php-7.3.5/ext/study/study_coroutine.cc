@@ -180,6 +180,7 @@ void PHPCoroutine::restore_task(php_coro_task *task)
     restore_vm_stack(task);
 }
 /**
+   restore_vm_stack用来重新加载PHP栈。
  * load PHP stack 加载当前的PHP执行栈 执行
  */
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
