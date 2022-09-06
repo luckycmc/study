@@ -30,6 +30,7 @@ PHP_MINIT_FUNCTION(study)
     study_runtime_init(); // 新增的代码
     return SUCCESS;
 }
+//事件初始化
 PHP_FUNCTION(study_event_init)
 {
     int ret;
@@ -40,11 +41,11 @@ PHP_FUNCTION(study_event_init)
     }
     RETURN_TRUE;
 }
-
+//等待事件的发生
 PHP_FUNCTION(study_event_wait)
 {
     int ret;
-    ret = st_event_wait();
+    ret = st_event_wait(); // event 事件初始化
     if (ret < 0)
     {
         RETURN_FALSE;
@@ -83,7 +84,7 @@ const zend_function_entry study_functions[] = {
     PHP_FE(study_event_wait, arginfo_study_coroutine_void)
     PHP_FE_END
 };
-
+//注册模块
 zend_module_entry study_module_entry = {
     STANDARD_MODULE_HEADER,
     "study",
