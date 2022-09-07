@@ -4,7 +4,7 @@
 struct  Student{
 	int age;
 	float score;
-	char name[100]
+	char name[100];
 }; 
 
 //声明函数
@@ -13,15 +13,20 @@ void intput_student(struct Student *p);
 void output_student(struct Student *p); 
 
 int main()
-{
-	return 1;
+{   
+     struct Student p;
+     intput_student(&p);  //结构体引用数据会跟着改变 
+     output_student(&p); 
+	 return 1;
 } 
 
 void intput_student(struct Student *p){
-	
+	 p->age = 30;
+	 p->score = 90.5;
+	 strcpy(p->name,"张珊");
 }
 
 void output_student(struct Student *p){
-	
+	printf("%d %f %s\n", (*p).age, p->score, p->name);
 }
 
