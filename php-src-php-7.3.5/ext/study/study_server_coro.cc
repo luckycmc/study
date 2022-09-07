@@ -158,7 +158,7 @@ static const zend_function_entry study_coroutine_server_coro_methods[] =
 // server  初始化
 void study_coroutine_server_coro_init()
 {
-    zval zsock;
+    zval zsock;   //修改的地方会存在内存泄露
     //注册带命名空间的类
     INIT_NS_CLASS_ENTRY(study_coroutine_server_coro_ce, "Study", "Coroutine\\Server", study_coroutine_server_coro_methods);
     study_coroutine_server_coro_ce_ptr = zend_register_internal_class(&study_coroutine_server_coro_ce TSRMLS_CC); // Registered in the Zend Engine

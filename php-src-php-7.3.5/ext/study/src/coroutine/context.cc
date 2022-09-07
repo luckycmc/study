@@ -38,7 +38,7 @@ void Context::context_func(void *arg)
         调用jump_fcontext函数时，第三个参数传递的是this，即当前Context对象；而函数jump_fcontext汇编实现时，
         将第三个参数的内容拷贝到%rdi寄存器中，当协程换入执行函数context_func时，寄存器%rdi存储的就是第一个参数，
         即Context对象。
-        /*********函数的执行/
+        /函数的执行/
        可以看到，这段代码就是去调用fn_，也就是PHPCoroutine::create_func，
        并且给它传递参数private_data_，也就是php_coro_args *。
       */

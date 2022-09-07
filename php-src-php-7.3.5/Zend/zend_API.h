@@ -42,7 +42,7 @@ typedef struct _zend_function_entry {
 } zend_function_entry;
 /**
  * 
- *函数结构体 
+ *函数结构体 主要是函数的参数
  */
 typedef struct _zend_fcall_info {
 	size_t size;            // size是结构体zend_fcall_info的大小，通过sizeof(fci)计算得到。
@@ -53,7 +53,7 @@ typedef struct _zend_fcall_info {
 	zend_bool no_separation; //no_separation表示zend_call_function内部要不要释放我们的参数引用计数（
 	uint32_t param_count;   //是传递给函数的参数个数。
 } zend_fcall_info;
-
+//函数的相关信息
 typedef struct _zend_fcall_info_cache {
 	zend_function *function_handler;
 	zend_class_entry *calling_scope;

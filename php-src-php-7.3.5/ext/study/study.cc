@@ -14,6 +14,7 @@ ZEND_END_ARG_INFO()
 
 // swoole 协成为为什么需要进行双栈切换 因为执行的handler 是C函数
 // 所以也需要保存相应的C栈 信息
+// i r rax 打印汇编寄存器
 /***测试接口 end***/
 PHP_FUNCTION(study_coroutine_create);
 

@@ -6,10 +6,10 @@
 using study::Coroutine;
 using study::coroutine::Socket;
 
-char * Socket::read_buffer = nullptr;
-size_t Socket::read_buffer_len = 0;
-char * Socket::write_buffer = nullptr;
-size_t Socket::write_buffer_len = 0;
+char * Socket::read_buffer = nullptr;  // 增加的地方
+size_t Socket::read_buffer_len = 0;     // 增加的地方
+char * Socket::write_buffer = nullptr;  // 增加的地方
+size_t Socket::write_buffer_len = 0;    // 增加的地方
 /**
  * 所以，虽然通过协程，可以通过同步的方式编写高性能的服务器，但是，我们只有掌握了协程的原理，才可以避免一些坑。
  * 

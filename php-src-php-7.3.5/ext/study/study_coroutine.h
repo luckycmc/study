@@ -16,7 +16,7 @@ struct php_study_fci_fcc
 //定义协成参数结构体
 struct php_coro_args
 {
-     zend_fcall_info_cache *fci_cache;
+     zend_fcall_info_cache *fci_cache;  //函数的相关信息
      zval *argv;   
      uint32_t argc; //参数个数
      
