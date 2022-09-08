@@ -26,6 +26,7 @@ Socket::Socket(int domain, int type, int protocol)
     {
         return;
     }
+    //设置为非阻塞
     stSocket_set_nonblock(sockfd);
 }
 
@@ -97,13 +98,13 @@ int Socket::close()
 {
     return stSocket_close(sockfd);
 }
-//协成调度器
+//协成调度器 把协成和对应的事件进行绑定
 bool Socket::wait_event(int event)
 {
     long id;
     Coroutine* co;
     epoll_event *ev;
-
+    /*******获取到当前对应的协程******/
     co = Coroutine::get_current();
     id = co->get_cid();
 
@@ -113,9 +114,10 @@ bool Socket::wait_event(int event)
     }
 
     ev = StudyG.poll->events;
-
+    //绑定对应的事件
     ev->events = event == ST_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
+    // 对应的fd 加入到对应epoll中
     epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
     (StudyG.poll->event_num)++;
 
