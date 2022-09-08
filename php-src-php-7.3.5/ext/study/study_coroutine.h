@@ -31,7 +31,7 @@ struct php_coro_task
     study::Coroutine *co;               // 协成对象
     zend_execute_data *execute_data;   //是当前协程栈的栈帧。
     // 引入栈
-    std::stack<php_study_fci_fcc *> *defer_tasks;
+    std::stack<php_study_fci_fcc *> *defer_tasks; //defer 相应的处理
 };
 
 

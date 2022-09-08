@@ -3,7 +3,7 @@
 
 using study::PHPCoroutine;
 using study::Coroutine;
-
+// php 栈和C栈的粘合
 php_coro_task PHPCoroutine::main_task = {0}; //主协成 也即是主进程
 // 
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *argv)
@@ -24,15 +24,15 @@ void PHPCoroutine::save_task(php_coro_task *task)
      save_vm_stack(task);
 }
 
-//保存当前栈的数据信息 zend_vm 也是有想用的堆栈信息 
+//保存当前栈的数据信息 zend_vm 也是有想用的堆栈信息 当前在执行的PHP的脚本的内容
 // 通过全局函数EG获取对应的信息 EG 是PHP 提供的
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息
-     task->vm_stack_end = EG(vm_stack_end);
-     task->vm_stack     = EG(vm_stack);
-     task->vm_stack_page_size = EG(vm_stack_page_size);
-     task->execute_data = EG(current_execute_data);
+     task->vm_stack_end = EG(vm_stack_end);  
+     task->vm_stack     = EG(vm_stack);  // 当前运行的栈指针
+     task->vm_stack_page_size = EG(vm_stack_page_size);  //当前运行栈的大小
+     task->execute_data = EG(current_execute_data);    // 当前 PHP 栈的执行
 }
 //暂时先返回一个空指针
 php_coro_task* PHPCoroutine::get_task()
@@ -126,7 +126,7 @@ void PHPCoroutine::vm_stack_init(void)
     //栈顶和栈的底部page->top的作用是指向目前的栈顶，这个top会随着栈里面的数据而不断的变化。
     //压栈，top往靠近end的方向移动个；出栈，top往远离end的方向移动。
     //page->end的作用就是用来标识PHP栈的边界，以防'栈溢出'。这个page->end可以作为是否要扩展PHP栈的依据
-    page->top = ZEND_VM_STACK_ELEMENTS(page);
+    page->top = ZEND_VM_STACK_ELEMENTS(page);   //栈顶 
     page->end = (zval*) ((char*) page + size);
     page->prev = NULL;  //上一个栈指针
     
@@ -161,7 +161,9 @@ void PHPCoroutine::on_yield(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
     php_coro_task *origin_task = get_origin_task(task);
+    // 保存当前的栈
     save_task(task);
+    //恢复准备好的栈
     restore_task(origin_task);
 }
 //php 栈的恢复 恢复当前协成
@@ -169,7 +171,9 @@ void PHPCoroutine::on_resume(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
     php_coro_task *current_task = get_task();
+    //保存当前的栈
     save_task(current_task);
+    // 恢复要运行的PHP栈
     restore_task(task);
 }
 /**
@@ -181,7 +185,9 @@ void PHPCoroutine::restore_task(php_coro_task *task)
 }
 /**
    restore_vm_stack用来重新加载PHP栈。
- * load PHP stack 加载当前的PHP执行栈 执行
+   之前的PHP栈 执行到到那个地方  就会从那个地方恢复过去 是PHP在虚拟机栈的恢复
+   C栈是在cpu 寄存器上的恢复在cpu上的运行
+ * load PHP stack 加载当前的PHP执行栈 执行 在虚拟机上执行
  */
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
@@ -198,7 +204,7 @@ void PHPCoroutine::on_close(void *arg)
     php_coro_task *origin_task = get_origin_task(task);
     zend_vm_stack stack = EG(vm_stack);
     //php_printf("%p\n", stack);
-    efree(stack);
+    efree(stack);  //释放整个运行的PHP 栈
     restore_task(origin_task); //恢复上一个PHP的栈帧
 }
 

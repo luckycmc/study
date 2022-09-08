@@ -5,7 +5,7 @@ using study::PHPCoroutine;
 using study::Coroutine;
 //无序字典user_yield_coros
 static std::unordered_map<long, Coroutine*> user_yield_coros;
-
+//  主要提供对外的接口
 //声明宏定义create()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_study_coroutine_create, 0, 0, 1)
     ZEND_ARG_CALLABLE_INFO(0, func, 0)

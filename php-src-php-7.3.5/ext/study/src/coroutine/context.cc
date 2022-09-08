@@ -3,7 +3,7 @@
 #include "log.h"
 
 using study::Context;
-//协成上下文 构造方法执行 
+//协成上下文 构造方法执行  C栈的创建和上下文管理
 // 在Coroutine的构造函数中完成了协程对象Coroutine的创建与初始化，以及Context对象的创建与初始化（创建了c栈）
 //参数fn是一个函数指针，指向该执行上下文的入口函数；
 Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :

@@ -3,7 +3,7 @@
 
 using study::Coroutine;
 
-// Coroutine管理着协程所有内容；
+// Coroutine管理着协程所有内容；包括 PHP栈和C栈
 Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
 
 long Coroutine::last_cid = 0;   //初始化协成的id0
