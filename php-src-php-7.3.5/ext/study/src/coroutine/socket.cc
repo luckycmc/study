@@ -29,7 +29,7 @@ Socket::Socket(int domain, int type, int protocol)
     //设置为非阻塞
     stSocket_set_nonblock(sockfd);
 }
-
+// 设置socket 为非阻塞
 Socket::Socket(int fd)
 {
     sockfd = fd;
@@ -56,8 +56,8 @@ Socket* Socket::accept()
 
     do
     {   
-        //connfd < 0 && errno == EAGAIN 没有客户端连接 这是一个可读事件
-        // 一旦事件到来（此时，有客户端连接），我们的调度器就会去resume这个协程
+        //connfd < 0 && errno == EAGAIN 没有客户端连接 
+        // 这是一个可读事件 一旦事件到来（此时，有客户端连接），我们的调度器就会去resume这个协程
         connfd = stSocket_accept(sockfd);
 
     } while (connfd < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
@@ -120,9 +120,9 @@ bool Socket::wait_event(int event)
     // 对应的fd 加入到对应epoll中
     epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
     (StudyG.poll->event_num)++;
-
+    // 让出当前协成
     co->yield();
-     //这个地方可能存在问题需要处理
+     //这个地方可能存在问题需要处理  fd 的修改
     if (epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
     {
         stError("Error has occurred: (errno %d) %s", errno, strerror(errno));
