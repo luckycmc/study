@@ -6,7 +6,7 @@ int stSocket_create(int domain, int type, int protocol)
 {
     
      int sock;
-
+    //创建套接字
     sock = socket(domain, type, protocol);
     if (sock < 0)
     {
@@ -45,15 +45,16 @@ int stSocket_bind(int sock, int type, char *host, int port)
 int stSocket_accept(int sock)
 {
     int connfd;
-    struct sockaddr_in sa;
+    struct sockaddr_in sa; // 对端的地址 结构体
     socklen_t len;
 
     len = sizeof(sa);
+    //产生一个新的fd 进入全连接队列
     connfd = accept(sock, (struct sockaddr *)&sa, &len);
     
-    return connfd;
+    return connfd; //通过这个fd可以和对端通讯
 }
-// server监听的封装
+// server监听的封装  backlog 表示半连接队列的大小
 int stSocket_listen(int sock,int backlog)
 {
     int ret;
@@ -77,7 +78,7 @@ ssize_t stSocket_recv(int sock, void *buf, size_t len, int flag)
     }
     return ret;
 }
-//发送数据给客户端
+//发送数据给对端发送数据
 ssize_t stSocket_send(int sock, const void *buf, size_t len, int flag)
 {
     ssize_t ret;
