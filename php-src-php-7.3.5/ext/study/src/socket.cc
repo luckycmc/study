@@ -22,7 +22,7 @@ int stSocket_bind(int sock, int type, char *host, int port)
     int ret;
     struct sockaddr_in servaddr;
 
-    if (type == ST_SOCK_TCP)
+    if (type == ST_SOCK_TCP) // 创建TCP服务器
     {
         bzero(&servaddr, sizeof(servaddr));
         inet_aton(host, &(servaddr.sin_addr));

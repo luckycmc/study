@@ -75,7 +75,8 @@ ssize_t Socket::recv(void *buf, size_t len)
     int ret;
      // 加一个while 这是对协程化接口的一种同步，确保前面的函数执行成功了，再继续后面的函数。
     do
-    {
+    {   
+        //数据不可读则换出协成
         ret = stSocket_recv(sockfd, buf, len, 0);
     } while (ret < 0 && errno == EAGAIN && wait_event(ST_EVENT_READ));
 
@@ -87,7 +88,8 @@ ssize_t Socket::send(const void *buf, size_t len)
     int ret;
 
     do
-    {
+    {   
+        // 数据是否准备完毕 准备完毕后 没有准备完毕 加入到IO多路复用的事件中
         ret = stSocket_send(sockfd, buf, len, 0);
     } while (ret < 0 && errno == EAGAIN && wait_event(ST_EVENT_WRITE));
     
@@ -122,7 +124,7 @@ bool Socket::wait_event(int event)
     (StudyG.poll->event_num)++;
     // 让出当前协成
     co->yield();
-     //这个地方可能存在问题需要处理  fd 的修改
+     //这个地方可能存在问题需要处理  fd 的修改 修改对应的fd事件
     if (epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
     {
         stError("Error has occurred: (errno %d) %s", errno, strerror(errno));

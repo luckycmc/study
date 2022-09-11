@@ -595,7 +595,7 @@ PHP_FUNCTION(pcntl_fork)
 {
 	pid_t id;
 
-	id = fork();
+	id = fork(); // pcntl 创建进程
 	if (id == -1) {
 		PCNTL_G(last_error) = errno;
 		php_error_docref(NULL, E_WARNING, "Error %d", errno);
@@ -653,7 +653,7 @@ PHP_FUNCTION(pcntl_alarm)
 
 /* {{{ proto int pcntl_waitpid(int pid, int &status, int options, array &$rusage)
    Waits on or returns the status of a forked child as defined by the waitpid() system call */
-PHP_FUNCTION(pcntl_waitpid)
+PHP_FUNCTION(pcntl_waitpid) // 回收子进程接口
 {
 	zend_long pid, options = 0;
 	zval *z_status = NULL, *z_rusage = NULL;
