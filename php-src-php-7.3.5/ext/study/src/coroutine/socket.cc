@@ -108,7 +108,7 @@ bool Socket::wait_event(int event)
     epoll_event *ev;
     /*******获取到当前对应的协程******/
     co = Coroutine::get_current();
-    id = co->get_cid();
+    id = co->get_cid(); // 当前运行的协成id
 
     if (!StudyG.poll)
     {
