@@ -1,0 +1,40 @@
+#include "AddressBook.h"
+//加入数据的信息提示
+void MyScanf(message arr[num], int* i)
+{
+     printf("请输入联系人姓名：\n");
+     scanf("%s", (arr[*i].name));
+     printf("请输入联系人年龄：\n");
+     scanf("%d", &(arr[*i].age));
+     printf("请输入联系人电话号码：\n");
+     scanf("%s", (arr[*i].number));
+     printf("请输入联系人性别：\n");
+     scanf("%s", (arr[*i].sex));
+     printf("请输入联系人地址：\n");
+     scanf("%s", (arr[*i].adress));
+}
+//添加用户信息
+void AddMessage(message arr[num], int* i)
+{
+    MyScanf(arr,i);
+    (*i)++;//偏移量自增
+}
+// 显示对应的数据
+void Show(message arr[num],int i)
+{
+    int j;
+    for(j = 0;j < i;j++)
+    {
+          MyPrintf(arr, j);
+    }
+}
+//打印数据
+void MyPrintf(message arr[num],int j)
+{
+    printf("%s ", arr[j].name);
+    printf("%d ", arr[j].age);
+    printf("%s ", arr[j].number);
+    printf("%s ", arr[j].sex);
+    printf("%s ", arr[j].adress);
+    printf("\n");
+}
