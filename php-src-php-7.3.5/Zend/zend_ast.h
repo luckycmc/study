@@ -46,7 +46,7 @@ enum _zend_ast_kind {
 	ZEND_AST_FUNC_DECL,  //声明函数的节点 67
 	ZEND_AST_CLOSURE, //闭包函数 67
 	ZEND_AST_METHOD,  // 类中的方法 68
-	ZEND_AST_CLASS,  // 类节点
+	ZEND_AST_CLASS,  // 类节点 69
 
 	/* list nodes */  //要进行 zend_ast_list转换
 	ZEND_AST_ARG_LIST = 1 << ZEND_AST_IS_LIST_SHIFT,
@@ -56,9 +56,9 @@ enum _zend_ast_kind {
 
 	ZEND_AST_STMT_LIST, // 132 表达式 
 	ZEND_AST_IF,        //133 if
-	ZEND_AST_SWITCH_LIST,
-	ZEND_AST_CATCH_LIST,
-	ZEND_AST_PARAM_LIST,
+	ZEND_AST_SWITCH_LIST, // 134
+	ZEND_AST_CATCH_LIST, //135
+	ZEND_AST_PARAM_LIST, // 136  表示函数的参数
 	ZEND_AST_CLOSURE_USES,
 	ZEND_AST_PROP_DECL,
 	ZEND_AST_CONST_DECL,
