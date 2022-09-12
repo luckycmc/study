@@ -1,7 +1,15 @@
 #include "socket.h"
 #include "log.h"
 //创建socket 套接字
-
+/**
+  说到底还是对socket 的封装 也是目前PHPstudy 扩展底层de封装
+  socket
+  bind
+  listen
+  accept
+  recv
+  send
+ */
 int stSocket_create(int domain, int type, int protocol)
 {
     
@@ -25,9 +33,11 @@ int stSocket_bind(int sock, int type, char *host, int port)
     if (type == ST_SOCK_TCP) // 创建TCP服务器
     {
         bzero(&servaddr, sizeof(servaddr));
+        // 将十进制的ip 转换为 二进制的字节序 这个地方是可以做个判断的
         inet_aton(host, &(servaddr.sin_addr));
-        servaddr.sin_family = AF_INET;
-        servaddr.sin_port = htons(port);
+        servaddr.sin_family = AF_INET;   // 协议类型
+        servaddr.sin_port = htons(port); //端口号
+        // 绑定端口和对应的ip 地址
         ret = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
         if (ret < 0)
         {

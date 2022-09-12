@@ -11,6 +11,13 @@ size_t Socket::read_buffer_len = 0;     // 增加的地方
 char * Socket::write_buffer = nullptr;  // 增加的地方
 size_t Socket::write_buffer_len = 0;    // 增加的地方
 /**
+ * @brief 
+ *  主要功能就是socket的协程话 是否 有连接到来 数据是否 可读可写 对应的fd创建一个协成
+ *  有连接到来则恢复 协成执行 数据可读可写则恢复协程 否则挂起当前协成 执行其他协成
+ *  提高CPU的利用率 也提高的服务端性能
+ * 
+ */
+/**
  * 所以，虽然通过协程，可以通过同步的方式编写高性能的服务器，但是，我们只有掌握了协程的原理，才可以避免一些坑。
  * 
  * @param domain 
