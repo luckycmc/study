@@ -125,7 +125,7 @@ bool Socket::wait_event(int event)
     ev = StudyG.poll->events;
     //绑定对应的事件
     ev->events = event == ST_EVENT_READ ? EPOLLIN : EPOLLOUT;
-    ev->data.u64 = touint64(sockfd, id);
+    ev->data.u64 = touint64(sockfd, id); // 协成id 和 fd进行绑定 以便回复时找到对应的 协成
     // 对应的fd 加入到对应epoll中
     epoll_ctl(StudyG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
     (StudyG.poll->event_num)++;
