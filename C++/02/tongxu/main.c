@@ -26,9 +26,21 @@ int main()
         {
             case ADD :
                AddMessage(arr,&b);
-               break;
+              break;
             case SHOW:
                 Show(arr,b);
+                break;
+            case MODIFIES:
+                Modifies(arr,&b);
+                break;
+            case FIND:
+                Find(arr,b);
+                break;
+            case DELETE:
+                Delete(arr,&b);
+                break;
+            case SORT:
+                SortByname(arr,b);
                 break;
             case EXITS:
                 exit(0);

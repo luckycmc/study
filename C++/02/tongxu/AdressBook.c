@@ -38,3 +38,26 @@ void MyPrintf(message arr[num],int j)
     printf("%s ", arr[j].adress);
     printf("\n");
 }
+// 查找通讯录的信息
+void Find(message arr[num],int i)
+{
+   char name[10] = {0};
+   printf("请输入你要查找的名字:\n");
+   scanf("%s",name);
+   int k =0; int j;
+   for(j =0;j< i;j++)
+   {     
+         //对比查找的名字
+         if(strcmp(name,arr[j].name) == 0)
+         {
+              k = 1;//更改找到的标识
+              MyPrintf(arr,j);
+              break; //跳出循环不在往下执行
+         }
+
+   }
+   if(k==0)
+   {
+       printf("没有找到你要查找的人");
+   }
+}
