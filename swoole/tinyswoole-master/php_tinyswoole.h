@@ -101,6 +101,9 @@ PHP_METHOD(tinyswoole_server, on);
 PHP_METHOD(tinyswoole_server, send);
 PHP_FUNCTION(call_function);
 
+//定义服务类初始化
+void init_tinyswoole_server();
+
 extern PHPAPI int php_array_merge(HashTable *dest, HashTable *src);
 
 #define php_tinyswoole_array_get_value(ht, str, v)     ((v = zend_hash_str_find(ht, str, sizeof(str)-1)) && !ZVAL_IS_NULL(v))
