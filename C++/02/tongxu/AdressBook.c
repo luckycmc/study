@@ -61,3 +61,31 @@ void Find(message arr[num],int i)
        printf("没有找到你要查找的人");
    }
 }
+//修改
+void Modifies(message arr[num],int* i)
+{
+     printf("请输入需要修改的名称!");
+     char name[10] = {0};
+     scanf("%s",name);
+     int j,k = 0;
+     for(j = 0;j<(*i);j++)
+     {       
+            //比对对应的名称
+            if (strcmp(arr1, arr[j].name) == 0)
+            {
+                k = 1;
+                MyPrintf(arr, j); // 找到对应的数据
+                int* a = &j;
+                MyScanf(arr, a); //输入对应的数据
+                break; //数据不在往下执行
+            }
+     }
+     if( k == 0){
+         printf("通讯录中没有此人！！！\n");
+     }
+}
+//删除对应的数据
+int Delete(message arr[num], int* i)
+{
+    
+}
