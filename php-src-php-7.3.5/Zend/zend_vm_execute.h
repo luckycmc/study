@@ -500,7 +500,7 @@ static zend_never_inline ZEND_COLD ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_us
 	ZVAL_UNDEF(EX_VAR(opline->result.var));
 	HANDLE_EXCEPTION();
 }
-
+//zend_leave_helper_SPEC，执行器切换、局部变量清理就是在这个函数中完成的。
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_leave_helper_SPEC(ZEND_OPCODE_HANDLER_ARGS)
 {
 	zend_execute_data *old_execute_data;
@@ -584,7 +584,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_leave_helper_SPEC(ZEND_OPCODE_
 
 		LOAD_NEXT_OPLINE();
 		ZEND_VM_LEAVE();
-	} else {
+	} else { //普通的函数调用将走到这个分支
 		if (EXPECTED((call_info & ZEND_CALL_CODE) == 0)) {
 			i_free_compiled_variables(execute_data);
 			if (UNEXPECTED(call_info & (ZEND_CALL_HAS_SYMBOL_TABLE|ZEND_CALL_FREE_EXTRA_ARGS))) {
@@ -612,6 +612,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_leave_helper_SPEC(ZEND_OPCODE_
 				}
 				old_execute_data = old_execute_data->prev_execute_data;
 			}
+			 //将执行器切回调用的位置
 			EG(current_execute_data) = EX(prev_execute_data);
 			ZEND_VM_RETURN();
 		}
@@ -37069,7 +37070,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_JMPNZ_EX_SPEC_CV_HANDLER(ZEND_
 	}
 	ZEND_VM_JMP(opline);
 }
-
+//  函数返回阶段  拷贝返回值、执行器切回调用位置、释放清理局部变量。
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_RETURN_SPEC_CV_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -37078,12 +37079,12 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_RETURN_SPEC_CV_HAN
 	zend_free_op free_op1;
 
 	retval_ptr = EX_VAR(opline->op1.var);
-	return_value = EX(return_value);
+	return_value = EX(return_value);  //获取返回值
 	if (IS_CV == IS_CV && UNEXPECTED(Z_TYPE_INFO_P(retval_ptr) == IS_UNDEF)) {
 		SAVE_OPLINE();
 		retval_ptr = GET_OP1_UNDEF_CV(retval_ptr, BP_VAR_R);
 		if (return_value) {
-			ZVAL_NULL(return_value);
+			ZVAL_NULL(return_value); //返回值未定义，返回NULL
 		}
 	} else if (!return_value) {
 		if (IS_CV & (IS_VAR|IS_TMP_VAR)) {
@@ -37127,11 +37128,12 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_RETURN_SPEC_CV_HAN
 				} else if (Z_OPT_REFCOUNTED_P(retval_ptr)) {
 					Z_ADDREF_P(retval_ptr);
 				}
-			} else {
+			} else {//将返回值复制给调用方接收值：EX(return_value)
 				ZVAL_COPY_VALUE(return_value, retval_ptr);
 			}
 		}
 	}
+	//zend_leave_helper_SPEC，执行器切换、局部变量清理就是在这个函数中完成的。
 	ZEND_VM_TAIL_CALL(zend_leave_helper_SPEC(ZEND_OPCODE_HANDLER_ARGS_PASSTHRU));
 }
 

@@ -2350,7 +2350,7 @@ ZEND_API void zend_clean_and_cache_symbol_table(zend_array *symbol_table) /* {{{
 	}
 }
 /* }}} */
-
+////清理局部变量的过程
 static zend_always_inline void i_free_compiled_variables(zend_execute_data *execute_data) /* {{{ */
 {
 	zval *cv = EX_VAR_NUM(0);
@@ -2360,9 +2360,9 @@ static zend_always_inline void i_free_compiled_variables(zend_execute_data *exec
 			zend_refcounted *r = Z_COUNTED_P(cv);
 			if (!GC_DELREF(r)) {
 				ZVAL_NULL(cv);
-				rc_dtor_func(r);
+				rc_dtor_func(r); ////释放变量值
 			} else {
-				gc_check_possible_root(r);
+				gc_check_possible_root(r); //引用计数减一后>0，启动垃圾检查机制，清理循环引用导致无法回收的垃圾
 			}
 		}
 		cv++;
