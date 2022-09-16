@@ -1,0 +1,16 @@
+parameters:
+    level: 6
+    paths:
+        - lib
+    stubFiles:
+        - lib/swow-stub/src/Swow.php
+    scanFiles:
+        - ext/tests/include/bootstrap.php
+    bootstrapFiles:
+        - lib/swow-stub/src/Swow.php
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - '/Anonymous function has an unused use \$wrc{0,1}\./'
+        -
+            message: '/(Function|Method) [a-zA-Z0-9\\_:]+\(\) should return [a-z]+ but return statement is missing\./'
+            path: lib/swow-stub/src/Swow.php

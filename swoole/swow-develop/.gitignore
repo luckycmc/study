@@ -1,0 +1,14 @@
+# ide
+.idea
+.project
+.cproject
+.settings
+.vscode
+
+# composer
+vendor
+composer.lock
+
+# others
+/debug
+*.cache
