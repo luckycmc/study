@@ -2142,7 +2142,7 @@ try_function_name:
 
 	ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 }
-
+// 执行类中的方法
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_NS_FCALL_BY_NAME_SPEC_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -2175,7 +2175,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_NS_FCALL_BY_N
 
 	ZEND_VM_NEXT_OPCODE();
 }
-// 函数
+// 函数  初始化阶段 查找函数zend_function、分配zend_execute_data。
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -2185,9 +2185,10 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CO
 	zend_function *fbc;
 	zend_execute_data *call;
 
-	fbc = CACHED_PTR(opline->result.num);
+	fbc = CACHED_PTR(opline->result.num);  //调用的函数名称通过操作数2记录
 	if (UNEXPECTED(fbc == NULL)) {
 		fname = RT_CONSTANT(opline, opline->op2);
+		//首先根据函数名去EG(function_table)索引zend_function
 		func = zend_hash_find_ex(EG(function_table), Z_STR_P(fname), 1);
 		if (UNEXPECTED(func == NULL)) {
 			ZEND_VM_TAIL_CALL(zend_undefined_function_helper_SPEC(fname ZEND_OPCODE_HANDLER_ARGS_PASSTHRU_CC));
@@ -2198,13 +2199,13 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CO
 		}
 		CACHE_PTR(opline->result.num, fbc);
 	}
-    //函数入栈
+    //函数入栈 分配函数栈
 	call = zend_vm_stack_push_call_frame_ex(
 		opline->op1.num, ZEND_CALL_NESTED_FUNCTION,
 		fbc, opline->extended_value, NULL, NULL);
 	call->prev_execute_data = EX(call);
 	// 执行call 指向当前的call
-	EX(call) = call;
+	EX(call) = call; //将当前正在运行的zend_execute_data.call指向新分配的zend_execute_data
 
 	ZEND_VM_NEXT_OPCODE();
 }
