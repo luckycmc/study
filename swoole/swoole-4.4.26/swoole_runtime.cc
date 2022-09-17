@@ -944,7 +944,7 @@ static int socket_set_option(php_stream *stream, int option, int value, void *pt
     }
     return PHP_STREAM_OPTION_RETURN_OK;
 }
-
+// php stream 的创建
 static php_stream *socket_create(
     const char *proto, size_t protolen, const char *resourcename, size_t resourcenamelen,
     const char *persistent_id, int options, int flags, struct timeval *timeout, php_stream_context *context
@@ -1053,7 +1053,7 @@ static php_stream *socket_create(
 
     return stream;
 }
-
+// 根据传入不同的FLAG进行hook_func对应的模块的函数
 bool PHPCoroutine::enable_hook(int flags)
 {
     if (sw_unlikely(enable_strict_mode))
@@ -1600,7 +1600,7 @@ static int stream_array_emulate_read_fd_set(zval *stream_array)
 
     return ret;
 }
-
+// strem_select 
 static PHP_FUNCTION(swoole_stream_select)
 {
     Coroutine::get_current_safe();
@@ -1850,7 +1850,7 @@ static PHP_FUNCTION(swoole_stream_socket_pair)
     add_next_index_resource(return_value, s1->res);
     add_next_index_resource(return_value, s2->res);
 }
-
+//设置用户空间函数 handler
 static PHP_FUNCTION(swoole_user_func_handler)
 {
     zend_fcall_info fci;

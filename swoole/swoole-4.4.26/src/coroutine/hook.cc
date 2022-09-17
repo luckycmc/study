@@ -31,7 +31,7 @@ using swoole::coroutine::Socket;
 using swoole::coroutine::System;
 
 SW_EXTERN_C_BEGIN
-
+// socket 读写的协成华
 int swoole_coroutine_socket(int domain, int type, int protocol)
 {
     if (sw_unlikely(SwooleTG.reactor == nullptr || !Coroutine::get_current()))

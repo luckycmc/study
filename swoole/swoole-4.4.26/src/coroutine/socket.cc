@@ -68,7 +68,7 @@ static int ssl_select_next_proto_cb(SSL *ssl, uchar **out, uchar *outlen, const 
 }
 #endif
 #endif
-
+// 该callback回调函数即为上面设置的timer_callback：
 void Socket::timer_callback(swTimer *timer, swTimer_node *tnode)
 {
     Socket *socket = (Socket *) tnode->data;
@@ -88,7 +88,7 @@ void Socket::timer_callback(swTimer *timer, swTimer_node *tnode)
         abort();
     }
 }
-
+// readable_event_callback 读事件回调函数
 int Socket::readable_event_callback(swReactor *reactor, swEvent *event)
 {
     Socket *socket = (Socket *) event->socket->object;
@@ -104,11 +104,11 @@ int Socket::readable_event_callback(swReactor *reactor, swEvent *event)
     else
 #endif
     {
-        socket->read_co->resume();
+        socket->read_co->resume();  // 恢复对应的协程
     }
     return SW_OK;
 }
-
+// 写事件回调
 int Socket::writable_event_callback(swReactor *reactor, swEvent *event)
 {
     Socket *socket = (Socket *) event->socket->object;
@@ -128,7 +128,7 @@ int Socket::writable_event_callback(swReactor *reactor, swEvent *event)
     }
     return SW_OK;
 }
-
+//错误事件回调
 int Socket::error_event_callback(swReactor *reactor, swEvent *event)
 {
     Socket *socket = (Socket *) event->socket->object;
@@ -145,7 +145,7 @@ int Socket::error_event_callback(swReactor *reactor, swEvent *event)
     }
     return SW_OK;
 }
-
+// 添加 event 事件
 bool Socket::add_event(const enum swEvent_type event)
 {
     bool ret = true;

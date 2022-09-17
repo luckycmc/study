@@ -29,7 +29,7 @@ swReactor* sw_reactor()
     return SwooleTG.reactor;
 }
 #endif
-
+// 事件初始化
 int swoole_event_init()
 {
     if (!SwooleG.init)
@@ -52,22 +52,22 @@ int swoole_event_init()
     }
     return SW_OK;
 }
-
+//添加
 int swoole_event_add(int fd, int events, int fdtype)
 {
     return SwooleTG.reactor->add(SwooleTG.reactor, fd, fdtype | events);
 }
-
+// 设置
 int swoole_event_set(int fd, int events, int fdtype)
 {
     return SwooleTG.reactor->set(SwooleTG.reactor, fd, fdtype | events);
 }
-
+// 删除
 int swoole_event_del(int fd)
 {
     return SwooleTG.reactor->del(SwooleTG.reactor, fd);
 }
-
+// 事件等待
 int swoole_event_wait()
 {
     swReactor *reactor = SwooleTG.reactor;
@@ -79,7 +79,7 @@ int swoole_event_wait()
     swoole_event_free();
     return retval;
 }
-
+// 事件 释放
 int swoole_event_free()
 {
     if (!SwooleTG.reactor)

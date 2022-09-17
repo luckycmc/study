@@ -184,7 +184,7 @@ static int swReactorEpoll_set(swReactor *reactor, int fd, int fdtype)
     swReactor_set(reactor, fd, fdtype);
     return SW_OK;
 }
-
+// swReactorEpoll_wait是对函数epoll_wait的封装；当有读写事件发生时，执行相应的handle
 static int swReactorEpoll_wait(swReactor *reactor, struct timeval *timeo)
 {
     swEvent event;
