@@ -1079,23 +1079,26 @@ ZEND_API int do_bind_function(const zend_op_array *op_array, const zend_op *opli
 	}
 }
 /* }}} */
-
+// )无继承类： 这种情况直接调用do_bind_class()处理了。
 ZEND_API zend_class_entry *do_bind_class(const zend_op_array* op_array, const zend_op *opline, HashTable *class_table, zend_bool compile_time) /* {{{ */
 {
 	zend_class_entry *ce;
 	zval *lcname, *rtd_key, *zv;
 
-	if (compile_time) {
+	if (compile_time) { //编译时
 		lcname = CT_CONSTANT_EX(op_array, opline->op1.constant);
 		rtd_key = lcname + 1;
 	} else {
 		lcname = RT_CONSTANT(opline, opline->op1);
 		rtd_key = lcname + 1;
 	}
+	//从CG(class_table)中取出zend_class_entry
 	zv = zend_hash_find_ex(class_table, Z_STR_P(rtd_key), 1);
 	ZEND_ASSERT(zv);
 	ce = (zend_class_entry*)Z_PTR_P(zv);
 	ce->refcount++;
+	//以标准类名为key将zend_class_entry插入CG(class_table)
+    //这才是后面要用到的类
 	if (zend_hash_add_ptr(class_table, Z_STR_P(lcname), ce) == NULL) {
 		ce->refcount--;
 		if (!compile_time) {
@@ -5787,7 +5790,7 @@ void zend_compile_closure_uses(zend_ast *ast) /* {{{ */
 	}
 }
 /* }}} */
-
+// 编译类中的成员方法
 void zend_begin_method_decl(zend_op_array *op_array, zend_string *name, zend_bool has_body) /* {{{ */
 {
 	zend_class_entry *ce = CG(active_class_entry);
@@ -5828,12 +5831,12 @@ void zend_begin_method_decl(zend_op_array *op_array, zend_string *name, zend_boo
 
 	lcname = zend_string_tolower(name);
 	lcname = zend_new_interned_string(lcname);
-
+    /***插入类的function_table中 把当前的方法****/
 	if (zend_hash_add_ptr(&ce->function_table, lcname, op_array) == NULL) {
 		zend_error_noreturn(E_COMPILE_ERROR, "Cannot redeclare %s::%s()",
 			ZSTR_VAL(ce->name), ZSTR_VAL(name));
 	}
-
+    // 设置一些构造函数、析构函数、魔术方法指针，以及其它一些可见性、静态非静态的检查
 	if (in_interface) {
 		if (ZSTR_VAL(lcname)[0] != '_' || ZSTR_VAL(lcname)[1] != '_') {
 			/* pass */
@@ -5963,7 +5966,7 @@ void zend_begin_method_decl(zend_op_array *op_array, zend_string *name, zend_boo
 	zend_string_release_ex(lcname, 0);
 }
 /* }}} */
-
+//用户函数的编译
 static void zend_begin_func_decl(znode *result, zend_op_array *op_array, zend_ast_decl *decl) /* {{{ */
 {
 	zend_ast *params_ast = decl->child[0];
@@ -6045,11 +6048,13 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	if (decl->kind == ZEND_AST_CLOSURE) {
 		op_array->fn_flags |= ZEND_ACC_CLOSURE;
 	}
-
+    //类方法
 	if (is_method) {
 		zend_bool has_body = stmt_ast != NULL;
 		zend_begin_method_decl(op_array, decl->name, has_body);
 	} else {
+		//函数是在当前空间生成了一条ZEND_DECLARE_FUNCTION的opcode
+        //然后在zend_do_early_binding()中"执行"了这条opcode，即将函数添加到CG(function_table)
 		zend_begin_func_decl(result, op_array, decl);
 		if (uses_ast) {
 			zend_compile_closure_binding(result, op_array, uses_ast);
