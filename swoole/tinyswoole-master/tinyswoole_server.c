@@ -213,7 +213,7 @@ void php_tswoole_onReceive(tswServer *serv, tswEventData *event_data)
 	args[0] = *server_object;
 	args[1] = *zfd;
 	args[2] = *zdata;
-
+    // 回调对用的函数
 	call_user_function_ex(EG(function_table), NULL, php_tsw_server_callbacks[TSW_SERVER_CB_onReceive], &retval, 3, args, 0, NULL);
 }
 // 服务器初始化

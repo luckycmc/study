@@ -589,7 +589,7 @@ bool Socket::init_sock()
     init_reactor_socket(_fd);
     return true;
 }
-
+//
 void Socket::init_reactor_socket(int _fd)
 {
     swReactor *reactor = SwooleTG.reactor;

@@ -598,7 +598,7 @@ int _call_user_function_ex(zval *object, zval *function_name, zval *retval_ptr, 
 	return zend_call_function(&fci, NULL);
 }
 /* }}} */
-
+//函数的执行
 int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /* {{{ */
 {
 	uint32_t i;
@@ -747,7 +747,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 		}
 		ZEND_ADD_CALL_FLAG(call, call_info);
 	}
-
+    // 用户自定义的函数
 	if (func->type == ZEND_USER_FUNCTION) {
 		int call_via_handler = (func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) != 0;
 		const zend_op *current_opline_before_exception = EG(opline_before_exception);
@@ -759,7 +759,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 			/* We must re-initialize function again */
 			fci_cache->function_handler = NULL;
 		}
-	} else if (func->type == ZEND_INTERNAL_FUNCTION) {
+	} else if (func->type == ZEND_INTERNAL_FUNCTION) { //内部函数
 		int call_via_handler = (func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) != 0;
 		ZVAL_NULL(fci->retval);
 		call->prev_execute_data = EG(current_execute_data);
@@ -808,13 +808,13 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 			ZVAL_UNDEF(fci->retval);
 		}
 	}
-
+    // 释放栈帧
 	zend_vm_stack_free_call_frame(call);
 
 	if (EG(current_execute_data) == &dummy_execute_data) {
 		EG(current_execute_data) = dummy_execute_data.prev_execute_data;
 	}
-
+    // 异常处理
 	if (UNEXPECTED(EG(exception))) {
 		if (UNEXPECTED(!EG(current_execute_data))) {
 			zend_throw_exception_internal(NULL);
