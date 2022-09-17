@@ -216,7 +216,7 @@ void php_tswoole_onReceive(tswServer *serv, tswEventData *event_data)
 
 	call_user_function_ex(EG(function_table), NULL, php_tsw_server_callbacks[TSW_SERVER_CB_onReceive], &retval, 3, args, 0, NULL);
 }
-
+// 服务器初始化
 void init_tinyswoole_server()
 {
 	

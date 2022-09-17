@@ -582,7 +582,7 @@ ZEND_API int zval_update_constant(zval *pp) /* {{{ */
 	return zval_update_constant_ex(pp, EG(current_execute_data) ? zend_get_executed_scope() : CG(active_class_entry));
 }
 /* }}} */
-
+// 函数执行初始化
 int _call_user_function_ex(zval *object, zval *function_name, zval *retval_ptr, uint32_t param_count, zval params[], int no_separation) /* {{{ */
 {
 	zend_fcall_info fci;

@@ -149,7 +149,7 @@ static zend_always_inline zend_string *zend_string_safe_alloc(size_t n, size_t m
 	ZSTR_LEN(ret) = (n * m) + l;
 	return ret;
 }
-
+//字符串初始化
 static zend_always_inline zend_string *zend_string_init(const char *str, size_t len, int persistent)
 {
 	zend_string *ret = zend_string_alloc(len, persistent);
