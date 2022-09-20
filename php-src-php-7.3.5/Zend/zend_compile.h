@@ -343,11 +343,13 @@ char *zend_visibility_string(uint32_t fn_flags);
 //类的属性信息
 typedef struct _zend_property_info {
 	uint32_t offset; /* property offset for object properties or
+	                      /普通成员变量的内存偏移值
+                        //静态成员变量的数组索引
 	                      property index for static properties */
-	uint32_t flags;
-	zend_string *name;
-	zend_string *doc_comment;
-	zend_class_entry *ce;
+	uint32_t flags;      //属性掩码，如public、private、protected及是否为静态属性
+	zend_string *name;   //属性名:并不是原始属性名
+	zend_string *doc_comment;  //对应的文档 例如注释
+	zend_class_entry *ce;   //所属类
 } zend_property_info;
 
 #define OBJ_PROP(obj, offset) \

@@ -46,7 +46,7 @@ enum _zend_ast_kind {
 	ZEND_AST_FUNC_DECL,  //声明函数的节点 67
 	ZEND_AST_CLOSURE, //闭包函数 67
 	ZEND_AST_METHOD,  // 类中的方法 68
-	ZEND_AST_CLASS,  // 类节点 69
+	ZEND_AST_CLASS,  // 类节点 69   
 
 	/* list nodes */  //要进行 zend_ast_list转换
 	ZEND_AST_ARG_LIST = 1 << ZEND_AST_IS_LIST_SHIFT,

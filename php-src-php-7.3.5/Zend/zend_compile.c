@@ -6108,11 +6108,11 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	CG(active_op_array) = orig_op_array; //回复上一个op_array
 }
 /* }}} */
-
+// 属性节点类型为:ZEND_AST_PROP_DECL
 void zend_compile_prop_decl(zend_ast *ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
-	uint32_t flags = list->attr;
+	uint32_t flags = list->attr; //属性修饰符：static、public、private、protected
 	zend_class_entry *ce = CG(active_class_entry);
 	uint32_t i, children = list->children;
 
@@ -6143,23 +6143,23 @@ void zend_compile_prop_decl(zend_ast *ast) /* {{{ */
 				"the final modifier is allowed only for methods and classes",
 				ZSTR_VAL(ce->name), ZSTR_VAL(name));
 		}
-
+        // //检查该属性是否在当前类中已经定义
 		if (zend_hash_exists(&ce->properties_info, name)) {
 			zend_error_noreturn(E_COMPILE_ERROR, "Cannot redeclare %s::$%s",
 				ZSTR_VAL(ce->name), ZSTR_VAL(name));
 		}
 
-		if (value_ast) {
-			zend_const_expr_to_zval(&value_zv, value_ast);
+		if (value_ast) {//取出默认值
+			zend_const_expr_t o_zval(&value_zv, value_ast);
 		} else {
-			ZVAL_NULL(&value_zv);
+			ZVAL_NULL(&value_zv); //默认值为null
 		}
-
+        //保存属性
 		zend_declare_property_ex(ce, name, &value_zv, flags, doc_comment);
 	}
 }
 /* }}} */
-
+// 常量编译
 void zend_compile_class_const_decl(zend_ast *ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
@@ -6354,7 +6354,7 @@ static zend_string *zend_generate_anon_class_name(unsigned char *lex_pos) /* {{{
 	return zend_new_interned_string(result);
 }
 /* }}} */
-
+//它的输入就是ZEND_AST_CLASS节点，这个函数中再针对常量、属性、方法、继承、接口等分别处理。
 void zend_compile_class_decl(zend_ast *ast) /* {{{ */
 {
 	zend_ast_decl *decl = (zend_ast_decl *) ast;
@@ -6406,7 +6406,7 @@ void zend_compile_class_decl(zend_ast *ast) /* {{{ */
 	ce->info.user.filename = zend_get_compiled_filename();
 	ce->info.user.line_start = decl->start_lineno;
 	ce->info.user.line_end = decl->end_lineno;
-
+    // 文档
 	if (decl->doc_comment) {
 		ce->info.user.doc_comment = zend_string_copy(decl->doc_comment);
 	}
@@ -6561,7 +6561,7 @@ void zend_compile_class_decl(zend_ast *ast) /* {{{ */
 
 		zend_emit_op(NULL, ZEND_BIND_TRAITS, &declare_node, NULL);
 	}
-
+    //实现接口
 	if (implements_ast) {
 		zend_compile_implements(&declare_node, implements_ast);
 	}
@@ -6586,7 +6586,7 @@ void zend_compile_class_decl(zend_ast *ast) /* {{{ */
 	}
 
 	FC(implementing_class) = original_implementing_class;
-	CG(active_class_entry) = original_ce;
+	CG(active_class_entry) = original_ce; //活跃类
 }
 /* }}} */
 
