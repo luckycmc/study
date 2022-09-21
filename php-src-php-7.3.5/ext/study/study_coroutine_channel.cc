@@ -133,7 +133,7 @@ static PHP_METHOD(study_coro_channel, pop)
     RETVAL_ZVAL(zdata, 0, 0);
     efree(zdata);
 }
-
+//声明类的方法
 static const zend_function_entry study_coro_channel_methods[] =
 {
     PHP_ME(study_coro_channel, __construct, arginfo_study_coro_channel_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR) // ZEND_ACC_CTOR is used to declare that this method is a constructor of this class.
@@ -141,13 +141,15 @@ static const zend_function_entry study_coro_channel_methods[] =
     PHP_ME(study_coro_channel, pop, arginfo_study_coro_channel_pop, ZEND_ACC_PUBLIC)
     PHP_FE_END
 };
-
+//类的初始化
 void study_coro_channel_init()
-{
+{   
+    // 注册对应的类和方法
     INIT_NS_CLASS_ENTRY(study_coro_channel_ce, "Study", "Coroutine\\Channel", study_coro_channel_methods);
     study_coro_channel_ce_ptr = zend_register_internal_class(&study_coro_channel_ce TSRMLS_CC); // Registered in the Zend Engine
     memcpy(&study_coro_channel_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+    // ST_SET_CLASS_CUSTOM_OBJECT用来替换默认的创建PHP对象以及释放PHP对象的handler
     ST_SET_CLASS_CUSTOM_OBJECT(study_coro_channel, study_coro_channel_create_object, study_coro_channel_free_object, coro_chan, std);
-
+    //声明类的属性
     zend_declare_property_long(study_coro_channel_ce_ptr, ZEND_STRL("capacity"), 1, ZEND_ACC_PUBLIC);
 }

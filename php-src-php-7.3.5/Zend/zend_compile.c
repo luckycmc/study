@@ -1706,7 +1706,7 @@ int ZEND_FASTCALL zendlex(zend_parser_stack_elem *elem) /* {{{ */
 	return lex_scan(&zv, elem);
 }
 /* }}} */
-
+//初始化类的方法
 ZEND_API void zend_initialize_class_data(zend_class_entry *ce, zend_bool nullify_handlers) /* {{{ */
 {
 	zend_bool persistent_hashes = (ce->type == ZEND_INTERNAL_CLASS) ? 1 : 0;
@@ -1723,7 +1723,7 @@ ZEND_API void zend_initialize_class_data(zend_class_entry *ce, zend_bool nullify
 	zend_hash_init_ex(&ce->properties_info, 8, NULL, (persistent_hashes ? zend_destroy_property_info_internal : NULL), persistent_hashes, 0);
 	zend_hash_init_ex(&ce->constants_table, 8, NULL, NULL, persistent_hashes, 0);
 	zend_hash_init_ex(&ce->function_table, 8, NULL, ZEND_FUNCTION_DTOR, persistent_hashes, 0);
-
+     //内部类
 	if (ce->type == ZEND_INTERNAL_CLASS) {
 #ifdef ZTS
 		int n = zend_hash_num_elements(CG(class_table));
@@ -1738,14 +1738,14 @@ ZEND_API void zend_initialize_class_data(zend_class_entry *ce, zend_bool nullify
 #else
 		ce->static_members_table = NULL;
 #endif
-	} else {
+	} else { // 用户自定义类
 		ce->static_members_table = ce->default_static_members_table;
 		ce->info.user.doc_comment = NULL;
 	}
 
 	ce->default_properties_count = 0;
 	ce->default_static_members_count = 0;
-
+     //魔术方方法初始化
 	if (nullify_handlers) {
 		ce->constructor = NULL;
 		ce->destructor = NULL;
