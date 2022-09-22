@@ -168,7 +168,7 @@ zend_class_entry *study_coroutine_ce_ptr; // 这个类的句柄
     PHPCoroutine::init(); // 新增的一行
       //初始化类 带命名空间的 和对应的方法   绑定类名和方法
      INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
-     // 注册对应的类 把当前类注册到CG(class_table)中
+     // 注册对应的类 把当前类注册到CG(class_table)中 并且注册对应的方法
      study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
      zend_register_class_alias("SCo", study_coroutine_ce_ptr); // 新增的代码
  }

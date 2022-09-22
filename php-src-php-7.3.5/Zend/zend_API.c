@@ -2192,14 +2192,14 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 			lc_class_name = zend_str_tolower_dup(ZSTR_VAL(scope->name), class_name_len);
 		}
 	}
-    // 对当前类的方法操作
+    // 对当前类的方法操作 一个个遍历
 	while (ptr->fname) {
 		fname_len = strlen(ptr->fname);
-		internal_function->handler = ptr->handler;
-		internal_function->function_name = zend_string_init_interned(ptr->fname, fname_len, 1);
+		internal_function->handler = ptr->handler; // handler
+		internal_function->function_name = zend_string_init_interned(ptr->fname, fname_len, 1); //函数名
 		internal_function->scope = scope;
 		internal_function->prototype = NULL;
-		if (ptr->flags) {
+		if (ptr->flags) {  // 函数的标识 public procted privide
 			if (!(ptr->flags & ZEND_ACC_PPP_MASK)) {
 				if (ptr->flags != ZEND_ACC_DEPRECATED && scope) {
 					zend_error(error_type, "Invalid access level for %s%s%s() - access must be exactly one of public, protected or private", scope ? ZSTR_VAL(scope->name) : "", scope ? "::" : "", ptr->fname);
@@ -2211,17 +2211,19 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 		} else {
 			internal_function->fn_flags = ZEND_ACC_PUBLIC;
 		}
-		if (ptr->arg_info) {
+		// 当前该函数的的 arg_info 信息
+		if (ptr->arg_info) {  
 			zend_internal_function_info *info = (zend_internal_function_info*)ptr->arg_info;
 
 			internal_function->arg_info = (zend_internal_arg_info*)ptr->arg_info+1;
-			internal_function->num_args = ptr->num_args;
+			internal_function->num_args = ptr->num_args;  // 参数个数
 			/* Currently you cannot denote that the function can accept less arguments than num_args */
 			if (info->required_num_args == (zend_uintptr_t)-1) {
 				internal_function->required_num_args = ptr->num_args;
 			} else {
 				internal_function->required_num_args = info->required_num_args;
-			}
+			} 
+			// 是否引用
 			if (info->return_reference) {
 				internal_function->fn_flags |= ZEND_ACC_RETURN_REFERENCE;
 			}
@@ -2245,9 +2247,9 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 				internal_function->fn_flags |= ZEND_ACC_HAS_RETURN_TYPE;
 			}
 		} else {
-			internal_function->arg_info = NULL;
-			internal_function->num_args = 0;
-			internal_function->required_num_args = 0;
+			internal_function->arg_info = NULL;        // 函数的参数信息
+			internal_function->num_args = 0;           //个数
+			internal_function->required_num_args = 0;  // 必须传的
 		}
 		zend_set_function_arg_flags((zend_function*)internal_function);
 		if (ptr->flags & ZEND_ACC_ABSTRACT) {
@@ -2376,7 +2378,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 				zend_check_magic_method_implementation(scope, reg_function, error_type);
 			}
 		}
-		ptr++;   
+		ptr++;   // 指针后移 也就是对应的函数一个个遍历
 		count++;
 		zend_string_release_ex(lowercase_name, 1);
 	}
@@ -2397,7 +2399,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 		zend_unregister_functions(functions, count, target_function_table);
 		return FAILURE;
 	}
-	if (scope) {     // 对构造方法的一些处理
+	if (scope) {     // 魔术方法的一些处理
 		scope->constructor = ctor;
 		scope->destructor = dtor;
 		scope->clone = clone;
@@ -2488,7 +2490,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 		if (clone && (clone->common.fn_flags & ZEND_ACC_HAS_RETURN_TYPE)) {
 			zend_error_noreturn(E_CORE_ERROR, "%s::%s() cannot declare a return type", ZSTR_VAL(scope->name), ZSTR_VAL(clone->common.function_name));
 		}
-		efree((char*)lc_class_name);
+		efree((char*)lc_class_name); // 释放当前字符串
 	}
 	return SUCCESS;
 }
