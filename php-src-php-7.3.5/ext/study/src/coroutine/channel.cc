@@ -100,12 +100,12 @@ bool Channel::push(void* data,double timeout)
 
     return true;
 }
-
+// 队列是否为空
 bool Channel::empty()
 {
     return data_queue.empty();
 }
-
+// 从队列中取出数据
 void* Channel::pop_data()
 {
     void *data;
@@ -115,6 +115,6 @@ void* Channel::pop_data()
         return nullptr;
     }
     data = data_queue.front();
-    data_queue.pop();
+    data_queue.pop(); //减去一个数据
     return data;
 }

@@ -414,7 +414,7 @@ struct _zend_ast_ref {
 #define IS_ITERABLE					18
 #define IS_VOID						19
 #define _IS_NUMBER					20
-
+// 获取数据类型
 static zend_always_inline zend_uchar zval_get_type(const zval* pz) {
 	return pz->u1.v.type;
 }

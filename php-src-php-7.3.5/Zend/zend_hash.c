@@ -639,7 +639,7 @@ static zend_always_inline Bucket *zend_hash_index_find_bucket(const HashTable *h
 	}
 	return NULL;
 }
-
+//添加或者更新hash数据
 static zend_always_inline zval *_zend_hash_add_or_update_i(HashTable *ht, zend_string *key, zval *pData, uint32_t flag)
 {
 	zend_ulong h;

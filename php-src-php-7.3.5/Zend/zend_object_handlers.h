@@ -127,7 +127,7 @@ typedef int (*zend_object_get_closure_t)(zval *obj, zend_class_entry **ce_ptr, z
 typedef HashTable *(*zend_object_get_gc_t)(zval *object, zval **table, int *n);
 
 typedef int (*zend_object_do_operation_t)(zend_uchar opcode, zval *result, zval *op1, zval *op2);
-
+//默认值处理handler 都是回调函数
 struct _zend_object_handlers {
 	/* offset of real object header (usually zero) */
 	int										offset;
@@ -164,7 +164,7 @@ struct _zend_object_handlers {
 
 BEGIN_EXTERN_C()
 extern const ZEND_API zend_object_handlers std_object_handlers;
-
+// std_object_handlers是PHP定义的默认、标准的处理函数
 #define zend_get_std_object_handlers() \
 	(&std_object_handlers)
 

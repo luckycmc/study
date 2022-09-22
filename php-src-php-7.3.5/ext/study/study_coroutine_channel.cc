@@ -18,8 +18,8 @@ ZEND_END_ARG_INFO()
 /**
  * Define zend class entry
  */
-zend_class_entry study_coro_channel_ce;
-zend_class_entry *study_coro_channel_ce_ptr;
+zend_class_entry study_coro_channel_ce;  //一个是设置
+zend_class_entry *study_coro_channel_ce_ptr;  // 接受返回
 
 static zend_object_handlers study_coro_channel_handlers;
 

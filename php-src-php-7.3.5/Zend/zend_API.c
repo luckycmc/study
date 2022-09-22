@@ -3702,7 +3702,7 @@ ZEND_API int zend_declare_property_ex(zend_class_entry *ce, zend_string *name, z
 {
 	zend_property_info *property_info, *property_info_ptr;
 
-	if (ce->type == ZEND_INTERNAL_CLASS) {
+	if (ce->type == ZEND_INTERNAL_CLASS) {   // 内核中的类或者扩展类
 		property_info = pemalloc(sizeof(zend_property_info), 1);
 	} else {
 		property_info = zend_arena_alloc(&CG(arena), sizeof(zend_property_info));
@@ -3718,7 +3718,7 @@ ZEND_API int zend_declare_property_ex(zend_class_entry *ce, zend_string *name, z
 	if (!(access_type & ZEND_ACC_PPP_MASK)) {
 		access_type |= ZEND_ACC_PUBLIC;
 	}
-	if (access_type & ZEND_ACC_STATIC) {
+	if (access_type & ZEND_ACC_STATIC) { //静态属性
 		if ((property_info_ptr = zend_hash_find_ptr(&ce->properties_info, name)) != NULL &&
 		    (property_info_ptr->flags & ZEND_ACC_STATIC) != 0) {
 			property_info->offset = property_info_ptr->offset;
@@ -3759,7 +3759,7 @@ ZEND_API int zend_declare_property_ex(zend_class_entry *ce, zend_string *name, z
 		/* Must be interned to avoid ZTS data races */
 		name = zend_new_interned_string(zend_string_copy(name));
 	}
-
+    /**********属性的权限**********/
 	if (access_type & ZEND_ACC_PUBLIC) {
 		property_info->name = zend_string_copy(name);
 	} else if (access_type & ZEND_ACC_PRIVATE) {
@@ -3772,7 +3772,7 @@ ZEND_API int zend_declare_property_ex(zend_class_entry *ce, zend_string *name, z
 	property_info->name = zend_new_interned_string(property_info->name);
 	property_info->flags = access_type;
 	property_info->doc_comment = doc_comment;
-	property_info->ce = ce;
+	property_info->ce = ce; //更新类的属性信息
 	zend_hash_update_ptr(&ce->properties_info, name, property_info);
 
 	return SUCCESS;
@@ -3805,7 +3805,7 @@ ZEND_API int zend_declare_property_bool(zend_class_entry *ce, const char *name, 
 	return zend_declare_property(ce, name, name_length, &property, access_type);
 }
 /* }}} */
-// 声明类的属性为长整形
+// 声明类的属性是整形
 ZEND_API int zend_declare_property_long(zend_class_entry *ce, const char *name, size_t name_length, zend_long value, int access_type) /* {{{ */
 {
 	zval property;
@@ -3841,7 +3841,7 @@ ZEND_API int zend_declare_property_stringl(zend_class_entry *ce, const char *nam
 	return zend_declare_property(ce, name, name_length, &property, access_type);
 }
 /* }}} */
-
+// 类的常量
 ZEND_API int zend_declare_class_constant_ex(zend_class_entry *ce, zend_string *name, zval *value, int access_type, zend_string *doc_comment) /* {{{ */
 {
 	zend_class_constant *c;
