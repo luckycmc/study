@@ -2192,7 +2192,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 			lc_class_name = zend_str_tolower_dup(ZSTR_VAL(scope->name), class_name_len);
 		}
 	}
-
+    // 对当前类的方法操作
 	while (ptr->fname) {
 		fname_len = strlen(ptr->fname);
 		internal_function->handler = ptr->handler;
@@ -2376,7 +2376,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 				zend_check_magic_method_implementation(scope, reg_function, error_type);
 			}
 		}
-		ptr++;
+		ptr++;   
 		count++;
 		zend_string_release_ex(lowercase_name, 1);
 	}
@@ -2727,8 +2727,8 @@ static zend_class_entry *do_register_internal_class(zend_class_entry *orig_class
 		zend_register_functions(class_entry, class_entry->info.internal.builtin_functions, &class_entry->function_table, MODULE_PERSISTENT);
 	}
 
-	lowercase_name = zend_string_tolower_ex(orig_class_entry->name, 1);
-	lowercase_name = zend_new_interned_string(lowercase_name);  // 类转化为小写
+	lowercase_name = zend_string_tolower_ex(orig_class_entry->name, 1);   // 类转化为小写
+	lowercase_name = zend_new_interned_string(lowercase_name);   //获取string 数据
 	//把类注册到对应的类表中
 	zend_hash_update_ptr(CG(class_table), lowercase_name, class_entry); //更新类表的数据信息
 	zend_string_release_ex(lowercase_name, 1);
