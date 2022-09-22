@@ -249,7 +249,7 @@ char *alloca();
 #elif defined(_MSC_VER) && defined(_M_IX86) && _MSC_VER == 1700
 # define ZEND_FASTCALL __fastcall
 #elif defined(_MSC_VER) && _MSC_VER >= 1800 && !defined(__clang__)
-# define ZEND_FASTCALL __vectorcall
+# define ZEND_FASTCALL __vectorcall   //调用约定 可以理解为底层设置一个函数
 #else
 # define ZEND_FASTCALL
 #endif

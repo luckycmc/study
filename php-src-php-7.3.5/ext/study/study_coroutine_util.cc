@@ -52,7 +52,8 @@ PHP_FUNCTION(study_coroutine_create)
     long cid =PHPCoroutine::create(&fcc, fci.param_count, fci.params);
     RETURN_LONG(cid);
 }
-//协成切换
+//协成切换 
+//void zim_study_coroutine_util_yield(zend_execute_data *execute_data, zval *return_value);
 PHP_METHOD(study_coroutine_util, yield)
 {
     Coroutine* co = Coroutine::get_current();
@@ -89,7 +90,8 @@ PHP_METHOD(study_coroutine_util,getCid)
     RETURN_LONG(co->get_cid());
 }
 // 判断当前协成是否存在
-PHP_METHOD(study_coroutine_util,isExist)
+
+PHP_METHOD(study_coroutine_util,isExist)  
 {
     zend_long cid = 0;
     bool is_exist;
@@ -150,7 +152,7 @@ const zend_function_entry study_coroutine_util_methods [] =
     PHP_ME(study_coroutine_util, isExist, arginfo_study_coroutine_isExist, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(study_coroutine_util, defer, arginfo_study_coroutine_defer, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)//defer
      PHP_ME(study_coroutine_util, sleep, arginfo_study_coroutine_sleep, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-    PHP_FE_END
+    PHP_FE_END // 结束的标志位
 };
 
 
@@ -164,8 +166,9 @@ zend_class_entry *study_coroutine_ce_ptr; // 这个类的句柄
  {  
     //初始化对应的回调函数
     PHPCoroutine::init(); // 新增的一行
-      //初始化类 带命名空间的 和对应的方法
+      //初始化类 带命名空间的 和对应的方法   绑定类名和方法
      INIT_NS_CLASS_ENTRY(study_coroutine_ce, "Study", "Coroutine", study_coroutine_util_methods);
+     // 注册对应的类 把当前类注册到CG(class_table)中
      study_coroutine_ce_ptr = zend_register_internal_class(&study_coroutine_ce TSRMLS_CC); // Registered in the Zend Engine
      zend_register_class_alias("SCo", study_coroutine_ce_ptr); // 新增的代码
  }

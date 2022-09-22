@@ -34,7 +34,7 @@
 BEGIN_EXTERN_C()
 // PHP 函数的声明
 typedef struct _zend_function_entry {
-	const char *fname;
+	const char *fname;   //骨架暂时理解为 类
 	zif_handler handler; // 对应的函数 也是回调函数
 	const struct _zend_internal_arg_info *arg_info;  //参数信息
 	uint32_t num_args;  // 参数个数
@@ -63,8 +63,8 @@ typedef struct _zend_fcall_info_cache {
 
 #define ZEND_NS_NAME(ns, name)			ns "\\" name
 
-#define ZEND_FN(name) zif_##name
-#define ZEND_MN(name) zim_##name
+#define ZEND_FN(name) zif_##name     // zif_name 代表的是名字
+#define ZEND_MN(name) zim_##name     // 代表类方法 zim_name
 #define ZEND_NAMED_FUNCTION(name)		void ZEND_FASTCALL name(INTERNAL_FUNCTION_PARAMETERS)
 #define ZEND_FUNCTION(name)				ZEND_NAMED_FUNCTION(ZEND_FN(name))
 #define ZEND_METHOD(classname, name)	ZEND_NAMED_FUNCTION(ZEND_MN(classname##_##name))
@@ -193,10 +193,10 @@ typedef struct _zend_fcall_info_cache {
 #define INIT_CLASS_ENTRY_EX(class_container, class_name, class_name_len, functions) \
 	{															\
 		memset(&class_container, 0, sizeof(zend_class_entry)); \
-		class_container.name = zend_string_init_interned(class_name, class_name_len, 1); \
-		class_container.info.internal.builtin_functions = functions;	\
+		class_container.name = zend_string_init_interned(class_name, class_name_len, 1); \  // 获取类的名称
+		class_container.info.internal.builtin_functions = functions;	\   // 绑定类的hanshu
 	}
-// 绑定当前的类 和类对应的内置方法 例如 构造方法和魔术方法
+// 绑定当前的类 和类对应的内置方法 例如 构造方法和魔术方法 设置默认值
 #define INIT_CLASS_ENTRY_INIT_METHODS(class_container, functions) \
 	{															\
 		class_container.constructor = NULL;						\

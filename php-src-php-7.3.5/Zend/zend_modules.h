@@ -67,16 +67,16 @@
 struct _zend_ini_entry;
 typedef struct _zend_module_entry zend_module_entry;
 typedef struct _zend_module_dep zend_module_dep;
-
+// 模块 结构体 也就是对应的 扩展
 struct _zend_module_entry {
-	unsigned short size;
+	unsigned short size;    // 大小
 	unsigned int zend_api;
 	unsigned char zend_debug;
 	unsigned char zts;
 	const struct _zend_ini_entry *ini_entry;
 	const struct _zend_module_dep *deps;
-	const char *name;
-	const struct _zend_function_entry *functions;
+	const char *name;  // 扩展的名称
+	const struct _zend_function_entry *functions;  // 注册的模块函数
 	int (*module_startup_func)(INIT_FUNC_ARGS);
 	int (*module_shutdown_func)(SHUTDOWN_FUNC_ARGS);
 	int (*request_startup_func)(INIT_FUNC_ARGS);

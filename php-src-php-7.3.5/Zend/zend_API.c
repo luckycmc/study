@@ -2178,8 +2178,8 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 	if (!target_function_table) {
 		target_function_table = CG(function_table);
 	}
-	internal_function->type = ZEND_INTERNAL_FUNCTION;
-	internal_function->module = EG(current_module);
+	internal_function->type = ZEND_INTERNAL_FUNCTION; // 内部函数
+	internal_function->module = EG(current_module);   // 函数对应的模块
 	memset(internal_function->reserved, 0, ZEND_MAX_RESERVED_RESOURCES * sizeof(void*));
 
 	if (scope) {
@@ -2397,7 +2397,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 		zend_unregister_functions(functions, count, target_function_table);
 		return FAILURE;
 	}
-	if (scope) {
+	if (scope) {     // 对构造方法的一些处理
 		scope->constructor = ctor;
 		scope->destructor = dtor;
 		scope->clone = clone;
@@ -2718,17 +2718,17 @@ static zend_class_entry *do_register_internal_class(zend_class_entry *orig_class
 	zend_string *lowercase_name;
 	*class_entry = *orig_class_entry;
 
-	class_entry->type = ZEND_INTERNAL_CLASS; // 
+	class_entry->type = ZEND_INTERNAL_CLASS; //  内部类
 	zend_initialize_class_data(class_entry, 0); //初始化类的相关信息
 	class_entry->ce_flags = ce_flags | ZEND_ACC_CONSTANTS_UPDATED;
-	class_entry->info.internal.module = EG(current_module);
-    //绑定类和方法
+	class_entry->info.internal.module = EG(current_module);  //当前类属于哪个模块
+    //绑定类和方法 有数据则绑定
 	if (class_entry->info.internal.builtin_functions) {
 		zend_register_functions(class_entry, class_entry->info.internal.builtin_functions, &class_entry->function_table, MODULE_PERSISTENT);
 	}
 
 	lowercase_name = zend_string_tolower_ex(orig_class_entry->name, 1);
-	lowercase_name = zend_new_interned_string(lowercase_name);
+	lowercase_name = zend_new_interned_string(lowercase_name);  // 类转化为小写
 	//把类注册到对应的类表中
 	zend_hash_update_ptr(CG(class_table), lowercase_name, class_entry); //更新类表的数据信息
 	zend_string_release_ex(lowercase_name, 1);

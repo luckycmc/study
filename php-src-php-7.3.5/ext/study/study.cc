@@ -18,6 +18,7 @@ ZEND_END_ARG_INFO()
 /***测试接口 end***/
 PHP_FUNCTION(study_coroutine_create);
 
+// 初始化阶段
 PHP_MINIT_FUNCTION(study)
 {   
     study_coroutine_util_init();
@@ -88,9 +89,9 @@ const zend_function_entry study_functions[] = {
 //注册模块
 zend_module_entry study_module_entry = {
     STANDARD_MODULE_HEADER,
-    "study",
+    "study",       // 模块名称
     study_functions,    //注册模块函数
-    PHP_MINIT(study),
+    PHP_MINIT(study),    // zm_startup_##study 模块
     PHP_MSHUTDOWN(study),
     PHP_RINIT(study),
     PHP_RSHUTDOWN(study),
