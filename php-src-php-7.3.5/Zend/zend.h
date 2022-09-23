@@ -107,7 +107,7 @@ typedef struct _zend_trait_alias {
 	uint32_t modifiers;
 } zend_trait_alias;
 
-// 类的结构及存储
+// 类的结构及存储 也就是类的描述
 struct _zend_class_entry {
 	char type;                        //类的类型：内部类ZEND_INTERNAL_CLASS(1)、用户自定义类ZEND_USER_CLASS(2)
 	zend_string *name;                //类名，PHP类不区分大小写，统一为小写
@@ -157,7 +157,7 @@ struct _zend_class_entry {
 	uint32_t num_traits;     // triat 机制
 	zend_class_entry **interfaces; //抽象类
 
-	zend_class_entry **traits;
+	zend_class_entry **traits;        // traits 机制
 	zend_trait_alias **trait_aliases; // 别名
 	zend_trait_precedence **trait_precedences;
 
@@ -172,7 +172,7 @@ struct _zend_class_entry {
 			const struct _zend_function_entry *builtin_functions; //绑定函数
 			struct _zend_module_entry *module; //模块
 		} internal;
-	} info;
+	} info;   
 };
 
 typedef struct _zend_utility_functions {

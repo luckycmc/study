@@ -2497,7 +2497,7 @@ ZEND_API int zend_register_functions(zend_class_entry *scope, const zend_functio
 /* }}} */
 
 /* count=-1 means erase all functions, otherwise,
- * erase the first count functions
+ * erase the first count functions  删除注册的方法
  */
 ZEND_API void zend_unregister_functions(const zend_function_entry *functions, int count, HashTable *function_table) /* {{{ */
 {
