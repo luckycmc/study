@@ -451,7 +451,7 @@ void PHPCoroutine::interrupt_thread_loop()
     }
     pthread_exit(0);
 }
-
+//初始化PHP 栈
 inline void PHPCoroutine::vm_stack_init(void)
 {
     uint32_t size = SW_DEFAULT_PHP_STACK_PAGE_SIZE;
@@ -483,6 +483,7 @@ inline void PHPCoroutine::vm_stack_destroy(void)
 }
 
 /**
+  //保存PHP栈
  * The meaning of the task argument in coro switch functions
  *
  * create: origin_task
@@ -521,7 +522,7 @@ inline void PHPCoroutine::save_vm_stack(php_coro_task *task)
         EG(error_reporting) = task->ori_error_reporting;
     }
 }
-
+// 恢复PHP 栈
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
 #ifdef SW_CORO_SWAP_BAILOUT
@@ -602,7 +603,7 @@ void PHPCoroutine::on_resume(void *arg)
     record_last_msec(task);
     swTraceLog(SW_TRACE_COROUTINE,"php_coro_resume from cid=%ld to cid=%ld", Coroutine::get_current_cid(), task->co->get_cid());
 }
-
+//用户空间函数执行
 void PHPCoroutine::on_close(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
