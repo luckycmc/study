@@ -603,7 +603,7 @@ void PHPCoroutine::on_resume(void *arg)
     record_last_msec(task);
     swTraceLog(SW_TRACE_COROUTINE,"php_coro_resume from cid=%ld to cid=%ld", Coroutine::get_current_cid(), task->co->get_cid());
 }
-//用户空间函数执行
+
 void PHPCoroutine::on_close(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
@@ -639,7 +639,7 @@ void PHPCoroutine::on_close(void *arg)
         cid, origin_cid, (uintmax_t) Coroutine::count() - 1, (uintmax_t) zend_memory_usage(0), (uintmax_t) zend_memory_usage(1)
     );
 }
-
+//用户空间函数执行
 void PHPCoroutine::main_func(void *arg)
 {
 #ifdef SW_CORO_SUPPORT_BAILOUT
@@ -809,7 +809,7 @@ void PHPCoroutine::main_func(void *arg)
     } zend_end_try();
 #endif
 }
-
+// 创建协成执行用户空间函数
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv)
 {
     if (sw_unlikely(Coroutine::count() >= config.max_num))
