@@ -2785,7 +2785,7 @@ ZEND_API zend_class_entry *zend_register_internal_interface(zend_class_entry *or
 	return do_register_internal_class(orig_class_entry, ZEND_ACC_INTERFACE);
 }
 /* }}} */
-
+//给类设置别名
 ZEND_API int zend_register_class_alias_ex(const char *name, size_t name_len, zend_class_entry *ce, int persistent) /* {{{ */
 {
 	zend_string *lcname;
@@ -2801,7 +2801,7 @@ ZEND_API int zend_register_class_alias_ex(const char *name, size_t name_len, zen
 	zend_assert_valid_class_name(lcname);
 
 	lcname = zend_new_interned_string(lcname);
-	ce = zend_hash_add_ptr(CG(class_table), lcname, ce);
+	ce = zend_hash_add_ptr(CG(class_table), lcname, ce); // 加入到class_table 标识
 	zend_string_release_ex(lcname, 0);
 	if (ce) {
 		ce->refcount++;

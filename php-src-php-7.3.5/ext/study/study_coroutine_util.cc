@@ -39,7 +39,7 @@ PHP_FUNCTION(study_coroutine_create)
 {  
      // zend_fcall_info 就是用来接收我们创建协程的时候传递的那个函数
     zend_fcall_info fci = empty_fcall_info;
-    zend_fcall_info_cache fcc = empty_fcall_info_cache;
+    zend_fcall_info_cache fcc = empty_fcall_info_cache;  // 函数相关的信息
     zval result;
 
     ZEND_PARSE_PARAMETERS_START(1, -1)

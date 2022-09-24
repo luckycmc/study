@@ -53,12 +53,12 @@ typedef struct _zend_fcall_info {
 	zend_bool no_separation; //no_separation表示zend_call_function内部要不要释放我们的参数引用计数（
 	uint32_t param_count;   //是传递给函数的参数个数。
 } zend_fcall_info;
-//函数的相关信息
+//函数的相关信息  是否属于某个类
 typedef struct _zend_fcall_info_cache {
-	zend_function *function_handler;
+	zend_function *function_handler;  // 对应的操作函数
 	zend_class_entry *calling_scope;
 	zend_class_entry *called_scope;
-	zend_object *object;
+	zend_object *object;  // 对象
 } zend_fcall_info_cache;
 
 #define ZEND_NS_NAME(ns, name)			ns "\\" name
