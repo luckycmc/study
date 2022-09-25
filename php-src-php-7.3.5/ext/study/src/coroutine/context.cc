@@ -42,7 +42,7 @@ void Context::context_func(void *arg)
        可以看到，这段代码就是去调用fn_，也就是PHPCoroutine::create_func，
        并且给它传递参数private_data_，也就是php_coro_args *。
       */
-     Context *_this = (Context *) arg;
+     Context *_this = (Context *) arg; // 也就是contex的对应
      _this->fn_(_this->private_data_);
      _this->end_ = true;//协程开始运行
      _this->swap_out();
