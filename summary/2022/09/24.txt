@@ -1,0 +1,13 @@
+1.命令lsof -op $$ 查看当前进程下文件描述符的细节
+
+Socket(套接字) 是网络编程的一种接口，它是一种特殊的 I/O。Socket可以理解为TCP/IP网络的API，
+    它定义了许多函数或例程，程序员可以用它们来开发TCP/IP网络上的应用程序。
+    电脑上运行的应用程序通常通过”套接字”向网络发出请求或者应答网络请求。
+    在 TCP/IP 协议中，"IP地址＋TCP或UDP端口号”可以唯一标识网络通讯中的一个进程。
+    可以简单地认为 ："IP地址＋端口号”就称为socket。在TCP协议中，
+    建立连接的两个进程各自有一个socket来标识，这两个 socket组成的socket对就唯一标识一个连接。
+    用socket函数建立一个socket连接，此函数返回一个整型的socket描述符，随后进行数据传输。
+
+一般，socket地址的结构都以"sockaddr"开头。socket根据所使用的协议的不同，
+可分为TCP socket和UDP socket，也称为流式socket和数据报socket。
+
