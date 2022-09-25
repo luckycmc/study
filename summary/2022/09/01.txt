@@ -81,3 +81,5 @@ study 协程的上下文切换：
        ，用于实现php栈的切换操作，实际指向的是方法PHPCoroutine::on_yield和PHPCoroutine::on_resume；
 
     /*****************协成 需要 c栈和PHP 栈 共同管理 start*****************/
+
+    call 调用后的返回地址 会放入 被调用函数的栈顶 也就是返回后 函数的下一条要执行的指令
