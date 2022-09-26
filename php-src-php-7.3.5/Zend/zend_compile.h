@@ -492,15 +492,19 @@ typedef enum _zend_call_kind {
 	ZEND_CALL_TOP_CODE			/* direct VM call to "main" code from external C code */
 } zend_call_kind;
 //php  在栈上执行的数据为zend_execute_data
+/**
+ 是执行过程中最核心的一个结构，每次函数的调用、include/require、eval等都会生成一个新的结构，
+ 它表示当前的作用域、代码的执行位置以及局部变量的分配等等，等同于机器码执行过程中stack的角色
+ */
 struct _zend_execute_data {
-	const zend_op       *opline;           /* executed opline 要执行的指令                */
+	const zend_op       *opline;           /* executed opline 要执行的指令    初始时指向zend_op_array起始位置*/
 	zend_execute_data   *call;             /* current call     current call              */
-	zval                *return_value;     //返回值
-	zend_function       *func;             /* executed function 执行函数             */
+	zval                *return_value;     //返回值指针
+	zend_function       *func;             /* executed function 当前执行的函数（非函数调用时为空） */
 	zval                 This;             /* this + call_info + num_args    */
-	zend_execute_data   *prev_execute_data; //prev_execute_data;前一个栈针
+	zend_execute_data   *prev_execute_data; //prev_execute_data;前一个栈针 //函数调用时指向调用位置作用空间
 	zend_array          *symbol_table;   /*符号表*/
-#if ZEND_EX_USE_RUN_TIME_CACHE
+#if ZEND_EX_USE_RUN_TIME_CACHE  //是否使用缓存
 	void               **run_time_cache;   /* cache op_array->run_time_cache */
 #endif
 };

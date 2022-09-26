@@ -141,7 +141,7 @@ struct _zend_executor_globals {
 	zend_array **symtable_cache_limit;
 	zend_array **symtable_cache_ptr;
 
-	zend_array symbol_table;		/* main symbol table  PHP全局变量哈希*/
+	zend_array symbol_table;		/* main symbol table  PHP符号表*/
 
 	HashTable included_files;	/* files already included  已将include的脚本*/
 
@@ -168,12 +168,12 @@ struct _zend_executor_globals {
 
 	int ticks_count;
 
-	uint32_t persistent_constants_count;
-	uint32_t persistent_functions_count;
-	uint32_t persistent_classes_count;
+	uint32_t persistent_constants_count;  // 存在常量的个数
+	uint32_t persistent_functions_count;  // 函数的个数
+	uint32_t persistent_classes_count;     //类的个数
 
 	HashTable *in_autoload;      //在类加载中会用到
-	zend_function *autoload_func;   //自动加载回掉函数
+	zend_function *autoload_func;   //自动加载回调函数
 	zend_bool full_tables_cleanup;
 
 	/* for extended information support */
@@ -214,7 +214,7 @@ struct _zend_executor_globals {
 	const zend_op *opline_before_exception;
 	zend_op exception_op[3];
 
-	struct _zend_module_entry *current_module;
+	struct _zend_module_entry *current_module; //属于哪个扩展
 
 	zend_bool active;
 	zend_uchar flags;

@@ -170,7 +170,7 @@ struct _zend_class_entry {
 		} user;
 		struct {
 			const struct _zend_function_entry *builtin_functions; //绑定函数
-			struct _zend_module_entry *module; //模块
+			struct _zend_module_entry *module; //模块 也就是属于哪一个扩展  
 		} internal;
 	} info;   
 };

@@ -31,8 +31,8 @@ struct _zend_fcall_info;
 ZEND_API extern void (*zend_execute_ex)(zend_execute_data *execute_data);
 ZEND_API extern void (*zend_execute_internal)(zend_execute_data *execute_data, zval *return_value);
 
-void init_executor(void);
-void shutdown_executor(void);
+void init_executor(void);  // 执行初始化
+void shutdown_executor(void); // 关闭执行
 void shutdown_destructors(void);
 ZEND_API void zend_init_execute_data(zend_execute_data *execute_data, zend_op_array *op_array, zval *return_value);
 ZEND_API void zend_init_func_execute_data(zend_execute_data *execute_data, zend_op_array *op_array, zval *return_value);
@@ -55,7 +55,7 @@ extern ZEND_API const zend_internal_function zend_pass_function;
 ZEND_API void ZEND_FASTCALL zend_check_internal_arg_type(zend_function *zf, uint32_t arg_num, zval *arg);
 ZEND_API int  ZEND_FASTCALL zend_check_arg_type(zend_function *zf, uint32_t arg_num, zval *arg, zval *default_value, void **cache_slot);
 ZEND_API ZEND_COLD void ZEND_FASTCALL zend_missing_arg_error(zend_execute_data *execute_data);
-
+// 变量赋值
 static zend_always_inline zval* zend_assign_to_variable(zval *variable_ptr, zval *value, zend_uchar value_type)
 {
 	zend_refcounted *ref = NULL;
@@ -139,7 +139,7 @@ ZEND_API int zval_update_constant(zval *pp);
 ZEND_API int zval_update_constant_ex(zval *pp, zend_class_entry *scope);
 ZEND_API int zend_use_undefined_constant(zend_string *name, zend_ast_attr attr, zval *result);
 
-/* dedicated Zend executor functions - do not use! */
+/* dedicated Zend executor functions - do not use! */ // 栈的结构体
 struct _zend_vm_stack {
 	zval *top;              //栈顶位置
 	zval *end;              //栈底位置
@@ -171,20 +171,20 @@ ZEND_API void zend_vm_stack_init(void);
 ZEND_API void zend_vm_stack_init_ex(size_t page_size);
 ZEND_API void zend_vm_stack_destroy(void);
 ZEND_API void* zend_vm_stack_extend(size_t size);
-//初始化vm的栈帧
+//初始化vm的栈帧 也就是PHP栈的初始化
 static zend_always_inline void zend_vm_init_call_frame(zend_execute_data *call, uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
 	call->func = func;
-	if (object) {
-		Z_OBJ(call->This) = object;
+	if (object) {  // 类的方法
+		Z_OBJ(call->This) = object;  // 代表属于哪个类
 		ZEND_SET_CALL_INFO(call, 1, call_info);
-	} else {
+	} else {  // 函数
 		Z_CE(call->This) = called_scope;
-		ZEND_SET_CALL_INFO(call, 0, call_info);
+		ZEND_SET_CALL_INFO(call, 0, call_info);  // 类型的设置
 	}
-	ZEND_CALL_NUM_ARGS(call) = num_args;
+	ZEND_CALL_NUM_ARGS(call) = num_args; // 参数
 }
-//相应的数据入栈
+//相应的数据入栈 也就是给当前栈分配足够的 内存空间
 static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame_ex(uint32_t used_stack, uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
 {
 	zend_execute_data *call = (zend_execute_data*)EG(vm_stack_top);//返回的是栈的首地址
@@ -240,12 +240,12 @@ static zend_always_inline void zend_vm_stack_free_extra_args_ex(uint32_t call_in
 		} while (--count);
  	}
 }
-
+//释放栈的额外参数
 static zend_always_inline void zend_vm_stack_free_extra_args(zend_execute_data *call)
 {
 	zend_vm_stack_free_extra_args_ex(ZEND_CALL_INFO(call), call);
 }
-//释放栈针的参数
+//释放栈针的参数 也就是函数的参数
 static zend_always_inline void zend_vm_stack_free_args(zend_execute_data *call)
 {
 	uint32_t num_args = ZEND_CALL_NUM_ARGS(call);
@@ -275,16 +275,18 @@ static zend_always_inline void zend_vm_stack_free_call_frame_ex(uint32_t call_in
 	ZEND_ASSERT_VM_STACK_GLOBAL;
 
 	if (UNEXPECTED(call_info & ZEND_CALL_ALLOCATED)) {
-		zend_vm_stack p = EG(vm_stack);
-		zend_vm_stack prev = p->prev;
+		zend_vm_stack p = EG(vm_stack); //获取当前正在运行的栈帧
+		zend_vm_stack prev = p->prev;  //上一个PHP栈
 
 		ZEND_ASSERT(call == (zend_execute_data*)ZEND_VM_STACK_ELEMENTS(EG(vm_stack)));
+		/*******切换到 上一个PHP栈 start*******/
 		EG(vm_stack_top) = prev->top;
 		EG(vm_stack_end) = prev->end;
-		EG(vm_stack) = prev;
-		efree(p);
+		EG(vm_stack) = prev; //当前运行的栈帧指向上一个PHP栈
+		/*******切换到 上一个PHP栈 end*******/
+		efree(p);//释放当前使用的PHP栈
 	} else {
-		EG(vm_stack_top) = (zval*)call;
+		EG(vm_stack_top) = (zval*)call; // 重新分配一个栈
 	}
 
 	ZEND_ASSERT_VM_STACK_GLOBAL;

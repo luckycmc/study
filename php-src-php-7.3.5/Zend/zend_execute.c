@@ -177,16 +177,16 @@ ZEND_API const zend_internal_function zend_pass_function = {
 static zend_always_inline zend_vm_stack zend_vm_stack_new_page(size_t size, zend_vm_stack prev) {
 	zend_vm_stack page = (zend_vm_stack)emalloc(size);
 
-	page->top = ZEND_VM_STACK_ELEMENTS(page);
-	page->end = (zval*)((char*)page + size);
-	page->prev = prev;
+	page->top = ZEND_VM_STACK_ELEMENTS(page);// 计算栈顶的位置
+	page->end = (zval*)((char*)page + size); // 栈底的位置
+	page->prev = prev; // 上一个栈帧
 	return page;
 }
 // vm栈初始化
 ZEND_API void zend_vm_stack_init(void)
 {
-	EG(vm_stack_page_size) = ZEND_VM_STACK_PAGE_SIZE;
-	EG(vm_stack) = zend_vm_stack_new_page(ZEND_VM_STACK_PAGE_SIZE, NULL);
+	EG(vm_stack_page_size) = ZEND_VM_STACK_PAGE_SIZE; // 栈的大小
+	EG(vm_stack) = zend_vm_stack_new_page(ZEND_VM_STACK_PAGE_SIZE, NULL); // 新的栈空间
 	EG(vm_stack)->top++;
 	EG(vm_stack_top) = EG(vm_stack)->top;
 	EG(vm_stack_end) = EG(vm_stack)->end;
@@ -201,18 +201,18 @@ ZEND_API void zend_vm_stack_init_ex(size_t page_size)
 	EG(vm_stack_top) = EG(vm_stack)->top;
 	EG(vm_stack_end) = EG(vm_stack)->end;
 }
-//销毁整个栈
+//销毁整个栈 
 ZEND_API void zend_vm_stack_destroy(void)
 {
 	zend_vm_stack stack = EG(vm_stack);
-
+    // 栈本就是个链表
 	while (stack != NULL) {
 		zend_vm_stack p = stack->prev;
 		efree(stack);
 		stack = p;
 	}
 }
-//执行栈扩容
+//执行栈扩容 PHP栈扩容
 ZEND_API void* zend_vm_stack_extend(size_t size)
 {
 	zend_vm_stack stack;
@@ -220,6 +220,7 @@ ZEND_API void* zend_vm_stack_extend(size_t size)
 
 	stack = EG(vm_stack);
 	stack->top = EG(vm_stack_top);
+	// 分配一个新的也大小
 	EG(vm_stack) = stack = zend_vm_stack_new_page(
 		EXPECTED(size < EG(vm_stack_page_size) - (ZEND_VM_STACK_HEADER_SLOTS * sizeof(zval))) ?
 			EG(vm_stack_page_size) : ZEND_VM_STACK_PAGE_ALIGNED_SIZE(size, EG(vm_stack_page_size)),
@@ -244,7 +245,7 @@ static zend_always_inline zval *_get_zval_ptr_tmp(uint32_t var, zend_free_op *sh
 
 	return ret;
 }
-
+// 获取到临时变量
 static zend_always_inline zval *_get_zval_ptr_var(uint32_t var, zend_free_op *should_free EXECUTE_DATA_DC)
 {
 	zval *ret = EX_VAR(var);
@@ -261,7 +262,7 @@ static zend_always_inline zval *_get_zval_ptr_var_deref(uint32_t var, zend_free_
 	ZVAL_DEREF(ret);
 	return ret;
 }
-
+// 没有定义的变量
 static zend_never_inline ZEND_COLD void zval_undefined_cv(uint32_t var EXECUTE_DATA_DC)
 {
 	if (EXPECTED(EG(exception) == NULL)) {
@@ -269,7 +270,7 @@ static zend_never_inline ZEND_COLD void zval_undefined_cv(uint32_t var EXECUTE_D
 		zend_error(E_NOTICE, "Undefined variable: %s", ZSTR_VAL(cv));
 	}
 }
-
+// 获取变量查询 
 static zend_never_inline ZEND_COLD zval *_get_zval_cv_lookup(zval *ptr, uint32_t var, int type EXECUTE_DATA_DC)
 {
 	switch (type) {

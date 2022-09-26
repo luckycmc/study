@@ -118,7 +118,7 @@ static int clean_non_persistent_class_full(zval *zv) /* {{{ */
 	return (ce->type == ZEND_INTERNAL_CLASS) ? ZEND_HASH_APPLY_KEEP : ZEND_HASH_APPLY_REMOVE;
 }
 /* }}} */
-
+// PHP执行初始化
 void init_executor(void) /* {{{ */
 {
 	zend_init_fpu();
@@ -827,7 +827,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 	return SUCCESS;
 }
 /* }}} */
-
+//获取对应的PHP 类
 ZEND_API zend_class_entry *zend_lookup_class_ex(zend_string *name, const zval *key, int use_autoload) /* {{{ */
 {
 	zend_class_entry *ce = NULL;
@@ -965,7 +965,7 @@ ZEND_API zend_class_entry *zend_get_called_scope(zend_execute_data *ex) /* {{{ *
 	return NULL;
 }
 /* }}} */
-
+// 获取当前对象
 ZEND_API zend_object *zend_get_this_object(zend_execute_data *ex) /* {{{ */
 {
 	while (ex) {

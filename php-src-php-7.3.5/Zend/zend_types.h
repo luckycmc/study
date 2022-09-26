@@ -163,13 +163,13 @@ typedef union _zend_value {
 	zend_long         lval;				/* long value */
 	double            dval;				/* double value */
 	zend_refcounted  *counted;
-	zend_string      *str;
-	zend_array       *arr;
-	zend_object      *obj;
+	zend_string      *str;          // 字符串
+	zend_array       *arr;         // 数组
+	zend_object      *obj;         //对象
 	zend_resource    *res;         //资源类型
-	zend_reference   *ref;
-	zend_ast_ref     *ast;
-	zval             *zv;
+	zend_reference   *ref;         //引用类型   
+	zend_ast_ref     *ast;        // gc 垃圾回收
+	zval             *zv;         // zal
 	void             *ptr;        // 可以指向任意类型
 	zend_class_entry *ce;          // 类
 	zend_function    *func;        // 方法
@@ -216,7 +216,7 @@ struct _zval_struct {
 typedef struct _zend_refcounted_h {
 	uint32_t         refcount;			/* reference counter 32-bit */
 	union {
-		uint32_t type_info;
+		uint32_t type_info;  // 信息
 	} u;
 } zend_refcounted_h;
 
@@ -362,10 +362,10 @@ typedef struct _HashTableIterator {
 } HashTableIterator;
 //对象 类中会用的
 struct _zend_object {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc;    //使用的次数
 	uint32_t          handle; // TODO: may be removed ???
-	zend_class_entry *ce;
-	const zend_object_handlers *handlers;
+	zend_class_entry *ce;   // 当前对象属于哪个类
+	const zend_object_handlers *handlers;  // 对象对应的操作
 	HashTable        *properties;
 	zval              properties_table[1];
 };
