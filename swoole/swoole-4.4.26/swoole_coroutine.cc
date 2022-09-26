@@ -451,7 +451,7 @@ void PHPCoroutine::interrupt_thread_loop()
     }
     pthread_exit(0);
 }
-
+//初始化PHP 栈
 inline void PHPCoroutine::vm_stack_init(void)
 {
     uint32_t size = SW_DEFAULT_PHP_STACK_PAGE_SIZE;
@@ -483,6 +483,7 @@ inline void PHPCoroutine::vm_stack_destroy(void)
 }
 
 /**
+  //保存PHP栈
  * The meaning of the task argument in coro switch functions
  *
  * create: origin_task
@@ -521,7 +522,7 @@ inline void PHPCoroutine::save_vm_stack(php_coro_task *task)
         EG(error_reporting) = task->ori_error_reporting;
     }
 }
-
+// 恢复PHP 栈
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
 #ifdef SW_CORO_SWAP_BAILOUT
@@ -638,7 +639,7 @@ void PHPCoroutine::on_close(void *arg)
         cid, origin_cid, (uintmax_t) Coroutine::count() - 1, (uintmax_t) zend_memory_usage(0), (uintmax_t) zend_memory_usage(1)
     );
 }
-
+//用户空间函数执行
 void PHPCoroutine::main_func(void *arg)
 {
 #ifdef SW_CORO_SUPPORT_BAILOUT
@@ -808,7 +809,7 @@ void PHPCoroutine::main_func(void *arg)
     } zend_end_try();
 #endif
 }
-
+// 创建协成执行用户空间函数
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache, uint32_t argc, zval *argv)
 {
     if (sw_unlikely(Coroutine::count() >= config.max_num))
