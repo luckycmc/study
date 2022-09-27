@@ -865,7 +865,7 @@ static ZEND_COLD void zend_parse_parameters_debug_error(const char *msg) {
 		class_name, class_name[0] ? "::" : "",
 		ZSTR_VAL(active_function->common.function_name), msg);
 }
-
+//参数解析
 static int zend_parse_va_args(int num_args, const char *type_spec, va_list *va, int flags) /* {{{ */
 {
 	const  char *spec_walk;
@@ -952,7 +952,7 @@ static int zend_parse_va_args(int num_args, const char *type_spec, va_list *va, 
 		}
 		return FAILURE;
 	}
-
+    //查找参数的个数
 	arg_count = ZEND_CALL_NUM_ARGS(EG(current_execute_data));
 
 	if (num_args > arg_count) {
@@ -986,7 +986,7 @@ static int zend_parse_va_args(int num_args, const char *type_spec, va_list *va, 
 				*n_varargs = 0;
 			}
 		}
-
+        //获取第i个参数的zval地址：arg就是在zend_execute_data上分配的局部变量
 		arg = ZEND_CALL_ARG(EG(current_execute_data), i + 1);
 
 		if (zend_parse_arg(i+1, arg, va, &type_spec, flags) == FAILURE) {
