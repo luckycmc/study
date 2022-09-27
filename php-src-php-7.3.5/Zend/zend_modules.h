@@ -77,12 +77,14 @@ struct _zend_module_entry {
 	const struct _zend_module_dep *deps;
 	const char *name;  // 扩展的名称
 	const struct _zend_function_entry *functions;  // 注册的模块函数
+	/**********当前模块的回调函数 start**********/
 	int (*module_startup_func)(INIT_FUNC_ARGS);
 	int (*module_shutdown_func)(SHUTDOWN_FUNC_ARGS);
 	int (*request_startup_func)(INIT_FUNC_ARGS);
 	int (*request_shutdown_func)(SHUTDOWN_FUNC_ARGS);
 	void (*info_func)(ZEND_MODULE_INFO_FUNC_ARGS);
-	const char *version;
+	/**********当前模块的回调函数 end**********/
+	const char *version; //版本信息
 	size_t globals_size;
 #ifdef ZTS
 	ts_rsrc_id* globals_id_ptr;
