@@ -269,7 +269,7 @@ static zend_always_inline void zend_string_efree(zend_string *s)
 	ZEND_ASSERT(!(GC_FLAGS(s) & IS_STR_PERSISTENT));
 	efree(s);
 }
-
+// 释放string 字符串
 static zend_always_inline void zend_string_release(zend_string *s)
 {
 	if (!ZSTR_IS_INTERNED(s)) {

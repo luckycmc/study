@@ -1015,7 +1015,7 @@ ZEND_API int zend_parse_parameters_ex(int flags, int num_args, const char *type_
 	return retval;
 }
 /* }}} */
-
+// 解析参数的个数和 类型 后面的是返回值
 ZEND_API int zend_parse_parameters(int num_args, const char *type_spec, ...) /* {{{ */
 {
 	va_list va;

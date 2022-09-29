@@ -2468,7 +2468,7 @@ static zend_always_inline void zend_init_cvs(uint32_t first, uint32_t last EXECU
 		} while (--count);
 	}
 }
-//函数执行数据
+//函数数据之前前的初始化
 static zend_always_inline void i_init_func_execute_data(zend_op_array *op_array, zval *return_value, zend_bool may_be_trampoline EXECUTE_DATA_DC) /* {{{ */
 {
 	uint32_t first_extra_arg, num_args;

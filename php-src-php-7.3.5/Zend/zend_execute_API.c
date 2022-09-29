@@ -585,20 +585,20 @@ ZEND_API int zval_update_constant(zval *pp) /* {{{ */
 // 函数执行初始化
 int _call_user_function_ex(zval *object, zval *function_name, zval *retval_ptr, uint32_t param_count, zval params[], int no_separation) /* {{{ */
 {
-	zend_fcall_info fci;
+	zend_fcall_info fci;  // 函数信息初始化
 
 	fci.size = sizeof(fci);
-	fci.object = object ? Z_OBJ_P(object) : NULL;
-	ZVAL_COPY_VALUE(&fci.function_name, function_name);
-	fci.retval = retval_ptr;
-	fci.param_count = param_count;
-	fci.params = params;
-	fci.no_separation = (zend_bool) no_separation;
+	fci.object = object ? Z_OBJ_P(object) : NULL; // 是是对象
+	ZVAL_COPY_VALUE(&fci.function_name, function_name);  // 函数名称
+	fci.retval = retval_ptr;    //返回值
+	fci.param_count = param_count;  // 参数个数
+	fci.params = params;   // 参数
+	fci.no_separation = (zend_bool) no_separation; //引用
 
 	return zend_call_function(&fci, NULL);
 }
 /* }}} */
-//函数的执行
+//函数的执行 也就是函数的最终执行
 int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /* {{{ */
 {
 	uint32_t i;
@@ -619,7 +619,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 	ZEND_ASSERT(fci->size == sizeof(zend_fcall_info));
 
 	/* Initialize execute_data */
-	if (!EG(current_execute_data)) {
+	if (!EG(current_execute_data)) {   //初始化 execute_data
 		/* This only happens when we're called outside any execute()'s
 		 * It shouldn't be strictly necessary to NULL execute_data out,
 		 * but it may make bugs easier to spot
@@ -679,7 +679,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 	func = fci_cache->function_handler;
 	fci->object = (func->common.fn_flags & ZEND_ACC_STATIC) ?
 		NULL : fci_cache->object;
-
+    // 函数入栈
 	call = zend_vm_stack_push_call_frame(ZEND_CALL_TOP_FUNCTION | ZEND_CALL_DYNAMIC,
 		func, fci->param_count, fci_cache->called_scope, fci->object);
 
@@ -696,7 +696,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 			return FAILURE;
 		}
 	}
-
+    //函数参数的处理
 	for (i=0; i<fci->param_count; i++) {
 		zval *param;
 		zval *arg = &fci->params[i];
@@ -732,11 +732,11 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 				arg = Z_REFVAL_P(arg);
 			}
 		}
-
+          //为参数添加引用
 		param = ZEND_CALL_ARG(call, i+1);
 		ZVAL_COPY(param, arg);
 	}
-
+    // 闭包函数处理
 	if (UNEXPECTED(func->op_array.fn_flags & ZEND_ACC_CLOSURE)) {
 		uint32_t call_info;
 
@@ -751,7 +751,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 	if (func->type == ZEND_USER_FUNCTION) {
 		int call_via_handler = (func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) != 0;
 		const zend_op *current_opline_before_exception = EG(opline_before_exception);
-
+        // 用户函数是一个execute_data
 		zend_init_func_execute_data(call, &func->op_array, fci->retval);
 		zend_execute_ex(call);
 		EG(opline_before_exception) = current_opline_before_exception;
@@ -783,13 +783,14 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 			/* We must re-initialize function again */
 			fci_cache->function_handler = NULL;
 		}
-	} else { /* ZEND_OVERLOADED_FUNCTION */
+	} else { /* ZEND_OVERLOADED_FUNCTION */  //类的成员方法
 		ZVAL_NULL(fci->retval);
 
 		/* Not sure what should be done here if it's a static method */
 		if (fci->object) {
 			call->prev_execute_data = EG(current_execute_data);
 			EG(current_execute_data) = call;
+			// 回调函数调用对应的方法
 			fci->object->handlers->call_method(func->common.function_name, fci->object, call, fci->retval);
 			EG(current_execute_data) = call->prev_execute_data;
 		} else {

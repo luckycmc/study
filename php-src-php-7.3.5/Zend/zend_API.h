@@ -42,7 +42,7 @@ typedef struct _zend_function_entry {
 } zend_function_entry;
 /**
  * 
- *函数结构体 主要是函数的参数
+ *函数结构体 主要是函数的参数 函数的相关信息
  */
 typedef struct _zend_fcall_info {
 	size_t size;            // size是结构体zend_fcall_info的大小，通过sizeof(fci)计算得到。
