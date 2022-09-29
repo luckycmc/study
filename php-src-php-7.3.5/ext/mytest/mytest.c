@@ -50,7 +50,7 @@ PHP_FUNCTION(zpw_handle)
 	//调用函数 call
 	if (SUCCESS != call_user_function(EG(function_table),NULL,&call_func_name, &call_user_ret, call_func_param_cnt, call_func_params))
 	{
-		 zend_string_release(call_func_str);
+		 zend_string_release(call_func_str); //释放字符串
          RETURN_FALSE;
 	}
 	zend_string_release(call_func_str); //释放字符串

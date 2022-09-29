@@ -16,6 +16,8 @@
         "asm_context.h": "c",
         "study.h": "c",
         "zend_vm.h": "c",
-        "zend_compile.h": "c"
+        "zend_compile.h": "c",
+        "php_mytest.h": "c",
+        "info.h": "c"
     }
 }

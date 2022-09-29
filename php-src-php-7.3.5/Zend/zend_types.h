@@ -228,11 +228,11 @@ struct _zend_string {
 	zend_refcounted_h gc;
 	zend_ulong        h;                /* hash value */
 	size_t            len;
-	char              val[1];
+	char              val[1]; // 也就是个指针
 };
 //数组的基本结构key =>value 和当前元素的索引值 也就是h
 typedef struct _Bucket {
-	zval              val;   //存储的具体value，这里嵌入了一个zval，而不是一个指针
+	zval              val;   //存储的具体value，这里嵌入了一个zval，而不是一个指针 因此可以是任何数据
 	zend_ulong        h;      /* hash value (or numeric index)   */ //key根据times 33计算得到的哈希值，或者是数值索引编号
 	zend_string      *key;    /* string key or NULL for numerics */ //存储元素的key
 } Bucket;
@@ -253,7 +253,7 @@ struct _zend_array {
 				zend_uchar    _unused2)
 		} v;
 		uint32_t flags;
-	} u;
+	} u;  //额外的信息 都占用4 个字节
 	uint32_t          nTableMask; //哈希值计算掩码，等于nTableSize的负值(nTableMask = -nTableSize) 最小为8
 	Bucket           *arData;    // //存储元素数组，指向第一个Bucket
 	uint32_t          nNumUsed;      //已用Bucket数
@@ -371,10 +371,10 @@ struct _zend_object {
 };
 //资源类型
 struct _zend_resource {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc;   //引用数
 	int               handle; // TODO: may be removed ???
-	int               type;
-	void             *ptr;
+	int               type;   // 类型
+	void             *ptr;   //空指针可以指向任何数据类型
 };
 // 引用
 struct _zend_reference {
@@ -643,7 +643,7 @@ static zend_always_inline uint32_t zval_gc_info(uint32_t gc_type_info) {
 
 #define Z_ISERROR(zval)				(Z_TYPE(zval) == _IS_ERROR)
 #define Z_ISERROR_P(zval_p)			Z_ISERROR(*(zval_p))
-//获取到zvl的值
+//获取到zvl的值 必须是整形
 #define Z_LVAL(zval)				(zval).value.lval
 #define Z_LVAL_P(zval_p)			Z_LVAL(*(zval_p))
 

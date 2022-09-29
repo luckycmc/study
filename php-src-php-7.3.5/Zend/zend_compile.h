@@ -464,7 +464,7 @@ typedef struct _zend_internal_function {
 } zend_internal_function;
 
 #define ZEND_FN_SCOPE_NAME(function)  ((function) && (function)->common.scope ? ZSTR_VAL((function)->common.scope->name) : "")
-//用户自定义的函数
+//函数
 union _zend_function {
 	zend_uchar type;	/* MUST be the first element of this struct! */
 	uint32_t   quick_arg_flags;
