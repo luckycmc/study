@@ -2580,9 +2580,9 @@ static zend_always_inline void i_init_code_execute_data(zend_execute_data *execu
 {
 	ZEND_ASSERT(EX(func) == (zend_function*)op_array);
 
-	EX(opline) = op_array->opcodes;  //把指令集复制给 opline
-	EX(call) = NULL;
-	EX(return_value) = return_value;
+	EX(opline) = op_array->opcodes;  //把当前的指令指向 opcodes 的初始值也就是 opcode数组中的第一个元素
+	EX(call) = NULL;   // 当前执行的栈
+	EX(return_value) = return_value;  //函数返回值
 
 	zend_attach_symbol_table(execute_data); // //将全局变量添加到EG(symbol_table)中一份，因为此处的execute_data是PHP脚本最初的那个，不是function的，所以所有的变量都是全局的
 

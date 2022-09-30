@@ -554,7 +554,7 @@ struct _zend_execute_data {
 #define ZEND_DEL_CALL_FLAG(call, flag) do { \
 		ZEND_DEL_CALL_FLAG_EX(Z_TYPE_INFO((call)->This), flag); \
 	} while (0)
-
+// 获取函数参数的个数
 #define ZEND_CALL_NUM_ARGS(call) \
 	(call)->This.u2.num_args
 

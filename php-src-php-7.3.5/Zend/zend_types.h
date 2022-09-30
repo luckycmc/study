@@ -720,7 +720,7 @@ static zend_always_inline uint32_t zval_gc_info(uint32_t gc_type_info) {
 
 #define Z_CE(zval)					(zval).value.ce
 #define Z_CE_P(zval_p)				Z_CE(*(zval_p))
-
+// 查找函数的信息
 #define Z_FUNC(zval)				(zval).value.func
 #define Z_FUNC_P(zval_p)			Z_FUNC(*(zval_p))
 

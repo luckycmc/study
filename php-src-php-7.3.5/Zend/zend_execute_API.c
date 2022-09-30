@@ -1487,7 +1487,7 @@ ZEND_API zend_array *zend_rebuild_symbol_table(void) /* {{{ */
 	return symbol_table;
 }
 /* }}} */
-
+//把当前栈中的变量 设置到符号表中
 ZEND_API void zend_attach_symbol_table(zend_execute_data *execute_data) /* {{{ */
 {
 	zend_op_array *op_array = &execute_data->func->op_array;
@@ -1501,9 +1501,9 @@ ZEND_API void zend_attach_symbol_table(zend_execute_data *execute_data) /* {{{ *
 		zval *var = EX_VAR_NUM(0);
 
 		do {
-			zval *zv = zend_hash_find_ex(ht, *str, 1);
+			zval *zv = zend_hash_find_ex(ht, *str, 1); // 查找当前的 变量
 
-			if (zv) {
+			if (zv) { // 存在则更新 不存在则 添加
 				if (Z_TYPE_P(zv) == IS_INDIRECT) {
 					zval *val = Z_INDIRECT_P(zv);
 
