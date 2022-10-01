@@ -40977,10 +40977,12 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_ASSIGN_SPEC_CV_CONST_RETVAL_UN
 	zval *value;
 	zval *variable_ptr;
 
-	SAVE_OPLINE();
+	SAVE_OPLINE();         //EX_VAR --> ZEND_CALL_VAR  -->#define ZEND_CALL_VAR(call, n) \
+	                     ((zval*)(((char*)(call)) + ((int)(n))))
 	//从literals数组中获取op2对应的值，也就是值2  //从literals数组中获取op2对应的值，也就是值2
-	value = RT_CONSTANT(opline, opline->op2);  //获 value 在虚拟机上的地址 计算数据值相应的步长
-	variable_ptr = EX_VAR(opline->op1.var); // 对应的变量就是 $a 中的a 获取a 在栈中的地址
+	value = RT_CONSTANT(opline, opline->op2);  //常量数据获取对应的数据 也就是常量区的步
+	variable_ptr = EX_VAR(opline->op1.var); // 对应的变量就是 $a 中的a 获取a 在栈中的地址 
+	                                        // opline->op1.var 就是偏移量基于偏移量可以获取到对应的zval
 
 	if (IS_CV == IS_VAR && UNEXPECTED(Z_ISERROR_P(variable_ptr))) {
 

@@ -2575,7 +2575,7 @@ ZEND_API zend_function * ZEND_FASTCALL zend_fetch_function_str(const char *name,
 	}
 	return NULL;
 } /* }}} */
-//初始化 execute的数据信息
+//初始化 execute的数据信息 设置好指令集 返回值 和当前的执行数据
 static zend_always_inline void i_init_code_execute_data(zend_execute_data *execute_data, zend_op_array *op_array, zval *return_value) /* {{{ */
 {
 	ZEND_ASSERT(EX(func) == (zend_function*)op_array);
