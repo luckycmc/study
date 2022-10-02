@@ -560,7 +560,7 @@ struct _zend_execute_data {
 
 #define ZEND_CALL_FRAME_SLOT \
 	((int)((ZEND_MM_ALIGNED_SIZE(sizeof(zend_execute_data)) + ZEND_MM_ALIGNED_SIZE(sizeof(zval)) - 1) / ZEND_MM_ALIGNED_SIZE(sizeof(zval))))
-
+//获取执行数据上的变量
 #define ZEND_CALL_VAR(call, n) \
 	((zval*)(((char*)(call)) + ((int)(n))))
 //获取变量和execute_data的部长 转换成zval 地址
@@ -569,7 +569,7 @@ struct _zend_execute_data {
 
 #define ZEND_CALL_ARG(call, n) \
 	ZEND_CALL_VAR_NUM(call, ((int)(n)) - 1)
-
+//获取 execute_data中的数据
 #define EX(element) 			((execute_data)->element)
 
 #define EX_CALL_INFO()			ZEND_CALL_INFO(execute_data)
@@ -589,8 +589,9 @@ struct _zend_execute_data {
 
 #define ZEND_RET_USES_STRICT_TYPES() \
 	ZEND_CALL_USES_STRICT_TYPES(EG(current_execute_data))
-
+//获取 execute上的数据信息
 #define EX_VAR(n)				ZEND_CALL_VAR(execute_data, n)
+//获取执行栈变量的个数
 #define EX_VAR_NUM(n)			ZEND_CALL_VAR_NUM(execute_data, n)
 
 #define EX_VAR_TO_NUM(n)		((uint32_t)(ZEND_CALL_VAR(NULL, n) - ZEND_CALL_VAR_NUM(NULL, 0)))
