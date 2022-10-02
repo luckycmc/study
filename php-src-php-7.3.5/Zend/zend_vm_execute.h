@@ -65204,9 +65204,10 @@ static const void *zend_vm_get_opcode_handler_func(zend_uchar opcode, const zend
 #endif
 //设置opcode的handle	
 ZEND_API void ZEND_FASTCALL zend_vm_set_opcode_handler(zend_op* op)
-{
+{   
+	//从数组获取对应的handler
 	zend_uchar opcode = zend_user_opcodes[op->opcode];
-
+   
 	if (zend_spec_handlers[op->opcode] & SPEC_RULE_COMMUTATIVE) {
 		if (op->op1_type < op->op2_type) {
 			zend_swap_operands(op);
