@@ -445,7 +445,7 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		i++;
 	}
 	 //这是一个新变量  添加进去  若不存在，则写入vars中，返回新插入的位置
-	i = op_array->last_var;
+	i = op_array->last_var;  //当前变量在op_array中的索引位置 ，以便后续虚拟机执行
 	op_array->last_var++;
 	if (op_array->last_var > CG(context).vars_size) {
 		CG(context).vars_size += 16; /* FIXME */
@@ -1935,18 +1935,20 @@ static void zend_adjust_for_fetch_type(zend_op *opline, znode *result, uint32_t 
 	}
 }
 /* }}} */
-
+//设置变量的结果
 static inline void zend_make_var_result(znode *result, zend_op *opline) /* {{{ */
 {
 	opline->result_type = IS_VAR; //返回值的类型设置为IS_VAR
-	opline->result.var = get_temporary_variable(CG(active_op_array));//这个是返回值的编号，对应T位置
-	GET_NODE(result, opline->result);
+	//这个是返回值的编号，对应T位置 相对于当前执行栈的位置 例如 1 * （zval）,2*(zval)等
+	opline->result.var = get_temporary_variable(CG(active_op_array));
+	GET_NODE(result, opline->result); //宏定义设置
 }
 /* }}} */
 // 临时变量的 result
 static inline void zend_make_tmp_result(znode *result, zend_op *opline) /* {{{ */
 {
-	opline->result_type = IS_TMP_VAR;
+	opline->result_type = IS_TMP_VAR;  //op_type 的类型
+	//返回是临时变量的偏移量
 	opline->result.var = get_temporary_variable(CG(active_op_array));
 	GET_NODE(result, opline->result);
 }
@@ -2547,7 +2549,8 @@ static int zend_try_compile_cv(znode *result, zend_ast *ast) /* {{{ */
 		}
 
 		result->op_type = IS_CV; //类型是一个变量
-		result->u.op.var = lookup_cv(CG(active_op_array), name);
+		//查找对应的变量 var 的偏移量
+		result->u.op.var = lookup_cv(CG(active_op_array), name); 
 
 		if (UNEXPECTED(Z_TYPE_P(zv) != IS_STRING)) {
 			zend_string_release_ex(name, 0);
