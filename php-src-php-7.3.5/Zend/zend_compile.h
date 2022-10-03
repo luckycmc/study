@@ -427,7 +427,7 @@ struct _zend_op_array {
 	zend_live_range *live_range;
 	zend_try_catch_element *try_catch_array; // try_catch_array 异常抛出
 
-	zend_string *filename;
+	zend_string *filename; //文件名称
 	uint32_t line_start;
 	uint32_t line_end;
 	zend_string *doc_comment;
@@ -595,13 +595,13 @@ struct _zend_execute_data {
 #define EX_VAR_NUM(n)			ZEND_CALL_VAR_NUM(execute_data, n)
 
 #define EX_VAR_TO_NUM(n)		((uint32_t)(ZEND_CALL_VAR(NULL, n) - ZEND_CALL_VAR_NUM(NULL, 0)))
-
+// opline 跳转的偏移量
 #define ZEND_OPLINE_TO_OFFSET(opline, target) \
 	((char*)(target) - (char*)(opline))
 
 #define ZEND_OPLINE_NUM_TO_OFFSET(op_array, opline, opline_num) \
 	((char*)&(op_array)->opcodes[opline_num] - (char*)(opline))
-
+// opline 跳转的偏移量
 #define ZEND_OFFSET_TO_OPLINE(base, offset) \
 	((zend_op*)(((char*)(base)) + (int)offset))
 

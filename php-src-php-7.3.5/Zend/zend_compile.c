@@ -2235,7 +2235,10 @@ static inline uint32_t zend_emit_cond_jump(zend_uchar opcode, znode *cond, uint3
 	return opnum;
 }
 /* }}} */
-
+/**
+ 对应当前opcode 中的opline  
+ opnum_target是跳转几个opcode 执行也就是需要执行的下一个opcode
+*/
 static inline void zend_update_jump_target(uint32_t opnum_jump, uint32_t opnum_target) /* {{{ */
 {
 	zend_op *opline = &CG(active_op_array)->opcodes[opnum_jump];
@@ -2254,7 +2257,7 @@ static inline void zend_update_jump_target(uint32_t opnum_jump, uint32_t opnum_t
 	}
 }
 /* }}} */
-
+//更新跳转的下一个目标
 static inline void zend_update_jump_target_to_next(uint32_t opnum_jump) /* {{{ */
 {
 	zend_update_jump_target(opnum_jump, get_next_op_number(CG(active_op_array)));
@@ -4900,17 +4903,19 @@ void zend_compile_if(zend_ast *ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
 	uint32_t i;
-	uint32_t *jmp_opnums = NULL;
+	uint32_t *jmp_opnums = NULL; //暂时是设置为0 因为还不知道要跳转多少个opcode
     //用来保存每个分支在步骤(4)中的ZEND_JMP opcode
 	if (list->children > 1) {
 		jmp_opnums = safe_emalloc(sizeof(uint32_t), list->children - 1, 0);
 	}
      //依次编译各个分支
 	for (i = 0; i < list->children; ++i) {
+		//条件的子节点
 		zend_ast *elem_ast = list->child[i];
+        /***对应的条件和声明 start***/
 		zend_ast *cond_ast = elem_ast->child[0]; // 条件
 		zend_ast *stmt_ast = elem_ast->child[1]; //声明
-
+         /***对应的条件和声明 end***/
 		znode cond_node;
 		uint32_t opnum_jmpz;
 		if (cond_ast) {
@@ -7145,12 +7150,12 @@ void zend_compile_binary_op(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast *left_ast = ast->child[0];
 	zend_ast *right_ast = ast->child[1];
-	uint32_t opcode = ast->attr;  //通过attr区分加减乘除等等操作
+	uint32_t opcode = ast->attr;  //通过attr区分加减乘除,比较 等等操作 
 
 	znode left_node, right_node;
 	zend_compile_expr(&left_node, left_ast);
 	zend_compile_expr(&right_node, right_ast);
-
+    //比较是否相等 
 	if (left_node.op_type == IS_CONST && right_node.op_type == IS_CONST) {
 		if (zend_try_ct_eval_binary_op(&result->u.constant, opcode,
 				&left_node.u.constant, &right_node.u.constant)
@@ -8392,7 +8397,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 		case ZEND_AST_ASSIGN_OP:
 			zend_compile_compound_assign(result, ast);
 			return;
-		case ZEND_AST_BINARY_OP:  //运算操作
+		case ZEND_AST_BINARY_OP:  //运算操作 比较表达式
 			zend_compile_binary_op(result, ast);
 			return;
 		case ZEND_AST_GREATER:
