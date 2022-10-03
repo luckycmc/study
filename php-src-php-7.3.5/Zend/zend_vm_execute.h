@@ -618,7 +618,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_leave_helper_SPEC(ZEND_OPCODE_
 		}
 	}
 }
-
+// 跳转
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_JMP_SPEC_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -38615,7 +38615,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_IS_NOT_IDENTICAL_SPEC_CV_CONST
 	ZVAL_BOOL(EX_VAR(opline->result.var), result);
 	ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 }
-
+// if 值得比较
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_IS_EQUAL_SPEC_CV_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -38626,7 +38626,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_IS_EQUAL_SPEC_CV_CONST_HANDLER
 	op2 = RT_CONSTANT(opline, opline->op2);
 	do {
 		int result;
-
+        //长整形比较
 		if (EXPECTED(Z_TYPE_P(op1) == IS_LONG)) {
 			if (EXPECTED(Z_TYPE_P(op2) == IS_LONG)) {
 				result = (Z_LVAL_P(op1) == Z_LVAL_P(op2));
@@ -38634,7 +38634,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_IS_EQUAL_SPEC_CV_CONST_HANDLER
 				result = ((double)Z_LVAL_P(op1) == Z_DVAL_P(op2));
 			} else {
 				break;
-			}
+			} // 浮点型 dobule比较
 		} else if (EXPECTED(Z_TYPE_P(op1) == IS_DOUBLE)) {
 			if (EXPECTED(Z_TYPE_P(op2) == IS_DOUBLE)) {
 				result = (Z_DVAL_P(op1) == Z_DVAL_P(op2));
@@ -38642,7 +38642,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_IS_EQUAL_SPEC_CV_CONST_HANDLER
 				result = (Z_DVAL_P(op1) == ((double)Z_LVAL_P(op2)));
 			} else {
 				break;
-			}
+			}// 字符串比较
 		} else if (EXPECTED(Z_TYPE_P(op1) == IS_STRING)) {
 			if (EXPECTED(Z_TYPE_P(op2) == IS_STRING)) {
 				result = zend_fast_equal_strings(Z_STR_P(op1), Z_STR_P(op2));

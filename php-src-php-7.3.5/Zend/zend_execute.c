@@ -3425,10 +3425,10 @@ static zend_never_inline int ZEND_FASTCALL zend_quick_check_constant(
 #define ZEND_VM_SET_NEXT_OPCODE(new_op) \
 	CHECK_SYMBOL_TABLES() \
 	OPLINE = new_op
-
+//设置新的opcode
 #define ZEND_VM_SET_OPCODE(new_op) \
 	CHECK_SYMBOL_TABLES() \
-	OPLINE = new_op; \
+	OPLINE = new_op; \   //新的opline
 	ZEND_VM_INTERRUPT_CHECK()
 
 #define ZEND_VM_SET_RELATIVE_OPCODE(opline, offset) \
