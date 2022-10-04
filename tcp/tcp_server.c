@@ -25,7 +25,7 @@ int main() {
 
     int str_length;
 
-    server_socket = socket(PF_INET, SOCK_STREAM, 0);  //创建soceket 地址 Ipv4 服务器类型 tcp/http 协议
+    server_socket = socket(PF_INET, SOCK_STREAM, 0);  //创建soceket 地址 Ipv4 服务器类型 （SOCK_STREAM字节流）
     //置字节字符串s的前n个字节为零，无返回值
     bzero(&server_addr, sizeof(server_addr));  //置字节字符串s的前n个字节为零。
     /**********************绑定server 的状态 start************************/
@@ -51,7 +51,7 @@ int main() {
     printf("单进程 tcp 服务器创建成功\n"); //提示服务器创建成功
 
     addr_size = sizeof(client_addr); 
-    //接受客户请求
+    //接受来自客户端的连接
     client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
     printf("client fd is %d connect success\n", client_socket);
@@ -72,10 +72,14 @@ int main() {
             printf("客户端关闭 fd 是:%d \n", client_socket);
             break;  //服务端 关闭一个 一个服务端只能接受一个客户端的连接 其他连接只能进行等待
             //continue;
-        } else {
+        } else if(str_length > 0) {
 
             printf("client send string is:%s\n",buffer); 
             write(client_socket, buffer, str_length);//数据发送给客户端数据
+        }else{
+             close(client_socket);  //关闭客户端
+            printf("read data is error\n");
+            break;
         }
 
     }
