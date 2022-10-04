@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -109,9 +108,10 @@ int main()
                     break;
                 }
             }
+            printf("current pid is %d\n",getpid());
             //退出子进程关闭cfd
             close(cfd);
-            exit(0);
+            exit(0); //当前进程退出后会有相应的信号buhip
         }else if(pid > 0){ //父进程空间
           
             //不参与客户端通讯 关闭cfd
@@ -124,7 +124,7 @@ int main()
     return 0;
 }
 
-//子进程与客户端通讯
+//子进程与客户端通讯 单独的进程通讯
 int childwork(int cfd)
 {
     //接受数据缓冲区
@@ -140,11 +140,14 @@ int childwork(int cfd)
     else if(len  == 0)
     {
         printf("客户端断开了连接...\n");
+        close(cfd);
        // exit(0); // 需要退出当前进程
        return -1;
     }else{
         perror("read cliennt data is error\n");
-        exit(0);// 需要退出当前进程
+        close(cfd);
+        //exit(0);// 需要退出当前进程
+         return -1;
     }
     return len;
 }
