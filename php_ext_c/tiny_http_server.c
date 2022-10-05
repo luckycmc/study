@@ -182,7 +182,13 @@ void accept_request(int cfd,char *buf)
           printf("http content is error\n");
           exit(0);
     }
-    printf("%s\n",linebuf);
+    //printf("%s\n",linebuf);
+    //判断是否会get 请求
+    if(strstr(linebuf,"GET")){
+         write(cfd,MESSAGE,sizeof(MESSAGE));
+    }else{
+
+    }
 }
 
 
