@@ -20,6 +20,12 @@ int childwork(int cfd);
 void accept_request(int cfd,char *buf);
 //解析 http 发送的数据 第一行
 int get_line(char *allbuf, int idx,char *linebuf);
+//404 请求
+void bad_request(int cfd);
+//打开资源文件 也就是对应的html文件
+void cat(int client, FILE *resource);
+//文件资源找不到
+void not_found(int cfd);
 //信号处理函数
 void callback(int num)
 {
@@ -185,7 +191,11 @@ void accept_request(int cfd,char *buf)
     //printf("%s\n",linebuf);
     //判断是否会get 请求
     if(strstr(linebuf,"GET")){
-         write(cfd,MESSAGE,sizeof(MESSAGE));
+        not_found(cfd);
+        // write(cfd,MESSAGE,sizeof(MESSAGE));
+         //处理get 请求 读取文件
+         // 文件不存在设置为404 
+         //cgi 请求等相关信息的设置
     }else{
 
     }
@@ -210,3 +220,61 @@ int get_line(char *allbuf, int idx,char *linebuf)
 }  
 
 /****************************** 获取第一行的http数据 end****************************************/  
+// 页面发生错误时的请求
+void bad_request(int cfd)  
+{  
+    char buf[1024];  
+  
+    /*回应客户端错误的 HTTP 请求 */  
+    sprintf(buf, "HTTP/1.0 400 BAD REQUEST\r\n");  
+    send(cfd, buf, sizeof(buf), 0);  
+    sprintf(buf, "Content-type: text/html\r\n");  
+    send(cfd, buf, sizeof(buf), 0);  
+    sprintf(buf, "\r\n");  
+    send(cfd, buf, sizeof(buf), 0);  
+    sprintf(buf, "<P>Your browser sent a bad request, ");  
+    send(cfd, buf, sizeof(buf), 0);  
+    sprintf(buf, "such as a POST without a Content-Length.\r\n");  
+    send(cfd, buf, sizeof(buf), 0);  
+}  
+// 404 页面
+void not_found(int cfd)  
+{  
+    char buf[1024];  
+  
+    /* 404 页面 */  
+    sprintf(buf, "HTTP/1.0 404 NOT FOUND\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    /*服务器信息*/  
+    sprintf(buf, SERVER_STRING);  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "Content-Type: text/html\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "<HTML><TITLE>Not Found</TITLE>\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "<BODY><P>The server could not fulfill\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "your request because the resource specified\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "is unavailable or nonexistent.\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+    sprintf(buf, "</BODY></HTML>\r\n");  
+    send(cfd, buf, strlen(buf), 0);  
+}  
+
+/*************************** 读取对应的文件 start *******************************************/  
+void cat(int cfd, FILE *resource)  
+{  
+    char buf[1024];  
+  
+    /*读取文件中的所有数据写到 socket */  
+    fgets(buf, sizeof(buf), resource);  
+    while (!feof(resource))  
+    {  
+        send(cfd, buf, strlen(buf), 0);
+    }  
+}  
+  
+/**********************************************************************/  
