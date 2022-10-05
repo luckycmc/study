@@ -26,6 +26,8 @@ void bad_request(int cfd);
 void cat(int client, FILE *resource);
 //文件资源找不到
 void not_found(int cfd);
+//打开对应的文件信息
+void serve_file(int client, const char *filename);
 //信号处理函数
 void callback(int num)
 {
@@ -191,11 +193,14 @@ void accept_request(int cfd,char *buf)
     //printf("%s\n",linebuf);
     //判断是否会get 请求
     if(strstr(linebuf,"GET")){
-        not_found(cfd);
-        // write(cfd,MESSAGE,sizeof(MESSAGE));
+         //not_found(cfd);
+         write(cfd,MESSAGE,sizeof(MESSAGE));
          //处理get 请求 读取文件
          // 文件不存在设置为404 
          //cgi 请求等相关信息的设置
+         //解析对应的html文件
+        // serve_file(cfd, './index.html');  
+
     }else{
 
     }
@@ -275,6 +280,57 @@ void cat(int cfd, FILE *resource)
     {  
         send(cfd, buf, strlen(buf), 0);
     }  
+}  
+  
+/**********************************************************************/  
+
+
+/**********************************************************************/  
+void serve_file(int client, const char *filename)  
+{  
+    FILE *resource = NULL;  
+    int numchars = 1;  
+    char buf[1024];  
+  
+    /*读取并丢弃 header */  
+    buf[0] = 'A'; buf[1] = '\0';  
+    while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */  
+        numchars = get_line(client, buf, sizeof(buf));  
+  
+    /*打开 sever 的文件*/  
+    resource = fopen(filename, "r");  
+    if (resource == NULL)  
+        not_found(client);  
+    else  
+    {  
+        /*写 HTTP header */  
+        headers(client, filename);  
+        /*复制文件*/  
+        cat(client, resource);  
+    }  
+    fclose(resource);  
+}  
+  
+/**********************************************************************/  
+
+
+/**********************************************************************/  
+//文件的头部
+void headers(int client, const char *filename)  
+{  
+    char buf[1024];  
+    (void)filename;  /* could use filename to determine file type */  
+  
+    /*正常的 HTTP header */  
+    strcpy(buf, "HTTP/1.0 200 OK\r\n");  
+    send(client, buf, strlen(buf), 0);  
+    /*服务器信息*/  
+    strcpy(buf, SERVER_STRING);  
+    send(client, buf, strlen(buf), 0);  
+    sprintf(buf, "Content-Type: text/html\r\n");  
+    send(client, buf, strlen(buf), 0);  
+    strcpy(buf, "\r\n");  
+    send(client, buf, strlen(buf), 0);  
 }  
   
 /**********************************************************************/  
