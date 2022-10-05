@@ -41,6 +41,7 @@ tswServer *tswServer_new(void)
 }
 
 /*
+  创建reactor线程
  * Create reactor threads
 */
 static int tswServer_start_proxy(tswServer *serv)
@@ -54,12 +55,12 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-
+    //主线程的创建
     if (tswReactor_create(main_reactor, MAXEVENTS) < 0) {
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-
+    // reactor 线程的创建
     if (tswReactorThread_create(serv) < 0) {
         tswWarn("%s", "tswReactorThread_create error");
         return TSW_ERR;
@@ -69,14 +70,15 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "tswReactorThread_start error");
         return TSW_ERR;
     }
-
+    //监听
     if (listen(serv->serv_sock, LISTENQ) < 0) {
         tswWarn("%s", strerror(errno));
     }
+    // 服务器启动回调函数
     if (serv->onStart != NULL) {
         serv->onStart(serv);
     }
-
+    //注册主线程reactor
     if (main_reactor->add(main_reactor, serv->serv_sock, TSW_EVENT_READ, tswServer_master_onAccept) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -108,23 +110,24 @@ static int tswServer_start_proxy(tswServer *serv)
 
     return TSW_OK;
 }
-
+//服务器启动
 int tswServer_start(tswServer *serv)
 {
     tswProcessPool *pool;
     tswPipe *pipe;
 
-    serv->onMasterStart();
+    serv->onMasterStart();//触发主线程回调函数
     pool = (tswProcessPool *)malloc(sizeof(tswProcessPool));
     if (pool == NULL) {
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
+    //进程初始化
     if (tswProcessPool_create(pool, serv->worker_num) < 0) {
         tswWarn("%s", "tswProcessPool_create error");
         return TSW_ERR;
     }
-
+    //创建管道
     for (int i = 0; i < serv->worker_num; i++) {
         tswPipeUnsock *object;
 
@@ -138,7 +141,7 @@ int tswServer_start(tswServer *serv)
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
     }
-
+    //创建工作进程
     for (int i = 0; i < serv->worker_num; i++) {
         if (tswServer_create_worker(serv, pool, i) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
@@ -158,6 +161,7 @@ int tswServer_start(tswServer *serv)
 }
 
 /*
+ //主线程接受客户端连接
  * reactor: Used to manage handle in tswEvent
 */
 int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
@@ -229,12 +233,12 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-
+//主线程启动
 void tswServer_master_onStart(void)
 {
     tswDebug("%s", "master thread started successfully");
 }
-
+// reactor 线程启动
 void tswServer_reactor_onStart(int reactor_id)
 {
     tswDebug("reactor thread [%d] started successfully", reactor_id);
