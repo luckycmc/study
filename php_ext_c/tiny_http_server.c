@@ -18,8 +18,8 @@
 int childwork(int cfd);
 //接受客户端请求的数据
 void accept_request(int cfd,char *buf);
-//解析 http 发送的数据
-int get_line(int sock, char *buf, int size)  
+//解析 http 发送的数据 第一行
+int get_line(char *allbuf, int idx,char *linebuf);
 //信号处理函数
 void callback(int num)
 {
@@ -163,7 +163,7 @@ int childwork(int cfd)
 void accept_request(int cfd,char *buf)
 {
      //接受数据缓冲区
-    //char buf[1024];
+     char linebuf[1024]={0};
    // memset(buf, 0, sizeof(buf));
     //获取http中的GET  请求
      //读取客户端的数据
@@ -176,12 +176,31 @@ void accept_request(int cfd,char *buf)
         //Accept: *//*
 
     **/
-    printf(buf);
+    int idx = get_line(buf,0,linebuf);
+    if(idx == -1){
+         
+          printf("http content is error\n");
+          exit(0);
+    }
+    printf("%s\n",linebuf);
 }
 
 
-/**********************************************************************/  
-int get_line(int sock, char *buf, int size)  
+/****************************** 获取第一行的http数据 start****************************************/  
+int get_line(char *allbuf, int idx,char *linebuf)  
 {  
-    
+     int len = strlen(allbuf);
+     for(; idx<len; idx++)
+     {
+           //遇到第一个\r\n 返回数据
+           if(allbuf[idx]=='\r'&&allbuf[idx+1]=='\n' ){
+                return idx+2;
+           }else{
+               *(linebuf++) = allbuf[idx];
+           }
+
+     }
+     return -1;
 }  
+
+/****************************** 获取第一行的http数据 end****************************************/  
