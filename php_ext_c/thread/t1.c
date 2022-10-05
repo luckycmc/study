@@ -108,7 +108,9 @@ int main()
             perror("accept");
             exit(0);
         }
+        //来一个连接我创建一个客户端 分配一个线程去处理
         pinfo->fd = connfd; //当前的fd
+        //线程数组存放 tid
         pthread_create(&pinfo->tid, NULL, working, pinfo);
         pthread_detach(pinfo->tid);
     }
