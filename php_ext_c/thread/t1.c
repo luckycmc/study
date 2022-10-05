@@ -12,13 +12,33 @@ struct SockInfo
     int fd;                       //通讯的fd
     pthread_t tid;                //线程id
     struct sockaddr_in addr;      // 地址信息
-}
+};
 
 struct SockInfo infos[128];
 //线程工作的入口地址
 void* working(void *arg)
 {   
-    
+    while(1)
+    {    
+        //数据转换 成 SockInfo
+        struct SockInfo* info = (struct SockInfo*)arg;
+        // 接收数据
+        char buf[1024];
+        int ret = read(info->fd, buf, sizeof(buf));
+        if(ret == 0){
+             
+             printf("client is closed \n");
+             info->fd = -1;
+             break;
+        }else if(ret == -1){
+            printf("接收数据失败...\n");
+            info->fd = -1;
+            break;
+        }else{
+            //也可以用 sizeof(buf);
+            write(info->fd, buf, strlen(buf)+1);
+        }
+    }
     return NULL;
 }
 
@@ -33,11 +53,11 @@ int main()
      }
 
      //2.绑定数据信息
-     struct sockaddr_in add;
+     struct sockaddr_in addr;
      addr.sin_family = AF_INET; // ipv4
      addr.sin_port = htons(8080); //// 字节序应该是网络字节序
-     add.sin_addr.sin_addr = INADDR_ANY;// // == 0, 获取IP的操作交给了内核
-     ret = bind(fd,(struct sockaddr *)&addr,sizeof(addr));
+     addr.sin_addr.s_addr = INADDR_ANY;// // == 0, 获取IP的操作交给了内核
+    int ret = bind(fd,(struct sockaddr *)&addr,sizeof(addr));
      if(ret == -1){
           perror("bind");
           exit(0);
@@ -55,7 +75,8 @@ int main()
 
     // 数据初始化
     int max = sizeof(infos) / sizeof(infos[0]);
-    for(int i=0; i<max; ++i)
+    int i;
+    for(i=0; i<max; ++i)
     {
         bzero(&infos[i], sizeof(infos[i]));
         infos[i].fd = -1;
@@ -66,7 +87,7 @@ int main()
     {
        // 创建子线程
         struct SockInfo* pinfo;
-        for(int i=0; i<max; ++i)
+        for(i=0; i<max; ++i)
         {
             if(infos[i].fd == -1)
             {
