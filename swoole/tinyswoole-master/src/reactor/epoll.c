@@ -90,7 +90,7 @@ static int tswReactorEpoll_free(tswReactor *reactor)
     free(reactor_epoll_object->events);
     free(reactor_epoll_object);
 }
-
+//创建epoll 红黑树
 int tswReactorEpoll_create(tswReactor *reactor, int max_event_num)
 {
     tswReactorEpoll *reactor_epoll_object;

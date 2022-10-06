@@ -127,7 +127,7 @@ PHP_METHOD(tinyswoole_server, on)
 
 	RETURN_TRUE;
 }
-
+//服务器启动
 PHP_METHOD(tinyswoole_server, start)
 {
 	zval *sock;

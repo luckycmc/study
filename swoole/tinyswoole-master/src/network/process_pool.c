@@ -6,12 +6,14 @@
 
 //工作进程的初始化
 int tswProcessPool_create(tswProcessPool *pool, int worker_num)
-{
+{    
+    //worker进程分配 内存空间 
     pool->workers = (tswWorker *)malloc(sizeof(tswWorker) * worker_num);
     if (pool->workers == NULL) {
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
+    //管道分配内存空间
     pool->pipes = malloc(sizeof(tswPipe) * worker_num);
     if (pool->pipes == NULL) {
         tswWarn("%s", "malloc error");

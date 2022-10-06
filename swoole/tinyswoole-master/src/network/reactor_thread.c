@@ -54,7 +54,7 @@ int tswReactorThread_create(tswServer *serv)
 
     return TSW_OK;
 }
-
+// reactor 线程启动
 int tswReactorThread_start(tswServer *serv)
 {
     pthread_t pidt;
@@ -81,7 +81,7 @@ int tswReactorThread_start(tswServer *serv)
 
     return TSW_OK;
 }
-
+// reactor 线程把数据发送给 对应的worker进程
 int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int worker_id)
 {
     int pipe_master;
@@ -98,7 +98,7 @@ int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int
 
     return TSW_OK;
 }
-
+//接受worker 发送的数据 发送给客户端
 int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;

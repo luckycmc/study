@@ -78,7 +78,7 @@ static int tswServer_start_proxy(tswServer *serv)
     if (serv->onStart != NULL) {
         serv->onStart(serv);
     }
-    //注册主线程reactor
+    //注册主线程reactor 检测是否有新链接的到来
     if (main_reactor->add(main_reactor, serv->serv_sock, TSW_EVENT_READ, tswServer_master_onAccept) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -128,11 +128,11 @@ int tswServer_start(tswServer *serv)
         tswWarn("%s", "tswProcessPool_create error");
         return TSW_ERR;
     }
-    //创建管道
+    //创建管道 并且赋值管道的属性
     for ( i = 0; i < serv->worker_num; i++) {
         tswPipeUnsock *object;
-
-        pipe = &pool->pipes[i];
+        //知识忙点
+        pipe = &pool->pipes[i];  //申请的内存空间可以当成一个边长数组处理
 
         if (tswPipeUnsock_create(pipe) < 0) {
             tswWarn("%s", "tswPipeUnsock_create error");
@@ -175,6 +175,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     tswReactor *sub_reactor;
 
     len = sizeof(cliaddr);
+    //接受客户端连接
     connfd = accept(tswev->fd, (struct sockaddr *)&cliaddr, &len);
     if (connfd < 0) {
         tswWarn("%s", "accept error");
@@ -182,7 +183,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     }
 
     serv->status->accept_count++;
-
+    // 取模获取到对应reactor线程
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
@@ -194,9 +195,9 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].connfd = connfd;
     serv->session_list[serv->status->accept_count].reactor_id = sub_reactor->id;
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
-
+    // 触发回调函数当有连接的时候
     serv->onConnect(serv->status->accept_count);
-
+    // 注册对应的rteactor 线程 接受客户端的数据
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
@@ -213,8 +214,9 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
     tswReactorEpoll *reactor_epoll_object = reactor->object;
     tswEventData event_data;
     int worker_id;
-
+    // 读取客户端的数据
     n = recv(tswev->fd, event_data.data, TSW_BUFFER_SIZE, 0);
+    // 客户端关闭
     if (n == 0) {
         reactor->del(reactor, tswev->fd);
         close(tswev->fd);
