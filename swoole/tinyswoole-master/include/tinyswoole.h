@@ -139,7 +139,7 @@ struct _tswWorkerG {
 	int pipe_master;
 	int pipe_worker;
 };
-
+//管道结构体
 struct _tswPipe {
 	void *object;
 

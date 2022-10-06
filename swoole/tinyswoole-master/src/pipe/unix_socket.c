@@ -17,7 +17,7 @@ static int tswPipeUnsock_write(tswPipe *pipe, void *data, int length)
 {
     
 }
-
+// 管道的创建 主要用于 进程通讯
 int tswPipeUnsock_create(tswPipe *pipe)
 {
     tswPipeUnsock *object;
@@ -27,7 +27,7 @@ int tswPipeUnsock_create(tswPipe *pipe)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-
+    //创建socketpair 双向管道
     if (socketpair(AF_LOCAL, SOCK_STREAM, 0, object->socks) < 0) {
         tswWarn("%s", "socketpair error");
         free(object);
@@ -35,9 +35,9 @@ int tswPipeUnsock_create(tswPipe *pipe)
     }
 
     pipe->object = object;
-    pipe->getFd = tswPipeUnsock_getFd;
-    pipe->read = tswPipeUnsock_read;
-    pipe->write = tswPipeUnsock_write;
+    pipe->getFd = tswPipeUnsock_getFd;  //获取管道的fd
+    pipe->read = tswPipeUnsock_read;    //读取管道
+    pipe->write = tswPipeUnsock_write;  // 写入管道
 
     return TSW_OK;
 }
