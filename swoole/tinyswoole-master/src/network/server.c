@@ -55,7 +55,7 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-    //主线程的创建
+    //主线程的 创建reactor
     if (tswReactor_create(main_reactor, MAXEVENTS) < 0) {
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
@@ -153,7 +153,7 @@ int tswServer_start(tswServer *serv)
 
     tswProcessPool_info(pool);
     serv->process_pool = pool;
-
+    //创建服务器代理
     if (tswServer_start_proxy(serv) < 0) {
         tswWarn("%s", "tswServer_start_proxy error");
         return TSW_ERR;
@@ -204,7 +204,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-
+//reactor线程接受数据
 int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;
