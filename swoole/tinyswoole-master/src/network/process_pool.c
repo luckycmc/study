@@ -50,7 +50,8 @@ int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id
 void tswProcessPool_info(const tswProcessPool *pool)
 {
     tswWorker *worker = pool->workers;
-    for (int i = 0; i < pool->worker_num; i++) {
+    int i;
+    for (i = 0; i < pool->worker_num; i++) {
         tswDebug("worker [%d] pid is %d", worker[i].worker_id, worker[i].pid);
     }
 }

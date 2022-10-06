@@ -24,7 +24,7 @@ int tswWorker_sendToReactor(tswEventData *event_data)
 
 int tswWorker_loop()
 {
-    tswReactor *main_reactor;
+    tswReactor *main_reactor; int i;
 
     main_reactor = malloc(sizeof(tswReactor));
     if (main_reactor == NULL) {
@@ -51,7 +51,7 @@ int tswWorker_loop()
             return TSW_ERR;
         }
         
-        for (int i = 0; i < nfds; i++) {
+        for (i = 0; i < nfds; i++) {
             int connfd;
             tswReactorEpoll *reactor_epoll_object = main_reactor->object;
 

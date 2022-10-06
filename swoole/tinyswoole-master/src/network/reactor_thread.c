@@ -3,10 +3,10 @@
 #include "server.h"
 #include "tinyswoole.h"
 #include "process_pool.h"
-
+//reactor 线程进入事件循环
 static int tswReactorThread_loop(tswThreadParam *param)
 {
-    int pti = param->pti;
+    int pti = param->pti;   int i;
     tswServer *serv = param->object;
     tswReactor *reactor = &(serv->reactor_threads[pti].reactor);
 
@@ -20,7 +20,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
             return TSW_ERR;
         }
 
-        for (int i = 0; i < nfds; i++) {
+        for (i = 0; i < nfds; i++) {
             int connfd;
             tswReactorEpoll *reactor_epoll_object = reactor->object;
 
@@ -33,18 +33,18 @@ static int tswReactorThread_loop(tswThreadParam *param)
         }
     }
 }
-
+//reactor线程的创建
 int tswReactorThread_create(tswServer *serv)
 {
-    tswReactorThread *thread;
+    tswReactorThread *thread; int i;
 
     serv->reactor_threads = (tswReactorThread *)malloc(sizeof(tswReactorThread) * serv->reactor_num);
     if (serv->reactor_threads == NULL) {
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-
-    for (int i = 0; i < serv->reactor_num; i++) {
+    
+    for (i = 0; i < serv->reactor_num; i++) {
         thread = &(serv->reactor_threads[i]);
         if (tswReactor_create(&(thread->reactor), MAXEVENTS) < 0) {
             tswWarn("%s", "tswReactor_create error");
@@ -60,8 +60,8 @@ int tswReactorThread_start(tswServer *serv)
     pthread_t pidt;
     tswReactorThread *thread;
     tswThreadParam *param;
-
-    for (int i = 0; i < serv->reactor_num; i++) {
+    int i;
+    for (i = 0; i < serv->reactor_num; i++) {
         param = (tswThreadParam *)malloc(sizeof(tswThreadParam));
         if (param == NULL) {
             tswWarn("%s", "malloc error");

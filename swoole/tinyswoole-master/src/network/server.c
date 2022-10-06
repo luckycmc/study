@@ -46,7 +46,7 @@ tswServer *tswServer_new(void)
 */
 static int tswServer_start_proxy(tswServer *serv)
 {
-    tswReactor *main_reactor;
+    tswReactor *main_reactor; int i;
 
     serv->reactor_pipe_num = serv->worker_num / serv->reactor_num;
 
@@ -83,17 +83,18 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
     }
-
+    //进入事件循环
     for (;;) {
         int nfds;
-
+        // 获取就绪事件
         nfds = main_reactor->wait(main_reactor);
         if (nfds < 0) {
             tswWarn("%s", "master thread epoll wait error");
             return TSW_ERR;
         }
-        
-        for (int i = 0; i < nfds; i++) {
+        // 获取就绪事件触发回调函数
+
+        for (i = 0; i < nfds; i++) {
             tswReactorThread *tsw_reactor_thread;
             tswReactorEpoll *reactor_epoll_object = main_reactor->object;
 
@@ -114,8 +115,8 @@ static int tswServer_start_proxy(tswServer *serv)
 int tswServer_start(tswServer *serv)
 {
     tswProcessPool *pool;
-    tswPipe *pipe;
-
+    tswPipe *pipe; 
+    int i,j;
     serv->onMasterStart();//触发主线程回调函数
     pool = (tswProcessPool *)malloc(sizeof(tswProcessPool));
     if (pool == NULL) {
@@ -128,7 +129,7 @@ int tswServer_start(tswServer *serv)
         return TSW_ERR;
     }
     //创建管道
-    for (int i = 0; i < serv->worker_num; i++) {
+    for ( i = 0; i < serv->worker_num; i++) {
         tswPipeUnsock *object;
 
         pipe = &pool->pipes[i];
@@ -141,9 +142,10 @@ int tswServer_start(tswServer *serv)
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
     }
+   
     //创建工作进程
-    for (int i = 0; i < serv->worker_num; i++) {
-        if (tswServer_create_worker(serv, pool, i) < 0) {
+    for (j = 0; j < serv->worker_num; j++) {
+        if (tswServer_create_worker(serv, pool, j) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
             return TSW_ERR;
         }
@@ -168,7 +170,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
 {
     int connfd;
     socklen_t len;
-    struct sockaddr_in cliaddr;
+    struct sockaddr_in cliaddr;    //获取客户端的信息结构体
     tswServer *serv = reactor->ptr;
     tswReactor *sub_reactor;
 
