@@ -2,7 +2,7 @@
 #define PROCESS_POOL_H_
 
 #include "tinyswoole.h"
-
+// wokrker 进程
 struct _tswWorker {
 	pid_t pid;
 	int worker_id;
@@ -10,7 +10,7 @@ struct _tswWorker {
 	int pipe_worker;
 	tswPipe *pipe_object;
 };
-
+//进程池的相关信息
 struct _tswProcessPool {
 	int worker_num;
 	tswPipe *pipes;

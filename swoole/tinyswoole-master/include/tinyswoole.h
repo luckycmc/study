@@ -136,8 +136,8 @@ struct _tswServerStatus {
 */
 struct _tswWorkerG {
     uint32_t id; // worker_id
-	int pipe_master;
-	int pipe_worker;
+	int pipe_master;  //主线程的文件描述符
+	int pipe_worker;  //工作进程的文件描述符
 };
 //管道结构体
 struct _tswPipe {
