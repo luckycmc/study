@@ -37,7 +37,7 @@ int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id
         return TSW_OK;
     }
 
-    // worker process
+    // worker process 每一个进程一个 是相互独立的
     TSwooleWG.pipe_master = worker->pipe_master;
     TSwooleWG.pipe_worker = worker->pipe_worker;
     TSwooleWG.id = worker_id;

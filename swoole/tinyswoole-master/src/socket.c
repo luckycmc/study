@@ -42,3 +42,8 @@ int tswSocket_bind(int sock, int type, char *host, int port)
 
     return ret;
 }
+
+// recv
+
+//send 也可以封装到这个地方
+

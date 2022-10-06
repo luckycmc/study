@@ -17,7 +17,8 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
 }
 //数据发送给 reactor线程 reactor 线程发送给 worker线程
 int tswWorker_sendToReactor(tswEventData *event_data)
-{
+{    
+    printf("crrrent pid is %d\n",TSwooleWG.id);
     write(TSwooleWG.pipe_worker, event_data, sizeof(event_data->info) + event_data->info.len);
     return TSW_OK;
 }

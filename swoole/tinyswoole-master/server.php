@@ -1,4 +1,5 @@
 <?php
+$port = 9501;
 
 function onStart()
 {
@@ -16,11 +17,11 @@ function onReceive($serv, $fd, $data)
     $serv->send($fd, "hello client");
 }
 
-$serv = new TinySwoole\Server('127.0.0.1', 9501, TSWOOLE_TCP);
+$serv = new TinySwoole\Server('127.0.0.1', $port, TSWOOLE_TCP);
 
 $serv->set([
     'reactor_num' => 2,
-    'worker_num' => 2,
+    'worker_num' => 4,
 ]);
 
 $serv->on("Start", "onStart");

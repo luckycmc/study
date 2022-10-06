@@ -91,6 +91,7 @@ int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int
     write(pipe_master, (void *)event_data, sizeof(event_data->info) + event_data->info.len);
 
     reactor = &(serv->reactor_threads[event_data->info.from_id].reactor);
+    // 注册接受worker 进程发送的数据
     if (reactor->add(reactor, pipe_master, TSW_EVENT_READ, tswReactorThread_onPipeReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
