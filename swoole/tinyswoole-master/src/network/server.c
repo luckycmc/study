@@ -206,7 +206,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
 
     return TSW_OK;
 }
-//reactor线程接受数据
+//reactor线程接受客户端发送过来的数据
 int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
 {
     int n;
@@ -230,7 +230,7 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
     event_data.info.from_id = reactor->id;
     event_data.info.fd = TSwooleG.serv->connection_list[tswev->fd].session_id;
     worker_id = tswev->fd % TSwooleG.serv->process_pool->worker_num;
-    //吧客户端的数据发送给worker 进程
+    //把客户端的数据发送给 相应的worker 进程的管道
     if (tswReactorThread_sendToWorker(TSwooleG.serv, &event_data, worker_id) < 0) {
         tswWarn("%s", "tswReactorThread_sendToWorker error");
         return TSW_ERR;

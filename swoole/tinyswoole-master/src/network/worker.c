@@ -7,7 +7,7 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
     int n;
     tswEventData event_data;
 
-    // tswev->fd represents the pipe_worker
+    // tswev->fd represents the pipe_worker 
     n = read(tswev->fd, &event_data, sizeof(event_data));
     // 触发 onReceive 回调函数
     if (event_data.info.len > 0) {
