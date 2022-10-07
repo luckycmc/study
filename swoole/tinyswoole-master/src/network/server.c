@@ -138,12 +138,14 @@ int tswServer_start(tswServer *serv)
             tswWarn("%s", "tswPipeUnsock_create error");
             return TSW_ERR;
         }
+        //主进程写入数据 也就是 reactor现成的使用
         pool->workers[i].pipe_master = pipe->getFd(pipe, TSW_PIPE_MASTER);
+        //工作进程写入数据 worker进程使用
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
     }
    
-    //创建工作进程
+    //创建工作进程 socketpair 在之前创建的 所以父子进程都可以使用
     for (j = 0; j < serv->worker_num; j++) {
         if (tswServer_create_worker(serv, pool, j) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
