@@ -93,6 +93,7 @@ int tswReactorThread_sendToWorker(tswServer *serv, tswEventData *event_data, int
 
     reactor = &(serv->reactor_threads[event_data->info.from_id].reactor);
     // 注册事件 接受worker 进程发送的数据 等待事件的到来
+    // 也就是说 检测到  pipe_master 管道中的数据可以读时 回调函数 tswReactorThread_onPipeReceive
     if (reactor->add(reactor, pipe_master, TSW_EVENT_READ, tswReactorThread_onPipeReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
