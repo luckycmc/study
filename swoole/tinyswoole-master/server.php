@@ -16,6 +16,7 @@ function onConnect($fd)
 function onReceive($serv, $fd, $data)
 {
     print_r("receive data from client[{$fd}]: {$data}");
+    // 发送给客户端的数据
     $serv->send($fd, "hello client");
 }
 

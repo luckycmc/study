@@ -133,7 +133,7 @@ int tswServer_start(tswServer *serv)
         tswPipeUnsock *object;
         //知识忙点
         pipe = &pool->pipes[i];  //申请的内存空间可以当成一个边长数组处理
-
+        //创建socket pipe  管道
         if (tswPipeUnsock_create(pipe) < 0) {
             tswWarn("%s", "tswPipeUnsock_create error");
             return TSW_ERR;
@@ -143,6 +143,8 @@ int tswServer_start(tswServer *serv)
         //工作进程写入数据 worker进程使用
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
+
+        
     }
    
     //创建工作进程 socketpair 在之前创建的 所以父子进程都可以使用
@@ -186,7 +188,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     //有连接的建立
     printf("connect coming \n");
     serv->status->accept_count++;
-    // 取模获取到对应reactor线程
+    // 取模获取到对应reactor线程 客户端的数据由那个 reactor线程接受
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
@@ -265,7 +267,7 @@ int tswServer_tcp_send(tswServer *serv, int fd, const void *data, size_t length)
     event_data.info.from_id = TSwooleWG.id;
     event_data.info.fd = fd;
     memcpy(event_data.data, data, length);
-
+    // worker 进程的数据附送给reatcor 再有reactor 发送给客户端
     tswWorker_sendToReactor(&event_data);
     return TSW_OK;
 }

@@ -38,6 +38,6 @@ int tswPipeUnsock_create(tswPipe *pipe)
     pipe->getFd = tswPipeUnsock_getFd;  //获取管道的fd
     pipe->read = tswPipeUnsock_read;    //读取管道
     pipe->write = tswPipeUnsock_write;  // 写入管道
-
+   
     return TSW_OK;
 }

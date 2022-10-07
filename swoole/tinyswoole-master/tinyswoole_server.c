@@ -149,6 +149,7 @@ PHP_METHOD(tinyswoole_server, send)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zz", &zfd, &zdata) == FAILURE) {
 		return;
     }
+	//调用发送数据
 	ret = tswServer_tcp_send(NULL, Z_LVAL(*zfd), Z_STRVAL(*zdata), Z_STRLEN(*zdata));
 
 	RETURN_LONG(ret);
