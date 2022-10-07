@@ -10,7 +10,7 @@
 zval *php_tsw_server_callbacks[PHP_SERVER_CALLBACK_NUM];
 zend_fcall_info_cache *php_tsw_server_caches[PHP_SERVER_CALLBACK_NUM];
 
-
+// tinyswoole_server 构造方法
 PHP_METHOD(tinyswoole_server, __construct)
 {
 	char *serv_host;
@@ -20,33 +20,34 @@ PHP_METHOD(tinyswoole_server, __construct)
 	int sock;
 	tswServer *serv;
 
-	serv = tswServer_new();
+	serv = tswServer_new(); // 服务器初始化
 	if (serv == NULL) {
 		tinyswoole_php_fatal_error(E_ERROR, "tswServer_new error");
 		return;
 	}
-	TSwooleG.serv = serv;
-
+	TSwooleG.serv = serv; // 全局服务器
+    // 参数解析
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sl|l", &serv_host, &host_len, &serv_port, &sock_type) == FAILURE) {
 		RETURN_NULL();
 	}
-
+    // socket 的创建
 	sock = tswSocket_create(sock_type);
 	if (sock < 0) {
 		tinyswoole_php_fatal_error(E_ERROR, "tswSocket_create error");
 		RETURN_NULL();
 	}
+	// socket 的绑定
 	if (tswSocket_bind(sock, sock_type, serv_host, serv_port) < 0) {
 		tinyswoole_php_fatal_error(E_ERROR, "tswSocket_bind error");
 		RETURN_NULL();
 	}
-	serv->serv_sock = sock;
+	serv->serv_sock = sock; // 存放到服务对象中
 
 	server_object = getThis(); // server_object is a global variable
 	zend_update_property_string(tinyswoole_server_ce_ptr, server_object, ZEND_STRL("ip"), serv_host);
 	zend_update_property_long(tinyswoole_server_ce_ptr, server_object, ZEND_STRL("port"), serv_port);
 }
-
+// 设置服务器信息
 PHP_METHOD(tinyswoole_server, set)
 {
 	zval *zset = NULL;
@@ -82,7 +83,7 @@ PHP_METHOD(tinyswoole_server, set)
 		serv->reactor_num = 4;
 	}
 }
-
+// 设置回调函数
 PHP_METHOD(tinyswoole_server, on)
 {
 	int i;
@@ -138,7 +139,7 @@ PHP_METHOD(tinyswoole_server, start)
 
 	tswServer_start(serv);
 }
-
+// 发送数据 给客户端
 PHP_METHOD(tinyswoole_server, send)
 {
 	zval *zfd;
@@ -152,7 +153,7 @@ PHP_METHOD(tinyswoole_server, send)
 
 	RETURN_LONG(ret);
 }
-
+// 注册回调函数
 void php_tswoole_register_callback(tswServer *serv)
 {
 	if (php_tsw_server_callbacks[TSW_SERVER_CB_onStart] != NULL) {
@@ -165,8 +166,8 @@ void php_tswoole_register_callback(tswServer *serv)
 		serv->onReceive = php_tswoole_onReceive;
 	}
 
-	serv->onMasterStart = tswServer_master_onStart;
-	serv->onReactorStart = tswServer_reactor_onStart;
+	serv->onMasterStart = tswServer_master_onStart;   // master 主线程启动
+	serv->onReactorStart = tswServer_reactor_onStart; // reactor 线程启动
 }
 
 void php_tswoole_onStart(tswServer *serv)
@@ -189,7 +190,7 @@ void php_tswoole_onConnect(int fd)
 	TSW_MAKE_STD_ZVAL(zfd); // Let zfd point to a piece of memory in the stack
 	ZVAL_LONG(zfd, fd); // Before using ZVAL_LONG, you need to allocate memory first.
 	args[0] = *zfd;
-
+	
 	call_user_function_ex(EG(function_table), NULL, php_tsw_server_callbacks[TSW_SERVER_CB_onConnect], &retval, 1, args, 0, NULL);
 }
 

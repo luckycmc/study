@@ -11,7 +11,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
     tswReactor *reactor = &(serv->reactor_threads[pti].reactor);
 
     reactor->id = pti;
-    for (;;) {
+    while (1) {
         int nfds;
 
         nfds = reactor->wait(reactor);

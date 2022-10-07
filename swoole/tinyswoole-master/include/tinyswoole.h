@@ -52,7 +52,7 @@ typedef struct _tswPipeUnsock tswPipeUnsock;
 struct _tswServerG {
 	tswServer *serv;
 };
-
+//线程参数
 struct _tswThreadParam {
 	void *object;
 	int pti; // Used to mark the threads, counting from 0
@@ -64,7 +64,7 @@ struct _tswReactorEpoll {
 };
 
 #define MAXEVENTS 64
-
+//event 事件
 typedef struct _tswEvent {
 	int fd;
 	int event;

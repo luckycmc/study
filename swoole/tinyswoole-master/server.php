@@ -2,7 +2,9 @@
 $port = 9501;
 
 function onStart()
-{
+{    
+    global $port;
+    print_r("Server IP is 127.0.0.1 port is $port:" . PHP_EOL);
     print_r("server is running..." . PHP_EOL);
 }
 

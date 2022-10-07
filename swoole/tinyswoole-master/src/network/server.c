@@ -3,7 +3,7 @@
 #include "worker.h"
 #include "log.h"
 #include "server.h"
-
+//服务器初始化
 tswServer *tswServer_new(void)
 {
     tswServer *serv;
@@ -65,7 +65,7 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "tswReactorThread_create error");
         return TSW_ERR;
     }
-
+    // reactor 线程启动
     if (tswReactorThread_start(serv) < 0) {
         tswWarn("%s", "tswReactorThread_start error");
         return TSW_ERR;
@@ -83,8 +83,8 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "reactor add error");
         return TSW_ERR;
     }
-    //进入事件循环
-    for (;;) {
+    //主线程事件循环 等待客户端连接
+    while (1) {
         int nfds;
         // 获取就绪事件
         nfds = main_reactor->wait(main_reactor);
@@ -181,7 +181,8 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
         tswWarn("%s", "accept error");
         return TSW_ERR;
     }
-
+    //有连接的建立
+    printf("connect coming \n");
     serv->status->accept_count++;
     // 取模获取到对应reactor线程
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
@@ -197,7 +198,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
     // 触发回调函数当有连接的时候
     serv->onConnect(serv->status->accept_count);
-    // 注册对应的rteactor 线程 接受客户端的数据
+    // 注册对应的rteactor 线程 接受客户端的数据 是否可读
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;

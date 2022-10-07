@@ -1,8 +1,6 @@
 #ifndef SOCKET_H_
 #define SOCKET_H_
 
-int tswSocket_create(int type);
-
 enum tswSocket_type {
     TSW_SOCK_TCP          =  1,
     TSW_SOCK_UDP          =  2,
