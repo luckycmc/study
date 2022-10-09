@@ -44,7 +44,7 @@ int tswSocket_bind(int sock, int type, char *host, int port)
 }
 
 // socket 设置为非阻塞
-int stSocket_set_nonblock(int sock)
+int tswSocket_set_nonblock(int sock)
 {
     int flags;
 
