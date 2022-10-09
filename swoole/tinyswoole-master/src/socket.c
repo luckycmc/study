@@ -1,7 +1,7 @@
 #include "tinyswoole.h"
 #include "socket.h"
 #include "log.h"
-
+// socket 的创建
 int tswSocket_create(int type)
 {
     int _domain;
@@ -20,7 +20,7 @@ int tswSocket_create(int type)
 
     return socket(_domain, _type, 0);
 }
-
+// socket的绑定
 int tswSocket_bind(int sock, int type, char *host, int port)
 {
     int ret;
@@ -41,6 +41,24 @@ int tswSocket_bind(int sock, int type, char *host, int port)
     }
 
     return ret;
+}
+
+// socket 设置为非阻塞
+int stSocket_set_nonblock(int sock)
+{
+    int flags;
+
+    flags = fcntl(sock, F_GETFL, 0);
+    if (flags < 0) {
+        stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return -1;
+    }
+    flags = fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+    if (flags < 0) {
+        stWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return -1;
+    }
+    return 0;
 }
 
 // recv

@@ -1,11 +1,12 @@
 #include "tinyswoole.h"
 #include "server.h"
 #include "log.h"
+#include "socket.h"
 // 获取管道描描述符
 static int tswPipeUnsock_getFd(tswPipe *pipe, int type)
 {
     tswPipeUnsock *this = pipe->object; //获取读管道和写管道
-    return type == TSW_PIPE_WORKER ? this->socks[0] : this->socks[1];
+    return type == TSW_PIPE_WORKER ? tswSocket_set_nonblock(this->socks[0]) : tswSocket_set_nonblock(this->socks[1]);
 }
 
 static int tswPipeUnsock_read(tswPipe *pipe, void *data, int length)
