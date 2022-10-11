@@ -560,7 +560,7 @@ ZEND_API int pass_two(zend_op_array *op_array)
 	opline = op_array->opcodes;
 	end = opline + op_array->last;
 	while (opline < end) {
-		switch (opline->opcode) {
+		switch (opline->opcode) {  //根据 不同的opcode 类型设置不同 opcode
 			case ZEND_RECV_INIT:
 				{
 					zval *val = CT_CONSTANT(opline->op2);

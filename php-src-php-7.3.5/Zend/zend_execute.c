@@ -182,7 +182,7 @@ static zend_always_inline zend_vm_stack zend_vm_stack_new_page(size_t size, zend
 	page->prev = prev; // 上一个栈帧
 	return page;
 }
-// vm栈初始化
+// vm栈初始化 主要进行内存申请，以及对_zend_vm_stack成员变量的初始化
 ZEND_API void zend_vm_stack_init(void)
 {
 	EG(vm_stack_page_size) = ZEND_VM_STACK_PAGE_SIZE; // 栈的大小
@@ -235,7 +235,7 @@ ZEND_API zval* zend_get_compiled_variable_value(const zend_execute_data *execute
 {
 	return EX_VAR(var);
 }
-
+//获取临时变量的值
 static zend_always_inline zval *_get_zval_ptr_tmp(uint32_t var, zend_free_op *should_free EXECUTE_DATA_DC)
 {
 	zval *ret = EX_VAR(var);

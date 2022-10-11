@@ -278,7 +278,7 @@ static zend_always_inline void zend_string_release(zend_string *s)
 		}
 	}
 }
-
+//释放  string 
 static zend_always_inline void zend_string_release_ex(zend_string *s, int persistent)
 {
 	if (!ZSTR_IS_INTERNED(s)) {

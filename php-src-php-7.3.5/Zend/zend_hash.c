@@ -1992,7 +1992,7 @@ ZEND_API HashTable* ZEND_FASTCALL zend_array_dup(HashTable *source)
 	return target;
 }
 
-
+//两个数组相加合并数据 本质就是 hash table的合并
 ZEND_API void ZEND_FASTCALL zend_hash_merge(HashTable *target, HashTable *source, copy_ctor_func_t pCopyConstructor, zend_bool overwrite)
 {
     uint32_t idx;

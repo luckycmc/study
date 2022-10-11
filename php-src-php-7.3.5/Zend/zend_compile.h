@@ -557,10 +557,10 @@ struct _zend_execute_data {
 // 获取函数参数的个数
 #define ZEND_CALL_NUM_ARGS(call) \
 	(call)->This.u2.num_args
-
+// 内存对齐
 #define ZEND_CALL_FRAME_SLOT \
 	((int)((ZEND_MM_ALIGNED_SIZE(sizeof(zend_execute_data)) + ZEND_MM_ALIGNED_SIZE(sizeof(zval)) - 1) / ZEND_MM_ALIGNED_SIZE(sizeof(zval))))
-//获取执行数据上的变量
+//获取执行数据上的变量 更具步长假变量的地址
 #define ZEND_CALL_VAR(call, n) \
 	((zval*)(((char*)(call)) + ((int)(n))))
 //获取变量和execute_data的部长 转换成zval 地址
@@ -589,7 +589,7 @@ struct _zend_execute_data {
 
 #define ZEND_RET_USES_STRICT_TYPES() \
 	ZEND_CALL_USES_STRICT_TYPES(EG(current_execute_data))
-//获取 execute上的数据信息
+//获取 execute上的数据信息 n表示对应的步长 在当前的虚拟机上
 #define EX_VAR(n)				ZEND_CALL_VAR(execute_data, n)
 //获取执行栈变量的个数
 #define EX_VAR_NUM(n)			ZEND_CALL_VAR_NUM(execute_data, n)

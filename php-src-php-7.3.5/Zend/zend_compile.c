@@ -431,7 +431,7 @@ static uint32_t get_temporary_variable(zend_op_array *op_array) /* {{{ */
 	return (uint32_t)op_array->T++;  // 位置往后++ 临时变量的个数
 }
 /* }}} */
-//在op_array中查找相应的 val变量
+//在当前的op_array中查找相应的 val变量
 static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 	int i = 0;
 	zend_ulong hash_value = zend_string_hash_val(name);
@@ -440,7 +440,7 @@ static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 		if (ZSTR_VAL(op_array->vars[i]) == ZSTR_VAL(name) ||
 		    (ZSTR_H(op_array->vars[i]) == hash_value &&
 		     zend_string_equal_content(op_array->vars[i], name))) {
-			return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i);
+			return (int)(zend_intptr_t)ZEND_CALL_VAR_NUM(NULL, i); //所以返回的是每个变量的偏移值，即80+16*i
 		}
 		i++;
 	}
@@ -493,6 +493,14 @@ static inline void zend_insert_literal(zend_op_array *op_array, zval *zv, int li
 /* Is used while compiling a function, using the context to keep track
    of an approximate size to avoid to relocate to often.
    Literals are truncated to actual size in the second compiler pass (pass_two()). */
+/**
+ * 对于操作数1，会将编译过程中临时的结构znode传递给zend_op中，对于操作数2，因为是常量（IS_CONST），
+ * 会调用zend_add_literal将其插入到op_array->literals中。
+ * 
+ * @param op_array 
+ * @param zv 
+ * @return int 
+ */
 int zend_add_literal(zend_op_array *op_array, zval *zv) /* {{{ */
 {
 	int i = op_array->last_literal;
@@ -2115,7 +2123,8 @@ static void zend_check_live_ranges(zend_op *opline) /* {{{ */
 /* }}} */
 // 下面就是根据这俩值生成opcode的过程。例如assign opcode = 38
 static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode *op2) /* {{{ */
-{
+{   
+	//分配和获取opline，并设置其opcode
 	zend_op *opline = get_next_op(CG(active_op_array)); //当前zend_op_array下生成一条新的指令
 	opline->opcode = opcode;
     // op1和op2 都是指针操作
@@ -2137,7 +2146,7 @@ static zend_op *zend_emit_op(znode *result, zend_uchar opcode, znode *op1, znode
 	return opline;
 }
 /* }}} */
-//编译带临时变量的 opline
+//编译带临时变量的 opline 也就是生成临时变量编译
 static zend_op *zend_emit_op_tmp(znode *result, zend_uchar opcode, znode *op1, znode *op2) /* {{{ */
 {
 	zend_op *opline = get_next_op(CG(active_op_array));
@@ -2152,7 +2161,7 @@ static zend_op *zend_emit_op_tmp(znode *result, zend_uchar opcode, znode *op1, z
 	}
 
 	zend_check_live_ranges(opline);
-
+     //有返回结果 设置返回结果
 	if (result) {
 		zend_make_tmp_result(result, opline);
 	}
@@ -2551,8 +2560,9 @@ static int zend_try_compile_cv(znode *result, zend_ast *ast) /* {{{ */
 			return FAILURE;
 		}
 
-		result->op_type = IS_CV; //类型是一个变量
-		//查找对应的变量 var 的偏移量
+		result->op_type = IS_CV; //类型是一个变量 
+		//查找对应的变量 var 的偏移量  CG(active_op_array) 当前的op_array 也就是当前执行栈 查找
+		// 查找变量的位置
 		result->u.op.var = lookup_cv(CG(active_op_array), name); 
 
 		if (UNEXPECTED(Z_TYPE_P(zv) != IS_STRING)) {
@@ -2609,13 +2619,13 @@ static zend_bool is_this_fetch(zend_ast *ast) /* {{{ */
 //编译简单的变量
 static void zend_compile_simple_var(znode *result, zend_ast *ast, uint32_t type, int delayed) /* {{{ */
 {
-	if (is_this_fetch(ast)) {
+	if (is_this_fetch(ast)) {   //编译临时变量
 		zend_op *opline = zend_emit_op(result, ZEND_FETCH_THIS, NULL, NULL);
 		if ((type == BP_VAR_R) || (type == BP_VAR_IS)) {
 			opline->result_type = IS_TMP_VAR;
 			result->op_type = IS_TMP_VAR;
 		}
-	} else if (zend_try_compile_cv(result, ast) == FAILURE) {
+	} else if (zend_try_compile_cv(result, ast) == FAILURE) { // 编译变量
 		zend_compile_simple_var_no_cv(result, ast, type, delayed);
 	}
 }
@@ -6113,7 +6123,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 	/* Pop the loop variable stack separator */
 	zend_stack_del_top(&CG(loop_var_stack));
 
-	CG(active_op_array) = orig_op_array; //回复上一个op_array
+	CG(active_op_array) = orig_op_array; //恢复上一个op_array
 }
 /* }}} */
 // 属性节点类型为:ZEND_AST_PROP_DECL
@@ -8366,7 +8376,7 @@ void zend_compile_expr(znode *result, zend_ast *ast) /* {{{ */
 	CG(zend_lineno) = zend_ast_get_lineno(ast);
 
 	switch (ast->kind) {
-		case ZEND_AST_ZVAL:     // 如果是zval则直接 
+		case ZEND_AST_ZVAL:     // 如果是zval 的值 则直接 
 			ZVAL_COPY(&result->u.constant, zend_ast_get_zval(ast));//将变量值复制到znode.u.constant中
 			result->op_type = IS_CONST; //类型为IS_CONST，这种value后面将会保存在zend_op_array.literals中
 			return;
