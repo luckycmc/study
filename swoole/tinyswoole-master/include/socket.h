@@ -8,5 +8,5 @@ enum tswSocket_type {
 
 int tswSocket_create(int type);
 int tswSocket_bind(int sock, int type, char *host, int port);
-
+int tswSocket_set_nonblock(int sock);
 #endif /* SOCKET_H_ */

@@ -1,6 +1,7 @@
 #include "tinyswoole.h"
 #include "server.h"
 #include "log.h"
+#include "socket.h"
 // 获取管道描描述符
 static int tswPipeUnsock_getFd(tswPipe *pipe, int type)
 {
