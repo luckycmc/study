@@ -3,8 +3,8 @@
 $server = new swoole_http_server('0.0.0.0', 8888);
  
 $server->set([
-  //配置项目的目录
-  'project_path' => __DIR__ . '/src/',
+     'worker_num' => swoole_cpu_num() * 2,
+     
 ]);
  
 $server->on('WorkerStart', function ($server, $worker_id) {
