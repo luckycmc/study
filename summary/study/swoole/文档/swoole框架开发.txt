@@ -1,0 +1,12 @@
+https://www.cnblogs.com/xinliangcoder/p/10804400.html 框架案例
+https://blog.51cto.com/u_15077562/2583740  
+
+workerstart之前include、require进来的类，无法热更
+
+1.框架的准备 
+
+2.框架的开发
+
+3.框架的测试
+
+4.能够实现基本的http 接口服务
