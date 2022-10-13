@@ -1,0 +1,33 @@
+1. swoole 的安装
+    安装前必须保证系统已经安装了下列软件
+    4.8 版本需要 php-7.2 或更高版本
+    5.0 版本需要 php-8.0 或更高版本
+    gcc-4.8 或更高版本
+
+
+   //我们可以安装使用 4.8 的版本
+   wget https://github.com/swoole/swoole-src/archive/v4.8.0.tar.gz
+   //解压
+    tar -zvxf v4.8.0.tar.gz
+    cd swoole-src-4.8.0/ 
+
+    ## 使用 phpize 创建 php 编译检测脚本 ./configure
+    ##【注意：需要选择 php 对应版本的 phpize，这里使用的是绝对路径，否则编译安装无法生效】
+
+     /usr/local/php/bin/phpize   // PHP 安装版本的绝对路径
+
+     ## 创建编译文件，第一个 --with，后面是 php-config 的所在路径(这个路径一般和 php 在同一个目录) 
+     /usr/local/php7/bin/php-config，第二个 --enable，是开启 Swoole 的 ssl 功能，第三个 --enable(可选参数)，是开启 Swoole 支持 http2 相关的功能
+
+     ./configure --with-php-config=/usr/local/php/bin/php-config --enable-openssl --enable-http2   
+     ## 编译 Swoole 并把编译好的文件移动到 php 的扩展目录(前面的配置 php 版本的扩展目录) 需要root权限
+
+     make && make install // 安装即可
+
+     把swoole扩展添加PHP的配置文件中 我的配置在 /usr/local/php/etc/php.ini   extension=swoole.so
+
+     注意：不知道 php.ini 所在目录时，您可以通过运行 php --ini 确定
+
+     成功安装 Swoole 之后，通过 php --ri swoole 查看 Swoole 扩展 的信息:
+
+    

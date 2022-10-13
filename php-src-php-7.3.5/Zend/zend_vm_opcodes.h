@@ -112,13 +112,13 @@ END_EXTERN_C()
 #define ZEND_PRE_DEC                          35
 #define ZEND_POST_INC                         36
 #define ZEND_POST_DEC                         37
-#define ZEND_ASSIGN                           38
+#define ZEND_ASSIGN                           38  //赋值操作
 #define ZEND_ASSIGN_REF                       39
-#define ZEND_ECHO                             40
+#define ZEND_ECHO                             40  //输出操作
 #define ZEND_GENERATOR_CREATE                 41
-#define ZEND_JMP                              42
-#define ZEND_JMPZ                             43
-#define ZEND_JMPNZ                            44
+#define ZEND_JMP                              42 //跳转操作 跳转到下一条opcode
+#define ZEND_JMPZ                             43 
+#define ZEND_JMPNZ                            44 // 进入循环体的JMP
 #define ZEND_JMPZNZ                           45
 #define ZEND_JMPZ_EX                          46
 #define ZEND_JMPNZ_EX                         47
@@ -136,7 +136,7 @@ END_EXTERN_C()
 #define ZEND_INIT_FCALL_BY_NAME               59
 #define ZEND_DO_FCALL                         60
 #define ZEND_INIT_FCALL                       61
-#define ZEND_RETURN                           62
+#define ZEND_RETURN                           62 // return 操作
 #define ZEND_RECV                             63
 #define ZEND_RECV_INIT                        64
 #define ZEND_SEND_VAL                         65

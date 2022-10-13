@@ -51,7 +51,6 @@ typedef struct _zend_leak_info {
 	uint32_t lineno;
 	uint32_t orig_lineno;
 } zend_leak_info;
-
 #if ZEND_DEBUG
 typedef struct _zend_mm_debug_info {
 	size_t             size;

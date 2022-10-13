@@ -601,7 +601,7 @@ struct _zend_execute_data {
 
 #define ZEND_OPLINE_NUM_TO_OFFSET(op_array, opline, opline_num) \
 	((char*)&(op_array)->opcodes[opline_num] - (char*)(opline))
-// opline 跳转的偏移量
+// opline 计算跳转的偏移量 基地址加长度的跳转
 #define ZEND_OFFSET_TO_OPLINE(base, offset) \
 	((zend_op*)(((char*)(base)) + (int)offset))
 
