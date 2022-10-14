@@ -18,3 +18,9 @@
         $b = 234; //编译到zend_op_array_2
     }//函数编译结束，将CG(active_op_array) = origin_op_array，切回zend_op_array_1
     $c = 345; //编译到zend_op_array_1
+
+
+每开辟一个新的function  都会生成对应的 op_array 和相应的 execute_data 
+
+函数返回阶段
+    这个过程中有三个关键工作：拷贝返回值、执行器切回调用位置、释放清理局部变量。
