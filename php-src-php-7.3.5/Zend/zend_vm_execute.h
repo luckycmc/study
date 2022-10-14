@@ -739,7 +739,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_DO_UCALL_SPEC_RETV
 
 	ZEND_VM_ENTER_EX();
 }
-
+//用户函数调用阶段
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_DO_UCALL_SPEC_RETVAL_USED_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -757,7 +757,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_DO_UCALL_SPEC_RETV
 	}
 
 	call->prev_execute_data = execute_data;
-	execute_data = call;
+	execute_data = call; // 初始化函数
 	i_init_func_execute_data(&fbc->op_array, ret, 0 EXECUTE_DATA_CC);
 	LOAD_OPLINE();
 
@@ -2205,12 +2205,12 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_INIT_FCALL_SPEC_CO
 		opline->op1.num, ZEND_CALL_NESTED_FUNCTION,
 		fbc, opline->extended_value, NULL, NULL);
 	call->prev_execute_data = EX(call);
-	// 执行call 指向当前的call
+	// 执行call 指向当前的call 然后执行该函数
 	EX(call) = call; //将当前正在运行的zend_execute_data.call指向新分配的zend_execute_data
 
 	ZEND_VM_NEXT_OPCODE();
 }
-//设置函数常量
+//用户函数接受参数
 static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_RECV_INIT_SPEC_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE
@@ -37312,7 +37312,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_SEND_VAR_SPEC_CV_H
 				Z_ADDREF_P(arg);
 			}
 		} else {
-			ZVAL_COPY_VALUE(arg, varptr);
+			ZVAL_COPY_VALUE(arg, varptr); // copy 函数参数
 		}
 	}
 
@@ -38517,7 +38517,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_POW_SPEC_CV_CONST_HANDLER(ZEND
 
 	ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 }
-
+//函数返回值的handler
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CONCAT_SPEC_CV_CONST_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	USE_OPLINE

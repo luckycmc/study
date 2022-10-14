@@ -5525,7 +5525,7 @@ static void zend_compile_typename(zend_ast *ast, zend_arg_info *arg_info, zend_b
 	}
 }
 /* }}} */
-
+// 编译用户函数参数
 void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 {
 	zend_ast_list *list = zend_ast_get_list(ast);
@@ -5564,12 +5564,14 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 	}
 
 	for (i = 0; i < list->children; ++i) {
-		zend_ast *param_ast = list->child[i];
-		zend_ast *type_ast = param_ast->child[0];
-		zend_ast *var_ast = param_ast->child[1];
-		zend_ast *default_ast = param_ast->child[2];
+		zend_ast *param_ast = list->child[i];   // 获取第一个参数
+		zend_ast *type_ast = param_ast->child[0];  // 参数类型
+		zend_ast *var_ast = param_ast->child[1];  //  参数变量 
+		zend_ast *default_ast = param_ast->child[2];  // 默认值
 		zend_string *name = zval_make_interned_string(zend_ast_get_zval(var_ast));
+		//是否被引用
 		zend_bool is_ref = (param_ast->attr & ZEND_PARAM_REF) != 0;
+		//是否可变变量
 		zend_bool is_variadic = (param_ast->attr & ZEND_PARAM_VARIADIC) != 0;
 
 		znode var_node, default_node;
@@ -5622,14 +5624,15 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 		opline = zend_emit_op(NULL, opcode, NULL, &default_node);
 		SET_NODE(opline->result, &var_node);
 		opline->op1.num = i + 1;
-
+        /**参数的相关信息 start**/
 		arg_info = &arg_infos[i];
 		arg_info->name = zend_string_copy(name);
 		arg_info->pass_by_reference = is_ref;
 		arg_info->is_variadic = is_variadic;
+		/**参数的相关信息 end**/
 		/* TODO: Keep compatibility, but may be better reset "allow_null" ??? */
 		arg_info->type = ZEND_TYPE_ENCODE(0, 1);
-
+       
 		if (type_ast) {
 			zend_bool allow_null;
 			zend_bool has_null_default = default_ast
@@ -5721,8 +5724,8 @@ void zend_compile_params(zend_ast *ast, zend_ast *return_type_ast) /* {{{ */
 	}
 
 	/* These are assigned at the end to avoid uninitialized memory in case of an error */
-	op_array->num_args = list->children;
-	op_array->arg_info = arg_infos;
+	op_array->num_args = list->children; //记录参数的个数 到 op_array
+	op_array->arg_info = arg_infos;  //  参数的信息
 
 	/* Don't count the variadic argument */
 	if (op_array->fn_flags & ZEND_ACC_VARIADIC) {
@@ -6020,7 +6023,7 @@ static void zend_begin_func_decl(znode *result, zend_op_array *op_array, zend_as
 	}
 
 	key = zend_build_runtime_definition_key(lcname, decl->lex_pos);
-	zend_hash_update_ptr(CG(function_table), key, op_array);
+	zend_hash_update_ptr(CG(function_table), key, op_array);  // 更新全局函数表
 	zend_register_seen_symbol(lcname, ZEND_SYMBOL_FUNCTION);
 
 	if (op_array->fn_flags & ZEND_ACC_CLOSURE) {
@@ -6039,7 +6042,7 @@ static void zend_begin_func_decl(znode *result, zend_op_array *op_array, zend_as
 	zend_string_release_ex(lcname, 0);
 }
 /* }}} */
-// PHP 中函数的编译
+// PHP 中函数的编译用户函数的编译
 void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 {
 	zend_ast_decl *decl = (zend_ast_decl *) ast;
@@ -6105,7 +6108,7 @@ void zend_compile_func_decl(znode *result, zend_ast *ast) /* {{{ */
 		zend_compile_closure_uses(uses_ast); //闭包函数编译
 	}
 	zend_compile_stmt(stmt_ast);
-
+    // 类中的方法编译
 	if (is_method) {
 		zend_check_magic_method_implementation(
 			CG(active_class_entry), (zend_function *) op_array, E_COMPILE_ERROR);

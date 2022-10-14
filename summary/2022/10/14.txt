@@ -1,0 +1,20 @@
+1.，上面也说了函数其实就是将一组PHP代码编译为单独的opcodes，函数的调用就是不同opcodes间的切换，
+     所以函数的编译过程与普通PHP代码基本一致
+
+2.保存当前正在编译的zend_op_array，新分配一个结构，因为每个函数、include的文件都对应独立的一个zend_op_array，
+    通过CG(active_op_array)记录当前编译所属zend_op_array，所以开始编译函数时就需要将这个值保存下来，
+    等到函数编译完成再还原回去；
+
+3.另外还有一个关键操作：zend_begin_func_decl，这里会在当前zend_op_array（不是新生成的函数那个）生成一条 
+    ZEND_DECLARE_FUNCTION 的opcode，也就是函数声明操作。可以这么理解 函数也是当前的一个opcode 只不过这个opcode
+    是一个函数 执行到这opcode 的时候执行的是个函数
+
+例如:
+    $a = 123;  //当前为CG(active_op_array) = zend_op_array_1，编译到这时此opcode加到zend_op_array_1
+
+    //新分配一个zend_op_array_2，并将当前CG(active_op_array)保存到origin_op_array，
+    //然后将CG(active_op_array)=zend_op_array_2
+    function test(){
+        $b = 234; //编译到zend_op_array_2
+    }//函数编译结束，将CG(active_op_array) = origin_op_array，切回zend_op_array_1
+    $c = 345; //编译到zend_op_array_1
