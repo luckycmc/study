@@ -5,12 +5,12 @@ class Index
    
       public function index()
       {
-
+           return "www.php.cn";
       }
 
-      public function getData()
+      public function get()
       {
-
+          return "get www.php.cn data";
       }
 
 }// class end
