@@ -38,6 +38,10 @@ class Server
      public function request(\Swoole\Http\Request $request,\Swoole\Http\Response $response)
      {
          $pathInfo = explode('/', ltrim($request->server['path_info'], '/'));
+         if (count($pathInfo) <= 1){
+             $pathInfo[0] = 'Index';
+             $pathInfo[1] = 'Index';
+         }
          //获取对应的控制器和方法
          $controller = isset($pathInfo[0]) ?ucfirst($pathInfo[0]): 'Index';
          $method     = isset($pathInfo[1]) ?ucfirst($pathInfo[1]): 'index';
@@ -47,7 +51,8 @@ class Server
              $result = (new $class)->{$method}();
              $response->end($result);
          } catch (\Throwable $e) {
-             $response->end($e->getMessage());
+             $responseContent = $e->getFile().':'.$e->getLine().':'.$e->getMessage();
+             $response->end($responseContent);
          }
      }
     //服务器启动
