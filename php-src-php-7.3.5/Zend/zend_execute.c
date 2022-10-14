@@ -163,7 +163,7 @@ ZEND_API const zend_internal_function zend_pass_function = {
 	if (should_free) { \
 		zval_ptr_dtor_nogc(should_free); \
 	}
-
+// 获取op_array变量的位置
 #define CV_DEF_OF(i) (EX(func)->op_array.vars[i])
 
 #define ZEND_VM_STACK_PAGE_SLOTS (16 * 1024) /* should be a power of 2 */
