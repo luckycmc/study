@@ -168,6 +168,8 @@ int tswServer_start(tswServer *serv)
 
 /*
  //主线程接受客户端连接
+  当有连接到来的时候 接受连接 此时的连接转态是 established
+  fd是 和客户端通信的依据
  * reactor: Used to manage handle in tswEvent
 */
 int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
@@ -186,9 +188,9 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
         return TSW_ERR;
     }
     //有连接的建立
-    printf("connect coming \n");
+   // printf("connect coming \n");
     serv->status->accept_count++;
-    // 取模获取到对应reactor线程 客户端的数据由那个 reactor线程接受
+    // 取模获取到对应reactor线程 客户端的数据由那个 reactor线程处理连接 和读写数据
     sub_reactor = &(serv->reactor_threads[connfd % serv->reactor_num].reactor);
 
     serv->connection_list[connfd].connfd = connfd;
@@ -200,7 +202,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev)
     serv->session_list[serv->status->accept_count].connfd = connfd;
     serv->session_list[serv->status->accept_count].reactor_id = sub_reactor->id;
     serv->session_list[serv->status->accept_count].serv_sock = serv->serv_sock;
-    // 触发回调函数当有连接的时候
+    // 触发回调函数当有连接的时候 php 设置的回调函数
     serv->onConnect(serv->status->accept_count);
     // 注册对应的rteactor 线程 接受客户端的数据 是否可读
     if (sub_reactor->add(sub_reactor, connfd, TSW_EVENT_READ, tswServer_reactor_onReceive) < 0) {
