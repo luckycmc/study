@@ -9,7 +9,7 @@ int tswSocket_create(int type)
 
     if (type == TSW_SOCK_TCP) {
         _domain = AF_INET;
-        _type = SOCK_STREAM;
+        _type = SOCK_STREAM;  //字节流
     } else if (type == TSW_SOCK_UDP) {
         _domain = AF_INET;
         _type = SOCK_DGRAM;
@@ -18,7 +18,7 @@ int tswSocket_create(int type)
         return TSW_ERR;
     }
 
-    return socket(_domain, _type, 0);
+    return socket(_domain, _type, 0); // _type 区分创建的协议 也就是内核使用的协议
 }
 // socket的绑定
 int tswSocket_bind(int sock, int type, char *host, int port)
@@ -29,8 +29,9 @@ int tswSocket_bind(int sock, int type, char *host, int port)
     if (type == TSW_SOCK_TCP) {
         bzero(&servaddr, sizeof(servaddr));
         inet_aton(host, &(servaddr.sin_addr));
-        servaddr.sin_family = AF_INET;
-        servaddr.sin_port = htons(port);
+        servaddr.sin_family = AF_INET;   // 允许接受的IP地址
+        servaddr.sin_port = htons(port); //端口号
+        // 绑定服务的进程
         ret = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
         if (ret < 0) {
             tswWarn("%s", strerror(errno));

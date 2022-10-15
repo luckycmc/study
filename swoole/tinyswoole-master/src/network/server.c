@@ -70,7 +70,7 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "tswReactorThread_start error");
         return TSW_ERR;
     }
-    //监听
+    //监听 对应的socket
     if (listen(serv->serv_sock, LISTENQ) < 0) {
         tswWarn("%s", strerror(errno));
     }
