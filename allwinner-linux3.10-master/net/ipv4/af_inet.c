@@ -224,7 +224,7 @@ int inet_listen(struct socket *sock, int backlog)
 	/* Really, if the socket is already in listen state
 	 * we can only allow the backlog to be adjusted.
 	 */
-	if (old_state != TCP_LISTEN) {
+	if (old_state != TCP_LISTEN) {  //还不是 listen 状态（尚未 listen 过）
 		/* Check special setups for testing purpose to enable TFO w/o
 		 * requiring TCP_FASTOPEN sockopt.
 		 * Note that only TCP sockets (SOCK_STREAM) will reach here.
@@ -249,6 +249,7 @@ int inet_listen(struct socket *sock, int backlog)
 		if (err)
 			goto out;
 	}
+	//设置全连接队列长度
 	sk->sk_max_ack_backlog = backlog;
 	err = 0;
 

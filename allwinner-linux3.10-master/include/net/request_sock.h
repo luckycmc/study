@@ -147,7 +147,7 @@ struct fastopen_queue {
  * don't need to grab this lock in read mode too as rskq_accept_head. writes
  * are always protected from the main sock lock.
  */
-struct request_sock_queue {
+struct request_sock_queue {  //全连接队列 
 	struct request_sock	*rskq_accept_head;
 	struct request_sock	*rskq_accept_tail;
 	rwlock_t		syn_wait_lock;
