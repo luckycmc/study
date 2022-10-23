@@ -1,11 +1,12 @@
 <?php
 //创建tcp 服务器
+// 相当于完成 bind socket accept
 $server = new \Swoole\Server('0.0.0.0',9501);
 
 $server->set([
      'worker_num'=>swoole_cpu_num(),
 ]);
-//接受数据的事件
+//接受数据的事件  接受数据相当于 recv 
 $server->on('receive',function (\Swoole\Server $ser,$fd,$from_id,$data){
 
         //接受客户端的数据
@@ -17,7 +18,7 @@ $server->on('receive',function (\Swoole\Server $ser,$fd,$from_id,$data){
                'age'=>'23',
                'sex'=>1,
         ];
-        //返回数据给客户端
+        //返回数据给客户端 相当于write
         $ser->send($fd,json_encode($returnData));
 });
 //启动服务器
