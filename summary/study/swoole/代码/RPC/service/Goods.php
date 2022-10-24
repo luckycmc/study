@@ -1,6 +1,7 @@
 
 
-class Goods{
+class Goods
+{
        
       public function index()
       {    
