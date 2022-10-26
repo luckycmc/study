@@ -12,4 +12,11 @@ class Goods
             ];
             return json_encode($returnData);
       }
+      public function list()
+      {
+            return [
+                'name'=>'zpw',
+                'schoole'=>'许昌学院'    
+            ]
+      }
 }
