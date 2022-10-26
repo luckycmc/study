@@ -36,16 +36,17 @@
  */
 int sysctl_max_syn_backlog = 256;
 EXPORT_SYMBOL(sysctl_max_syn_backlog);
-
+// 请求队列申请内存
 int reqsk_queue_alloc(struct request_sock_queue *queue,
 		      unsigned int nr_table_entries)
 {
 	size_t lopt_size = sizeof(struct listen_sock);
 	struct listen_sock *lopt;
-
+     //计算半连接队列的长度
 	nr_table_entries = min_t(u32, nr_table_entries, sysctl_max_syn_backlog);
 	nr_table_entries = max_t(u32, nr_table_entries, 8);
 	nr_table_entries = roundup_pow_of_two(nr_table_entries + 1);
+	//为半连接队列申请内存
 	lopt_size += nr_table_entries * sizeof(struct request_sock *);
 	if (lopt_size > PAGE_SIZE)
 		lopt = vzalloc(lopt_size);
@@ -60,9 +61,11 @@ int reqsk_queue_alloc(struct request_sock_queue *queue,
 
 	get_random_bytes(&lopt->hash_rnd, sizeof(lopt->hash_rnd));
 	rwlock_init(&queue->syn_wait_lock);
+	//全连接队列头初始化
 	queue->rskq_accept_head = NULL;
+	//半连接队列设置
 	lopt->nr_table_entries = nr_table_entries;
-
+    // 添加写锁
 	write_lock_bh(&queue->syn_wait_lock);
 	queue->listen_opt = lopt;
 	write_unlock_bh(&queue->syn_wait_lock);
