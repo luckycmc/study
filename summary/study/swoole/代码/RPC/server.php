@@ -9,7 +9,7 @@ $server->set([
 //接受数据的事件  接受数据相当于 recv 
 $server->on('receive',function (\Swoole\Server $ser,$fd,$from_id,$data){
 
-        //接受客户端的数据
+        //接受客户端的数据 本质上也是客户端和tcp_server的请求
         $data = json_decode($data,true);  //定义好相应的数据格式 进行数据通讯
         // 获取对应的service 例如 Service/Goods
         $reurnData = (new './service/'.$data['site'].'()')->$data['action']
