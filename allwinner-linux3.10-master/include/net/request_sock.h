@@ -148,8 +148,8 @@ struct fastopen_queue {
  * are always protected from the main sock lock.
  */
 struct request_sock_queue {  //全连接队列 
-	struct request_sock	*rskq_accept_head;
-	struct request_sock	*rskq_accept_tail;
+	struct request_sock	*rskq_accept_head;   //头部指针
+	struct request_sock	*rskq_accept_tail;   // 尾部指针
 	rwlock_t		syn_wait_lock;
 	u8			rskq_defer_accept;
 	/* 3 bytes hole, try to pack */

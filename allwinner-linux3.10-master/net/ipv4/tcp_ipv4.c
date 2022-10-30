@@ -218,7 +218,7 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 	 * lock select source port, enter ourselves into the hash tables and
 	 * complete initialization after this.
 	 */
-	tcp_set_state(sk, TCP_SYN_SENT);
+	tcp_set_state(sk, TCP_SYN_SENT); //设置 socket 状态为 TCP_SYN_SENT
 	err = inet_hash_connect(&tcp_death_row, sk);
 	if (err)
 		goto failure;
