@@ -5320,7 +5320,7 @@ discard:
 	return 0;
 }
 EXPORT_SYMBOL(tcp_rcv_established);
-//tcp 完成连接
+//tcp 客户端完成连接 
 void tcp_finish_connect(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
