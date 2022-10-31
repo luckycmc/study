@@ -2980,9 +2980,10 @@ int tcp_connect(struct sock *sk)
 
 	tcp_init_nondata_skb(buff, tp->write_seq++, TCPHDR_SYN);
 	tp->retrans_stamp = TCP_SKB_CB(buff)->when = tcp_time_stamp;
+	//添加到发送队列 sk_write_queue 上
 	tcp_connect_queue_skb(sk, buff);
 	TCP_ECN_send_syn(sk, buff);
-
+    // //实际发出 syn
 	/* Send off SYN; include data in Fast Open. */
 	err = tp->fastopen_req ? tcp_send_syn_data(sk, buff) :
 	      tcp_transmit_skb(sk, buff, 1, sk->sk_allocation);
@@ -2995,7 +2996,7 @@ int tcp_connect(struct sock *sk)
 	tp->snd_nxt = tp->write_seq;
 	tp->pushed_seq = tp->write_seq;
 	TCP_INC_STATS(sock_net(sk), TCP_MIB_ACTIVEOPENS);
-
+    //启动重传定时器
 	/* Timer for repeating the SYN until an answer. */
 	inet_csk_reset_xmit_timer(sk, ICSK_TIME_RETRANS,
 				  inet_csk(sk)->icsk_rto, TCP_RTO_MAX);

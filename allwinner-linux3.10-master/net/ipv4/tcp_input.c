@@ -5320,7 +5320,7 @@ discard:
 	return 0;
 }
 EXPORT_SYMBOL(tcp_rcv_established);
-
+//tcp 完成连接
 void tcp_finish_connect(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
@@ -5337,7 +5337,7 @@ void tcp_finish_connect(struct sock *sk, struct sk_buff *skb)
 	icsk->icsk_af_ops->rebuild_header(sk);
 
 	tcp_init_metrics(sk);
-
+    //初始化拥塞控制
 	tcp_init_congestion_control(sk);
 
 	/* Prevent spurious tcp_cwnd_restart() on first data
@@ -5354,7 +5354,7 @@ void tcp_finish_connect(struct sock *sk, struct sk_buff *skb)
 		__tcp_fast_path_on(tp, tp->snd_wnd);
 	else
 		tp->pred_flags = 0;
-
+    //保活计时器打开
 	if (!sock_flag(sk, SOCK_DEAD)) {
 		sk->sk_state_change(sk);
 		sk_wake_async(sk, SOCK_WAKE_IO, POLL_OUT);
@@ -5629,7 +5629,7 @@ reset_and_undo:
  *	It's called from both tcp_v4_rcv and tcp_v6_rcv and should be
  *	address independent.
  */
-
+// 里根据不同的 socket 状态进行不同的处理。
 int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 			  const struct tcphdr *th, unsigned int len)
 {

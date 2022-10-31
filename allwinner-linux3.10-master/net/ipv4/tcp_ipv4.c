@@ -241,7 +241,7 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 							   usin->sin_port);
 
 	inet->inet_id = tp->write_seq ^ jiffies;
-
+    // 调用tcp连接
 	err = tcp_connect(sk);
 
 	rt = NULL;
@@ -1462,7 +1462,7 @@ static int tcp_v4_conn_req_fastopen(struct sock *sk,
 	WARN_ON(req->sk == NULL);
 	return 0;
 }
-
+// conn_request 是一个函数指针，指向 tcp_v4_conn_request。服务器响应 SYN 的主要处理逻辑都在这个 tcp_v4_conn_request 里。
 int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_options_received tmp_opt;
@@ -1488,6 +1488,7 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 	 * limitations, they conserve resources and peer is
 	 * evidently real one.
 	 */
+	// //看看半连接队列是否满了
 	if (inet_csk_reqsk_queue_is_full(sk) && !isn) {
 		want_cookie = tcp_syn_flood_action(sk, skb, "TCP");
 		if (!want_cookie)
@@ -1499,11 +1500,12 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 	 * clogging syn queue with openreqs with exponentially increasing
 	 * timeout.
 	 */
+	// //在全连接队列满的情况下，如果有 young_ack，那么直接丢
 	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1) {
 		NET_INC_STATS_BH(sock_net(sk), LINUX_MIB_LISTENOVERFLOWS);
 		goto drop;
 	}
-
+    // //分配 request_sock 内核对象
 	req = inet_reqsk_alloc(&tcp_request_sock_ops);
 	if (!req)
 		goto drop;
@@ -1608,6 +1610,7 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 
 	if (likely(!do_fastopen)) {
 		int err;
+		//发送 syn + ack 响应
 		err = ip_build_and_send_pkt(skb_synack, sk, ireq->loc_addr,
 		     ireq->rmt_addr, ireq->opt);
 		err = net_xmit_eval(err);
@@ -1617,6 +1620,7 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 		tcp_rsk(req)->snt_synack = tcp_time_stamp;
 		tcp_rsk(req)->listener = NULL;
 		/* Add the request_sock to the SYN table */
+		// //添加到半连接队列，并开启计时器
 		inet_csk_reqsk_queue_hash_add(sk, req, TCP_TIMEOUT_INIT);
 		if (fastopen_cookie_present(&foc) && foc.len != 0)
 			NET_INC_STATS_BH(sock_net(sk),
@@ -1744,9 +1748,10 @@ static struct sock *tcp_v4_hnd_req(struct sock *sk, struct sk_buff *skb)
 	const struct iphdr *iph = ip_hdr(skb);
 	struct sock *nsk;
 	struct request_sock **prev;
-	/* Find possible connection requests. */
+	/* Find possible connection requests. */  // 查找 listen socket 的半连接队列
 	struct request_sock *req = inet_csk_search_req(sk, &prev, th->source,
 						       iph->saddr, iph->daddr);
+	// 如果找到则 直接返回						   
 	if (req)
 		return tcp_check_req(sk, skb, req, prev, false);
 
@@ -1812,7 +1817,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
 	if (tcp_v4_inbound_md5_hash(sk, skb))
 		goto discard;
 #endif
-
+    // established 的状态
 	if (sk->sk_state == TCP_ESTABLISHED) { /* Fast path */
 		struct dst_entry *dst = sk->sk_rx_dst;
 
@@ -1833,7 +1838,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
 
 	if (skb->len < tcp_hdrlen(skb) || tcp_checksum_complete(skb))
 		goto csum_err;
-
+    //服务器收到第一步握手 SYN 或者第三步 ACK 都会走到这里
 	if (sk->sk_state == TCP_LISTEN) {
 		struct sock *nsk = tcp_v4_hnd_req(sk, skb);
 		if (!nsk)
