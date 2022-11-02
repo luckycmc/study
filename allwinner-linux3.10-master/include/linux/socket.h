@@ -25,9 +25,9 @@ typedef __kernel_sa_family_t	sa_family_t;
 /*
  *	1003.1g requires sa_family_t and that sa_data is char.
  */
- 
+ //因特网地址是有IP地址和端口号唯一定义
 struct sockaddr {
-	sa_family_t	sa_family;	/* address family, AF_xxx	*/
+	sa_family_t	sa_family;	/* address family, AF_xxx	地址家族 无符号短整型*/
 	char		sa_data[14];	/* 14 bytes of protocol address	*/
 };
 

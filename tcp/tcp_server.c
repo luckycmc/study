@@ -17,7 +17,7 @@ int main() {
 
     int server_socket, client_socket;
 
-    struct sockaddr_in server_addr, client_addr;
+    struct sockaddr_in server_addr, client_addr; 
 
     socklen_t addr_size;
 
@@ -29,19 +29,19 @@ int main() {
     //置字节字符串s的前n个字节为零，无返回值
     bzero(&server_addr, sizeof(server_addr));  //置字节字符串s的前n个字节为零。
     /**********************绑定server 的状态 start************************/
-    server_addr.sin_family = INADDR_ANY; // INADDR_ANY就是指定地址为0.0.0.0的地址 所有地址和任意地址
+    server_addr.sin_family = INADDR_ANY; // 这里可以理解为协议类型 设置地址家族
 
     server_addr.sin_port = htons(port);  //对应的端口
 
     server_addr.sin_addr.s_addr = listen_addr; //监听的地址
     /**********************绑定server 的状态 end************************/
-    //绑定socket
+    //绑定socket 绑定对应的ip和端口号
     if (bind(server_socket, (struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) 
     {
         printf("bind error\n");
         return -1;
     }
-    //监听socket
+    //监听socket 此时给半连接对列和全连接队列申请内存控制
     if (listen(server_socket, 5) == -1) 
     {
         printf("listen error\n");
@@ -51,7 +51,7 @@ int main() {
     printf("单进程 tcp 服务器创建成功\n"); //提示服务器创建成功
 
     addr_size = sizeof(client_addr); 
-    //接受来自客户端的连接
+    //从全连接队列中取出一个 fd连接 进行通讯
     client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
     printf("client fd is %d connect success\n", client_socket);
