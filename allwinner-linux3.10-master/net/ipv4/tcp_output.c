@@ -2956,7 +2956,7 @@ done:
 	fo->cookie.len = -1;  /* Exclude Fast Open option for SYN retries */
 	return err;
 }
-
+//申请一个 syn 报文并发送出去
 /* Build a SYN and send it off. */
 int tcp_connect(struct sock *sk)
 {
@@ -3059,7 +3059,7 @@ void tcp_send_delayed_ack(struct sock *sk)
 	icsk->icsk_ack.timeout = timeout;
 	sk_reset_timer(sk, &icsk->icsk_delack_timer, timeout);
 }
-
+// 构造 ack 包，并把它发送了出去。
 /* This routine sends an ack and also updates the window. */
 void tcp_send_ack(struct sock *sk)
 {
@@ -3088,6 +3088,7 @@ void tcp_send_ack(struct sock *sk)
 
 	/* Send it off, this clears delayed acks for us. */
 	TCP_SKB_CB(buff)->when = tcp_time_stamp;
+	//发送出去
 	tcp_transmit_skb(sk, buff, 0, sk_gfp_atomic(sk, GFP_ATOMIC));
 }
 

@@ -5320,12 +5320,12 @@ discard:
 	return 0;
 }
 EXPORT_SYMBOL(tcp_rcv_established);
-//tcp 客户端完成连接 
+//tcp 客户端完成连接  请求
 void tcp_finish_connect(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct inet_connection_sock *icsk = inet_csk(sk);
-
+    // 设置链接状态为 tcp_established
 	tcp_set_state(sk, TCP_ESTABLISHED);
 
 	if (skb != NULL) {
@@ -5643,17 +5643,17 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 	switch (sk->sk_state) {
 	case TCP_CLOSE:
 		goto discard;
-
+    ////第一次握手
 	case TCP_LISTEN:
-		if (th->ack)
+		if (th->ack)  //判断是ack
 			return 1;
 
-		if (th->rst)
+		if (th->rst)   //rst 报文 该连接结束
 			goto discard;
 
-		if (th->syn) {
+		if (th->syn) {  // syn 报文
 			if (th->fin)
-				goto discard;
+				goto discard;  // fin 报文直接丢弃
 			if (icsk->icsk_af_ops->conn_request(sk, skb) < 0)
 				return 1;
 
@@ -5679,7 +5679,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 		}
 		goto discard;
 
-	case TCP_SYN_SENT:
+	case TCP_SYN_SENT:  // syn send报文
 		queued = tcp_rcv_synsent_state_process(sk, skb, th, len);
 		if (queued >= 0)
 			return queued;
@@ -5783,7 +5783,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 			}
 			break;
 
-		case TCP_FIN_WAIT1:
+		case TCP_FIN_WAIT1:  // TCP_FIN_WAIT1 客户端发出 fin 报文
 			/* If we enter the TCP_FIN_WAIT1 state and we are a
 			 * Fast Open socket and this is the first acceptable
 			 * ACK we have received, this would have acknowledged
@@ -5852,7 +5852,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 			}
 			break;
 
-		case TCP_LAST_ACK:
+		case TCP_LAST_ACK:  // 服务端的最后ack
 			if (tp->snd_una == tp->write_seq) {
 				tcp_update_metrics(sk);
 				tcp_done(sk);
@@ -5901,7 +5901,7 @@ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb,
 
 	if (!queued) {
 discard:
-		__kfree_skb(skb);
+		__kfree_skb(skb); //释放掉这个链接
 	}
 	return 0;
 }

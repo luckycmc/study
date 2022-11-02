@@ -137,7 +137,10 @@ int tcp_twsk_unique(struct sock *sk, struct sock *sktw, void *twp)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(tcp_twsk_unique);
-
+/**
+ 客户端通过调用 connect 来发起连接。在 connect 系统调用中会进入到内核源码的 tcp_v4_connect。
+ * 
+ */
 /* This will initiate an outgoing connection. */
 int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 {
@@ -219,10 +222,10 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 	 * complete initialization after this.
 	 */
 	tcp_set_state(sk, TCP_SYN_SENT); //设置 socket 状态为 TCP_SYN_SENT
+	//动态选择一个端口
 	err = inet_hash_connect(&tcp_death_row, sk);
 	if (err)
 		goto failure;
-    //生成一个端口号
 	rt = ip_route_newports(fl4, rt, orig_sport, orig_dport,
 			       inet->inet_sport, inet->inet_dport, sk);
 	if (IS_ERR(rt)) {
@@ -241,7 +244,7 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 							   usin->sin_port);
 
 	inet->inet_id = tp->write_seq ^ jiffies;
-    // 调用tcp连接
+    // 调用tcp连接 //函数用来根据 sk 中的信息，构建一个完成的 syn 报文，并将它发送出去。
 	err = tcp_connect(sk);
 
 	rt = NULL;
@@ -1490,9 +1493,10 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 	 */
 	// //看看半连接队列是否满了
 	if (inet_csk_reqsk_queue_is_full(sk) && !isn) {
+		//是否开启syncookie
 		want_cookie = tcp_syn_flood_action(sk, skb, "TCP");
-		if (!want_cookie)
-			goto drop;
+		if (!want_cookie)  
+			goto drop; //直接丢弃
 	}
 
 	/* Accept backlog is full. If we have already queued enough
@@ -1741,7 +1745,7 @@ put_and_exit:
 	goto exit;
 }
 EXPORT_SYMBOL(tcp_v4_syn_recv_sock);
-
+// 首先会到 tcp_v4_hnd_req 去查看半连接队列
 static struct sock *tcp_v4_hnd_req(struct sock *sk, struct sk_buff *skb)
 {
 	struct tcphdr *th = tcp_hdr(skb);
@@ -1854,7 +1858,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
 		}
 	} else
 		sock_rps_save_rxhash(sk, skb);
-
+    //  tcp_rcv_state_process 里根据不同的 socket 状态进行不同的处理。
 	if (tcp_rcv_state_process(sk, skb, tcp_hdr(skb), skb->len)) {
 		rsk = sk;
 		goto reset;
