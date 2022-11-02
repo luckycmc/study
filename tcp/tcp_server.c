@@ -51,7 +51,7 @@ int main() {
     printf("单进程 tcp 服务器创建成功\n"); //提示服务器创建成功
 
     addr_size = sizeof(client_addr); 
-    //从全连接队列中取出一个 fd连接 进行通讯
+    //从全连接队列中取出一个 fd连接 进行通讯  对应的是客户端的信息
     client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
     printf("client fd is %d connect success\n", client_socket);
