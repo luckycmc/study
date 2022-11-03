@@ -16,7 +16,7 @@ int main() {
     int port = 8080;
 
     int server_socket, client_socket;
-
+    //创建服务端和客户端的 sockaddr_in
     struct sockaddr_in server_addr, client_addr; 
 
     socklen_t addr_size;

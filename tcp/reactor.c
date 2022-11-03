@@ -118,7 +118,7 @@ int recv_cb(int fd, int events, void *arg) {
 
 }
 
-//接受客户端连接
+//接受客户端连接 是否有连接的到来
 int accept_cb(int fd, int events, void *arg) {
 
 	struct sockaddr_in client_addr;

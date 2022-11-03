@@ -1519,6 +1519,7 @@ SYSCALL_DEFINE3(bind, int, fd, struct sockaddr __user *, umyaddr, int, addrlen)
 }
 
 /*
+   对应 应用程序 listen()
  *	Perform a listen. Basically, we allow the protocol to do anything
  *	necessary for a listen, and if that works, we mark the socket as
  *	ready for listening.
@@ -1531,6 +1532,7 @@ SYSCALL_DEFINE2(listen, int, fd, int, backlog)
 	int somaxconn;
     //根据 fd 查找 socket 内核对象
 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+	//存在 进项相应的chu
 	if (sock) {
 		somaxconn = sock_net(sock->sk)->core.sysctl_somaxconn;
 		//所以，虽然 listen 允许我们传入 backlog（该值和半连接队列、全连接队列都有关系）。
