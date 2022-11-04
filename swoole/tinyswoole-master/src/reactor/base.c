@@ -1,9 +1,10 @@
 #include "tinyswoole.h"
 #include "server.h"
 #include "log.h"
-
+// reactor 模型创建
 int tswReactor_create(tswReactor *reactor, int max_event_num)
-{
+{    
+    //创建对应的reactor
     if (tswReactorEpoll_create(reactor, max_event_num) < 0) {
         tswWarn("tswReactorEpoll_create error.");
         return TSW_ERR;

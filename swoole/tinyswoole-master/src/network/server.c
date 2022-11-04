@@ -60,7 +60,7 @@ static int tswServer_start_proxy(tswServer *serv)
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-    // reactor 线程的创建
+    // reactor 线程的创建 和初始化
     if (tswReactorThread_create(serv) < 0) {
         tswWarn("%s", "tswReactorThread_create error");
         return TSW_ERR;
@@ -92,7 +92,7 @@ static int tswServer_start_proxy(tswServer *serv)
             tswWarn("%s", "master thread epoll wait error");
             return TSW_ERR;
         }
-        // 获取就绪事件触发回调函数
+        // 获取就绪事件触发回调函数 也就是查看是否有连接的到来 有连接触发 tswServer_master_onAccept 回调函数
 
         for (i = 0; i < nfds; i++) {
             tswReactorThread *tsw_reactor_thread;
@@ -169,6 +169,7 @@ int tswServer_start(tswServer *serv)
 /*
  //主线程接受客户端连接
   当有连接到来的时候 接受连接 此时的连接转态是 established
+  从内核全连接队列中取出一个fd 进程数据交互和通讯
   fd是 和客户端通信的依据
  * reactor: Used to manage handle in tswEvent
 */
@@ -231,11 +232,13 @@ int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev)
         reactor->event_num -= 1;
         return TSW_OK;
     }
+    //客户端异常 < 0
+
 
     event_data.info.len = n;
     event_data.info.from_id = reactor->id;
     event_data.info.fd = TSwooleG.serv->connection_list[tswev->fd].session_id;
-    worker_id = tswev->fd % TSwooleG.serv->process_pool->worker_num;
+    worker_id = tswev->fd % TSwooleG.serv->process_pool->worker_num; //算出对应的id
     //把客户端的数据发送给 相应的worker 进程的管道
     if (tswReactorThread_sendToWorker(TSwooleG.serv, &event_data, worker_id) < 0) {
         tswWarn("%s", "tswReactorThread_sendToWorker error");
