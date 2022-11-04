@@ -33,7 +33,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
         }
     }
 }
-//reactor线程的创建
+//reactor线程组申请内存
 int tswReactorThread_create(tswServer *serv)
 {
     tswReactorThread *thread; int i;
@@ -46,6 +46,7 @@ int tswReactorThread_create(tswServer *serv)
     
     for (i = 0; i < serv->reactor_num; i++) {
         thread = &(serv->reactor_threads[i]);
+        // 线程对应的reactor初始化
         if (tswReactor_create(&(thread->reactor), MAXEVENTS) < 0) {
             tswWarn("%s", "tswReactor_create error");
             return TSW_ERR;
@@ -116,11 +117,28 @@ int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
     session_id = event_data.info.fd;
     session = &(TSwooleG.serv->session_list[session_id]);
     // 发送数据给客户端
-    send(session->connfd, event_data.data, event_data.info.len, 0);
+    n = send(session->connfd, event_data.data, event_data.info.len, 0);
+     //删除对应的fd 不仅进行通讯
     if (reactor->del(reactor, tswev->fd) < 0) {
-        tswWarn("%s", "reactor del error");
-        return TSW_ERR;
+            tswWarn("%s", "reactor del error");
+            return TSW_ERR;
     }
+    /********后续自己添加的start******/    
+    /*if(n == -1){
+         printf("client is closed\n");
+         //删除对应的fd 不仅进行通讯
+        if (reactor->del(reactor, tswev->fd) < 0) {
+            tswWarn("%s", "reactor del error");
+            return TSW_ERR;
+        }
+    }else if(n > 0){
+          //数据发送完 等待fd在下次送数据
+        if (reactor->set(reactor, tswev->fd,TSW_EVENT_READ) < 0) {
+            tswWarn("%s", "reactor del error");
+            return TSW_ERR;
+        }
+    }*/
+     /********后续自己添加的end******/  
 
     return TSW_OK;
 }

@@ -51,14 +51,14 @@ int main() {
     printf("单进程 tcp 服务器创建成功\n"); //提示服务器创建成功
 
     addr_size = sizeof(client_addr); 
-    //从全连接队列中取出一个 fd连接 进行通讯  对应的是客户端的信息
+    //从全连接队列中取出一个 fd连接 进行通讯  对应的是客户端的信息 监听的是 server_socket
     client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
     printf("client fd is %d connect success\n", client_socket);
 
     char msg[] = "欢迎你连接成功\n";
     char bye[] = "服务端已经关闭\n";
-    write(client_socket, msg, sizeof(msg));  //数据返回给当前客户端
+    write(client_socket, msg, sizeof(msg));  //给当前客户端 进行数据通讯
 
     //阻塞在这等待服务器连接 不断的接受客户端的发过来的数据
     while (1) 
@@ -76,7 +76,8 @@ int main() {
 
             printf("client send string is:%s\n",buffer); 
             write(client_socket, buffer, str_length);//数据发送给客户端数据
-        }else{
+        }else{ 
+            //客户端异常
              close(client_socket);  //关闭客户端
             printf("read data is error\n");
             break;

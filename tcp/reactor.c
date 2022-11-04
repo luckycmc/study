@@ -13,8 +13,8 @@ struct sockitem { //  socket item 对应的节点
 	int sockfd;
 	int (*callback)(int fd, int events, void *arg);  //指针回调函数
 
-	char recvbuffer[1024]; //
-	char sendbuffer[1024];
+	char recvbuffer[1024]; // 接受 buff
+	char sendbuffer[1024]; //发送  buff
 
 };
 
@@ -124,7 +124,7 @@ int accept_cb(int fd, int events, void *arg) {
 	struct sockaddr_in client_addr;
 	memset(&client_addr, 0, sizeof(struct sockaddr_in));
 	socklen_t client_len = sizeof(client_addr);
-	//接受客户端连接
+	//从 全连接队列中取出一个 链接 fd 进行数据的通讯
 	int clientfd = accept(fd, (struct sockaddr*)&client_addr, &client_len);
 	if (clientfd <= 0) return -1;
 
@@ -138,10 +138,10 @@ int accept_cb(int fd, int events, void *arg) {
 	//ev.data.fd = clientfd;
 
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
-	si->sockfd = clientfd;
+	si->sockfd = clientfd;  //绑定的对应fd
 	si->callback = recv_cb; // 回调接受客户端的数据
-	ev.data.ptr = si;
-	
+	ev.data.ptr = si; //用户态额外的数据
+	// 把获取的连接fd 放入到 epoll中
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
 	
 	return clientfd;
@@ -193,14 +193,14 @@ int main(int argc, char *argv[]) {
 	ev.data.ptr = si;  // si 加入对应的 ev.data.ptr
 	
 	int result = epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, sockfd, &ev);   //加入对应的epoll_ctl
-    //验证是否加入成功
+    //验证是否加入成功 失败返回
 	if(result == -1){
           
            return -1;
     }
 
 	//pthread_cond_waittime();
-	//阻塞 等待 客户端连接
+	//阻塞 等待 客户端连接 和数据的可读或者可写
 	while (1) {
         
         // 有数据时会触发  
