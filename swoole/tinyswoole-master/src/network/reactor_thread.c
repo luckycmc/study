@@ -14,7 +14,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
     while (1) {
         int nfds;
 
-        nfds = reactor->wait(reactor);
+        nfds = reactor->wait(reactor);  // 获取当前线程的就绪fd 或者说事件
         if (nfds < 0) {
             tswWarn("%s", "reactor thread epoll wait error");
             return TSW_ERR;
@@ -26,6 +26,7 @@ static int tswReactorThread_loop(tswThreadParam *param)
 
             tswEvent *tswev = (tswEvent *)reactor_epoll_object->events[i].data.ptr;
             tswDebug("reactor thread [%d] handler the event", reactor->id);
+            //处理对用绑定 回调函数
             if (tswev->event_handler(reactor, tswev) < 0) {
                 tswWarn("%s", "event_handler error");
                 continue;
@@ -118,7 +119,7 @@ int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
     session = &(TSwooleG.serv->session_list[session_id]);
     // 发送数据给客户端
     n = send(session->connfd, event_data.data, event_data.info.len, 0);
-     //删除对应的fd 不仅进行通讯
+     //清除对应的fd不在进行 reactor监控
     if (reactor->del(reactor, tswev->fd) < 0) {
             tswWarn("%s", "reactor del error");
             return TSW_ERR;
