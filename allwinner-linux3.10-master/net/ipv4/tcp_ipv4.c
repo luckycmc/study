@@ -1866,7 +1866,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
 	return 0;
 
 reset:
-	tcp_v4_send_reset(rsk, skb);
+	tcp_v4_send_reset(rsk, skb); // 发送 RST 中止这个连接。
 discard:
 	kfree_skb(skb);
 	/* Be careful here. If this function gets more complicated and
@@ -1971,11 +1971,11 @@ EXPORT_SYMBOL(tcp_prequeue);
 
 int tcp_v4_rcv(struct sk_buff *skb)
 {
-	const struct iphdr *iph;
-	const struct tcphdr *th;
-	struct sock *sk;
+	const struct iphdr *iph; //ip
+	const struct tcphdr *th; //tcp
+	struct sock *sk;   //socket
 	int ret;
-	struct net *net = dev_net(skb->dev);
+	struct net *net = dev_net(skb->dev); //获取对应的设备
 
 	if (skb->pkt_type != PACKET_HOST)
 		goto discard_it;
@@ -2009,7 +2009,9 @@ int tcp_v4_rcv(struct sk_buff *skb)
 	TCP_SKB_CB(skb)->when	 = 0;
 	TCP_SKB_CB(skb)->ip_dsfield = ipv4_get_dsfield(iph);
 	TCP_SKB_CB(skb)->sacked	 = 0;
-
+   // __inet_lookup_skb 函数首先查找连接建立状态的socket（__inet_lookup_established），
+   //在没有命中的情况下，才会查找监听套接口（__inet_lookup_listener）。
+   // 
 	sk = __inet_lookup_skb(&tcp_hashinfo, skb, th->source, th->dest);
 	if (!sk)
 		goto no_tcp_socket;

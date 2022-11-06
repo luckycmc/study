@@ -229,7 +229,7 @@ begin:
 	return result;
 }
 EXPORT_SYMBOL_GPL(__inet_lookup_listener);
-
+// 查找已经建立连接的套接字
 struct sock *__inet_lookup_established(struct net *net,
 				  struct inet_hashinfo *hashinfo,
 				  const __be32 saddr, const __be16 sport,

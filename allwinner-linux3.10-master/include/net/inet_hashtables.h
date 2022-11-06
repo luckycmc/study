@@ -264,7 +264,7 @@ extern struct sock *__inet_lookup_listener(struct net *net,
 					   const __be32 daddr,
 					   const unsigned short hnum,
 					   const int dif);
-
+//查找监听套接字 也就是半连接队列的套接字
 static inline struct sock *inet_lookup_listener(struct net *net,
 		struct inet_hashinfo *hashinfo,
 		__be32 saddr, __be16 sport,
