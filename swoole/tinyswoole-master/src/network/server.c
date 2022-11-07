@@ -117,7 +117,9 @@ int tswServer_start(tswServer *serv)
     tswProcessPool *pool;
     tswPipe *pipe; 
     int i,j;
-    serv->onMasterStart();//触发主线程回调函数
+    //触发主线程回调函数
+    serv->onMasterStart();
+    //申请内存
     pool = (tswProcessPool *)malloc(sizeof(tswProcessPool));
     if (pool == NULL) {
         tswWarn("%s", "malloc error");

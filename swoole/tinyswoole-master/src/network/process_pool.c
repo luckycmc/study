@@ -4,7 +4,7 @@
 #include "tinyswoole.h"
 #include "server.h"
 
-//工作进程的初始化
+//worker进程的初始化 主要是申请内存 和管道的内存申请
 int tswProcessPool_create(tswProcessPool *pool, int worker_num)
 {    
     //worker进程分配 内存空间 
@@ -23,13 +23,13 @@ int tswProcessPool_create(tswProcessPool *pool, int worker_num)
 
     return TSW_OK;
 }
-//工作进程的创建
+//worker进程的创建  主要任务是fork()创建进程  并设置 进程属性 进入事件循环
 int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id)
 {
     pid_t pid;
     tswWorker *worker;
 
-    worker = pool->workers + worker_id;
+    worker = pool->workers + worker_id;  //通过偏移量获取对应的worker 对象
     pid = fork();
     if (pid > 0) { // master process
         worker->pid = pid;
@@ -41,6 +41,7 @@ int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id
     TSwooleWG.pipe_master = worker->pipe_master;
     TSwooleWG.pipe_worker = worker->pipe_worker;
     TSwooleWG.id = worker_id;
+    // 工作进程进程事件循环
     if (tswWorker_loop() < 0) {
         tswWarn("%s", "tswWorker_loop error");
         return TSW_ERR;

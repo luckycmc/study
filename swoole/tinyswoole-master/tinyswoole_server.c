@@ -16,7 +16,7 @@ PHP_METHOD(tinyswoole_server, __construct)
 	char *serv_host;
 	size_t host_len;
 	long serv_port;
-	long sock_type = TSW_SOCK_TCP;
+	long sock_type = TSW_SOCK_TCP; 
 	int sock;
 	tswServer *serv;
 
@@ -135,8 +135,9 @@ PHP_METHOD(tinyswoole_server, start)
 	tswServer *serv;
 
 	serv = TSwooleG.serv;
+	//注册回调函数
 	php_tswoole_register_callback(serv);
-
+    // 启动服务器
 	tswServer_start(serv);
 }
 // 发送数据 给客户端
