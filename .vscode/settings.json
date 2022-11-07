@@ -18,6 +18,9 @@
         "zend_vm.h": "c",
         "zend_compile.h": "c",
         "php_mytest.h": "c",
-        "info.h": "c"
+        "info.h": "c",
+        "sockios.h": "c",
+        "uio.h": "c",
+        "compiler.h": "c"
     }
 }

@@ -102,7 +102,7 @@ struct socket_wq {
  *  @wq: wait queue for several uses
  */
 struct socket {
-	socket_state		state;
+	socket_state		state;      // socket 对应的状态
 
 	kmemcheck_bitfield_begin(type);
 	short			type;
@@ -123,7 +123,7 @@ struct kiocb;
 struct sockaddr;
 struct msghdr;
 struct module;
-
+// socket 对应的操作
 struct proto_ops {
 	int		family;
 	struct module	*owner;

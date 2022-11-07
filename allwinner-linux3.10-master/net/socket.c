@@ -1345,7 +1345,7 @@ out_release:
 	goto out_sock_release;
 }
 EXPORT_SYMBOL(__sock_create);
-
+// socket 的创建 的接口
 int sock_create(int family, int type, int protocol, struct socket **res)
 {
 	return __sock_create(current->nsproxy->net_ns, family, type, protocol, res, 0);
