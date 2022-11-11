@@ -147,7 +147,7 @@ struct _tswPipe {
     int (*getFd)(tswPipe *pipe, int isWriteFd);
 	int (*write)(tswPipe *pipe, void *send, int length);
 };
-
+//两端的通讯描述符
 struct _tswPipeUnsock {
     int socks[2]; // socks[0]: worker, socks[1]: master
 };
