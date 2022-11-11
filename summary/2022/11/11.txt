@@ -1,0 +1,18 @@
+1.Socket Statistics  ~~SS
+
+	1 ss是Socket Statistics的缩写。顾名思义，ss命令可以用来获取socket统计信息，它可以显示和netstat类似的内容。ss的优势在于它能够显示更多更详细的有关TCP和连接状态的信息，而且比netstat更快速更高效。
+	
+	3 当服务器的socket连接数量变得非常大时，无论是使用netstat命令还是直接cat /proc/net/tcp，执行速度都会很慢。
+	
+	5 ss快的秘诀在于，它利用到了TCP协议栈中tcp_diag。tcp_diag是一个用于分析统计的模块，可以获得Linux 内核中第一手的信息，这就确保了ss的快捷高效。
+
+
+3.查看进程使用的socket
+  ss -pl
+
+5.查看建立的 TCP 连接
+  ss -tna
+
+6.使用 -p 选项查看监听端口的程序名称
+  ss -tlp
+
