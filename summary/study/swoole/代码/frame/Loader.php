@@ -3,14 +3,14 @@
 /**
  * Created by PhpStorm.
  * User: f
- * Date: 2022/10/14
+ * Date: 2022/11/13
  * Time: 10:03
  */
 class Loader
 {
     /**
      * 自动加载的方法
-     * @param $class_name
+     * @param $class_name 对应的类名
      */
      public static function  autoload($class_name)
      {
