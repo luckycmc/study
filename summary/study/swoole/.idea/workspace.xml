@@ -34,8 +34,8 @@
       <file leaf-file-name="server.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/代码/tcp/server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1122">
-              <caret line="32" column="27" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
+            <state relative-caret-position="-260">
+              <caret line="69" column="38" selection-start-line="69" selection-start-column="38" selection-end-line="69" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -49,6 +49,7 @@
         <option value="$PROJECT_DIR$/代码/frame/Server.php" />
         <option value="$PROJECT_DIR$/代码/frame/Loader.php" />
         <option value="$PROJECT_DIR$/代码/process/p1.php" />
+        <option value="$PROJECT_DIR$/代码/tcp/server.php" />
       </list>
     </option>
   </component>
@@ -227,12 +228,12 @@
       <option name="presentableId" value="Default" />
       <updated>1668347643434</updated>
       <workItem from="1668347644726" duration="3543000" />
-      <workItem from="1669193675223" duration="2520000" />
+      <workItem from="1669193675223" duration="3020000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6063000" />
+    <option name="totallyTimeSpent" value="6563000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -345,10 +346,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/swoole-ide-helper/src/Server/Port.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1089">
+          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/代码/tcp/server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1122">
-          <caret line="32" column="27" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
+        <state relative-caret-position="-260">
+          <caret line="69" column="38" selection-start-line="69" selection-start-column="38" selection-end-line="69" selection-end-column="38" />
           <folding />
         </state>
       </provider>

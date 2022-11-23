@@ -18,7 +18,7 @@ class Server
     {
          $this->serv = new Swoole\Http\Server('127.0.0.1',9506);
          $this->serv->set([
-             'worker_num' => swoole_cpu_num(), //开启2个worker进程
+             'worker_num' => 1, //开启2个worker进程
              'max_request' => 4,//每个worker进程 max_request设置为4次
          ]);
         /**********注册相应的事件 start***********/
@@ -26,7 +26,7 @@ class Server
         $this->serv->on('Request',[$this,'onRequest']);
         /**********注册相应的事件 end***********/
         //监听tcp 9=9607
-         $tcp = $this->serv->listen("0.0.0.0", 9507, SWOOLE_SOCK_TCP);
+        $tcp = $this->serv->listen("0.0.0.0", 9507, SWOOLE_SOCK_TCP);
         //需要调用 set 方法覆盖主服务器的设置
         //默认新监听的端口 9999 会继承主服务器的设置，也是 HTTP 协议
         //需要调用 set 方法覆盖主服务器的设置
