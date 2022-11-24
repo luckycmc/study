@@ -4,7 +4,7 @@ $client = new \Swoole\Client(SWOOLE_SOCK_TCP);
 
 $client->connect('127.0.0.1',9501);  //完成三次握手
 //调用的控制器和方法
-$data = json_encode(['site'=>'Goods','action'=>'index']);
+$data = json_encode(['site'=>'Goods','action'=>'list']);
 $client->send($data);  // 发送数据
 //接受服务端的消息
 $result = $client->recv(); // 接受数据
