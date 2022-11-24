@@ -1,6 +1,9 @@
 <?php
 $http_server = new Swoole\Http\Server('0.0.0.0',9998);
-$http_server->set(['daemonize'=> false]);
+//设置配置信息
+$http_server->set([
+    'daemonize'=> false
+]);
 $http_server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
     $response->header("Content-Type", "text/html; charset=utf-8");
     $response->end("<h1>Hello Swoole. #".rand(1000, 9999)."</h1>");
