@@ -11,6 +11,7 @@ $server->on('WorkerStart','onWorkerStart');
 //进程启动
 function onWorkerStart(\Swoole\Server $server,int $worker_id)
 {
+     // 注册自动加载
      spl_autoload_register('myAutoLoad',true,true);
 }
 //自动加载函数
