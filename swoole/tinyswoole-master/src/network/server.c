@@ -259,7 +259,12 @@ void tswServer_reactor_onStart(int reactor_id)
 {
     tswDebug("reactor thread [%d] started successfully", reactor_id);
 }
-
+// reactor 线程启动
+void tswServer_master_onClose(void)
+{
+    //tswDebug("reactor thread [%d] started successfully", reactor_id);
+    printf("close is end\n");
+}
 /*
  * worker process: 
  * 

@@ -124,6 +124,8 @@ int tswReactorThread_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
             tswWarn("%s", "reactor del error");
             return TSW_ERR;
     }
+    //触发关闭事件
+    tswServer_master_onClose();
     /********后续自己添加的start******/    
     /*if(n == -1){
          printf("client is closed\n");

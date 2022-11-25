@@ -170,6 +170,7 @@ void php_tswoole_register_callback(tswServer *serv)
 
 	serv->onMasterStart = tswServer_master_onStart;   // master 主线程启动
 	serv->onReactorStart = tswServer_reactor_onStart; // reactor 线程启动
+	serv->onClose        = tswServer_master_onClose;  //客户端关闭
 }
 
 void php_tswoole_onStart(tswServer *serv)

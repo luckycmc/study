@@ -47,6 +47,7 @@ int tswServer_master_onAccept(tswReactor *reactor, tswEvent *tswev);
 int tswServer_reactor_onReceive(tswReactor *reactor, tswEvent *tswev);
 void tswServer_master_onStart(void);
 void tswServer_reactor_onStart(int reactor_id);
+void tswServer_master_onClose(void);
 
 int tswReactorThread_create(tswServer *serv);
 int tswReactorThread_start(tswServer *serv);
