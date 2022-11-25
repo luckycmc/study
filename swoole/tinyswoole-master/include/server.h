@@ -8,7 +8,7 @@
 
 tswServerG TSwooleG;
 tswWorkerG TSwooleWG;
-
+// server 结构体
 struct _tswServer {
     int serv_sock;
 
@@ -33,6 +33,7 @@ struct _tswServer {
 };
 
 /*
+ 线程id和对应的reactor 绑定在一起
  * Used for the reactor thread instead of the master thread
 */
 struct _tswReactorThread {

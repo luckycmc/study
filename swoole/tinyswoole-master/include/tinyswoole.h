@@ -59,27 +59,27 @@ struct _tswThreadParam {
 };
 
 struct _tswReactorEpoll {
-	int epfd;
+	int epfd;  // 红黑树的根节点
 	struct epoll_event *events; // for epoll_wait()
 };
 
 #define MAXEVENTS 64
-//event 事件
+//event 事件 fd  事件 对应的回调函数
 typedef struct _tswEvent {
 	int fd;
 	int event;
 	int (*event_handler)(tswReactor *reactor, tswEvent *tswev); // specific event handler
 } tswEvent;
-
+// head的头部信心
 struct _tswDataHead {
 	uint16_t len;	// data len
 	uint16_t from_id; // reactor id
 	uint16_t fd; // session id
 };
-
+// event 对应的数据信息
 struct _tswEventData {
-	tswDataHead info;
-	char data[TSW_BUFFER_SIZE];
+	tswDataHead info; 
+	char data[TSW_BUFFER_SIZE]; // buffer 缓冲区
 };
 
 /*
@@ -91,7 +91,7 @@ struct _tswEventData {
 */
 struct _tswReactor {
 	void *object; // event object, for example, tswReactorEpoll
-	void *ptr;  // reserve(to server)
+	void *ptr;    // reserve(to server)
 	int event_num;
 	int max_event_num;
 
