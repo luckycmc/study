@@ -125,13 +125,13 @@ zend_module_entry tinyswoole_module_entry = {
 	PHP_TINYSWOOLE_VERSION,
 	STANDARD_MODULE_PROPERTIES
 };
-
+// 更新类的属性
 zval *tsw_zend_read_property(zend_class_entry *class_ptr, zval *obj, const char *s, int len, int silent)
 {
     zval rv;
     return zend_read_property(class_ptr, obj, s, len, silent, &rv);
 }
-
+// 获取 数据的类型
 char *tsw_zend_println_zval_type(zval *v)
 {
 	switch (Z_TYPE_P(v)) {

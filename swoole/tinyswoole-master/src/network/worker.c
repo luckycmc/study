@@ -11,6 +11,8 @@ static int tswWorker_onPipeReceive(tswReactor *reactor, tswEvent *tswev)
     n = read(tswev->fd, &event_data, sizeof(event_data));
     // 触发 onReceive 回调函数
     if (event_data.info.len > 0) {
+        printf("onReceive is chufa \n");
+        // 触发 onReceive 函数
         TSwooleG.serv->onReceive(TSwooleG.serv, &event_data);
     }
 

@@ -107,6 +107,7 @@ int tswReactorEpoll_create(tswReactor *reactor, int max_event_num)
         free(reactor_epoll_object);
         return TSW_ERR;
     }
+    // events 事件
     reactor_epoll_object->events = malloc(sizeof(struct epoll_event) * max_event_num);
     if (reactor_epoll_object->events == NULL) {
         tswWarn("malloc error");
@@ -117,13 +118,13 @@ int tswReactorEpoll_create(tswReactor *reactor, int max_event_num)
     reactor->object = reactor_epoll_object;
     reactor->event_num = 0;
     reactor->max_event_num = max_event_num;
-
+    /*******注册回调函数 start*****/
     reactor->add = tswReactorEpoll_add;
     reactor->set = tswReactorEpoll_set;
     reactor->del = tswReactorEpoll_del;
     reactor->wait = tswReactorEpoll_wait;
     reactor->free = tswReactorEpoll_free;
-
+     /*******注册回调函数 end*****/
     return TSW_OK;
 }
 
