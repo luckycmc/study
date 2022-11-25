@@ -112,14 +112,14 @@ struct _tswReactor {
 int tswReactor_create(tswReactor *reactor, int max_event_num);
 int tswReactorEpoll_create(tswReactor *reactor, int max_event_num);
 int tswReactor_setHandler(tswEvent *tswev, int (*tswReactor_handler)(tswReactor *reactor, tswEvent *tswev));
-
+// 连接信息
 struct _tswConnection {
 	int connfd;
 	uint32_t session_id;
 	uint32_t from_reactor_id;
 	int serv_sock;
 };
-
+// session 
 struct _tswSession {
     uint32_t session_id;
     int connfd;
@@ -151,7 +151,7 @@ struct _tswPipe {
 struct _tswPipeUnsock {
     int socks[2]; // socks[0]: worker, socks[1]: master
 };
-
+// 创建文件描述符
 int tswPipeUnsock_create(tswPipe *pipe);
 
 #endif /* TINYSWOOLE_H_ */
