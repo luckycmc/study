@@ -3,7 +3,7 @@
 #include "server.h"
 #include "tinyswoole.h"
 #include "process_pool.h"
-//reactor 线程进入事件循环
+//reactor 线程进入事件循环 所有绑定进程
 static int tswReactorThread_loop(tswThreadParam *param)
 {
     int pti = param->pti;   int i;
@@ -72,7 +72,8 @@ int tswReactorThread_start(tswServer *serv)
 
         thread = &(serv->reactor_threads[i]);
         param->pti = i;
-        param->object = serv;
+        param->object = serv;   
+
         //启动reactor 相应事件
         serv->onReactorStart(i);
         //创建线程
