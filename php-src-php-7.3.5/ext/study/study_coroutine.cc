@@ -8,12 +8,13 @@ php_coro_task PHPCoroutine::main_task = {0}; //主协成 也即是主进程
 // 
 long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *argv)
 {
-    php_coro_args php_coro_args;
+    php_coro_args php_coro_args;  //参数
+
     php_coro_args.fci_cache = fci_cache;
     php_coro_args.argc = argc;
     php_coro_args.argv = argv;
     
-    save_task(get_task());//保存当前的栈空间
+    save_task(get_task());//保存当前php的栈空间
 
     return Coroutine::create(create_func,(void *) &php_coro_args);  // 1.直接进到 Context.h 的构造方法中
     //return 0; //这里本应该返回协成的id 但是我们还没有到这一步，所以先返回0
@@ -40,16 +41,18 @@ php_coro_task* PHPCoroutine::get_task()
     php_coro_task *task = (php_coro_task *) Coroutine::get_current_task();
     return task?task:&main_task;
 }
-//对应的执行函数 对应的协成执行函数
+//对应的执行函数 对应的协成执行函数 也就是用户空间的指向的函数
 void PHPCoroutine::create_func(void *arg)
 {
     int i;
     // 用户端传递过来的参数
     php_coro_args *php_arg = (php_coro_args *) arg;
     zend_fcall_info_cache fci_cache = *php_arg->fci_cache;
+    // 获取需要指向的函数 也会就是 task test_php 中的 t1.php
     zend_function *func = fci_cache.function_handler;
     zval *argv = php_arg->argv;
     int argc = php_arg->argc;
+
     php_coro_task *task;
     zend_execute_data *call;
     zval _retval, *retval = &_retval;
@@ -88,7 +91,7 @@ void PHPCoroutine::create_func(void *arg)
         //zend_init_func_execute_data的作用是去初始化zend_execute_data
         zend_init_func_execute_data(call, &func->op_array, retval); //初始化执行栈
         //zend_execute_ex的作用就是去循环执行executor_globals.current_execute_data指向的opline。
-        //此时，这些opline就是我们用户空间传递的函数。
+        //此时，这些opline就是我们用户空间传递的函数。执行PHP代码 编译后的opcode 
         zend_execute_ex(EG(current_execute_data));
     }
     //判断是都有defer 函数注册有注入则实现函数调用 start************************************/

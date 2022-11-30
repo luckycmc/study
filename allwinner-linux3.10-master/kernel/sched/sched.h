@@ -974,27 +974,32 @@ static const u32 prio_to_wmult[40] = {
 #endif
 
 #define DEQUEUE_SLEEP		1
-
+//调度 类的机构体
 struct sched_class {
+	/*操作系统当中有多个调度类,按照调度的优先级排成一个链表*/
 	const struct sched_class *next;
 
 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
 	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+	// 放弃cpu的执行权限
 	void (*yield_task) (struct rq *rq);
 	bool (*yield_to_task) (struct rq *rq, struct task_struct *p, bool preempt);
 
 	void (*check_preempt_curr) (struct rq *rq, struct task_struct *p, int flags);
 
 	struct task_struct * (*pick_next_task) (struct rq *rq);
+	/**讲进程添加到运行队列当中**/
 	void (*put_prev_task) (struct rq *rq, struct task_struct *p);
 
 #ifdef CONFIG_SMP
 	int  (*select_task_rq)(struct task_struct *p, int sd_flag, int flags);
+	// 迁移任务到另一个CPU
 	void (*migrate_task_rq)(struct task_struct *p, int next_cpu);
 
 	void (*pre_schedule) (struct rq *this_rq, struct task_struct *task);
 	void (*post_schedule) (struct rq *this_rq);
 	void (*task_waking) (struct task_struct *task);
+	//唤醒进程
 	void (*task_woken) (struct rq *this_rq, struct task_struct *task);
 
 	void (*set_cpus_allowed)(struct task_struct *p,
