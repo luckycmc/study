@@ -9,6 +9,8 @@
 #include <errno.h>
 #include <sys/epoll.h>
 
+#define PORT  8090
+
 struct sockitem { //  socket item 对应的节点 
 	int sockfd;
 	int (*callback)(int fd, int events, void *arg);  //指针回调函数
@@ -153,7 +155,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	int port = atoi(argv[1]);  //获取对应的端口号
+	int port = atoi(PORT);  //获取对应的端口号
 
 	//socket
 

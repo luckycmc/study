@@ -18,8 +18,8 @@ int main()
         sleep(30);              //子进程睡眠30秒
         printf("child is die\n");
     }
-     else if(pid>0)   //父进程
-     {          
+    else if(pid > 0)   //父进程
+    {          
         wpid = wait(&status);   //等待回收子进程
         if(wpid == -1){
             perror("wait error:");
@@ -45,6 +45,5 @@ int main()
             perror("for error");
             exit(1);
     }
-
     return 0;
 }

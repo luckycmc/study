@@ -23,8 +23,8 @@
      等待接受客户端连接 -- accept 产生clienfd
 
      有链接 到来:
-       创建一个子进程 fork()
-       将通信的文件描述符关闭
+        创建一个子进程 fork()
+        将通信的文件描述符关闭
 
     （3）子进程的角色是什么?
         1）通信
@@ -110,7 +110,7 @@ int main()
         write(client_socket, msg, sizeof(msg));
 
         pid = fork();   //创建子进程
-
+        //父进程空间
         if (pid > 0) {
 
             sleep(1);//父进程,进行下次循环,读取客户端连接事件
