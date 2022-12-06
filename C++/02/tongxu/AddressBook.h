@@ -29,10 +29,10 @@ extern void Choose();
 
 extern void AddMessage(message arr[num],int*);
 extern void Show(message arr[num], int);
-//extern void Find(message arr[num],int);
+extern void Find(message arr[num],int);
 extern void MyPrintf(message arr[num], int);
-//extern void Modifies(message arr[num],int*);
-//extern int Delete(message arr[num], int*);
-//extern void SortByname(message arr[num], int);
+extern void Modifies(message arr[num],int*);
+extern int Delete(message arr[num], int*);
+extern void SortByname(message arr[num], int);
 
 

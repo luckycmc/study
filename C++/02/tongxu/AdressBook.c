@@ -87,5 +87,12 @@ void Modifies(message arr[num],int* i)
 //删除对应的数据
 int Delete(message arr[num], int* i)
 {
-    
+    printf("请输入你要修改的联系人名字：\n");
+    char arr1[10]={0};
+    scanf("%s",arr1);
+    int j, k = 0;
+     for(j = 0;j<)
+     {
+
+     }
 }
