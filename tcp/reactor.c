@@ -87,12 +87,12 @@ int recv_cb(int fd, int events, void *arg) {
 		printf("disconnect %d\n", fd);
 
 		ev.events = EPOLLIN;
-		//ev.data.fd = fd;
+		//ev.data.fd = fd; // 客户端端关闭删除对应的节点fd
 		epoll_ctl(eventloop->epfd, EPOLL_CTL_DEL, fd, &ev);
 
-		close(fd);
-
-		free(si);
+		close(fd); // 关闭文件描述符 释放 描述符对应的文件节点
+ 
+		free(si); //释放内存节点
 		
 	} else {
         // 代码 提示收到客户端的数据
@@ -138,11 +138,11 @@ int accept_cb(int fd, int events, void *arg) {
 	struct epoll_event ev;
 	ev.events = EPOLLIN | EPOLLET;  // 设置水平触发
 	//ev.data.fd = clientfd;
-
+    // sockitem 对应的socket节点
 	struct sockitem *si = (struct sockitem*)malloc(sizeof(struct sockitem));
 	si->sockfd = clientfd;  //绑定的对应fd
 	si->callback = recv_cb; // 回调接受客户端的数据
-	ev.data.ptr = si; //用户态额外的数据
+	ev.data.ptr = si; //用户态额外的数据指针
 	// 把获取的连接fd 放入到 epoll中
 	epoll_ctl(eventloop->epfd, EPOLL_CTL_ADD, clientfd, &ev);
 	
@@ -217,17 +217,16 @@ int main(int argc, char *argv[]) {
 
             //数据可读
 			if (eventloop->events[i].events & EPOLLIN) {
-				//printf("sockitem\n");
+				//printf("sockitem\n"); //获取对应的socket节点
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
-                // 出发对应的回调函数
+                // 触发对应的回调函数
 				si->callback(si->sockfd, eventloop->events[i].events, si);
-
 			}
             //数据可写
 			if (eventloop->events[i].events & EPOLLOUT) {
 
 				struct sockitem *si = (struct sockitem*)eventloop->events[i].data.ptr;
-                // 出发对应的回调函数
+                // 触发对应的回调函数
 				si->callback(si->sockfd, eventloop->events[i].events, si);
 
 			}
