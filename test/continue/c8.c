@@ -38,9 +38,10 @@ int main( void ) {
 	ctx_f2.uc_stack.ss_flags = 0;
 	ctx_f2.uc_link = &ctx_main;//f2后继上下文为主流程
 	makecontext(&ctx_f2, fun2, 0);//设置入口函数
-    /*******************修改对应的上下文信息 start********************/
+    /*******************修改对应的上下文信息 end********************/
 
 	swapcontext(&ctx_main, &ctx_f1);//保存ctx_main,从主流程上下文切换至ctx_f1上下文
 
 	printf("main exit\n");
+	return 1;
 }

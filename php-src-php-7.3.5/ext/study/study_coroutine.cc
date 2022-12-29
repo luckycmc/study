@@ -15,7 +15,7 @@ long PHPCoroutine::create(zend_fcall_info_cache *fci_cache,uint32_t argc, zval *
     php_coro_args.argv = argv;
     
     save_task(get_task());//保存当前php的栈空间
-
+    // create_func 是执行函数的空间
     return Coroutine::create(create_func,(void *) &php_coro_args);  // 1.直接进到 Context.h 的构造方法中
     //return 0; //这里本应该返回协成的id 但是我们还没有到这一步，所以先返回0
 }

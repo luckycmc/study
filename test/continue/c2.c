@@ -4,13 +4,12 @@
 //定义一个函数
 void func1(void *arg)
 {
-   
     puts("1");
     puts("11");
     puts("111");
-    sleep(30);//模拟IO等待
+    sleep(3);//模拟IO等待
     puts("IO 等待 两秒");
-    puts("1111");
+    puts("1111----children\n");
 }
 //测试上下文 其实就是从一个线程的 执行流切换到另一个线程的执行流
 // 保存当前的协程的用户信息 用于恢复
@@ -36,12 +35,14 @@ void  context_test()
  
     swapcontext(&main,&child);//切换到child上下文，保存当前上下文到main
     puts("main");//如果设置了后继上下文，func1函数指向完后会返回此处
-
+    printf("context_test is finished\n");
+    sleep(1);
 }
 //主函数
 int main()
 {  
     printf("主线程执行\n");
     context_test();//协成上下文测试
+    printf("process is finished\n");
     return 1;
 }

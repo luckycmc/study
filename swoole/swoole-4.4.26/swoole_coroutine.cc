@@ -451,7 +451,7 @@ void PHPCoroutine::interrupt_thread_loop()
     }
     pthread_exit(0);
 }
-//初始化PHP 栈
+//初始化PHP 栈 也就是创建一个PHP栈
 inline void PHPCoroutine::vm_stack_init(void)
 {
     uint32_t size = SW_DEFAULT_PHP_STACK_PAGE_SIZE;
@@ -469,7 +469,7 @@ inline void PHPCoroutine::vm_stack_init(void)
     EG(vm_stack_page_size) = size;
 #endif
 }
-
+// php 栈销毁
 inline void PHPCoroutine::vm_stack_destroy(void)
 {
     zend_vm_stack stack = EG(vm_stack);
@@ -739,7 +739,7 @@ void PHPCoroutine::main_func(void *arg)
     {
         swoole_call_hook(SW_GLOBAL_HOOK_ON_CORO_START, task);
     }
-
+     //用户空间传递的函数
     if (EXPECTED(func->type == ZEND_USER_FUNCTION))
     {
         ZVAL_UNDEF(retval);

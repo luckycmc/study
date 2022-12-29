@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<ucontext.h>
 #include<unistd.h>
+#include <time.h>
 /*
   ucontext来实现简单的协程库。
   利用ucontext提供的四个函数getcontext(),setcontext(),
@@ -50,6 +51,9 @@
 void test_go()
 {
     printf("Testing\n");
+    time_t t;    //time_t是一种类型，定义time_t类型的t
+    time(&t);    //取得当前时间
+    printf("%s\n",ctime(&t));// ctime(&t)将日期转为字符串并打印
 }
 
 int  main()
@@ -69,7 +73,7 @@ int  main()
       在通过setcontext恢复到getcontext的地方，重新执行代码，
       所以导致程序不断的输出”Hello world“
      */
-     //test_go();
+     test_go();
      setcontext(&context); // 恢复到1 执行的地方执行流跳转到对应的之前保存的地方
      return 0;
 
