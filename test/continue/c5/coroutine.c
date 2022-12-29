@@ -63,9 +63,7 @@ int coroutine_create(schedule_t* s, void* (*call_back)(schedule_t*, void* argc),
     c->ctx.uc_stack.ss_flags = 0;       //标识位
     c->ctx.uc_link = &s->ctx_main;//后继上下文main  //后继主协成
     makecontext(&c->ctx,(void(*)())&main_fun,1,s);//当前c->ctx的上下文环境 main_fun
-
-    return i;
-
+    return i; //返回对应的协程id
 }
 
 //获取协程状态

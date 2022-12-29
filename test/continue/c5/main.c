@@ -15,7 +15,7 @@
   改造ucp上下文信息，下一步执行func，func执行完毕之后执行 link之后的函数
 
   int swapcontext(ucontext_t *oucp, ucontext_t *ucp)
-  将oucp寄存器信息保存起来，将ucp的寄存器信息加载到CPU中  也就是寄存器中指令加载到cpu中去
+  将cpu寄存器信息保存起来，将ucp的寄存器信息加载到CPU中  也就是寄存器中指令加载到cpu中去
   然后cpu 取址执行 当前的协成就可以恢复起来执行了
 
 */
@@ -135,7 +135,7 @@ void* handle(schedule_t* s, void* argc)
             //读到结尾就结束
             printf("read end\n");
             break;
-            }
+        }
         else 
         {
             //从cfd中读到buf,并且输出
@@ -155,7 +155,7 @@ void* handle(schedule_t* s, void* argc)
 //主函数
 int main()
 {
-   printf("server start\n");
+    printf("server start\n");
     int lfd = tcp_init();
     set_nonblock(lfd);//将监听套接字设置为非阻塞
 

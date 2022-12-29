@@ -43,10 +43,10 @@ typedef struct coroutine
 //协成管理器
 typedef struct schedule
 {
-     coroutine_t **coroutines;  //所以协成
+     coroutine_t **coroutines;  //对应的协成结构体
      int current_id;            //当前协成id 如果没有运行的协成则设置为 -1
      ucontext_t ctx_main;        //主协成的上下文环境
-     int max_id;               //最大下表
+     int max_id;               //最大下标
 }schedule_t;
 
 //初始化协成管理器
