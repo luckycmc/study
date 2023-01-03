@@ -43,7 +43,7 @@ struct fpm_scoreboard_proc_s {
 #endif
 	size_t memory;
 };
-
+// scoreboard 记分牌 记录
 struct fpm_scoreboard_s {
 	union {
 		atomic_t lock;

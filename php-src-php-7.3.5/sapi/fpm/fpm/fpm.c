@@ -40,7 +40,7 @@ struct fpm_globals_s fpm_globals = {
 	.force_stderr = 0,
 	.send_config_pipe = {0, 0},
 };
-
+// fpm 模式下的初始化
 int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int test_conf, int run_as_root, int force_daemon, int force_stderr) /* {{{ */
 {
 	fpm_globals.argc = argc;

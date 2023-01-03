@@ -1542,6 +1542,7 @@ static zend_module_entry cgi_module_entry = {
 };
 
 /* {{{ main
+   php-fpm 下启动的入口函数
  */
 int main(int argc, char *argv[])
 {
@@ -1860,7 +1861,7 @@ consult the installation file that came with this distribution, or visit \n\
 		close(fpm_globals.send_config_pipe[1]);
 	}
 	fpm_is_running = 1;
-
+    //后面都是worker进程的操作，master进程不会走到下面
 	fcgi_fd = fpm_run(&max_requests);
 	parent = 0;
 

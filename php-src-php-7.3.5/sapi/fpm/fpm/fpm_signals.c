@@ -176,7 +176,7 @@ static void sig_handler(int signo) /* {{{ */
 	errno = saved_errno;
 }
 /* }}} */
-
+// 信号初始化
 int fpm_signals_init_main() /* {{{ */
 {
 	struct sigaction act;

@@ -368,7 +368,7 @@ static int fpm_socket_af_unix_listening_socket(struct fpm_worker_pool_s *wp) /* 
 	return fpm_sockets_get_listening_socket(wp, (struct sockaddr *) &sa_un, sizeof(struct sockaddr_un));
 }
 /* }}} */
-
+//创建每个worker pool的socket套接字。
 int fpm_sockets_init_main() /* {{{ */
 {
 	unsigned i, lq_len;

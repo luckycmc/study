@@ -15,7 +15,7 @@ enum fpm_address_domain {
 	FPM_AF_UNIX = 1,
 	FPM_AF_INET = 2
 };
-
+// pool下对应的每个worker进程分配一个fpm_scoreboard_proc_s
 struct fpm_worker_pool_s {
 	struct fpm_worker_pool_s *next;
 	struct fpm_worker_pool_config_s *config;
