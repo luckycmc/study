@@ -169,7 +169,7 @@ struct _zend_ast {
 
 /* Same as zend_ast, but with children count, which is updated dynamically */
 typedef struct _zend_ast_list {
-	zend_ast_kind kind;
+	zend_ast_kind kind;        // kind标识的是ast节点类型
 	zend_ast_attr attr;
 	uint32_t lineno;
 	uint32_t children;

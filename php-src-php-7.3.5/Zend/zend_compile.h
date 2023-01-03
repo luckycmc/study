@@ -126,9 +126,9 @@ typedef struct _zend_file_context {
 
 	HashTable seen_symbols;
 } zend_file_context;
-
+//解析 elem元素的栈
 typedef union _zend_parser_stack_elem {
-	zend_ast *ast;
+	zend_ast *ast;   //抽象语法树主要结构
 	zend_string *str;
 	zend_ulong num;
 } zend_parser_stack_elem;
