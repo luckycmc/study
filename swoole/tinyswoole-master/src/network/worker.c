@@ -40,7 +40,7 @@ int tswWorker_loop()
         tswWarn("%s", "tswReactor_create error");
         return TSW_ERR;
     }
-    // 注册reactor事件 回调函数是 tswWorker_onPipeReceive
+    // 注册reactor事件 回调函数是 tswWorker_onPipeReceive 我先给你绑定一下等到有数据到来时候可以出发对应的函数
     if (main_reactor->add(main_reactor, TSwooleWG.pipe_worker, TSW_EVENT_READ, tswWorker_onPipeReceive) < 0) {
         tswWarn("%s", "reactor add error");
         return TSW_ERR;

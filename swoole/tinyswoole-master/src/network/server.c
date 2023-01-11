@@ -145,12 +145,11 @@ int tswServer_start(tswServer *serv)
         //工作进程写入数据 worker进程使用
         pool->workers[i].pipe_worker = pipe->getFd(pipe, TSW_PIPE_WORKER);
         pool->workers[i].pipe_object = pipe;
-
-        
     }
    
     //创建工作进程 socketpair 在之前创建的 所以父子进程都可以使用
     for (j = 0; j < serv->worker_num; j++) {
+        //创建worker 进程
         if (tswServer_create_worker(serv, pool, j) < 0) {
             tswWarn("%s", "tswServer_create_worker error");
             return TSW_ERR;
