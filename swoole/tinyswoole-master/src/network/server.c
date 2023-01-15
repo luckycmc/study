@@ -111,7 +111,8 @@ static int tswServer_start_proxy(tswServer *serv)
 
     return TSW_OK;
 }
-//服务器启动
+//服务器启动 主要做初始化的工作 申请内存和管道的
+// 的创建
 int tswServer_start(tswServer *serv)
 {
     tswProcessPool *pool;
@@ -125,7 +126,7 @@ int tswServer_start(tswServer *serv)
         tswWarn("%s", "malloc error");
         return TSW_ERR;
     }
-    //进程初始化
+    //进程初始化 申请内存空间
     if (tswProcessPool_create(pool, serv->worker_num) < 0) {
         tswWarn("%s", "tswProcessPool_create error");
         return TSW_ERR;
