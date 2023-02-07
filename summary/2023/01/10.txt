@@ -1,0 +1,2 @@
+1.通过 cat /proc/cpuinfo 输出地址的大小 及具体其他选项参数
+cat /proc/meminfo 查看内存分布结构

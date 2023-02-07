@@ -5,7 +5,7 @@
 dynamicArrayOneDimensional.c
 输入N个数，求平均数
 **************************************************/
-main()
+int main()
 {
   int *p = NULL, n, i, sum;
   printf("Please enter array size:");
