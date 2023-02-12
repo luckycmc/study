@@ -29,8 +29,8 @@ void PHPCoroutine::save_task(php_coro_task *task)
 // 通过全局函数EG获取对应的信息 EG 是PHP 提供的
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
-     task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息
-     task->vm_stack_end = EG(vm_stack_end);  
+     task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息 当前的栈顶
+     task->vm_stack_end = EG(vm_stack_end);    // 当前PHP的栈底
      task->vm_stack     = EG(vm_stack);  // 当前运行的栈指针
      task->vm_stack_page_size = EG(vm_stack_page_size);  //当前运行栈的大小
      task->execute_data = EG(current_execute_data);    // 当前 PHP 栈的执行
