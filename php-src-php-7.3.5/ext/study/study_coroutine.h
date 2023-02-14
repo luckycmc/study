@@ -29,9 +29,9 @@ struct php_coro_task
     zend_vm_stack vm_stack;    //是协程栈指针。 
     size_t vm_stack_page_size;           //是协程栈页大小。
     study::Coroutine *co;               // 协成对象
-    zend_execute_data *execute_data;   //是当前协程栈的栈帧。
+    zend_execute_data *execute_data;   //是当前协程栈 PHP的栈帧。
     // 引入栈
-    std::stack<php_study_fci_fcc *> *defer_tasks; //defer 相应的处理
+    std::stack<php_study_fci_fcc *> *defer_tasks; //defer 相应的处理 栈 先进来的后出去 主要用于defer
 };
 
 

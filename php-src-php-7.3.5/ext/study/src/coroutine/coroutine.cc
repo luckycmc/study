@@ -40,8 +40,10 @@ void Coroutine::set_task(void *_task)
 void Coroutine::yield()
 {  
    assert(current == this);
+   //切换PHP栈
    on_yield(task);
    current = origin;
+   //切换C栈
    ctx.swap_out();
 }
 //恢复当前协成
@@ -56,16 +58,16 @@ void Coroutine::resume()
     on_resume(task);
     origin = current;  //主程序中current为null
     current = this;  //执行当前的协程对象
-    ctx.swap_in();
+    ctx.swap_in();   // 切换C栈
     //判断协成是否结束
     if (ctx.is_end())
     {
         //cid = current->get_cid();
         //printf("in resume method: co[%ld] end\n", cid);
-        on_close(task); // 新增的一行
-        current = origin;
-        coroutines.erase(cid);
-        delete this;
+        on_close(task); // 新增的一行 释放PHP栈
+        current = origin; //上一个协程对象   
+        coroutines.erase(cid); //释放map 中的 对象
+        delete this;// 删除协程对象
     }
 }
 //创建协成 协成类
