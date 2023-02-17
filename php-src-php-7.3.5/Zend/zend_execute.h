@@ -212,9 +212,10 @@ static zend_always_inline uint32_t zend_vm_calc_used_stack(uint32_t num_args, ze
 	}
 	return used_stack * sizeof(zval);
 }
-// 分配内存栈帧
+// 分配内存栈帧 入栈操作
 static zend_always_inline zend_execute_data *zend_vm_stack_push_call_frame(uint32_t call_info, zend_function *func, uint32_t num_args, zend_class_entry *called_scope, zend_object *object)
-{
+{   
+	//计算栈的大小
 	uint32_t used_stack = zend_vm_calc_used_stack(num_args, func); //函数和参数使用的空间
 
 	return zend_vm_stack_push_call_frame_ex(used_stack, call_info,
