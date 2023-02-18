@@ -51378,6 +51378,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_NULL_HANDLER(ZEND_OPCODE_HANDL
 #endif
 
 //这一步开始具体执行opcode指令，这里调用的是zend_execute_ex
+// 执行对应的 opcode 对应的handler 也就是调用C函数
 ZEND_API void execute_ex(zend_execute_data *ex)
 {
 	DCL_OPLINE

@@ -28,13 +28,14 @@ void PHPCoroutine::save_task(php_coro_task *task)
 //保存当前栈的数据信息 zend_vm 也是有想用的堆栈信息 当前在执行的PHP的脚本的内容
 // 通过全局函数EG获取对应的信息 EG 是PHP 提供的
 // EG 中的数据也就是当前虚拟机中正在执行的数据
+// 通过全局函数EG获取对应的信息 EG 是PHP 提供的 也就是 PHP虚拟机的堆栈信息 也是响应的脚本指向到那了
 void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息 当前的栈顶
      task->vm_stack_end = EG(vm_stack_end);    // 当前PHP的栈底
      task->vm_stack     = EG(vm_stack);  // 当前运行的栈指针
      task->vm_stack_page_size = EG(vm_stack_page_size);  //当前运行栈的大小
-     task->execute_data = EG(current_execute_data);    // 当前 PHP 栈的执行
+     task->execute_data = EG(current_execute_data);    // 当前 PHP 栈的执行 也就是opline opcode 的运行位置
 }
 //暂时先返回一个空指针
 php_coro_task* PHPCoroutine::get_task()
@@ -138,7 +139,7 @@ void PHPCoroutine::vm_stack_init(void)
     EG(vm_stack) = page;  //整个栈  也就是 zend_vm_stack
     EG(vm_stack)->top++;
     /*当前栈的栈顶和栈底使用我们新的栈空间*/
-    EG(vm_stack_top) = EG(vm_stack)->top; //栈顶 EG(vm_stack) 是当前的page 新栈
+    EG(vm_stack_top) = EG(vm_stack)->top; //栈顶 EG(vm_stack) 是当前的page 新栈的栈顶
     EG(vm_stack_end) = EG(vm_stack)->end; // 
     EG(vm_stack_page_size) = size; // 运行栈的大小
 
@@ -165,12 +166,13 @@ void PHPCoroutine::on_yield(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
     php_coro_task *origin_task = get_origin_task(task);
-    // 保存当前的栈
+    //保存当前的PHP栈
     save_task(task);
-    //恢复准备好的栈
+    //恢复准备好的上一个PHP栈
     restore_task(origin_task);
 }
-//php 栈的恢复 恢复当前协成
+//php 栈的恢复 恢复当前协成 主要作用是 保存挡当前的PHP栈
+// 恢复当前要运行的PHP栈
 void PHPCoroutine::on_resume(void *arg)
 {
     php_coro_task *task = (php_coro_task *) arg;
@@ -195,10 +197,11 @@ void PHPCoroutine::restore_task(php_coro_task *task)
  */
 inline void PHPCoroutine::restore_vm_stack(php_coro_task *task)
 {
-    EG(vm_stack_top) = task->vm_stack_top;
-    EG(vm_stack_end) = task->vm_stack_end;
-    EG(vm_stack) = task->vm_stack;
-    EG(vm_stack_page_size) = task->vm_stack_page_size;
+    EG(vm_stack_top) = task->vm_stack_top; // 恢复虚拟机的头部
+    EG(vm_stack_end) = task->vm_stack_end;  // 恢复虚拟机的结束位置
+    EG(vm_stack) = task->vm_stack;           //
+    EG(vm_stack_page_size) = task->vm_stack_page_size; //虚拟机的大小
+    //指令在虚拟接的执行位置 也要做相应的恢复 也就是说当前的指令在虚拟机上执行到那个位置了
     EG(current_execute_data) = task->execute_data;
 }
 //释放协成栈

@@ -2,7 +2,26 @@
 #include "timer.h"
 
 using study::Coroutine;
+/**
+1.每个协程都需要管理自己的c栈与php栈；
 
+2.Context封装了c栈的管理操作;ctx_字段保存的是寄存器%rsp的内容（指向c栈栈顶位置）；
+swap_ctx_字段保存的是将被换出的协程寄存器%rsp内容（即，将被换出的协程的c栈栈顶位置）；
+SwapIn()对应协程换入操作；SwapOut()对应协程换出操作；
+
+3.参考jump_fcontext实现，协程在换出时，会将寄存器%rip，%rbp等暂存在c栈栈顶；
+协程在换入时，相应的会从栈顶恢复这些寄存器的内容；
+Coroutine管理着协程所有内容；cid字段表示当前协程的ID；task字段指向当前协程的php_coro_task结构，
+该结构中保存的是当前协程的php栈信息（vm_stack_top，execute_data等）；ctx字段指向的是当前协程的Context对象；
+origin字段指向的是另一个协程Coroutine对象；yield()和resume()对应的是协程的换出换入操作；
+
+4.注意到php_coro_task结构的co字段指向其对应的协程对象Coroutine；
+
+5.Coroutine还有一些静态属性，静态属性的属于类属性，所有协程共享的；last_cid字段存储的是当前最大的协程ID，
+创建协程时可用于生成协程ID；current字段指向的是当前正在运行的协程Coroutine对象；on_yield和on_resume是两个函数指针，
+用于实现php栈的切换操作，实际指向的是方法PHPCoroutine::on_yield和PHPCoroutine::on_resume；
+ * 
+ */
 // Coroutine管理着协程所有内容；包括 PHP栈和C栈
 Coroutine* Coroutine::current = nullptr; //默认当前栈帧为空指针
 
@@ -40,8 +59,10 @@ void Coroutine::set_task(void *_task)
 void Coroutine::yield()
 {  
    assert(current == this);
+   //切换PHP栈
    on_yield(task);
    current = origin;
+   //切换C栈
    ctx.swap_out();
 }
 //恢复当前协成
@@ -56,16 +77,16 @@ void Coroutine::resume()
     on_resume(task);
     origin = current;  //主程序中current为null
     current = this;  //执行当前的协程对象
-    ctx.swap_in();
+    ctx.swap_in();   // 切换C栈
     //判断协成是否结束
     if (ctx.is_end())
     {
         //cid = current->get_cid();
         //printf("in resume method: co[%ld] end\n", cid);
-        on_close(task); // 新增的一行
-        current = origin;
-        coroutines.erase(cid);
-        delete this;
+        on_close(task); // 新增的一行 释放PHP栈
+        current = origin; //上一个协程对象   
+        coroutines.erase(cid); //释放map 中的 对象
+        delete this;// 删除协程对象
     }
 }
 //创建协成 协成类

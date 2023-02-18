@@ -140,18 +140,21 @@ struct _zend_executor_globals {
 	zend_array *symtable_cache[SYMTABLE_CACHE_SIZE];
 	zend_array **symtable_cache_limit;
 	zend_array **symtable_cache_ptr;
-
+    // 符号表，这里面主要是存的全局变量，以及一些魔术变量，比如$_GET、$_POST等；
 	zend_array symbol_table;		/* main symbol table  PHP符号表*/
 
 	HashTable included_files;	/* files already included  已将include的脚本*/
 
-	JMP_BUF *bailout;  //
+	JMP_BUF *bailout;  
 
 	int error_reporting;
 	int exit_status;
-
+    //function_table：函数表，主要存放函数，包括大量的内部函数，以及用户自定义的函数，
+	//比如zend_version，func_num_args，str系列函数，等等；
 	HashTable *function_table;	/* function symbol table  用户自定义函数 内置函数 代用函数*/
+	//class_table：类表，主要存放内置的类以及用户自定义的类，比如stdclass、throwable、exception等类
 	HashTable *class_table;		/* class table  new class 的类从这里面查找*/
+	//zend_constants：常量表，存放PHP中的常量，比如E_ERROR、E_WARNING等；
 	HashTable *zend_constants;	/* constants table  常量符号表*/
 
 	zval          *vm_stack_top;  //栈顶
@@ -159,7 +162,7 @@ struct _zend_executor_globals {
 	zend_vm_stack  vm_stack;     //整个栈
 	size_t         vm_stack_page_size; //栈的页 大小
     /**
-	  指正在执行的运行栈
+	  指正在执行的运行栈 对应_zend_execute_data结构体，存放执行时的数据
 	*/
 	struct _zend_execute_data *current_execute_data;
 	zend_class_entry *fake_scope; /* used to avoid checks accessing properties */

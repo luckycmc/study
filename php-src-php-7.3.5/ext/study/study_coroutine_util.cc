@@ -74,6 +74,7 @@ PHP_METHOD(study_coroutine_util,resume)
        php_error_docref(NULL, E_WARNING, "resume error");
        RETURN_FALSE;
     }
+    //更具对应的协程id 获取对应 的协程对象
     Coroutine* co=coroutine_iterator->second;
     user_yield_coros.erase(cid); //删除字典中的协程对象
     co->resume();
