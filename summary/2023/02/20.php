@@ -123,3 +123,4 @@ if ($res) {
 } else {
     exit('抢购失败');
 }
+//https://www.cnblogs.com/ianlab/p/16357749.html
