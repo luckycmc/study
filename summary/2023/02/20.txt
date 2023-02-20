@@ -1,0 +1,7 @@
+1.编译PHP文件====>zend_compile()函数 (file Zend/zend_language_scanner.l, line 579)对应的文件
+2.词法语法分析后会生成AST抽象语法树 保存到CG(ast)中
+3.然后Zend 虚拟机 会将ast 进一步转化成zend_op_array,以便于虚拟机执行
+
+
+回顾:
+    1.Zend虚拟机中的符号表,指令集,执行数据以及执行栈的数据结构
