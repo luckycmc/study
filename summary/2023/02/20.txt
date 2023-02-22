@@ -11,3 +11,7 @@
 
 
 php 执行脚本的函数为 zend_execute()函数 ./Zend/zend_vm_execute.h  对应的文件
+
+设置指令handler ==>抽象语法树编译后还有一个重要操作，函数叫pass_two ==>设置handler 用于执行opline指令对应的操作
+
+编译完成后 ==> opline生成调用函数zend_emit_op ==> zend/zend_compile.c文件中

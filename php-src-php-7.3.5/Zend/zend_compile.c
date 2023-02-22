@@ -431,7 +431,7 @@ static uint32_t get_temporary_variable(zend_op_array *op_array) /* {{{ */
 	return (uint32_t)op_array->T++;  // 位置往后++ 临时变量的个数
 }
 /* }}} */
-//在当前的op_array中查找相应的 val变量
+//在当前的op_array中查找相应的 val变量 的位置
 static int lookup_cv(zend_op_array *op_array, zend_string *name) /* {{{ */{
 	int i = 0;
 	zend_ulong hash_value = zend_string_hash_val(name);
@@ -2561,8 +2561,8 @@ static int zend_try_compile_cv(znode *result, zend_ast *ast) /* {{{ */
 		}
 
 		result->op_type = IS_CV; //类型是一个变量 
-		//查找对应的变量 var 的偏移量  CG(active_op_array) 当前的op_array 也就是当前执行栈 查找
-		// 查找变量的位置
+		//查找对应的变量 var 的偏移量  CG(active_op_array) 当前的op_array 当前指令存放的集合
+		// 获取变量在当前栈上偏移量 也就是变量的虚拟内存地址
 		result->u.op.var = lookup_cv(CG(active_op_array), name); 
 
 		if (UNEXPECTED(Z_TYPE_P(zv) != IS_STRING)) {
@@ -2999,7 +2999,7 @@ void zend_compile_assign(znode *result, zend_ast *ast) /* {{{ */
     //确定变量是否是可写的
 	zend_ensure_writable_variable(var_ast);
 
-	switch (var_ast->kind) {  //此时的表示 $a 就是一个变量
+	switch (var_ast->kind) {  //此时的表示 $a 就是一个变量 $a = 1为例
 		case ZEND_AST_VAR:
 		case ZEND_AST_STATIC_PROP:
 			offset = zend_delayed_compile_begin(); //开始的偏移量
@@ -8368,7 +8368,7 @@ void zend_compile_stmt(zend_ast *ast) /* {{{ */
 }
 /* }}} */
 /**
- * 编译表达式
+ * 编译表达式 也就是 = 右边的
  * 
  * @param result 
  * @param ast 
@@ -8537,7 +8537,7 @@ void zend_compile_var(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 	}
 }
 /* }}} */
-// 延迟编译var
+// 延迟编译var 编译简单的变量
 void zend_delayed_compile_var(znode *result, zend_ast *ast, uint32_t type) /* {{{ */
 {
 	switch (ast->kind) {
