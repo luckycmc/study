@@ -55,7 +55,8 @@ int main() {
     client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &addr_size);
 
     printf("client fd is %d connect success\n", client_socket);
-
+    // 监听的socket 和已经完成连接的socket
+    // 连接建立成功双方都可以读写数据 就像 对文件的操作一样
     char msg[] = "欢迎你连接成功\n";
     char bye[] = "服务端已经关闭\n";
     write(client_socket, msg, sizeof(msg));  //给当前客户端 进行数据通讯
