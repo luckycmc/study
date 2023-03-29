@@ -1536,7 +1536,7 @@ SYSCALL_DEFINE2(listen, int, fd, int, backlog)
 	if (sock) {
 		somaxconn = sock_net(sock->sk)->core.sysctl_somaxconn;
 		//所以，虽然 listen 允许我们传入 backlog（该值和半连接队列、全连接队列都有关系）。
-		//但是如果用户传入的比 net.core.somaxconn 还大的话是不会起作用的。
+		//但是如果用户传入的比 net.core.somaxconn 还大的话是不会起作用的。 两个相比较取其中的小的
 		if ((unsigned int)backlog > somaxconn)  //去最小的半连接队列的值
 			backlog = somaxconn;
         //  sock->ops->listen 实际执行的是 inet_listen。
