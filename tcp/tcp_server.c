@@ -41,7 +41,7 @@ int main() {
         printf("bind error\n");
         return -1;
     }
-    //监听socket 此时给半连接对列和全连接队列申请内存控制
+    //监听socket 此时给半连接对列和全连接队列申请内存空间
     if (listen(server_socket, 5) == -1) 
     {
         printf("listen error\n");
@@ -59,6 +59,7 @@ int main() {
     // 连接建立成功双方都可以读写数据 就像 对文件的操作一样
     char msg[] = "欢迎你连接成功\n";
     char bye[] = "服务端已经关闭\n";
+    //调用系统函数 把数据写入到客户端
     write(client_socket, msg, sizeof(msg));  //给当前客户端 进行数据通讯
 
     //阻塞在这等待服务器连接 不断的接受客户端的发过来的数据
