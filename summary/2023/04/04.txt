@@ -1,0 +1,5 @@
+//跨字段的尽量 这样连表查询 提高性能
+select * from (select COUNT(DISTINCT unionid) as t1 from ko_mini_clickcenter where position = 37) a JOIN (select COUNT(DISTINCT unionid) as t2 from ko_mini_clickcenter where position = 37) b on 1=1 JOIN (select COUNT(DISTINCT unionid) as t3 from ko_mini_clickcenter where position = 38) as c on 1=1
+
+
+
