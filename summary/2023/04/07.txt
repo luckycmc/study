@@ -1,0 +1,1 @@
+netstat -anp|grep CLOSE_WAIT  写程序测试是否存在这种状态
