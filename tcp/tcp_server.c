@@ -73,16 +73,17 @@ int main() {
             close(client_socket);  //关闭客户端
             printf("客户端关闭 fd 是:%d \n", client_socket);
             break;  //服务端 关闭一个 一个服务端只能接受一个客户端的连接 其他连接只能进行等待
-            //continue;
+           // continue; //服务端跳出循环继续执行
         } else if(str_length > 0) {
 
             printf("client send string is:%s\n",buffer); 
             write(client_socket, buffer, str_length);//数据发送给客户端数据
         }else{ 
             //客户端异常
-             close(client_socket);  //关闭客户端
+            close(client_socket);  //关闭客户端
             printf("read data is error\n");
-            break;
+            break; //如果 break服务器就停止运行了
+            //continue; //服务端跳出循环继续执行
         }
 
     }
