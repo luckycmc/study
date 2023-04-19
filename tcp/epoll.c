@@ -16,6 +16,8 @@
 #define BUFFER_SIZE 1024
 
 #define CLIENT_MAX_SIZE 1024
+
+#define PORT 8080
 /**************
 epoll是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃的情况下的系统CPU利用率，
  因为它会复用文件描述符集合来传递结果而不用迫使开发者
@@ -39,12 +41,10 @@ int main()
     
     //  size_t 的取值range是目标平台下最大可能的数组尺寸,
     size_t listen_addr = inet_addr(listen_addr_str);  //  inet_addr 功能是将一个点分十进制的IP转换成一个长整数型数
-   
-    int port = 8080;
 
     int server_socket, client_socket;   //定义两个socket 
 
-    struct sockaddr_in server_addr, client_addr;    //sockaddr_in 网络编程结构体
+    struct sockaddr_in server_addr, client_addr;    //sockaddr_in 网络编程结构体 属于内核
 
     socklen_t addr_size;
 
@@ -55,12 +55,12 @@ int main()
     server_socket = socket(PF_INET, SOCK_STREAM, 0);//创建套接字
 
     bzero(&server_addr, sizeof(server_addr));//初始化  // 将字符串s的前n个字节置为0，一般来说n通常取sizeof(s),将整块空间清零。
+ 
+    server_addr.sin_family = INADDR_ANY;  // 协议族设置
 
-    server_addr.sin_family = INADDR_ANY;
+    server_addr.sin_port = htons(PORT); //端口号
 
-    server_addr.sin_port = htons(port);
-
-    server_addr.sin_addr.s_addr = listen_addr;
+    server_addr.sin_addr.s_addr = listen_addr; // 监听地址
 
     if (bind(server_socket, (struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
 
@@ -84,7 +84,7 @@ int main()
 
     int j = 0;
 
-    int epoll_fd = epoll_fd = epoll_create(10);//创建epoll句柄,里面的参数10没有意义
+    int epoll_fd = epoll_create(10);//创建epoll句柄,里面的参数10没有意义
 
     if (epoll_fd == -1) {
 
@@ -113,7 +113,7 @@ int main()
         if (result <= 0) {
             continue;
         }
-        printf("---result is num :%d\n",result); 
+        printf("---event num is :%d\n",result); 
         //获取对应的可读可写事件
         //遍历对应的事件 其实经过内核处理后 已经发生的已经形成一个队列直接拿出来处理即可
         // 事件有 可读可写 可异常操作
@@ -171,7 +171,7 @@ int main()
                    
                     printf("客户端发送数据:%s \n", buffer); 
                     // 数据返回给客户端 fd ,buffer,str_length 长度 
-                    // wait_event_list[j].data.fd 对应当前的fd
+                    // wait_event_list[j].data.fd 对应当前监听的fd
                     write(wait_event_list[j].data.fd, buffer, str_length);//执行回声服务  即echo
                 }
             }
