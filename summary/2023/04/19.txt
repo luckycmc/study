@@ -1,0 +1,21 @@
+
+//PHP+redis 乐观锁实现秒杀
+public function t1()
+   {
+       $redis = redis();
+       $key = 'goods_list_key';
+       //需要监听的key
+       $redis->watch($key);
+       //获取key的数据是存在
+       $result = $redis->get($key);
+       if ($result){
+           $redis->multi(); //开启事务
+             $redis->decr($key); //减少数量
+           $res = $redis->exec(); //提交事务
+           if ($res){
+               echo "抢购成功!".PHP_EOL;
+           }
+       }else{
+           echo "抢购失败".PHP_EOL;
+       }
+   }
