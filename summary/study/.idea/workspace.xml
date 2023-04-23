@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="Server.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Server.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1224">
-              <caret line="19" column="52" selection-start-line="19" selection-start-column="52" selection-end-line="19" selection-end-column="52" />
+            <state relative-caret-position="684">
+              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/html/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="107" column="13" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+            <state relative-caret-position="3492">
+              <caret line="109" column="16" selection-start-line="109" selection-start-column="16" selection-end-line="109" selection-end-column="16" />
               <folding>
                 <marker date="1682242277505" expanded="true" signature="1572:1824" ph="..." />
                 <marker date="1682242277505" expanded="true" signature="1587:1683" ph="..." />
@@ -91,9 +91,9 @@
         <option value="$PROJECT_DIR$/swoole/代码/frame/app/view/index/index.html" />
         <option value="$PROJECT_DIR$/swoole/代码/frame/app/controller/Index.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/app/view/index/index.php" />
-        <option value="$PROJECT_DIR$/swoole/code/frame/Server.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/html/index.html" />
+        <option value="$PROJECT_DIR$/swoole/code/frame/Server.php" />
       </list>
     </option>
   </component>
@@ -333,12 +333,12 @@
       <workItem from="1682230849816" duration="21000" />
       <workItem from="1682230871744" duration="4032000" />
       <workItem from="1682236578059" duration="89000" />
-      <workItem from="1682236835929" duration="3910000" />
+      <workItem from="1682236835929" duration="5030000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8052000" />
+    <option name="totallyTimeSpent" value="9172000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -486,14 +486,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1224">
-          <caret line="19" column="52" selection-start-line="19" selection-start-column="52" selection-end-line="19" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -504,13 +496,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/html/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="107" column="13" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+        <state relative-caret-position="3492">
+          <caret line="109" column="16" selection-start-line="109" selection-start-column="16" selection-end-line="109" selection-end-column="16" />
           <folding>
             <marker date="1682242277505" expanded="true" signature="1572:1824" ph="..." />
             <marker date="1682242277505" expanded="true" signature="1587:1683" ph="..." />
             <marker date="1682242277505" expanded="true" signature="1698:1809" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
