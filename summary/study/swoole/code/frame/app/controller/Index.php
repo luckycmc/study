@@ -8,7 +8,7 @@ class Index
            $content = [
                 'title'=>'swoole 留言板'
            ];
-           return $content;
+           return json_encode($content);
       }
 
       public function get()
