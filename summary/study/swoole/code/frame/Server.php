@@ -6,7 +6,7 @@
 class Server
 {    
      protected $server;
-     protected $port = 9501;   // 端口号
+     protected $port = 9502;   // 端口号
      protected $IP = '0.0.0.0'; // 对应的IP
 
      public function __construct()
@@ -18,7 +18,7 @@ class Server
                 // 设置工作进程的个数
                 'worker_num' => swoole_cpu_num(), // swoole扩展内置函数
            ]);
-           //设置 回调事件 worker进程创建成功后会回调这个方法
+           //设置 回调事件 worker进程创建成功后会回调这个方法 当前方法必须为 public 属性
            $this->server->on('WorkerStart',([$this,'WorkerStart']));
            // 注册请求事件 当有http请求的时候 会触发这个回调函数
            $this->server->on('request',([$this,'onRequest']));
