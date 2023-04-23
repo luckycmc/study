@@ -17,6 +17,8 @@ class Server
            $this->server->set([
                 // 设置工作进程的个数
                 'worker_num' => swoole_cpu_num(), // swoole扩展内置函数
+                'document_root' => ROOT_PATH.'/html/', // v4.4.0以下版本, 此处必须为绝对路径
+                'enable_static_handler' => true,
            ]);
            //设置 回调事件 worker进程创建成功后会回调这个方法 当前方法必须为 public 属性
            $this->server->on('WorkerStart',([$this,'WorkerStart']));

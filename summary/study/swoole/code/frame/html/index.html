@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $title;?></title>
+    <title>留言板</title>
 </head>
 <style>
     article {
@@ -43,6 +43,7 @@
     <textarea name="" id="" cols="30" rows="10"></textarea>
     <input type="button" value="留言">
 </article>
+<script src="./jquery1.11.2.min.js"></script>
 <script type="text/javascript">
     //获取节点
     let artEle = document.querySelector("article");
@@ -91,7 +92,7 @@
             let gang = localTime.replace(/\//g, "-");
             //将用户输入的内容容作为对象存进数组
             arr.push(
-                { name: "小明", time: gang, content: textAreaEle.value }
+                    { name: "小明", time: gang, content: textAreaEle.value }
             )
             //清空输入框，方便下次输入
             textAreaEle.value = "";
