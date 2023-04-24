@@ -15,5 +15,6 @@ class Index
       {
           return "get www.php.cn data";
       }
+      //获取列表
 
 }// class end
