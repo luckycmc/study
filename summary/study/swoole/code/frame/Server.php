@@ -36,6 +36,10 @@ class Server
          //echo $worker_id.PHP_EOL;
          //注册自动加载函数
          spl_autoload_register('Loader::autoload',true,true);
+         //加载mysql
+         require './MysqlPool.php';
+         //启动mysql连接池
+         MysqlPool::getInstance()->init()->recycleFreeConnection();
     }
 
     /**

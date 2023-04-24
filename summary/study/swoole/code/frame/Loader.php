@@ -20,7 +20,6 @@ class Loader
 
     /**
      * 判断文件是否存在并且加载文件
-     *
      * @param $filename
      */
      public static function includeFile($filename)
