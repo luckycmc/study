@@ -123,7 +123,7 @@ typedef struct _nty_coroutine_queue nty_coroutine_queue;
 typedef struct _nty_coroutine_rbtree_sleep nty_coroutine_rbtree_sleep;
 typedef struct _nty_coroutine_rbtree_wait nty_coroutine_rbtree_wait;
 
-
+//获取CPU的寄存器
 typedef struct _nty_cpu_ctx {
 	void *esp; //
 	void *ebp;
