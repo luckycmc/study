@@ -24,7 +24,7 @@
       <file leaf-file-name="Server.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
+            <state relative-caret-position="1332">
               <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
               <folding />
             </state>
@@ -34,7 +34,7 @@
       <file leaf-file-name="Loader.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="215">
               <caret line="21" column="21" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
               <folding />
             </state>
@@ -217,7 +217,7 @@
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="E:/swooleesay---back" />
+    <property name="last_opened_file_path" value="E:/360seo/360/360mini" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
@@ -314,18 +314,19 @@
       <workItem from="1682236835929" duration="6296000" />
       <workItem from="1682317146571" duration="3127000" />
       <workItem from="1682327640928" duration="41000" />
+      <workItem from="1682401285200" duration="12000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13606000" />
+    <option name="totallyTimeSpent" value="13618000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23812094" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24244061" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -354,6 +355,52 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1332">
+          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/html/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3924">
+          <caret line="109" column="16" selection-start-line="109" selection-start-column="16" selection-end-line="109" selection-end-column="16" />
+          <folding>
+            <marker date="1682242277505" expanded="true" signature="1572:1824" ph="..." />
+            <marker date="1682242277505" expanded="true" signature="1587:1683" ph="..." />
+            <marker date="1682242277505" expanded="true" signature="1698:1809" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="15" column="47" selection-start-line="15" selection-start-column="47" selection-end-line="15" selection-end-column="47" />
+          <folding>
+            <marker date="1682327681302" expanded="true" signature="304:337" ph="SELECT * FRO... fa_admin" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/start.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -557,7 +604,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
+        <state relative-caret-position="1332">
           <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
           <folding />
         </state>
@@ -586,7 +633,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
+        <state relative-caret-position="215">
           <caret line="21" column="21" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
           <folding />
         </state>
@@ -594,6 +641,6 @@
     </entry>
   </component>
   <component name="webServersAuthStorage">
-    <data>AAAAsLIMffEann3i0K29WzceRqDqB02d5pfBP9m18PH31Dgj0ZKCQy7+ThrSznZ0IKRN99wH6gw3vC89vAssnLXHrjz9tT/znF/dzKVhBha+PJ6B1nptQM7Jz1J0SLbUR/DAPmpmXecA5UY61DDuk2+5pKEmUcKS4tlwnJcgPYF9eTELiHHv+HC1uXbGCvOLij1M65SfHCk0SgBqctCYaQNb8Umqb/QwXhCJpgf4nhS5BI3IdsRXu1zSsLucbuS9JgXasA==</data>
+    <data>AAAAsD5vz/2l8a4NFHQxO6IZtI2cLV8rce8bXIY9lfmOJH6LnE72+mc/g0Mb908EWHZb9EWk7bjyu6aqHujjZvoBe6eR/JHUUvGIq2xaoVleXMwIxLniA44ulKpiUhw1r5JthaV+kqSPgAEbfpOtplkWJJfVbkYwGXp1EcuuWUvKU85yJh5XZGTA8gaXlJM2PJqdG073bUV2lH9ar+4WoMbPeYhvMDc58I3fV6mnvinyy0u1LSO+ko783c1Vc0gx/QoPMA==</data>
   </component>
 </project>
