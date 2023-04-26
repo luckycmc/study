@@ -15,8 +15,8 @@ class MysqlPool
      */
     public function __construct()
     {
-        $this->min = 10;
-        $this->max = 100;
+        $this->min = 5;
+        $this->max = 10;
         $this->freeTime = 10 * 3600;
         $this->connections = new Channel($this->max + 1);
     }
@@ -38,11 +38,11 @@ class MysqlPool
     {
         $conn = new MySQL();
         $conn->connect([
-            'host' => 'mysql',
+            'host' => '127.0.0.1',
             'port' => '3306',
             'user' => 'root',
             'password' => 'root',
-            'database' => 'fastadmin',
+            'database' => 'study',
             'timeout'  => 5
         ]);
         return $conn;
