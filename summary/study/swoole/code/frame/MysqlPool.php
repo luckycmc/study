@@ -17,7 +17,7 @@ class MysqlPool
     {
         $this->min = 5;
         $this->max = 10;
-        $this->freeTime = 10 * 3600;
+        $this->freeTime = 5 * 60;
         $this->connections = new Channel($this->max + 1);
     }
     /**
