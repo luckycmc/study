@@ -25,6 +25,8 @@ class Index
       {
           $conn = MysqlPool::getInstance()->getConn();
           $result = $conn->query('SELECT * FROM messages WHERE id=1');
+          //使用完回收连接 不然连接不能复用
+          MysqlPool::getInstance()->recycle($conn);
           return json_encode($result);
       }
 

@@ -15,8 +15,8 @@ class MysqlPool
      */
     public function __construct()
     {
-        $this->min = 5;
-        $this->max = 10;
+        $this->min = 2;
+        $this->max = 5;
         $this->freeTime = 5 * 60;
         $this->connections = new Channel($this->max + 1);
     }
@@ -86,7 +86,7 @@ class MysqlPool
         } else {
             $obj = $this->connections->pop($timeout);
         }
-        return $obj['conn']->connected ? $obj['conn'] : $this->getConn();
+        return isset($obj['conn']->connected) ? $obj['conn'] : $this->getConn();
     }
     /**
      * 回收连接
@@ -104,7 +104,7 @@ class MysqlPool
     public function recycleFreeConnection()
     {
         // 每 2 分钟检测一下空闲连接
-        swoole_timer_tick(2 * 60 * 1000, function () {
+        swoole_timer_tick(1 * 60 * 1000, function () {
             if ($this->connections->length() < intval($this->max * 0.5)) {
                 // 请求连接数还比较多，暂时不回收空闲连接
                 return;
@@ -127,6 +127,7 @@ class MysqlPool
             }
         });
     }
+
 }
 
 /**
