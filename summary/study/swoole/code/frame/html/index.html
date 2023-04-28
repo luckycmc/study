@@ -73,26 +73,18 @@
             let index = e.target.dataset.index - 0;
             if (e.target.value == "留言") {
                 let textAreaEle = document.getElementsByTagName("textarea")[0];
-
-                //获取本地时间
-                let date = new Date();
-                let localTime = date.toLocaleString();//年月日、时分秒同时获取
-                //将原本的/ 换成-
-                //replace该方法主要用于将字符串中符合匹配条件的字串替换成其他的字符串，
-                //返回替换后的字符串，且原字符串不变。
-                let gang = localTime.replace(/\//g, "-");
-                //将用户输入的内容容作为对象存进数组
-                arr.push(
-                        { name: "小明", time: gang, content: textAreaEle.value }
-                )
-                //清空输入框，方便下次输入
-                textAreaEle.value = "";
-                //再次渲染
-                render();
+                $.post('/index/save/',{'content':textAreaEle},function (data) {
+                           if (data.status == 1){
+                                alert('success');
+                           }else{
+                               alert("error!");
+                           }
+                },'json');
+                
             }
             if (e.target.innerHTML == "删除") {
-                arr.splice(index, 1);
-                render();
+                /*arr.splice(index, 1);
+                render();*/
             }
         });
     })

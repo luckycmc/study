@@ -33,27 +33,35 @@ class Server
      */
     public function WorkerStart(\Swoole\Http\Server $server, $worker_id)
     {
-         //echo $worker_id.PHP_EOL;
+         //echo $worker_id.PHP_EOL; 可以查看当前进程的worker_id
          //注册自动加载函数
          spl_autoload_register('Loader::autoload',true,true);
-         //加载mysql
+         //加载mysql 进程池  每一个进程都会有一个进程池 总连接数 = 每个进程的连接数 * 进程数
          require './MysqlPool.php';
          //启动mysql连接池
          MysqlPool::getInstance()->init()->recycleFreeConnection();
     }
 
     /**
-     * 有客户端请求的时候会触发
+     * 客户端的所有http请求
      * @param \Swoole\Http\Request $request
      * @param \Swoole\Http\Response $response
      */
      public function onRequest(\Swoole\Http\Request $request,\Swoole\Http\Response $response)
      {
            $this->request($request,$response);
+
      }
      //处理request请求
      public function request(\Swoole\Http\Request $request,\Swoole\Http\Response $response)
      {
+        /* $uri = $request->server["request_uri"];
+         if($uri == "/favicon.icon")
+         {
+             $response->status(404);
+             $response->end();
+             return;
+         }*/
          // 获取请求的
          $pathInfo = explode('/', ltrim($request->server['path_info'], '/'));
          if (count($pathInfo) <= 1){
@@ -63,6 +71,8 @@ class Server
          //获取对应的控制器和方法
          $controller = isset($pathInfo[0]) ?ucfirst($pathInfo[0]): 'Index';
          $method     = isset($pathInfo[1]) ?ucfirst($pathInfo[1]): 'index';
+         //获取参数 get 和post
+         $_GET = $request->get; $_POST = $request->post;
          //处理请求和返回数据
          try {
              $class = "{$controller}"; // 当前的控制器

@@ -8,6 +8,7 @@ class Index
      */
       public function index()
       {
+
            $conn = MysqlPool::getInstance()->getConn();
            $content = $conn->query('SELECT * FROM messages');
           //使用完回收连接 不然连接不能复用
@@ -21,8 +22,9 @@ class Index
      */
       public function get()
       {
+          $id = $_GET['id']; //获取对应的id
           $conn = MysqlPool::getInstance()->getConn();
-          $result = $conn->query('SELECT * FROM messages WHERE id=1');
+          $result = $conn->query('SELECT * FROM messages WHERE id='.$id);
           //使用完回收连接 不然连接不能复用
           MysqlPool::getInstance()->recycle($conn);
           return json_encode($result);
@@ -35,7 +37,7 @@ class Index
       {
           $test_title = "小张";
           $test_author = date('Y-m-d H:i:s',time());
-          $submission_date = '今天星期五，明天星期六！';
+          $submission_date = $_POST['content'];
           $sql = "INSERT INTO messages ".
                   "(`name`,`time`,`content`) ".
                   "VALUES ".
@@ -45,5 +47,6 @@ class Index
           $result = $conn->query($sql);
           //使用完回收连接 不然连接不能复用
           MysqlPool::getInstance()->recycle($conn);
+          return $result ? json_encode(['status'=>1,'msg'=>'success']) : json_encode(['status'=>0,'msg'=>'faild']);
       }
 }// class end
