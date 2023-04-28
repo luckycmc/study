@@ -16,7 +16,7 @@ class Server
            // 设置php服务器属性
            $this->server->set([
                 // 设置工作进程的个数
-                'worker_num' => swoole_cpu_num() * 2, // swoole扩展内置函数
+                'worker_num' => swoole_cpu_num(), // swoole扩展内置函数
                 'document_root' => ROOT_PATH.'/html/', // v4.4.0以下版本, 此处必须为绝对路径
                 'enable_static_handler' => true,
            ]);

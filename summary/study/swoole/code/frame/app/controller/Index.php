@@ -8,12 +8,10 @@ class Index
      */
       public function index()
       {
-           $content = [
-                ['name'=>"小张",'time'=> "2020-01-01",'content'=> "今天星期五，明天星期六！" ],
-                 ['name'=> "小磊", 'time'=> "2020-02-01",'content'=> "中秋节快乐！" ],
-                 ['name'=>"小海", 'time'=> "2020-03-01", 'content'=> "明天不上课！爽翻！！！" ],
-                 ['name'=> "小丽", 'time'=> "2020-04-01", 'content'=> "今晚做个好梦哦~" ],
-           ];
+           $conn = MysqlPool::getInstance()->getConn();
+           $content = $conn->query('SELECT * FROM messages');
+          //使用完回收连接 不然连接不能复用
+           MysqlPool::getInstance()->recycle($conn);
            return json_encode($content);
       }
 
@@ -30,9 +28,9 @@ class Index
           return json_encode($result);
       }
 
-    /**
-     * 保存数据
-     */
+     /**
+      * 保存数据
+      */
       public function save()
       {
           $test_title = "小张";
@@ -45,6 +43,7 @@ class Index
           print_r($sql);
           $conn = MysqlPool::getInstance()->getConn();
           $result = $conn->query($sql);
-          var_dump($result);
+          //使用完回收连接 不然连接不能复用
+          MysqlPool::getInstance()->recycle($conn);
       }
 }// class end
