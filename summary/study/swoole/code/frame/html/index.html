@@ -40,8 +40,8 @@
 <article>
     <section></section>
     <!-- 增加一个多行输入文本框 -->
-    <textarea name="" id="" cols="30" rows="10"></textarea>
-    <input type="button" value="留言">
+    <textarea name=""  cols="30" rows="10" id="content"></textarea>
+    <input type="button" value="留言" class="liuyan" onclick="tiJiao()">
 </article>
 <script src="./jquery1.11.2.min.js"></script>
 <script type="text/javascript">
@@ -62,32 +62,45 @@
                str += '</p>';
                str += '<p>';
                str += '<span>'+item.content+'</span>';
-               str += '<span data-index='+index+'>删除</span>';
+               str += '<span data-index='+item.id+' onclick="delData(this)" style="cursor: pointer;">删除</span>';
                str +=   '</p>';
                str += '</div> ';
            });
            secEle.innerHTML = str;
        },'json');
-        //给祖先元素article绑定一个事件监听器（事件代理）
-        artEle.addEventListener("click", function (e) {
-            let index = e.target.dataset.index - 0;
-            if (e.target.value == "留言") {
-                let textAreaEle = document.getElementsByTagName("textarea")[0];
-                $.post('/index/save/',{'content':textAreaEle},function (data) {
-                           if (data.status == 1){
-                                alert('success');
-                           }else{
-                               alert("error!");
-                           }
-                },'json');
-                
+
+    });
+    //给祖先元素article绑定一个事件监听器（事件代理）
+    function tiJiao() {
+        let textAreaEle = $("#content").val();
+        $.post('/index/save/',{'content':textAreaEle},function (data) {
+            if (data.status == 1){
+                alert('success');
+            }else{
+                alert("error!");
             }
-            if (e.target.innerHTML == "删除") {
-                /*arr.splice(index, 1);
-                render();*/
+            //刷新当前页面
+            location.reload();
+            $("#content").val('');
+        },'json');
+    }
+    //删除节点数据
+    function delData(obj){
+        var id = $(obj).attr('data-index');
+        var result = confirm('确定删除嘛！');
+        if(!result){
+            return false;
+        }
+        $.post('/index/del/',{'id':id},function (data) {
+            if (data.status == 1){
+                alert('success');
+            }else{
+                alert("error!");
             }
-        });
-    })
+            //刷新当前页面
+            location.reload();
+        },'json');
+    }
 </script>
 </body>
 
