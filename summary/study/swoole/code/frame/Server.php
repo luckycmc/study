@@ -1,6 +1,7 @@
 <?php
 /*****
  * 服务器的设置 和启动
+ *  swoole 的本质就是 为PHP 提供高性能的 接口 同时 兼容PHP
  */
 
 class Server
@@ -34,7 +35,7 @@ class Server
     public function WorkerStart(\Swoole\Http\Server $server, $worker_id)
     {
          //echo $worker_id.PHP_EOL; 可以查看当前进程的worker_id
-         //注册自动加载函数
+         //注册自动加载函数 每一个进程都会有 自动加载器
          spl_autoload_register('Loader::autoload',true,true);
          //加载mysql 进程池  每一个进程都会有一个进程池 总连接数 = 每个进程的连接数 * 进程数
          require './MysqlPool.php';
@@ -49,8 +50,8 @@ class Server
      */
      public function onRequest(\Swoole\Http\Request $request,\Swoole\Http\Response $response)
      {
+           //onRequest 事件中的所有数据执行完毕 底层会自动销毁
            $this->request($request,$response);
-
      }
      //处理request请求
      public function request(\Swoole\Http\Request $request,\Swoole\Http\Response $response)
@@ -68,7 +69,7 @@ class Server
              $pathInfo[0] = 'Index';
              $pathInfo[1] = 'Index';
          }
-         //获取对应的控制器和方法
+         //获取对应的控制器和方法 默认是 Index  index
          $controller = isset($pathInfo[0]) ?ucfirst($pathInfo[0]): 'Index';
          $method     = isset($pathInfo[1]) ?ucfirst($pathInfo[1]): 'index';
          //获取参数 get 和post

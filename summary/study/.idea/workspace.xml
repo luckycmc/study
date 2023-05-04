@@ -21,11 +21,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="Server.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Server.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
+            <state relative-caret-position="108">
+              <caret line="3" column="40" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
+              <folding>
+                <element signature="e#1887#2079#0#PHP" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="start.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swoole/code/frame/start.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -34,7 +46,7 @@
       <file leaf-file-name="Loader.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="72">
               <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
               <folding />
             </state>
@@ -57,11 +69,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Index.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
-              <caret line="16" column="7" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+            <state relative-caret-position="1008">
+              <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
               <folding>
                 <marker date="1682680892221" expanded="true" signature="208:230" ph="SELECT * FRO... messages" />
                 <marker date="1682680892221" expanded="true" signature="208:247" ph="SELECT * FRO... messages" />
@@ -99,9 +111,9 @@
         <option value="$PROJECT_DIR$/swoole/code/frame/HttpRequest.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/Singleton.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/Request.php" />
-        <option value="$PROJECT_DIR$/swoole/code/frame/Server.php" />
         <option value="$PROJECT_DIR$/swoole/code/frame/html/index.html" />
         <option value="$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php" />
+        <option value="$PROJECT_DIR$/swoole/code/frame/Server.php" />
       </list>
     </option>
   </component>
@@ -147,6 +159,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -212,7 +225,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -221,7 +233,7 @@
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../seckill" />
+    <property name="last_opened_file_path" value="E:/swooleesay---back" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
@@ -327,19 +339,20 @@
       <workItem from="1682578400821" duration="2366000" />
       <workItem from="1682589545223" duration="918000" />
       <workItem from="1682666948346" duration="3894000" />
-      <workItem from="1682671113684" duration="6828000" />
+      <workItem from="1682671113684" duration="6954000" />
+      <workItem from="1683165722311" duration="347000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37981000" />
+    <option name="totallyTimeSpent" value="38454000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27807775" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28293738" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -409,7 +422,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1332">
           <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -462,7 +477,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1332">
           <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -515,7 +532,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -532,7 +551,7 @@
         <state relative-caret-position="4932">
           <caret line="137" column="66" selection-start-line="137" selection-start-column="7" selection-end-line="137" selection-end-column="66" />
           <folding>
-            <element signature="e#7#36#0#PHP" expanded="true" />
+            <element signature="e#7#36#0#PHP" expanded="false" />
             <marker date="1682579533679" expanded="true" signature="3768:3801" ph="SELECT * FRO... fa_admin" />
           </folding>
         </state>
@@ -579,7 +598,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="864">
           <caret line="26" column="6" selection-start-line="26" selection-start-column="6" selection-end-line="26" selection-end-column="6" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -632,7 +653,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -672,7 +695,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-          <folding />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -744,24 +769,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/start.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/app/controller/Base.php" />
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/Request.php" />
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Singleton.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Singleton.php" />
     <entry file="file://D:/swoole-ide-helper/output/namespace/Http/Request.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -770,30 +780,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Request.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Request.php" />
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/html/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3276">
@@ -813,7 +800,7 @@
         <state relative-caret-position="-4125">
           <caret line="11" column="27" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
           <folding>
-            <element signature="e#7#36#0#PHP" expanded="true" />
+            <element signature="e#7#36#0#PHP" expanded="false" />
             <marker date="1682579533679" expanded="true" signature="3768:3801" ph="SELECT * FRO... fa_admin" />
           </folding>
         </state>
@@ -821,8 +808,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/swoole/code/frame/app/controller/Index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
-          <caret line="16" column="7" selection-start-line="16" selection-start-column="7" selection-end-line="16" selection-end-column="7" />
+        <state relative-caret-position="1008">
+          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
           <folding>
             <marker date="1682680892221" expanded="true" signature="208:230" ph="SELECT * FRO... messages" />
             <marker date="1682680892221" expanded="true" signature="208:247" ph="SELECT * FRO... messages" />
@@ -834,8 +821,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Loader.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/start.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swoole/code/frame/Server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="3" column="40" selection-start-line="3" selection-start-column="40" selection-end-line="3" selection-end-column="40" />
+          <folding>
+            <element signature="e#1887#2079#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="webServersAuthStorage">
-    <data>AAAAsNstaZbwVOdQWqb9cYcG5+1hkXLmtcfLe+epPLESKCuRMruRSHf5fDfN9IUAbi3B9XsX385vmtsBJQfHbkwM1LBfO7oqZSrFDqQKgyku9fEtwJzwxWkbmxl21EcNJNddJ0fIcqP7D+mcrvHy+3Iw1n+u4Jqy3GqlDLX553+hfPXS7EVRQRyFI/uyer4O15gouhf8JQMOhu+lod3MeFBSKad3OSSJsH11hzILdHtNa5DaC8oqW7H7cx7hKyZq/7dCLg==</data>
+    <data>AAAAsPraqzHnGWkne/jcpNGcoSl248cSSXSN74WnqXWatVSqCYCJJs3aMi2bnjfwcC4Mz4oPwnraFthXE03+4EMvnz3j8R9yKUJaYSOrdmFp0WlCDFqAPCxf5bIcSqJKzuO8YiIFhxiqk33nNfgPQJAPr4hhskk0y6Hy5pPsUqPi/Vgj+PdFwkawlbGfXU8hjciy0/Xkz/tyRYL1/rXnwuPXS4f3Kd/hdxgO4VXskquoqc3ArR8rceYXc85eTjgLet1avA==</data>
   </component>
 </project>
