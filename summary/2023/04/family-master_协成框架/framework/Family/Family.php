@@ -103,13 +103,13 @@ class Family
                 $context = new Context($request, $response);
                 //存放容器pool
                 Pool\Context::getInstance()->put($context);
-                //协程退出，自动清空
+                //协程退出，自动清空  一个请求一个协成协成执行完毕 释放资源
                 defer(function () {
                     //清空当前pool的上下文，释放资源
                     Pool\Context::getInstance()->release();
                 });
                 try {
-                    //自动路由
+                    //自动路由 路由检测和分发
                     $result = Route::dispatch();
                     $response->end($result);
                 } catch (\Exception $e) { //程序异常
