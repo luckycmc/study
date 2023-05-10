@@ -14,6 +14,8 @@ $server->on('WorkerStart', function ($server, $worker_id) {
  
     if (file_exists($class)) {
       include_once $class;
+    }else{
+         //抛异常文件不存在
     }
   });
 });
