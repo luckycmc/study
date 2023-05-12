@@ -1,0 +1,4 @@
+http://www.360doc.com/content/17/1226/17/21693298_716477756.shtml 架构设计
+https://gitee.com/wokaixin/sok gitee 上的代码
+
+https://blog.csdn.net/qq_39612976/article/details/115029590  //webscoket 简单项目
