@@ -97,7 +97,7 @@ static int nty_poll_inner(struct pollfd *fds, nfds_t nfds, int timeout) {
 
 		co->events = fds[i].events;
 		nty_schedule_sched_wait(co, fds[i].fd, fds[i].events, timeout);
-	}
+	}k
 	nty_coroutine_yield(co);  //1  
 
 	for (i = 0;i < nfds;i ++) {
