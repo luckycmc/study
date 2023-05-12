@@ -56,17 +56,18 @@ return [
         'client' => [
         ],
     ],
+    //应用文件热更新配置 开始时不用 重启代码自动更新
     'hot_update' => [
-        'enable'  => env('APP_DEBUG', false),
-        'name'    => ['*.php'],
-        'include' => [app_path()],
+        'enable'  => env('APP_DEBUG', true), //true 开启 false 关闭 线上要关闭
+        'name'    => ['*.php'],   // php 后缀结尾的文件
+        'include' => [app_path()],  // 监控目录
         'exclude' => [],
     ],
     //连接池
     'pool'       => [
         'db'    => [
             'enable'        => true,
-            'max_active'    => 10, //最大数
+            'max_active'    => 20, //最大数
             'min_active'    => 5,  //最小数
             'max_wait_time' => 5,
         ],

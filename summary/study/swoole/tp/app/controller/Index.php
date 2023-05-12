@@ -16,9 +16,17 @@ class Index extends BaseController
     {
         return 'hello,' . $name;
     }
+
+    /**
+     * 修改测试数据
+     * @return string
+     */
     public function test()
     {
-        $data = Db::name('messages')->select();
+        $data = Db::name('ko_literature_cited_num')
+                ->order('id desc')
+                ->limit(10)
+                ->select();
         return json_encode($data);
     }
 }
