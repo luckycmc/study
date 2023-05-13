@@ -67,7 +67,7 @@ return [
     'pool'       => [
         'db'    => [
             'enable'        => true,
-            'max_active'    => 20, //最大数
+            'max_active'    => 10, //最大数
             'min_active'    => 5,  //最小数
             'max_wait_time' => 5,
         ],

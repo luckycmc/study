@@ -1,5 +1,7 @@
 <?php
 namespace app\controller;
+use think\facade\Session;
+
 /**
  * Created by PhpStorm.
  * User: f
@@ -10,6 +12,8 @@ class Login
 {
     public function login()
     {
+         $result = Session::set('name', 'thinkphp');
+         var_dump($result);
          return json_encode(['success'=>1,'msg'=>'ok']);
     }
 }
