@@ -12,8 +12,6 @@ class Login
 {
     public function login()
     {
-         $result = Session::set('name', 'thinkphp');
-         var_dump($result);
          return json_encode(['success'=>1,'msg'=>'ok']);
     }
 }
