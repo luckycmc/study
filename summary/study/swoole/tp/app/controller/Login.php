@@ -1,5 +1,7 @@
 <?php
 namespace app\controller;
+use think\facade\Session;
+
 /**
  * Created by PhpStorm.
  * User: f

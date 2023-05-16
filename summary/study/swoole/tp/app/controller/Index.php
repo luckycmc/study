@@ -23,6 +23,8 @@ class Index extends Base
      */
     public function test()
     {
+        $id = $this->request->get('id');
+        var_dump($id);
         $data = Db::name('ko_literature_cited_num')
                 ->order('id desc')
                 ->limit(10)
