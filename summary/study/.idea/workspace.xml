@@ -295,15 +295,15 @@
       <workItem from="1683947493728" duration="7908000" />
       <workItem from="1684144420381" duration="21000" />
       <workItem from="1684198939276" duration="402000" />
-      <workItem from="1684203703680" duration="39626000" />
+      <workItem from="1684203703680" duration="39732000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="112224000" />
+    <option name="totallyTimeSpent" value="112330000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="1" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -720,9 +720,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="576">
           <caret line="152" column="9" selection-start-line="152" selection-start-column="9" selection-end-line="152" selection-end-column="9" />
-          <folding>
-            <element signature="e#112#135#0#PHP" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -740,9 +738,9 @@
           <caret line="36" column="27" selection-start-line="30" selection-start-column="7" selection-end-line="36" selection-end-column="27" />
           <folding>
             <element signature="e#33#56#0#PHP" expanded="true" />
-            <marker date="1684376189273" expanded="true" signature="740:759" ph="..." />
-            <marker date="1684376189273" expanded="true" signature="842:857" ph="..." />
-            <marker date="1684376189273" expanded="true" signature="904:919" ph="..." />
+            <marker date="1684389822362" expanded="true" signature="730:749" ph="..." />
+            <marker date="1684389822362" expanded="true" signature="832:847" ph="..." />
+            <marker date="1684389822362" expanded="true" signature="894:909" ph="..." />
           </folding>
         </state>
       </provider>

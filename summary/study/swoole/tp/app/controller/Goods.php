@@ -1,13 +1,23 @@
+<<<<<<< HEAD
 <?php
 /**
  * Created by PhpStorm.
  * User: f
  * Date: 2023/5/16
  * Time: 10:27
+=======
+ <?php
+/**
+ * Created by PhpStorm.
+ * User: zpw
+ * Date: 2023/5/14
+ * Time: 14:06
+>>>>>>> e52f3f93d19a2aa1340abc5a18074f13617fefd4
  */
 
 namespace app\controller;
 
+<<<<<<< HEAD
 
 use app\BaseController;
 use think\facade\Cache;
@@ -153,4 +163,21 @@ class Goods extends BaseController
         }
         return json_encode($data);
     }
+=======
+/**
+ * 商品排行榜
+ * Class Goods
+ * @package app\controller
+ */
+class Goods extends Base
+{
+    /**
+     * 商品排行榜
+     */
+     public function rank()
+     {
+
+     }
+
+>>>>>>> e52f3f93d19a2aa1340abc5a18074f13617fefd4
 }// class end

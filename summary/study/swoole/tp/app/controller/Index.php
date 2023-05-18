@@ -5,7 +5,7 @@ use app\BaseController;
 use think\facade\Db;
 
 
-class Index extends BaseController
+class Index extends Base
 {
     public function index()
     {
