@@ -5,7 +5,9 @@ awk '{print $1}' /home/wwwlogs/access.log | sort | uniq -c | sort -nr -k1 | head
 
 awk '{print $1}' www.360qikan.com_access.log |sort|uniq|wc -l    查看nginx日志UV
 
+awk '{print substr($4,2,11)}' 360mobileaccess.log |sort|uniq -c  查看nginx 每天的PV
 /home/wwwlogs/access.log
+
 strace -p 进程id号 查看某个进程id 加载对应的文件
 
 strace -o /tmp/strace.log -f -p $PID   //把对应进程的文件写入到对应的日志文件中去
@@ -31,7 +33,7 @@ find -name file_name
         $content = preg_replace("/\<a.*?\>.*?<\/a>/i","",$content);
 
 /*************************awk 查找对应的日志******************************/
-     //cat www.360qikan.com_access.log | awk '{split($4,array,"[");if(array[2]>="24/Sep/2021:00:00:00" && array[2]<="24/Sep/2021:23:29:59"){print $0}}'|grep Baiduspider >> 360.txt
+     //cat www.360qikan.com_access.log | awk '{split($4,array,"[");if(array[2]>="17/May/2023:00:00:00" && array[2]<="17/May/2023/:23:29:59"){print $0}}' >> 360.txt
      
 cat shengsci_com_access.log | awk '{split($4,array,"[");if(array[2]>="23/Sep/2021:00:00:00" && array[2]<="23/Sep/2021:23:29:59"){print $0}}'|grep Baiduspider >> shengsci.txt
 

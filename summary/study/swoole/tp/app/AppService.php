@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace app;
 
+use Swoole\Server;
 use think\Service;
 
 /**

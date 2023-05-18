@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2e5949b925def0d4fb99951da2b0471",
+    "content-hash": "44cb9062517e275ef312fbb8dab282d4",
     "packages": [
         {
             "name": "league/flysystem",
@@ -731,6 +731,54 @@
                 "source": "https://github.com/php-fig/simple-cache/tree/master"
             },
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "sethink/swoole-redis",
+            "version": "v0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sethink/swoole-redis.git",
+                "reference": "246fa1138b3d8604f060c0a373676b5c0f398e2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sethink/swoole-redis/zipball/246fa1138b3d8604f060c0a373676b5c0f398e2a",
+                "reference": "246fa1138b3d8604f060c0a373676b5c0f398e2a",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-swoole": ">=4.2.7",
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "sethink\\swooleRedis\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "sethink",
+                    "email": "358066237@qq.com"
+                }
+            ],
+            "description": "sethink",
+            "support": {
+                "issues": "https://github.com/sethink/swoole-redis/issues",
+                "source": "https://github.com/sethink/swoole-redis/tree/master"
+            },
+            "abandoned": true,
+            "time": "2019-09-24T04:50:51+00:00"
         },
         {
             "name": "stechstudio/backoff",

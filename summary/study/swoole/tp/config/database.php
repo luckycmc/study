@@ -24,9 +24,9 @@ return [
             // 数据库类型
             'type'            => env('database.type', 'mysql'),
             // 服务器地址
-            'hostname'        => env('database.hostname', '127.0.0.1'),
+            'hostname'        => env('database.hostname', '192.168.40.1'),
             // 数据库名
-            'database'        => env('database.database', 'study'),
+            'database'        => env('database.database', 'shop'),
             // 用户名
             'username'        => env('database.username', 'root'),
             // 密码
@@ -59,5 +59,6 @@ return [
         ],
 
         // 更多的数据库配置信息
+
     ],
 ];

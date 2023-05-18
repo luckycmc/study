@@ -14,7 +14,7 @@ return [
             'daemonize'             => false,
             // Normally this value should be 1~4 times larger according to your cpu cores.
             'reactor_num'           => swoole_cpu_num(),
-            'worker_num'            => swoole_cpu_num(),
+            'worker_num'            => swoole_cpu_num()*2,
             //'task_worker_num'       => swoole_cpu_num() * 0,
             'enable_static_handler' => true,
             'document_root'         => root_path('public'),
@@ -67,13 +67,14 @@ return [
     'pool'       => [
         'db'    => [
             'enable'        => true,
-            'max_active'    => 10, //最大数
+            'max_active'    => 20, //最大数
             'min_active'    => 5,  //最小数
             'max_wait_time' => 5,
         ],
         'cache' => [
             'enable'        => true,
-            'max_active'    => 3,
+            'max_active'    => 10, //最大数
+            'min_active'    => 5,  //最小数
             'max_wait_time' => 5,
         ],
         //自定义连接池
@@ -97,4 +98,6 @@ return [
     'instances'  => [],
     //每次请求前需要重新执行的服务
     'services'   => [],
+    //redis 连接池 单独使用的
+
 ];
