@@ -1,26 +1,15 @@
-<<<<<<< HEAD
 <?php
 /**
  * Created by PhpStorm.
  * User: f
  * Date: 2023/5/16
  * Time: 10:27
-=======
- <?php
-/**
- * Created by PhpStorm.
- * User: zpw
- * Date: 2023/5/14
- * Time: 14:06
->>>>>>> e52f3f93d19a2aa1340abc5a18074f13617fefd4
  */
 
 namespace app\controller;
 
-<<<<<<< HEAD
 
 use app\BaseController;
-use think\facade\Cache;
 use think\facade\Db;
 
 /**
@@ -142,7 +131,7 @@ class Goods extends BaseController
     public function updateGoods()
     {
         $goods_id = rand(1,25166);
-         Db::name('lmrs_products')->where(['id'=>$goods_id])->inc('sold_count')->update();
+         Db::name('lmrs_products')->where(['id'=>30])->inc('sold_count')->update();
     }
 
     /**
@@ -151,33 +140,7 @@ class Goods extends BaseController
      */
     public function rank()
     {
-        //先从redis获取 没有则在从 数据库中获取
-        $data = Cache::get('g_rank');
-        if (!$data){
-            $data = Db::name('lmrs_products')
-                ->field('name,sold_count')
-                ->order('sold_count desc')
-                ->limit(10)
-                ->select();
-            Cache::set('g_rank',$data,60);
-        }
+        $data = \app\common\model\Goods::create([])->getRank();
         return json_encode($data);
     }
-=======
-/**
- * 商品排行榜
- * Class Goods
- * @package app\controller
- */
-class Goods extends Base
-{
-    /**
-     * 商品排行榜
-     */
-     public function rank()
-     {
-
-     }
-
->>>>>>> e52f3f93d19a2aa1340abc5a18074f13617fefd4
 }// class end
