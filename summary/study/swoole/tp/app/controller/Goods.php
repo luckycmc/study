@@ -143,4 +143,7 @@ class Goods extends BaseController
         $data = \app\common\model\Goods::create([])->getRank();
         return json_encode($data);
     }
+
+    //用户取模 雪花算法
+    
 }// class end
