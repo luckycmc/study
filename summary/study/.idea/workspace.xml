@@ -405,12 +405,12 @@
       <workItem from="1684465114639" duration="15000" />
       <workItem from="1684827009537" duration="2695000" />
       <workItem from="1684831490008" duration="1113000" />
-      <workItem from="1684832617735" duration="4598000" />
+      <workItem from="1684832617735" duration="4619000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="128988000" />
+    <option name="totallyTimeSpent" value="129009000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -817,8 +817,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/swoole/tp/vendor/topthink/think-orm/src/Model.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4104">
-          <caret line="127" column="14" selection-start-line="127" selection-start-column="14" selection-end-line="127" selection-end-column="14" />
+        <state relative-caret-position="5979">
+          <caret line="1046" column="9" selection-start-line="1046" selection-start-column="9" selection-end-line="1046" selection-end-column="9" />
           <folding />
         </state>
       </provider>
