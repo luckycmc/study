@@ -10,6 +10,7 @@ namespace app\controller;
 
 
 use app\BaseController;
+use app\common\lib\Particle;
 use think\facade\Db;
 
 /**
@@ -142,5 +143,15 @@ class Goods extends BaseController
     {
         $data = \app\common\model\Goods::create([])->getRank();
         return json_encode($data);
+    }
+
+    /**
+     * 获取全局唯一id
+     * @return number
+     */
+    public function getQuid()
+    {
+          $uniqueId = Particle::generateParticle();
+          return $uniqueId;
     }
 }// class end
