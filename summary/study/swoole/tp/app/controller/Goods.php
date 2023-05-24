@@ -145,9 +145,8 @@ class Goods extends BaseController
         return json_encode($data);
     }
 
-<<<<<<< HEAD
     /**
-     * 获取全局唯一id
+     * 获取全局唯一ID
      * @return number
      */
     public function getQuid()
@@ -155,8 +154,4 @@ class Goods extends BaseController
           $uniqueId = Particle::generateParticle();
           return $uniqueId;
     }
-=======
-    //用户取模 雪花算法
-    
->>>>>>> f6b3eb7486ca252d8579ab086ec93baa6812882f
 }// class end

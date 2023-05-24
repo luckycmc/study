@@ -31,8 +31,6 @@ class Particle
     }
 
     public static function generateParticle() {
-        self::$i = rand(0,100);
-        var_dump(self::$i);
         /*
         * Time - 42 bits
         */
@@ -48,7 +46,6 @@ class Particle
         */
         $base = decbin(self::max41bit + $time);
 
-       var_dump(self::$machineId);
         /*
         * Configured machine id - 10 bits - up to 1024 machines
         */
