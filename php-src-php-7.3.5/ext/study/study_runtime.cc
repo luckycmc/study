@@ -16,12 +16,11 @@ static PHP_METHOD(study_runtime, enableCoroutine)
     hook_func(ZEND_STRL("sleep"), zim_study_coroutine_util_sleep);
 }
 
-//实现hook_func
-
+//实现hook_func  替换要查找的 函数
 static void hook_func(const char *name, size_t name_len, zif_handler handler)
-{
+{    
     zend_function *ori_f = (zend_function *) zend_hash_str_find_ptr(EG(function_table), name, name_len);
-    ori_f->internal_function.handler = handler;
+    ori_f->internal_function.handler = handler;//指向协成后的指针函数 实现无缝衔接的切换
 }
 //注册类方法
 static const zend_function_entry study_runtime_methods[] =

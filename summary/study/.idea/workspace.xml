@@ -198,7 +198,7 @@
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="D:/www.tp.com" />
+    <property name="last_opened_file_path" value="E:/swooleesay---back" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
@@ -332,12 +332,13 @@
       <workItem from="1684832617735" duration="9785000" />
       <workItem from="1684898372725" duration="2137000" />
       <workItem from="1684907417493" duration="6000" />
-      <workItem from="1684908093816" duration="646000" />
+      <workItem from="1684908093816" duration="892000" />
+      <workItem from="1684910885102" duration="22000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136964000" />
+    <option name="totallyTimeSpent" value="137232000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -350,10 +351,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2613391" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26565874" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990867" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -740,6 +741,6 @@
     </entry>
   </component>
   <component name="webServersAuthStorage">
-    <data>AAAAsOEFu/s2uZId3py5Z93zaMg9vmGPELY8ip4rPjxTpc3rALoQsWt8QTUDMbHVCB+1qUXuTh7FszjOxyGKt1Ma4vU/lLsx/XPKqVDABsNHEasXxdJgMDWb6oHlQiKYXARi1QF053juJ7QS3KxT2B9+iD7ntUy2AANLoMytj1LH7lvv0lidl7bSt2fndCBI80U9bJdsyyAuEXiNDN5VpN1opoB2S95F35Flfqi3TRppdGF1zT4ahktQzi4/W3LFbGAjgQ==</data>
+    <data>AAAAsDaWx5LJTZcLiOAQ20KNUR96a+0nWI89krGtsk5wGpNxtdAgtxXSi0oXK/Dg86OTL0VmlPxNo9v/1ldAy/2s+Q1W9HJxdasczFvMwAvbtKs9Hxd8ColSl3yb/UNzMWY7+Fkeo9byuP3YmKtv3kNZHpP0iwUi0pUT4wnAVVNaXEIyec4c+JikdfLg85UBxykeqdbj1hfkcd8Gf3sIoMHecrm7afwKhw6gPISSpy4RLMNqJZQ4qoIp5GxZ1QPnXydx6w==</data>
   </component>
 </project>
