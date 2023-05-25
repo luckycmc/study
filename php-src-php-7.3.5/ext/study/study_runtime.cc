@@ -19,6 +19,7 @@ static PHP_METHOD(study_runtime, enableCoroutine)
 //实现hook_func  替换要查找的 函数
 static void hook_func(const char *name, size_t name_len, zif_handler handler)
 {    
+    //查找到对应 的函数
     zend_function *ori_f = (zend_function *) zend_hash_str_find_ptr(EG(function_table), name, name_len);
     ori_f->internal_function.handler = handler;//指向协成后的指针函数 实现无缝衔接的切换
 }

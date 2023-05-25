@@ -43,7 +43,12 @@ php_coro_task* PHPCoroutine::get_task()
     php_coro_task *task = (php_coro_task *) Coroutine::get_current_task();
     return task?task:&main_task;
 }
-//对应的执行函数 对应的协成执行函数 也就是用户空间的指向的函数
+/**
+ * /对应的执行函数 对应的协成执行函数 
+ *  也就是用户空间的指向的函数 liru go（function(){}）
+ * 这个协程函数需要在 PHP的虚拟机上执行
+ * @param arg 
+ */
 void PHPCoroutine::create_func(void *arg)
 {
     int i;

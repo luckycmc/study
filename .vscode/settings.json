@@ -22,6 +22,7 @@
         "sockios.h": "c",
         "uio.h": "c",
         "compiler.h": "c",
-        "zend_exceptions.h": "c"
+        "zend_exceptions.h": "c",
+        "ty_server.h": "c"
     }
 }

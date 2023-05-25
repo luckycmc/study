@@ -13,7 +13,7 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
 
     try
     {
-        stack_ = new char[stack_size_];
+        stack_ = new char[stack_size_]; // 申请一块栈的大小
     }
     catch(const std::bad_alloc& e)
     {
@@ -23,12 +23,13 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
     void* sp = (void*) ((char*) stack_ + stack_size_);
     //make_fcontext函数用于创建一个执行上下文 ctx_ 是一个空指针 void *ptr  此时也是 context 的对象
     // 申请对应的空间模拟一个栈的实现 (栈顶,栈的大小,函数的入口地址也就是栈的入口地址)
-    // 创建上下文:启动函数+执行栈
+    // 创建上下文:启动函数+执行栈 在堆中分配一块内存作为该执行上下文的c栈
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
 /**
- *  执行协成函数
+ *  执行上下文的入口函数为Context::context_func() 
+ * 例如在这个函数打断点 b study::Context::context_func() 
  * @param arg 
  */
 void Context::context_func(void *arg)
@@ -43,9 +44,9 @@ void Context::context_func(void *arg)
        并且给它传递参数private_data_，也就是php_coro_args *。
       */
      Context *_this = (Context *) arg; // 也就是contex的对应
-     _this->fn_(_this->private_data_);
-     _this->end_ = true;//协程开始运行
-     _this->swap_out();
+     _this->fn_(_this->private_data_); //用户空间传递过来的参数和函数名 需要指向的函数任务
+     _this->end_ = true; //协程运行结束 表示协成运行结束
+     _this->swap_out(); //从主程序切换到 要执行的协程
 }
 /**
  * 让出当前协程的上下文
@@ -69,7 +70,7 @@ bool Context::swap_in()
     jump_fcontext(&swap_ctx_, ctx_, (intptr_t) this, true);
     return true;
 }
-//协成结束后释放对应的内存
+//协成结束后释放对应的C栈内存
 Context::~Context()
 {
     if (swap_ctx_)
