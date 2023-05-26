@@ -14,6 +14,6 @@ function task($n, $a, $b)
 }
 
 echo "main coroutine" . PHP_EOL;
-Study\Coroutine::create('task', 1, 'a', 'b');
-echo "main coroutine" . PHP_EOL;
-Study\Coroutine::create('task', 2, 'c', 'd');
+zpw_go('task', 1, 'a', 'b');
+/* echo "main coroutine" . PHP_EOL;
+Study\Coroutine::create('task', 2, 'c', 'd'); */

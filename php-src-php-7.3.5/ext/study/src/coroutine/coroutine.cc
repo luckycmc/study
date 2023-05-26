@@ -74,7 +74,7 @@ void Coroutine::yield()
 void Coroutine::resume()
 {   
     assert(current != this);
-    on_resume(task);
+    on_resume(task);  //恢复 php栈  PHPCoroutine::on_resume(void *arg) PHP站的信息  以C栈驱动PHP栈
     origin = current;  //主程序中current为null
     current = this;  //执行当前的协程对象
     ctx.swap_in();   // 切换C栈

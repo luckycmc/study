@@ -1,8 +1,9 @@
 <?php
 
 while (true) {
-    Sgo(function () {
-        $cid = Sco::getCid();
-        var_dump($cid);
+    $cid = zpw_go(function () {
+
+        
     });
+    var_dump($cid);
 }

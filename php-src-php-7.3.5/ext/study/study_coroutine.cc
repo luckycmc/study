@@ -44,6 +44,9 @@ php_coro_task* PHPCoroutine::get_task()
     return task?task:&main_task;
 }
 /**
+ *它完成了我们创建协程的基础工作，例如创建PHP栈帧、把传递给用户函数的参数放到栈帧上面、
+执行用户空间传递过来的函数（实际上就是去执行zend_op_array）。函数PHPCoroutine::create_func最终会被我们的协程入口函数调用
+ * 注意Coroutine::create函数第一个参数伟create_func，该函数后续用于创建php栈，并开始协程代码的执行；
  * /对应的执行函数 对应的协成执行函数 
  *  也就是用户空间的指向的函数 liru go（function(){}）
  * 这个协程函数需要在 PHP的虚拟机上执行
@@ -66,7 +69,7 @@ void PHPCoroutine::create_func(void *arg)
     //这个方法的目的是初始化一个新的PHP栈，因为我们即将要创建一个协程了
     vm_stack_init(); // get a new php stack
     call = (zend_execute_data *) (EG(vm_stack_top));
-    task = (php_coro_task *) EG(vm_stack_top);
+    task = (php_coro_task *) EG(vm_stack_top); // 获取当前栈顶的信息
     EG(vm_stack_top) = (zval *) ((char *) call + PHP_CORO_TASK_SLOT * sizeof(zval));
     //将要执行的数据入栈
     call = zend_vm_stack_push_call_frame(
@@ -91,6 +94,7 @@ void PHPCoroutine::create_func(void *arg)
     task->co = Coroutine::get_current();
     task->co->set_task((void *) task);
     task->defer_tasks = nullptr; //deder 使用的赋值为空
+    /********************执行用户空间的 协程函数 start********************/
     if (func->type == ZEND_USER_FUNCTION)
     {
         ZVAL_UNDEF(retval);
@@ -101,6 +105,7 @@ void PHPCoroutine::create_func(void *arg)
         //此时，这些opline就是我们用户空间传递的函数。执行PHP代码 编译后的opcode 
         zend_execute_ex(EG(current_execute_data));
     }
+     /********************执行用户空间的 协程函数 end********************/
     //判断是都有defer 函数注册有注入则实现函数调用 start************************************/
     task = get_task();
     std::stack<php_study_fci_fcc*> *defer_tasks = task->defer_tasks;

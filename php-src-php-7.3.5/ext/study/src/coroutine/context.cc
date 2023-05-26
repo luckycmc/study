@@ -24,6 +24,7 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
     //make_fcontext函数用于创建一个执行上下文 ctx_ 是一个空指针 void *ptr  此时也是 context 的对象
     // 申请对应的空间模拟一个栈的实现 (栈顶,栈的大小,函数的入口地址也就是栈的入口地址)
     // 创建上下文:启动函数+执行栈 在堆中分配一块内存作为该执行上下文的c栈
+    // 代码是设置这个最底层的协程的上下文ctx_，比如栈地址，栈大小，协程的入口函数context_func
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
@@ -50,7 +51,8 @@ void Context::context_func(void *arg)
 }
 /**
  * 让出当前协程的上下文
- * 
+ * swap_out的作用是让出当前协程的上下文，去加载其他协程的上下文。
+ * 就是当我们跑完了这个协程，需要恢复其他的协程的上下文，让其他的协程继续运行
  * @return true 
  * @return false 
  */
