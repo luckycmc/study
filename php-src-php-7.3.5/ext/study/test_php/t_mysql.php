@@ -10,6 +10,7 @@ zpw_go(function ()
         $responseStr = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-Length: 11\r\n\r\nhello world\r\n";
         $conn->send($responseStr);
         $conn->close();
+        //模拟0.5 IO阻塞
         Sco::sleep(0.5);
     });
     $server->start();
