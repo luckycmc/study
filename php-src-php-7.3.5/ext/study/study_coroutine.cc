@@ -33,7 +33,7 @@ void PHPCoroutine::save_vm_stack(php_coro_task *task)
 {
      task->vm_stack_top = EG(vm_stack_top);    //通过EG全局变量来获取当前栈的信息 当前的栈顶
      task->vm_stack_end = EG(vm_stack_end);    // 当前PHP的栈底
-     task->vm_stack     = EG(vm_stack);  // 当前运行的栈指针
+     task->vm_stack     = EG(vm_stack);  // 整个栈结构
      task->vm_stack_page_size = EG(vm_stack_page_size);  //当前运行栈的大小
      task->execute_data = EG(current_execute_data);    // 当前 PHP 栈的执行 也就是opline opcode 的运行位置
 }
@@ -103,7 +103,7 @@ void PHPCoroutine::create_func(void *arg)
         zend_init_func_execute_data(call, &func->op_array, retval); //初始化执行栈
         //zend_execute_ex的作用就是去循环执行executor_globals.current_execute_data指向的opline。
         //此时，这些opline就是我们用户空间传递的函数。执行PHP代码 编译后的opcode 
-        zend_execute_ex(EG(current_execute_data));
+        zend_execute_ex(EG(current_execute_data)); // 执行协程里的用户函数
     }
      /********************执行用户空间的 协程函数 end********************/
     //判断是都有defer 函数注册有注入则实现函数调用 start************************************/

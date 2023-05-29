@@ -26,9 +26,9 @@ struct php_coro_task
 {
     zval *vm_stack_top;        //是协程栈栈顶。
     zval *vm_stack_end;        //是协程栈栈底。  
-    zend_vm_stack vm_stack;    //是协程栈指针。 
+    zend_vm_stack vm_stack;    //执行栈
     size_t vm_stack_page_size;           //是协程栈页大小。
-    study::Coroutine *co;               // 协成对象
+    study::Coroutine *co;               // 协成对象  属于哪个coroutine
     zend_execute_data *execute_data;   //是当前协程栈 PHP的栈帧。
     // 引入栈
     std::stack<php_study_fci_fcc *> *defer_tasks; //defer 相应的处理 栈 先进来的后出去 主要用于defer
