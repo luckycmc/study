@@ -36,8 +36,7 @@ int main()
 
     bzero(&server_addr, sizeof(server_addr));//初始化
 
-    server_addr.sin_family = INADDR_ANY;    
-
+    server_addr.sin_family = INADDR_ANY; //协议类型
     server_addr.sin_port = htons(port);
 
     server_addr.sin_addr.s_addr = listen_addr;
