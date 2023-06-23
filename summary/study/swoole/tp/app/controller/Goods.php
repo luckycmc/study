@@ -154,4 +154,15 @@ class Goods extends BaseController
           $uniqueId = Particle::generateParticle();
           return $uniqueId;
     }
+
+    /**
+     * /布隆过滤器
+     */
+    public function filter()
+    {
+        //获取商品参数
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1',6379);
+        $result = $redis->rawCommand('bf.exists', 'test', 'abc12345');
+    }
 }// class end
