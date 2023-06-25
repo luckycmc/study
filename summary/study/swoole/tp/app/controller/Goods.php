@@ -165,4 +165,21 @@ class Goods extends BaseController
         $redis->connect('127.0.0.1',6379);
         $result = $redis->rawCommand('bf.exists', 'test', 'abc12345');
     }
+    //分表
+    public function rangeTable()
+    {
+         //更具订单号插入数据
+         $order_num = rand(0,1);//模拟订单号
+         if($order_num%2 == 0){
+             //order_1 table
+         }else{
+            //order_2 table
+         }
+    }
+    //分表查询
+    public function getOrderDetail()
+    {
+         //订单号的后四位
+         // 第二池取模 订单号的前4位
+    }
 }// class end
