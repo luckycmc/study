@@ -1,0 +1,20 @@
+<?php
+/**
+  分布式数据库配置
+ */
+return [
+     'order_main'=>[
+          'order_main_0'=>[
+              'host'=>'127.0.0.1',
+              'user'=>'root',
+              'pass'=>'123456',
+              'dbname'=>'order_main_1',
+          ],
+         'order_main_1'=>[
+             'host'=>'127.0.0.1',
+             'user'=>'root',
+             'pass'=>'123456',
+             'dbname'=>'order_main_2',
+         ],
+     ],
+];

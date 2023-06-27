@@ -181,5 +181,7 @@ class Goods extends BaseController
     {
          //订单号的后四位
          // 第二池取模 订单号的前4位
+        // 买家专用表查询 卖家专用表查询 也要进行分表
+        //如何统计数据 一种 es 数据进行统计 一种是添加统计表
     }
 }// class end
