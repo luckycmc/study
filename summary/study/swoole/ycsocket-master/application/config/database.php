@@ -45,8 +45,8 @@
 | the active record class
 */
 $util_db_config['default']['host'] = '127.0.0.1';
-$util_db_config['default']['username'] = 'test';
-$util_db_config['default']['password'] = 'test';
+$util_db_config['default']['username'] = 'root';
+$util_db_config['default']['password'] = 'root';
 $util_db_config['default']['dbname'] = 'user';
 $util_db_config['default']['char_set'] = 'utf8';
 $util_db_config['default']['dbcollat'] = 'utf8_general_ci';
@@ -54,15 +54,15 @@ $util_db_config['default']['pool_size'] = 10;
 
 if (GAME_ZONE_ID == 1) {
     $util_db_config['game']['host'] = '127.0.0.1';
-    $util_db_config['game']['username'] = 'test';
-    $util_db_config['game']['password'] = 'test';
+    $util_db_config['game']['username'] = 'root';
+    $util_db_config['game']['password'] = 'root';
     $util_db_config['game']['dbname'] = 'game_zone_1';
     $util_db_config['game']['char_set'] = 'utf8';
     $util_db_config['game']['dbcollat'] = 'utf8_general_ci';
 } else if (GAME_ZONE_ID == 2) {
     $util_db_config['game']['host'] = '127.0.0.1';
-    $util_db_config['game']['username'] = 'test';
-    $util_db_config['game']['password'] = 'test';
+    $util_db_config['game']['username'] = 'root';
+    $util_db_config['game']['password'] = 'root';
     $util_db_config['game']['dbname'] = 'game_zone_2';
     $util_db_config['game']['char_set'] = 'utf8';
     $util_db_config['game']['dbcollat'] = 'utf8_general_ci';

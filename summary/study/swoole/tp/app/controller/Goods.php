@@ -11,6 +11,7 @@ namespace app\controller;
 
 use app\BaseController;
 use app\common\lib\Particle;
+use app\common\service\rabbitmq\Producer;
 use think\facade\Db;
 
 /**
@@ -183,5 +184,38 @@ class Goods extends BaseController
          // 第二池取模 订单号的前4位
         // 买家专用表查询 卖家专用表查询 也要进行分表
         //如何统计数据 一种 es 数据进行统计 一种是添加统计表
+    }
+    //MySQL的间隙锁
+    public function getLock()
+    {
+         //第一,添加普通索引的 例如10-30 之间如果数据没有提交 insert 29 是添加不进去的
+         //第二，添加普通索引 锁整个表
+         // 第三，添加唯一索引任意数据都能添加成功
+        // 事务一定要讲究 尽量不要耗时
+    }
+
+    /**
+     * 用户下单
+     */
+    public function createOrder()
+    {
+          //1.基本的方案 事务兜底 例如 基础订单表和详细订单表 购物券
+          // 积分的增加 等数据一致性的问题
+    }
+
+    /**
+     * 异步下单
+     */
+    public function syncOrder()
+    {
+        $producer = new Producer();
+        $data = [
+            'message_type' => 2,
+            'order_id' => 3,
+            'user_id' => 3,
+            'message' => "发送的消息内容：您的快递已到的配送站。"
+        ];
+        $producer->send($data);
+        return "success";
     }
 }// class end

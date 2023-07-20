@@ -5,5 +5,7 @@
 return [
     // 指令定义
     'commands' => [
+        // rabbitMq 调用消费者
+        'consumer' => 'app\command\Consumer',
     ],
 ];
