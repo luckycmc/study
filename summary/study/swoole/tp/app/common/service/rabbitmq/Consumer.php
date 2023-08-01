@@ -62,7 +62,6 @@ class Consumer
         $this->channel->basic_consume($this->mqConfig['queue_name'], $this->mqConfig['consumer_tag'], false, false, false, false, array($this, 'process_message'));
 
         register_shutdown_function(array($this, 'shutdown'), $this->channel, $this->connection);
-
         while (count($this->channel->callbacks)) {
             $this->channel->wait();
         }
@@ -74,6 +73,7 @@ class Consumer
      */
     public function process_message($message)
     {
+        $allData = [];
         if ($message->body !== 'quit') {
             $messageBody = json_decode($message->body);
             // 自定义的消息类型
@@ -85,7 +85,19 @@ class Consumer
                     // 消息
                     Log::write("message_data:" . json_encode($message, JSON_UNESCAPED_UNICODE));
                     $body = json_decode($message->body, true);
-                    $messageModel->save($body);
+                    if ($body){
+
+                    }
+                    array_push($allData,$body);
+                    if (count($allData) ==10){
+                        //$messageModel->saveAll($allData);
+                        print_r($allData);
+                    }else{
+                        sleep(3);
+                        //$messageModel->saveAll($allData);
+                        print_r($allData);
+                    }
+
 
                 } catch (\Think\Exception  $e) {
                     Log::write($e->getMessage(), 2);
