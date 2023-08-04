@@ -2,4 +2,5 @@
    a.消息投递 有 comfirm 机制  异步监听（保证消息百分之一百投递成功）set_ack_handler(投递成功)   set_nack_handler（投递失败）
    b.消息消费 有 ack 确认机制  ack 删除消息  nack 保留消息（保证消息百分之一百消费成功!）
    c.幂等性问题 主要针对于消息的重复.
-2.
+2.分布式订单统计 也可以采用rabbitmq 进行 数据订单统计
+  数据推送到rabbitmq 然后再用程序更新对应的数据字段 例如 set num =num+1;
