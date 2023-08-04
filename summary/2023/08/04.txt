@@ -1,0 +1,5 @@
+1.rabbitmq实现 分布式事务:
+   a.消息投递 有 comfirm 机制  异步监听（保证消息百分之一百投递成功）set_ack_handler(投递成功)   set_nack_handler（投递失败）
+   b.消息消费 有 ack 确认机制  ack 删除消息  nack 保留消息（保证消息百分之一百消费成功!）
+   c.幂等性问题 主要针对于消息的重复.
+2.
