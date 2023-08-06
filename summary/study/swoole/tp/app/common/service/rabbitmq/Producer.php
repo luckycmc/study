@@ -65,7 +65,16 @@ class Producer
 
         // 将要发送数据变为json字符串
         $messageBody = json_encode($data, JSON_UNESCAPED_UNICODE);
-
+        //监听数据推送成功
+        $this->channel->set_ack_handler(function (AMQPMessage $message){
+             echo "success";
+        });
+        //监听数据推送失败
+        $this->channel->set_nack_handler(function (AMQPMessage $message){
+            echo "fail";
+        });
+        //必须写 消息确认机制
+        $this->channel->confirm_select();
         /**
          * 创建AMQP消息类型
          * delivery_mode 消息是否持久化
