@@ -2,10 +2,17 @@ package main
 import(
 	"fmt"
 	"net"
+	"sync"
 )
 type Server struct{
 	Ip string
 	Port int
+	//在线用户列表
+	Onlinemap map[string]*User
+	MapLock sync.RWMutex
+    
+    //消息广播的channel
+    Message chan string
 }
 
 //创建server 接口
@@ -14,13 +21,44 @@ func NewServer(ip string,port int) *Server{
 	server:= &Server{
 		Ip:ip,
 		Port:port,
+		Onlinemap:make(map[string]*User),
+		Message:make(chan string),
 	}
     return server
 }
+//监听广播的消息发送给所有的用户
+func(this *Server) ListenMessage(){
+	//监听消息
+	for{
+        msg := <- this.Message
 
+        //将所有message 发送给在线User
+        this.MapLock.Lock()
+        for _,cli:=range this.Onlinemap{
+        	cli.C <-msg
+        }
+        this.MapLock.Unlock()
+	}
+}
+//广播消息
+func(this *Server) BroadCast(user *User,msg string){
+    
+      sendMsg := "["+user.Addr+"]"+user.Name+":"+msg
+      this.Message <- sendMsg
+}
 // handler 
 func (this *Server) Handler(conn net.Conn){
    fmt.Println("连接成功...")
+   user := NewUser(conn)
+   //用户上线将用户加入到maplock中
+   this.MapLock.Lock()
+   this.Onlinemap[user.Name]= user
+   this.MapLock.Unlock()
+
+   //广播用户上线
+   this.BroadCast(user,"已上线")
+   //当前handle阻塞
+   select{}
 }
 
 //启动服务器
@@ -35,6 +73,9 @@ func (this *Server) Start(){
 	}
 	//关闭连接
 	defer listener.Close()
+	//启动监听Message 的goroutine
+	go this.ListenMessage()
+
 	for{
 		// accept
 		conn,err := listener.Accept()

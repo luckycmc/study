@@ -15,7 +15,7 @@ type User struct{
 
 func NewUser(conn net.Conn) *User{
 
-   userAddr := conn.RemoteAddr().string()
+   userAddr := conn.RemoteAddr().String()
    user:=&User{
    	  Name :userAddr,
    	  Addr :userAddr,
