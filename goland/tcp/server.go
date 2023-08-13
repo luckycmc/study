@@ -51,14 +51,11 @@ func(this *Server) BroadCast(user *User,msg string){
 // handler 
 func (this *Server) Handler(conn net.Conn){
    fmt.Println("连接成功...")
-   user := NewUser(conn)
-   //用户上线将用户加入到maplock中
-   this.MapLock.Lock()
-   this.Onlinemap[user.Name]= user
-   this.MapLock.Unlock()
+   user := NewUser(conn,this)
+   
+   //用户上线
+   user.Online();
 
-   //广播用户上线
-   this.BroadCast(user,"已上线")
    //接受客户端的消息
    go func(){
         buf := make([]byte,4096)
@@ -66,7 +63,7 @@ func (this *Server) Handler(conn net.Conn){
 	        	n,err := conn.Read(buf)
 	        	//客户下线
 	        	if n==0{
-	        		this.BroadCast(user,"下线")
+	        		user.Offline()
 	        		return
 	        	}
 	        	if err!=nil && err!=io.EOF{
@@ -75,8 +72,8 @@ func (this *Server) Handler(conn net.Conn){
 	        	}
 	        	//提取用户消息
 	        	msg := string(buf[:n-1])
-	        	//广播数据
-	        	this.BroadCast(user,msg)
+	        	//广播数据给用户
+	        	user.DoMesssage(msg)
         }
    }()
    //当前handle阻塞
