@@ -12,8 +12,8 @@ type Server struct{
 	Onlinemap map[string]*User
 	MapLock sync.RWMutex
     
-    //消息广播的channel
-    Message chan string
+   //消息广播的channel
+   Message chan string
 }
 
 //创建server 接口
@@ -25,7 +25,7 @@ func NewServer(ip string,port int) *Server{
 		Onlinemap:make(map[string]*User),
 		Message:make(chan string),
 	}
-    return server
+   return server
 }
 //监听广播的消息发送给所有的用户
 func(this *Server) ListenMessage(){
@@ -63,20 +63,20 @@ func (this *Server) Handler(conn net.Conn){
    go func(){
         buf := make([]byte,4096)
         for{
-        	n,err := conn.Read(buf)
-        	//客户下线
-        	if n==0{
-        		this.BroadCast(user,"下线")
-        		return
-        	}
-        	if err!=nil && err!=io.EOF{
-        		fmt.Println("Conn read err:",err)
-        		return
-        	}
-        	//提取用户消息
-        	msg := string(buf[:n-1])
-        	//广播数据
-        	this.BroadCast(user,msg)
+	        	n,err := conn.Read(buf)
+	        	//客户下线
+	        	if n==0{
+	        		this.BroadCast(user,"下线")
+	        		return
+	        	}
+	        	if err!=nil && err!=io.EOF{
+	        		fmt.Println("Conn read err:",err)
+	        		return
+	        	}
+	        	//提取用户消息
+	        	msg := string(buf[:n-1])
+	        	//广播数据
+	        	this.BroadCast(user,msg)
         }
    }()
    //当前handle阻塞
