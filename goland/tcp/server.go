@@ -3,6 +3,7 @@ import(
 	"fmt"
 	"net"
 	"sync"
+	"io"
 )
 type Server struct{
 	Ip string
@@ -34,8 +35,9 @@ func(this *Server) ListenMessage(){
 
         //将所有message 发送给在线User
         this.MapLock.Lock()
+		//发送给每一个在线用户
         for _,cli:=range this.Onlinemap{
-        	cli.C <-msg
+        	  cli.C <-msg
         }
         this.MapLock.Unlock()
 	}
@@ -57,6 +59,26 @@ func (this *Server) Handler(conn net.Conn){
 
    //广播用户上线
    this.BroadCast(user,"已上线")
+   //接受客户端的消息
+   go func(){
+        buf := make([]byte,4096)
+        for{
+        	n,err := conn.Read(buf)
+        	//客户下线
+        	if n==0{
+        		this.BroadCast(user,"下线")
+        		return
+        	}
+        	if err!=nil && err!=io.EOF{
+        		fmt.Println("Conn read err:",err)
+        		return
+        	}
+        	//提取用户消息
+        	msg := string(buf[:n-1])
+        	//广播数据
+        	this.BroadCast(user,msg)
+        }
+   }()
    //当前handle阻塞
    select{}
 }
@@ -69,7 +91,7 @@ func (this *Server) Start(){
 		fmt.Println("listen error",err)
 		return //不在往下执行
 	}else{
-		fmt.Println("server is listenning ....\n")
+		fmt.Println("server is listenning port is",this.Port)
 	}
 	//关闭连接
 	defer listener.Close()
