@@ -4,6 +4,7 @@ import(
 	"net"
 	"sync"
 	"io"
+	"time"
 )
 type Server struct{
 	Ip string
@@ -55,7 +56,9 @@ func (this *Server) Handler(conn net.Conn){
    
    //用户上线
    user.Online();
-
+   
+   //监听用户是否活跃channel
+   isLive := make(chan bool)
    //接受客户端的消息
    go func(){
         buf := make([]byte,4096)
@@ -74,10 +77,28 @@ func (this *Server) Handler(conn net.Conn){
 	        	msg := string(buf[:n-1])
 	        	//广播数据给用户
 	        	user.DoMesssage(msg)
+	        	//用户任意消息代表当前用户是活跃的
+	        	isLive <- true
         }
    }()
    //当前handle阻塞
-   select{}
+   for{
+   	   select{
+   	   	  case <- isLive:
+   	   	  //当前用户活跃重置制定时器
+   	   	  //不需要做任何操作
+   	   	  case <-time.After(time.Second * 10):
+   	   	  //已经超时当前用户被剔除
+   	   	  user.SendMsg("你被强制下线")
+   	   	  //销毁当前资源
+   	   	  close(user.C)
+   	   	  //关闭当前客户端
+   	   	  conn.Close()
+   	   	  //退出当前handler
+   	   	  return // 或者runtime.Goexit()
+   	   }
+   }
+   
 }
 
 //启动服务器
