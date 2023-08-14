@@ -88,6 +88,30 @@ func(this *User) DoMesssage(msg string){
                this.Name = newName
                this.SendMsg("您已经更新用户名:"+this.Name+"\n")
           }
+    //消息私聊功能
+   }else if len(msg) >4 && msg[:3] == "to|"{
+         //消息格式: to|张三|消息内容
+         //1.获取用户名查找用户名
+         remoteName := strings.Split(msg,"|")[0]
+         //1.用户名为空
+         if remoteName == ""{
+            this.SendMsg("消息格式不正确,请使用:to|zhangsan|你好a|")
+            return
+         }
+         //2.更具用户名 得到当前对象
+         remoteUser,ok:=this.server.Onlinemap[remoteName]
+         if !ok{
+            this.SendMsg("该用户名不存在\n")
+            return
+         }
+         //3.获取消息信息
+         content:= strings.Split(msg,"|")[2]
+         if content == ""{
+            this.SendMsg("消息内容不能为空\n")
+            return
+         }
+         //把消息发送给指定用户
+         remoteUser.SendMsg(this.Name+"对你说:"+content)
 
    }else{
       this.server.BroadCast(this,msg)
