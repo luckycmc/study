@@ -1,7 +1,9 @@
 package main
 
-import "net"
-
+import (
+    "net"
+    "strings"
+)
 //user 类
 
 type User struct{
@@ -25,7 +27,7 @@ func NewUser(conn net.Conn,server *Server) *User{
    	  conn :conn,
         server:server,
    }
-   //启动监听当前user channel消息的
+   //启动监听当前user channel消息的 有消息就发送给用户
    go user.ListenMessage()
 
    return user
@@ -38,7 +40,7 @@ func(this *User) Online(){
    this.server.MapLock.Unlock()
    //广播用户上线
    this.server.BroadCast(this,"已上线")
-}
+} 
 //用户下线业务
 func(this *User) Offline(){
 
@@ -65,6 +67,27 @@ func(this *User) DoMesssage(msg string){
             this.SendMsg(onlineMsg)
         }
         this.server.MapLock.Unlock()
+
+   }else if len(msg) > 7 && msg[:7] == "rename|"{
+         
+          //消息格式 ：rename|张三
+          newName := strings.Split(msg,"|")[1]
+          //查询用户名是否存在
+           _,ok:=this.server.Onlinemap[newName]
+           //存在
+          if ok{
+             this.SendMsg("当前用户名已经被使用\n")
+          }else{ // 没有找到
+               this.server.MapLock.Lock();
+               //删除原来的名字
+               delete(this.server.Onlinemap,this.Name)
+               //添加新的名字
+               this.server.Onlinemap[newName] = this
+               this.server.MapLock.Unlock();
+               //更新新的用户名
+               this.Name = newName
+               this.SendMsg("您已经更新用户名:"+this.Name+"\n")
+          }
 
    }else{
       this.server.BroadCast(this,msg)

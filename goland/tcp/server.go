@@ -37,7 +37,7 @@ func(this *Server) ListenMessage(){
         this.MapLock.Lock()
 		//发送给每一个在线用户
         for _,cli:=range this.Onlinemap{
-        	  cli.C <-msg
+        	  cli.C <-msg // cli.C是当前用户的管道
         }
         this.MapLock.Unlock()
 	}
