@@ -40,6 +40,10 @@ func setupRouter() *gin.Engine {
               "hobby":[]string{"吃饭","睡觉","写代码"},
            })
     })
+    //gin框架重定向
+    /*r.GET("/re", func(c *gin.Context) {
+        c.Redirect(http.StatusMovedPermanently, "http://www.5lmh.com")
+    })*/
     return r
 }
 
