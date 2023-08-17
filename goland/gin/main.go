@@ -15,6 +15,8 @@ func setupRouter() *gin.Engine {
         Age:20,
     }
     r := gin.Default()
+    //加载模板目录
+    r.LoadHTMLGlob("test_gin_html/*")
     //json 的形式返回数据
     r.GET("/ping", func(c *gin.Context) {
         c.JSON(http.StatusOK, gin.H{
@@ -31,7 +33,10 @@ func setupRouter() *gin.Engine {
     //静态页面的处理
     r.GET("/index",func(c *gin.Context){
          
-          
+          c.HTML(http.StatusOK,"index.html",gin.H{
+              "title":"zpw",
+              "ce":"cc",
+           })
     })
     return r
 }
