@@ -36,6 +36,7 @@ func setupRouter() *gin.Engine {
           c.HTML(http.StatusOK,"index.html",gin.H{
               "title":"zpw",
               "ce":"cc",
+              "score":80,
            })
     })
     return r
