@@ -37,6 +37,7 @@ func setupRouter() *gin.Engine {
               "title":"zpw",
               "ce":"cc",
               "score":80,
+              "hobby":[]string{"吃饭","睡觉","写代码"},
            })
     })
     return r
