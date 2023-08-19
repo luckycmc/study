@@ -60,3 +60,14 @@ func queryBookByID(id int64)(book *Book,err error){
       }
       return
 }
+//修改数据
+func editBook(title string,price float64,id int64)(err error){
+     
+       sqlStr := "update book set title=?, price=? where id =?"
+        _,err = db.Exec(sqlStr,title,price,id)
+       if err != nil {
+		    fmt.Println("编辑书籍信息失败！")
+		    return
+	    }
+	    return
+}

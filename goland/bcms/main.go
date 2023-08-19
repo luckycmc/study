@@ -82,6 +82,23 @@ func editBookHandler(c *gin.Context){
       }
       //post参数请求
       if c.Request.Method == "POST"{
+              
+              //获取用户提交的数据
+              title := c.PostForm("title")
+              price := c.PostForm("price")
+              priceVal ,err := strconv.ParseFloat(price,64)
+              if err != nil {
+                  c.String(http.StatusBadRequest, "无效的价格信息")
+                  return 
+              }
+              // 2. 去数据库更新对应的书籍数据
+              // ? id去哪儿了？
+              err = editBook(title,priceVal,bookId)
+              if err != nil {
+                 c.String(http.StatusInternalServerError,"数据更新失败")
+                 return 
+              }
+              c.Redirect(http.StatusMovedPermanently,"/book/list")
 
       }else{ //加载页面
             
