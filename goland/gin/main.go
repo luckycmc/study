@@ -2,52 +2,14 @@ package main
 
 import (
     "github.com/gin-gonic/gin"
-    "net/http"
+    //"net/http"
+    "gin/router"
 )
-type Data struct{
-    Name string
-    Age int
-}
-//设置路由
-func setupRouter() *gin.Engine {
-    data := &Data{
-        Name:"zpw",
-        Age:20,
-    }
-    r := gin.Default()
-    //加载模板目录
-    r.LoadHTMLGlob("test_gin_html/*")
-    //json 的形式返回数据
-    r.GET("/ping", func(c *gin.Context) {
-        c.JSON(http.StatusOK, gin.H{
-             "code":"200",
-             "msg":"success",
-             "data":data,
-        })
-    })
-    //静态输出数据
-    r.GET("/",func(c *gin.Context){
-        
-         c.String(http.StatusOK,"hello gin")
-    })
-    //静态页面的处理
-    r.GET("/index",func(c *gin.Context){
-         
-          c.HTML(http.StatusOK,"index.html",gin.H{
-              "title":"zpw",
-              "ce":"cc",
-              "score":80,
-              "hobby":[]string{"吃饭","睡觉","写代码"},
-           })
-    })
-    //gin框架重定向
-    /*r.GET("/re", func(c *gin.Context) {
-        c.Redirect(http.StatusMovedPermanently, "http://www.5lmh.com")
-    })*/
-    return r
-}
 
-func main() {
-    r := setupRouter()
-    r.Run(":8000") // listen and serve on 0.0.0.0:8080
+func main(){
+    r:= gin.Default()
+    //引入路由
+    router.ApiRouterInit(r)
+    router.ApiAdminInit(r)
+    r.Run()
 }

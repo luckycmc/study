@@ -148,6 +148,8 @@ func webRouer() *gin.Engine{
 	r:= gin.Default()
     //加载对应的魔板
     r.LoadHTMLGlob("templates/**/*")
+    //配置静态文件目录
+    r.Static("/static","./static")
     /**********注册路由 start***************/
     //首页
     r.GET("/",func(c *gin.Context){
