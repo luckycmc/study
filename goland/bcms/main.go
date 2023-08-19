@@ -31,8 +31,7 @@ func bookListHandler(c *gin.Context){
 //显示插入页面
 func newBookHandler(c *gin.Context){
      
-     c.HTML(http.StatusOK,"book/new_book.html",nil)
-     
+     c.HTML(http.StatusOK,"book/new_book.html",nil) 
 }
 //数据入库
 func createBookHandler(c *gin.Context){
@@ -64,6 +63,38 @@ func createBookHandler(c *gin.Context){
      //跳转到列表页
      c.Redirect(http.StatusMovedPermanently, "/book/list")
 }
+//修改数据
+func editBookHandler(c *gin.Context){
+    
+      //获取用户传递的id
+      idStr := c.Query("id")
+      //判断参数   
+      if len(idStr) == 0{
+          //没有携带参数是无效请求
+          c.String(http.StatusOK,"请求参数有问题")
+          return
+      }
+      //数据转换类型
+      bookId ,err:=strconv.ParseInt(idStr,10,64)
+      if err != nil {
+         c.String(http.StatusOK,"没有携带参数则是无效请求")
+         return 
+      }
+      //post参数请求
+      if c.Request.Method == "POST"{
+
+      }else{ //加载页面
+            
+            //获取数据给旧的魔板渲染
+         bookObj, err := queryBookByID(bookId)
+         if err != nil {
+            c.String(http.StatusBadRequest, "无效的书籍id")
+            return
+         }
+         // 3. 把书籍数据渲染到页面上
+         c.HTML(http.StatusOK, "book/book_edit.html", bookObj)
+      }
+}
 //web 路由
 func webRouer() *gin.Engine{
 	 //初始化路由
@@ -82,6 +113,8 @@ func webRouer() *gin.Engine{
     r.GET("/book/new",newBookHandler)
     //获取对应的参数
     r.POST("/book/new",createBookHandler)
+    //编辑修改
+    r.Any("/book/edit", editBookHandler)
     /**********注册路由 end***************/
     return r;
 }

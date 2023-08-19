@@ -48,3 +48,15 @@ func queryAllBook()(bookList []*Book,err error){
 	}
 	return 
 }
+//获取单个数据
+func queryBookByID(id int64)(book *Book,err error){
+     
+      book = &Book{}
+      sqlStr := "select id,title,price from book where id =?"
+      err = db.Get(book,sqlStr,id)
+      if err != nil {
+      	fmt.Println("查询书籍信息失败！")
+ 		return
+      }
+      return
+}
