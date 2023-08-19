@@ -71,3 +71,15 @@ func editBook(title string,price float64,id int64)(err error){
 	    }
 	    return
 }
+
+//删除数据
+func deleteBook(id int64)(err error){
+    
+     sqlStr := "delete from book where id =?"
+     _,err = db.Exec(sqlStr,id)
+     if err != nil {
+     	fmt.Println("书籍删除失败")
+     	return 
+     }
+     return
+} 

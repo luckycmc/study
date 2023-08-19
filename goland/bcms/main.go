@@ -112,6 +112,36 @@ func editBookHandler(c *gin.Context){
          c.HTML(http.StatusOK, "book/book_edit.html", bookObj)
       }
 }
+//数据删除
+func deleteBookHandler(c *gin.Context){
+      
+       //获取参数
+       id := c.Query("id")
+       if len(id) == 0{
+           //请求参数有问题
+           c.String(http.StatusOK,"参数有问题")
+           return
+       }
+       idVal,err := strconv.ParseInt(id,10,64)
+       if err != nil {
+             c.JSON(http.StatusOK, gin.H{
+                  "code": 1,
+                  "msg": err,
+            })
+         return
+       }
+       //删除数据
+       err = deleteBook(idVal)
+       if err != nil {
+         c.JSON(http.StatusOK,gin.H{
+              "code":0,
+              "err":err,
+         })
+          return 
+       }
+       c.Redirect(http.StatusMovedPermanently,"/book/list")
+
+}
 //web 路由
 func webRouer() *gin.Engine{
 	 //初始化路由
@@ -132,6 +162,8 @@ func webRouer() *gin.Engine{
     r.POST("/book/new",createBookHandler)
     //编辑修改
     r.Any("/book/edit", editBookHandler)
+    //数据删除
+    r.GET("/book/delete", deleteBookHandler)
     /**********注册路由 end***************/
     return r;
 }
