@@ -1,14 +1,21 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+    "github.com/gin-gonic/gin"
+    "net/http"
 )
-type Admin struct{
 
+type Admin struct {
+    Base
 }
 
-func(this *Admin) AdminIndex(r *gin.Context){
+func (this *Admin) AdminIndex(r *gin.Context) {
 
-    r.String(http.StatusOK,"this is admin module")
+    r.String(http.StatusOK, "this is admin module")
+    //this.Base.Success(r)
+}
+
+// 后台列表
+func (this *Admin) AdminList(r *gin.Context) {
+    r.String(http.StatusOK, "this is admin AdminList")
 }
