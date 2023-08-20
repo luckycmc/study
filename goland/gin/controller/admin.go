@@ -9,6 +9,7 @@ type Admin struct {
     Base
 }
 
+// 后台页面
 func (this *Admin) AdminIndex(r *gin.Context) {
 
     r.String(http.StatusOK, "this is admin module")
