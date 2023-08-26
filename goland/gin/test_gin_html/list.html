@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.title}}</title>
+</head>
+    <body>
+        <p>
+          {{.ce}}
+        </p>
+        <!-- if 判断-->
+        {{if ge .score 60}}
+        <span>
+            及格
+        </span>
+        {{else}}
+        <span>
+             不及格
+        </span>
+        {{end}}
+        <ul>
+            {{range $key,$value :=.hobby}}
+            <li>{{$key}}--{{$value}}</li>
+            {{end}}
+        </ul>
+    </body>
+</html>

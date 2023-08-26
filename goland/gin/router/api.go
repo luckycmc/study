@@ -11,4 +11,5 @@ func ApiRouterInit(c *gin.Engine){
 
        }
        c.GET("/api/index",w.ApiIndex)
+       
 }

@@ -10,6 +10,8 @@ import (
 func DefaultInit(c *gin.Engine) {
 
 	w := &controller.Default{}
+	//首页
 	c.GET("/", w.DefaultIndex)
-
+	//列表页
+    c.GET("/list",w.DefaultList)
 }

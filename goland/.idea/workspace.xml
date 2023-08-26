@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c14dc061-3fdd-4bb6-adf0-748370fb9516" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2UWZDF6ATUHj38FcnnOfzsx20k8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Module.GOPATH.is.expanded" value="false" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="go.vgo" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <environment>
+      <map>
+        <entry key=" GOPROXY" value="https://goproxy.io" />
+      </map>
+    </environment>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="425" y="279" key="#GOROOT" timestamp="1693058005144">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="425" y="279" key="#GOROOT/0.0.1366.728@0.0.1366.728" timestamp="1693058005144" />
+    <state x="462" y="61" key="FileChooserDialogImpl" timestamp="1693058000563">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="462" y="61" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1693058000563" />
+    <state x="104" y="0" key="SettingsEditor" timestamp="1693057975085">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="104" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1693057975085" />
+  </component>
+</project>
