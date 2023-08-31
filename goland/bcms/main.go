@@ -31,7 +31,7 @@ func bookListHandler(c *gin.Context){
 //显示插入页面
 func newBookHandler(c *gin.Context){
      
-     c.HTML(http.StatusOK,"book/new_book.html",nil) 
+     c
 }
 //数据入库
 func createBookHandler(c *gin.Context){

@@ -10,6 +10,8 @@ import (
 func main() {
 	//初始化gin框架
 	r := gin.Default()
+	//加载对应的视图魔板
+	r.LoadHTMLGlob("templates/**/*")
 	//注册路由
 	router.InitRouter(r)
 	//启动服务
