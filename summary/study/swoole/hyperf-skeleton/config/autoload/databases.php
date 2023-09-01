@@ -14,11 +14,11 @@ use function Hyperf\Support\env;
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
-        'host' => env('DB_HOST', 'localhost'),
-        'database' => env('DB_DATABASE', 'hyperf'),
+        'host' => env('DB_HOST', '192.168.19.19'),
+        'database' => env('DB_DATABASE', 'study'),
         'port' => env('DB_PORT', 3306),
         'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', ''),
+        'password' => env('DB_PASSWORD', 'root'),
         'charset' => env('DB_CHARSET', 'utf8'),
         'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
         'prefix' => env('DB_PREFIX', ''),

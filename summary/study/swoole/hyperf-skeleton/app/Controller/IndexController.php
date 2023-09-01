@@ -24,4 +24,17 @@ class IndexController
         // 转换 $id 为字符串格式并以 plain/text 的 Content-Type 返回 $id 的值给客户端
         return (string)$id;
     }
+
+    /**
+     * 自动获取 /index/list
+     * @param RequestInterface $request
+     * @return string
+     */
+    public function list(RequestInterface $request)
+    {
+        // 从请求中获得 id 参数
+        $id = $request->input('id', 1);
+        // 转换 $id 为字符串格式并以 plain/text 的 Content-Type 返回 $id 的值给客户端
+        return "string";
+    }
 }
