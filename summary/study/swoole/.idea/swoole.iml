@@ -4,5 +4,21 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHARS">
+        <CLASSES>
+          <root url="phar://$MODULE_DIR$/hyperf-skeleton/vendor/bin/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-chat/vendor/bin/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-chat/vendor/phpstan/phpstan/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-skeleton/vendor/phpstan/phpstan/phpstan.phar/" />
+        </CLASSES>
+        <SOURCES>
+          <root url="phar://$MODULE_DIR$/hyperf-skeleton/vendor/bin/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-chat/vendor/bin/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-chat/vendor/phpstan/phpstan/phpstan.phar/" />
+          <root url="phar://$MODULE_DIR$/hyperf-skeleton/vendor/phpstan/phpstan/phpstan.phar/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
