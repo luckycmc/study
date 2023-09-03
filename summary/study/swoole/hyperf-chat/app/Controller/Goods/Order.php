@@ -120,4 +120,14 @@ class Order extends AbstractController
         $result = $order->save();
         return $result?"success":"faild";
     }
+
+    /**
+     * 判断用户是否购买过
+     */
+    public function v4()
+    {
+         //查订单表
+         // redis 获取对应的用户是否购买
+    }
+    
 }// class end
