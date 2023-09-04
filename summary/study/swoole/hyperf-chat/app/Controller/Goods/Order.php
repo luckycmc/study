@@ -129,5 +129,5 @@ class Order extends AbstractController
          //查订单表
          // redis 获取对应的用户是否购买
     }
-    
+
 }// class end
