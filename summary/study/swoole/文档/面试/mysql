@@ -14,4 +14,8 @@ select name,update_time from test_big_data where name like 'itlgitlg%' limit 800
 sql耗时470ms左右。
 1.3 上es服务器 简单粗暴
 
+1.4 mysql myisam和inndb 引擎的区别
+    锁 表锁行锁  具体使用上 读比较多的 选着myisam 数据交频繁
+    事务上
+    索引上
 
