@@ -1,0 +1,17 @@
+1.mysql大表分页方案
+1.1 延迟关联法
+优化思路：跟子查询的优化思路其实是一样的，把条件转移到主键索引树，
+然后减少回表。不同点是，延迟关联使用了inner join代替子查询。
+先通过二级索引查询主键，再通过主键关联，减少回表提升性能，,优化后SQL为：
+select a.* from test_big_data a
+inner join
+(select id from test_big_data
+where name like 'itlgitlg%' limit 800000,10) t
+on a.id = t.id
+1.2 采用覆盖索引优化
+目前该表name、update_time创建了联合索引，如果业务上，所需的字段都在索引上，可以使用覆盖索引来优化SQL，减少数据库的回表操作；如下sql：
+select name,update_time from test_big_data where name like 'itlgitlg%' limit 800000,10
+sql耗时470ms左右。
+1.3 上es服务器 简单粗暴
+
+
