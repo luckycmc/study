@@ -9,11 +9,17 @@
 namespace App\Model;
 
 
-class Order extends BaseModel
+class Order extends Model
 {
     /**
-     * 订单表
+     * 142服务器库的
+ * 订单表
+ * @var string
+ */
+    protected $table = "ku_order";
+    /**
+     * 对应的连接库
      * @var string
      */
-    protected $table = "ku_order";
+    protected $connection ="order";
 }

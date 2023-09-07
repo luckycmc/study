@@ -44,8 +44,7 @@ class IndexController
     {
         // 从请求中获得 id 参数
         $id = $request->input('id', 1);
-        $users = Db::select('SELECT * FROM book where id= '.$id
-        );
+        $users = Db::select('SELECT * FROM book where id= '.$id);
         return json_encode($users);
     }
     public function redis(RequestInterface $request)
