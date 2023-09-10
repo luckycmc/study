@@ -1,21 +1,16 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: zpw
- * Date: 2023/9/7
- * Time: 17:06
+ * Date: 2023/9/9
+ * Time: 15:05
  */
-declare (strict_types=1);
+
 namespace App\Model;
 
 
 class Order extends Model
 {
-    /**
-     * 订单表
-     * @var string
-     */
-    protected $table = "ku_order";
-
-    protected  $connection = 'goods';
+     protected ?string $table = 'ku_order';
 }

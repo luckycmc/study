@@ -14,7 +14,7 @@ use function Hyperf\Support\env;
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
-        'host' => env('DB_HOST', '192.168.10.19'),
+        'host' => env('DB_HOST', '192.168.10.37'),
         'database' => env('DB_DATABASE', 'user'),
         'port' => env('DB_PORT', 3306),
         'username' => env('DB_USERNAME', 'root'),
@@ -48,7 +48,7 @@ return [
             PDO::ATTR_EMULATE_PREPARES => false,
         ],
     ],
-    'goods' => [
+    'goods' => [  //数据库2
         'driver' => env('DB_DRIVER', 'mysql'),
         'host' => env('DB_HOST', '192.168.17.142'),
         'database' => env('DB_DATABASE', 'goods'),

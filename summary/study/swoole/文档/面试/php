@@ -20,7 +20,7 @@
     3.接口中不能包含构造方法，抽象类可以包含
     4.接口中没有成员变量 抽象类中可以有成员变量
  5.设计模式:
-    单例模式:trait 的单例的使用
+    单例模式:trait 的单例的使用(三私一共两静态)
     工厂模式: tp5中的 缓存的使用
  6.门面模式:
      __callStatic 底层调用  当调用一个不存在的 静态方法的时候回触发
@@ -48,6 +48,9 @@
      b.超时自动提交,这一点 2pc是没有的。
  11.Tcc支付宝用的是tcc 不是在mysql层面实现的事务回滚 而是在业务层面实现的事务回滚
  12.cgi fastcgi php-fpm的区别
-
+    cgi:公共网关接口（Common Gateway Interface，CGI）是Web 服务器运行时外部程序的规范
+     一个请求一个进程,
+     fastcgi：进程管理器,不用再去创建进程了,cgi程序提前创建好了
+     PHP-FPM(FastCGI Process Manager：FastCGI进程管理器)是一个PHPFastCGI管理器
  12.tcp
 

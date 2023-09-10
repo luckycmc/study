@@ -5,7 +5,7 @@
  * Date: 2023/9/6
  * Time: 22:34
  */
-declare (strict_types=1);
+
 namespace App\Common;
 
 /**
@@ -30,7 +30,7 @@ class OrderInfo
      * @param string $user_id
      * @return string
      */
-    public static function getOrderNo($user_id = ''):string
+    public static function getOrderNo()
     {
 
         $houseNum = time()-strtotime(date('Y-m-d',time()));
@@ -59,6 +59,6 @@ class OrderInfo
 
             }
         }
-        return $user_id.$orderNo;
+        return $orderNo;
     }
 }
