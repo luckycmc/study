@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Process;
 
 
-use App\Model\Goods;
 use Hyperf\Process\AbstractProcess;
 use Hyperf\Process\Annotation\Process;
 use Swoole\Timer;
@@ -29,8 +28,6 @@ class FooProcess extends AbstractProcess
          }
     }
     public function dealData(){
-        //查询商品
-        $goods = Goods::find(1);
-        var_dump($goods);
+        echo date('Y-m-d H:i:s',time())."--process self".PHP_EOL;
     }
 }
