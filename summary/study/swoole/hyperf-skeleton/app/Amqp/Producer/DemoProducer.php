@@ -12,7 +12,6 @@ class DemoProducer extends ProducerMessage
 {
     public function __construct($data)
     {
-        var_dump($data);
         $this->payload = [
             'id'=>1,
             'data'=>$data,

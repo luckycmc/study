@@ -80,7 +80,7 @@ class UserController
         //数据投递到rabbitMQ 进行分布式事务处理
         $message = new DemoProducer($order->toArray());
         $producer = ApplicationContext::getContainer()->get(\Hyperf\Amqp\Producer::class);
-        $result = $producer->produce($message);
+        $result = $producer->produce($message,true);
         if ($result){
             $result = $order->save();
         }else{
