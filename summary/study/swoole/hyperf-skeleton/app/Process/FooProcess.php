@@ -17,14 +17,13 @@ use Swoole\Timer;
 #[Process(name: "user-process", redirectStdinStdout: false, pipeType: 2, enableCoroutine: true)]
 class FooProcess extends AbstractProcess
 {
-     public int $nums = 2;
+    public int $nums = 2;
     public function handle(): void
     {
          while (true){
              go(function (){
                  $this->dealData();
              });
-
          }
     }
     public function dealData(){
