@@ -1,0 +1,7 @@
+mysql  innnodb 缓存 buffer Pool
+  管理内存通过 
+  free list     管理缓存 空闲的内存
+  flush list    管理涨读数据
+  lru list      提高命中率 当缓存不足的时候 清理经常不被使用的缓存
+
+innodb_buffer_pool_size 的大小设置为 物理内存的百分之60~80
