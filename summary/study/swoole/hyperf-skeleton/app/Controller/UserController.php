@@ -88,4 +88,16 @@ class UserController
         }
         return $result?"success":"faild";
     }
+
+    /**
+     * 测试代理 rabbitMQ
+     */
+    public function rabbit()
+    {
+        //数据投递到rabbitMQ 进行分布式事务处理
+        $message = new DemoProducer(['id'=>1,'name'=>"zpw"]);
+        $producer = ApplicationContext::getContainer()->get(\Hyperf\Amqp\Producer::class);
+        $result = $producer->produce($message,true);
+        var_dump($result);
+    }
 }// class end

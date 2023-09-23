@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 return [
     'default' => [
-        'host' => '192.168.17.140',
-        'port' => 5672,
+        'host' => '192.168.17.142',
+        'port' => 5675,
         'user' => 'guest',
         'password' => 'guest',
         'vhost' => '/',
@@ -19,7 +19,7 @@ return [
             'limit' => 1,
         ],
         'pool' => [
-            'connections' => 10,
+            'connections' => 20,
         ],
         'params' => [
             'insist' => false,
