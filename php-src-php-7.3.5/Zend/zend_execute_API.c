@@ -638,6 +638,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 		dummy_execute_data.call = NULL;
 		dummy_execute_data.opline = NULL;
 		dummy_execute_data.func = NULL;
+		//最终执行到 execute_data上的
 		EG(current_execute_data) = &dummy_execute_data;
 	}
 
@@ -677,6 +678,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 	}
 
 	func = fci_cache->function_handler;
+	//是否是对象函数
 	fci->object = (func->common.fn_flags & ZEND_ACC_STATIC) ?
 		NULL : fci_cache->object;
     // 函数入栈

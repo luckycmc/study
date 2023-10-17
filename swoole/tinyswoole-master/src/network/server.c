@@ -159,7 +159,7 @@ int tswServer_start(tswServer *serv)
 
     tswProcessPool_info(pool);
     serv->process_pool = pool;
-    //创建服务器代理
+    //创建reactor线程
     if (tswServer_start_proxy(serv) < 0) {
         tswWarn("%s", "tswServer_start_proxy error");
         return TSW_ERR;

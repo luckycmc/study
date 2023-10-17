@@ -1,10 +1,10 @@
 #!/bin/bash
 
-/usr/local/php/bin/phpize --clean
+/usr/local/php7/bin/phpize --clean
 
-/usr/local/php/bin/phpize
+/usr/local/php7/bin/phpize
 
-./configure --with-php-config=/usr/local/php/bin/php-config
+./configure --with-php-config=/usr/local/php7/bin/php-config
 
 make clean
 

@@ -30,7 +30,7 @@ int tswServer_create_worker(tswServer *serv, tswProcessPool *pool, int worker_id
     tswWorker *worker;
 
     worker = pool->workers + worker_id;  //通过偏移量获取对应的worker 对象
-    pid = fork();
+    pid = fork();   // pid == 0 表示是 子 进程  >0 表示 是主进程
     if (pid > 0) { // master process
         worker->pid = pid;
         worker->worker_id = worker_id;

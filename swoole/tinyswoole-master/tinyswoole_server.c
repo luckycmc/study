@@ -168,7 +168,7 @@ void php_tswoole_register_callback(tswServer *serv)
 		serv->onReceive = php_tswoole_onReceive;
 	}
 
-	serv->onMasterStart = tswServer_master_onStart;   // master 主线程启动
+	serv->onMasterStart  = tswServer_master_onStart;   // master 主线程启动
 	serv->onReactorStart = tswServer_reactor_onStart; // reactor 线程启动
 	serv->onClose        = tswServer_master_onClose;  //客户端关闭
 }
@@ -193,7 +193,7 @@ void php_tswoole_onConnect(int fd)
 	TSW_MAKE_STD_ZVAL(zfd); // Let zfd point to a piece of memory in the stack
 	ZVAL_LONG(zfd, fd); // Before using ZVAL_LONG, you need to allocate memory first.
 	args[0] = *zfd;
-	
+	//调用 用户传递的函数
 	call_user_function_ex(EG(function_table), NULL, php_tsw_server_callbacks[TSW_SERVER_CB_onConnect], &retval, 1, args, 0, NULL);
 }
 

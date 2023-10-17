@@ -3,9 +3,7 @@ $port = 9502;
 
 function onStart()
 {    
-    global $port;
-    print_r("Server IP is 127.0.0.1 port is $port:" . PHP_EOL);
-    print_r("server is running..." . PHP_EOL);
+    echo "onStart php execute".PHP_EOL;
 }
 
 function onConnect($fd)
@@ -21,18 +19,20 @@ function onReceive($serv, $fd, $data)
 }
 
 $serv = new TinySwoole\Server('127.0.0.1', $port, TSWOOLE_TCP);
-
+//设置配置项
 $serv->set([
-    'reactor_num' => 2,
-    'worker_num' => 4,
+    'reactor_num' => 1,
+    'worker_num' => 2,
 ]);
-//传入函数地址空间即可 函数 类方法都可以
+//传入函数地址空间即可 函数 类方法都可以 闭包函数
 $serv->on("Start", function(){
     global $port;
-    print_r("Server IP is 127.0.0.1 port is $port:" . PHP_EOL);
-    print_r("server is running..." . PHP_EOL);
+    echo "Server IP is 127.0.0.1 port is $port:" . PHP_EOL;
+    echo "server is running..." . PHP_EOL;
 });
-//$serv->on("Start", "onStart");
+//注册函数的方式
+$serv->on("Start", "onStart");
 $serv->on("Connect", "onConnect");
 $serv->on("Receive", "onReceive");
+//启动 tinyswooleServer
 $serv->start();

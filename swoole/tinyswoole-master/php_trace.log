@@ -1,0 +1,3693 @@
+execve("/usr/local/php73/bin/php", ["/usr/local/php73/bin/php", "-i"], 0x7ffd93e8d018 /* 24 vars */) = 0
+brk(NULL)                               = 0x2716000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ff000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=39193, ...}) = 0
+mmap(NULL, 39193, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f08a01f5000
+close(3)                                = 0
+open("/usr/lib64/libcrypt.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=40600, ...}) = 0
+mmap(NULL, 2318912, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089fda8000
+mprotect(0x7f089fdb0000, 2093056, PROT_NONE) = 0
+mmap(0x7f089ffaf000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x7000) = 0x7f089ffaf000
+mmap(0x7f089ffb1000, 184896, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089ffb1000
+close(3)                                = 0
+open("/usr/lib64/libresolv.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\2009\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=109976, ...}) = 0
+mmap(NULL, 2202112, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089fb8e000
+mprotect(0x7f089fba4000, 2097152, PROT_NONE) = 0
+mmap(0x7f089fda4000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f089fda4000
+mmap(0x7f089fda6000, 6656, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089fda6000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01f4000
+open("/usr/lib64/librt.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\"\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=43712, ...}) = 0
+mmap(NULL, 2128952, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089f986000
+mprotect(0x7f089f98d000, 2093056, PROT_NONE) = 0
+mmap(0x7f089fb8c000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x6000) = 0x7f089fb8c000
+close(3)                                = 0
+open("/usr/lib64/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P!\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=90160, ...}) = 0
+mmap(NULL, 2183272, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089f770000
+mprotect(0x7f089f785000, 2093056, PROT_NONE) = 0
+mmap(0x7f089f984000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x14000) = 0x7f089f984000
+close(3)                                = 0
+open("/usr/lib64/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0PS\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1136944, ...}) = 0
+mmap(NULL, 3150136, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089f46e000
+mprotect(0x7f089f56f000, 2093056, PROT_NONE) = 0
+mmap(0x7f089f76e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x100000) = 0x7f089f76e000
+close(3)                                = 0
+open("/usr/lib64/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=19248, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01f3000
+mmap(NULL, 2109744, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089f26a000
+mprotect(0x7f089f26c000, 2097152, PROT_NONE) = 0
+mmap(0x7f089f46c000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f089f46c000
+close(3)                                = 0
+open("/usr/lib64/libnsl.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200@\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=115816, ...}) = 0
+mmap(NULL, 2202296, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089f050000
+mprotect(0x7f089f067000, 2093056, PROT_NONE) = 0
+mmap(0x7f089f266000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f089f266000
+mmap(0x7f089f268000, 6840, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089f268000
+close(3)                                = 0
+open("/usr/lib64/libxml2.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\351\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1509520, ...}) = 0
+mmap(NULL, 3575896, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089ece6000
+mprotect(0x7f089ee44000, 2097152, PROT_NONE) = 0
+mmap(0x7f089f044000, 40960, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x15e000) = 0x7f089f044000
+mmap(0x7f089f04e000, 4184, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089f04e000
+close(3)                                = 0
+open("/usr/lib64/libssl.so.10", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\253\1\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=470328, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01f2000
+mmap(NULL, 2560784, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089ea74000
+mprotect(0x7f089eadb000, 2097152, PROT_NONE) = 0
+mmap(0x7f089ecdb000, 45056, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x67000) = 0x7f089ecdb000
+close(3)                                = 0
+open("/usr/lib64/libcrypto.so.10", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\322\6\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2521224, ...}) = 0
+mmap(NULL, 4596616, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089e611000
+mprotect(0x7f089e848000, 2093056, PROT_NONE) = 0
+mmap(0x7f089ea47000, 167936, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x236000) = 0x7f089ea47000
+mmap(0x7f089ea70000, 13192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089ea70000
+close(3)                                = 0
+open("/usr/lib64/libcurl.so.4", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260\243\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=439280, ...}) = 0
+mmap(NULL, 2527496, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089e3a7000
+mprotect(0x7f089e40d000, 2097152, PROT_NONE) = 0
+mmap(0x7f089e60d000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x66000) = 0x7f089e60d000
+mmap(0x7f089e610000, 264, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089e610000
+close(3)                                = 0
+open("/usr/local/lib/libiconv.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\240!\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1403544, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01f1000
+mmap(NULL, 3031232, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089e0c2000
+mprotect(0x7f089e1a5000, 2093056, PROT_NONE) = 0
+mmap(0x7f089e3a4000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xe2000) = 0x7f089e3a4000
+close(3)                                = 0
+open("/usr/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`&\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2156592, ...}) = 0
+mmap(NULL, 3985920, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089dcf4000
+mprotect(0x7f089deb8000, 2093056, PROT_NONE) = 0
+mmap(0x7f089e0b7000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1c3000) = 0x7f089e0b7000
+mmap(0x7f089e0bd000, 16896, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089e0bd000
+close(3)                                = 0
+open("/usr/lib64/libfreebl3.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\v\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=11392, ...}) = 0
+mmap(NULL, 2105536, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089daf1000
+mprotect(0x7f089daf3000, 2093056, PROT_NONE) = 0
+mmap(0x7f089dcf2000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7f089dcf2000
+close(3)                                = 0
+open("/usr/lib64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200m\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=142144, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01f0000
+mmap(NULL, 2208904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089d8d5000
+mprotect(0x7f089d8ec000, 2093056, PROT_NONE) = 0
+mmap(0x7f089daeb000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f089daeb000
+mmap(0x7f089daed000, 13448, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089daed000
+close(3)                                = 0
+open("/usr/lib64/liblzma.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=157440, ...}) = 0
+mmap(NULL, 2249352, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089d6af000
+mprotect(0x7f089d6d4000, 2093056, PROT_NONE) = 0
+mmap(0x7f089d8d3000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x24000) = 0x7f089d8d3000
+close(3)                                = 0
+open("/usr/lib64/libgssapi_krb5.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 \307\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=320720, ...}) = 0
+mmap(NULL, 2410688, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089d462000
+mprotect(0x7f089d4ac000, 2097152, PROT_NONE) = 0
+mmap(0x7f089d6ac000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4a000) = 0x7f089d6ac000
+close(3)                                = 0
+open("/usr/lib64/libkrb5.so.3", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 \\\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=967776, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ef000
+mmap(NULL, 3050080, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089d179000
+mprotect(0x7f089d252000, 2093056, PROT_NONE) = 0
+mmap(0x7f089d451000, 69632, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xd8000) = 0x7f089d451000
+close(3)                                = 0
+open("/usr/lib64/libcom_err.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0@\25\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=15856, ...}) = 0
+mmap(NULL, 2109928, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089cf75000
+mprotect(0x7f089cf78000, 2093056, PROT_NONE) = 0
+mmap(0x7f089d177000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f089d177000
+close(3)                                = 0
+open("/usr/lib64/libk5crypto.so.3", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320H\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=210784, ...}) = 0
+mmap(NULL, 2302680, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089cd42000
+mprotect(0x7f089cd73000, 2093056, PROT_NONE) = 0
+mmap(0x7f089cf72000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x30000) = 0x7f089cf72000
+close(3)                                = 0
+open("/usr/lib64/libidn.so.11", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0000\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=208920, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ee000
+mmap(NULL, 2302416, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089cb0f000
+mprotect(0x7f089cb41000, 2093056, PROT_NONE) = 0
+mmap(0x7f089cd40000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x31000) = 0x7f089cd40000
+close(3)                                = 0
+open("/usr/lib64/libssh2.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0@V\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=186680, ...}) = 0
+mmap(NULL, 2278808, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089c8e2000
+mprotect(0x7f089c90d000, 2097152, PROT_NONE) = 0
+mmap(0x7f089cb0d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2b000) = 0x7f089cb0d000
+close(3)                                = 0
+open("/usr/lib64/libssl3.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\334\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=421456, ...}) = 0
+mmap(NULL, 2509280, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089c67d000
+mprotect(0x7f089c6dc000, 2097152, PROT_NONE) = 0
+mmap(0x7f089c8dc000, 20480, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x5f000) = 0x7f089c8dc000
+mmap(0x7f089c8e1000, 2528, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089c8e1000
+close(3)                                = 0
+open("/usr/lib64/libsmime3.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\340\225\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=168112, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ed000
+mmap(NULL, 2259576, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089c455000
+mprotect(0x7f089c47a000, 2093056, PROT_NONE) = 0
+mmap(0x7f089c679000, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x24000) = 0x7f089c679000
+close(3)                                = 0
+open("/usr/lib64/libnss3.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`\266\1\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1304056, ...}) = 0
+mmap(NULL, 3381704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089c11b000
+mprotect(0x7f089c24c000, 2097152, PROT_NONE) = 0
+mmap(0x7f089c44c000, 32768, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x131000) = 0x7f089c44c000
+mmap(0x7f089c454000, 2504, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089c454000
+close(3)                                = 0
+open("/usr/lib64/libnssutil3.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\315\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=199016, ...}) = 0
+mmap(NULL, 2292760, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089beeb000
+mprotect(0x7f089bf14000, 2093056, PROT_NONE) = 0
+mmap(0x7f089c113000, 32768, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f089c113000
+close(3)                                = 0
+open("/usr/lib64/libplds4.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\17\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=15744, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ec000
+mmap(NULL, 2109728, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089bce7000
+mprotect(0x7f089bcea000, 2093056, PROT_NONE) = 0
+mmap(0x7f089bee9000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f089bee9000
+close(3)                                = 0
+open("/usr/lib64/libplc4.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360\24\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=20040, ...}) = 0
+mmap(NULL, 2113936, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089bae2000
+mprotect(0x7f089bae6000, 2093056, PROT_NONE) = 0
+mmap(0x7f089bce5000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7f089bce5000
+close(3)                                = 0
+open("/usr/lib64/libnspr4.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\315\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=255880, ...}) = 0
+mmap(NULL, 2354464, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089b8a3000
+mprotect(0x7f089b8dd000, 2097152, PROT_NONE) = 0
+mmap(0x7f089badd000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3a000) = 0x7f089badd000
+mmap(0x7f089bae0000, 7456, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089bae0000
+close(3)                                = 0
+open("/usr/lib64/liblber-2.4.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\3006\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=61880, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01eb000
+mmap(NULL, 2154984, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089b694000
+mprotect(0x7f089b6a2000, 2093056, PROT_NONE) = 0
+mmap(0x7f089b8a1000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xd000) = 0x7f089b8a1000
+close(3)                                = 0
+open("/usr/lib64/libldap-2.4.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 \377\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=352496, ...}) = 0
+mmap(NULL, 2442704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089b43f000
+mprotect(0x7f089b491000, 2097152, PROT_NONE) = 0
+mmap(0x7f089b691000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x52000) = 0x7f089b691000
+close(3)                                = 0
+open("/usr/lib64/libkrb5support.so.0", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360;\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=67104, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01ea000
+mmap(NULL, 2160296, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089b22f000
+mprotect(0x7f089b23d000, 2097152, PROT_NONE) = 0
+mmap(0x7f089b43d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xe000) = 0x7f089b43d000
+close(3)                                = 0
+open("/usr/lib64/libkeyutils.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260\25\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=15688, ...}) = 0
+mmap(NULL, 2109720, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089b02b000
+mprotect(0x7f089b02e000, 2093056, PROT_NONE) = 0
+mmap(0x7f089b22d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f089b22d000
+close(3)                                = 0
+open("/usr/lib64/libsasl2.so.3", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\240K\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=121312, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e9000
+mmap(NULL, 2213960, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089ae0e000
+mprotect(0x7f089ae2a000, 2093056, PROT_NONE) = 0
+mmap(0x7f089b029000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b000) = 0x7f089b029000
+close(3)                                = 0
+open("/usr/lib64/libselinux.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220j\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=155744, ...}) = 0
+mmap(NULL, 2255216, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089abe7000
+mprotect(0x7f089ac0b000, 2093056, PROT_NONE) = 0
+mmap(0x7f089ae0a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x23000) = 0x7f089ae0a000
+mmap(0x7f089ae0c000, 6512, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f089ae0c000
+close(3)                                = 0
+open("/usr/lib64/libpcre.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360\25\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=402384, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e8000
+mmap(NULL, 2494984, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f089a985000
+mprotect(0x7f089a9e5000, 2097152, PROT_NONE) = 0
+mmap(0x7f089abe5000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x60000) = 0x7f089abe5000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e7000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e6000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e5000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e4000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01e2000
+arch_prctl(ARCH_SET_FS, 0x7f08a01e2840) = 0
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+mprotect(0x7f089e0b7000, 16384, PROT_READ) = 0
+mprotect(0x7f089daeb000, 4096, PROT_READ) = 0
+mprotect(0x7f089abe5000, 4096, PROT_READ) = 0
+mprotect(0x7f089f46c000, 4096, PROT_READ) = 0
+mprotect(0x7f089ae0a000, 4096, PROT_READ) = 0
+mprotect(0x7f089dcf2000, 4096, PROT_READ) = 0
+mprotect(0x7f089ffaf000, 4096, PROT_READ) = 0
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+mprotect(0x7f089fda4000, 4096, PROT_READ) = 0
+mprotect(0x7f089d177000, 4096, PROT_READ) = 0
+mprotect(0x7f089b22d000, 4096, PROT_READ) = 0
+mprotect(0x7f089b43d000, 4096, PROT_READ) = 0
+mprotect(0x7f089cf72000, 8192, PROT_READ) = 0
+mprotect(0x7f089d451000, 57344, PROT_READ) = 0
+mprotect(0x7f089d6ac000, 4096, PROT_READ) = 0
+mprotect(0x7f089b029000, 4096, PROT_READ) = 0
+mprotect(0x7f089f984000, 4096, PROT_READ) = 0
+mprotect(0x7f089ea47000, 114688, PROT_READ) = 0
+mprotect(0x7f089ecdb000, 16384, PROT_READ) = 0
+mprotect(0x7f089fb8c000, 4096, PROT_READ) = 0
+mprotect(0x7f089badd000, 4096, PROT_READ) = 0
+mprotect(0x7f089bee9000, 4096, PROT_READ) = 0
+mprotect(0x7f089bce5000, 4096, PROT_READ) = 0
+mprotect(0x7f089c113000, 28672, PROT_READ) = 0
+mprotect(0x7f089c44c000, 20480, PROT_READ) = 0
+mprotect(0x7f089c8dc000, 16384, PROT_READ) = 0
+mprotect(0x7f089c679000, 12288, PROT_READ) = 0
+mprotect(0x7f089b8a1000, 4096, PROT_READ) = 0
+stat("/etc/sysconfig/64bit_strstr_via_64bit_strstr_sse2_unaligned", 0x7fff1b5d7750) = -1 ENOENT (No such file or directory)
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+mprotect(0x7f089b691000, 8192, PROT_READ) = 0
+mprotect(0x7f089cb0d000, 4096, PROT_READ) = 0
+mprotect(0x7f089cd40000, 4096, PROT_READ) = 0
+mprotect(0x7f089d8d3000, 4096, PROT_READ) = 0
+mprotect(0x7f089e3a4000, 8192, PROT_READ) = 0
+mprotect(0x7f089e60d000, 8192, PROT_READ) = 0
+mprotect(0x7f089f76e000, 4096, PROT_READ) = 0
+mprotect(0x7f089f044000, 32768, PROT_READ) = 0
+stat("/etc/sysconfig/64bit_strstr_via_64bit_strstr_sse2_unaligned", 0x7fff1b5d7750) = -1 ENOENT (No such file or directory)
+mprotect(0x7f089f266000, 4096, PROT_READ) = 0
+mprotect(0x1284000, 716800, PROT_READ)  = 0
+mprotect(0x7f08a0200000, 4096, PROT_READ) = 0
+munmap(0x7f08a01f5000, 39193)           = 0
+set_tid_address(0x7f08a01e2b10)         = 87033
+set_robust_list(0x7f08a01e2b20, 24)     = 0
+rt_sigaction(SIGRTMIN, {sa_handler=0x7f089d8db860, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089d8e4630}, NULL, 8) = 0
+rt_sigaction(SIGRT_1, {sa_handler=0x7f089d8db8f0, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f089d8e4630}, NULL, 8) = 0
+rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+statfs("/sys/fs/selinux", 0x7fff1b5d89b0) = -1 ENOENT (No such file or directory)
+statfs("/selinux", 0x7fff1b5d89b0)      = -1 ENOENT (No such file or directory)
+brk(NULL)                               = 0x2716000
+brk(0x2737000)                          = 0x2737000
+open("/proc/filesystems", O_RDONLY)     = 3
+fstat(3, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01fe000
+read(3, "nodev\tsysfs\nnodev\trootfs\nnodev\tr"..., 1024) = 277
+stat("/etc/sysconfig/64bit_strstr_via_64bit_strstr_sse2_unaligned", 0x7fff1b5d8570) = -1 ENOENT (No such file or directory)
+read(3, "", 1024)                       = 0
+close(3)                                = 0
+munmap(0x7f08a01fe000, 4096)            = 0
+access("/etc/selinux/config", F_OK)     = 0
+open("/etc/pki/tls/legacy-settings", O_RDONLY) = -1 ENOENT (No such file or directory)
+access("/etc/system-fips", F_OK)        = -1 ENOENT (No such file or directory)
+rt_sigaction(SIGPIPE, {sa_handler=SIG_IGN, sa_mask=[PIPE], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f089dd2a400}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGHUP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGILL, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTRAP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGABRT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGBUS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGFPE, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGKILL, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGUSR1, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSEGV, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGUSR2, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGPIPE, NULL, {sa_handler=SIG_IGN, sa_mask=[PIPE], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f089dd2a400}, 8) = 0
+rt_sigaction(SIGALRM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSTKFLT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGCHLD, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGCONT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSTOP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTSTP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTTIN, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTTOU, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGURG, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGXCPU, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGXFSZ, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGVTALRM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGPROF, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGWINCH, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGIO, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGPWR, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSYS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_2, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_3, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_4, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_5, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_6, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_7, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_8, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_9, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_10, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_11, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_12, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_13, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_14, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_15, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_16, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_17, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_18, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_19, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_20, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_21, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_22, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_23, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_24, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_25, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_26, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_27, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_28, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_29, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_30, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_31, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGRT_32, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+mmap(NULL, 2097152, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f089a785000
+munmap(0x7f089a785000, 2097152)         = 0
+mmap(NULL, 4190208, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f089a586000
+munmap(0x7f089a586000, 499712)          = 0
+munmap(0x7f089a800000, 1593344)         = 0
+getcwd("/data/C_study/swoole/tinyswoole-master", 4096) = 39
+open("/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=106176928, ...}) = 0
+mmap(NULL, 106176928, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f08940bd000
+close(3)                                = 0
+open("/etc/localtime", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=528, ...}) = 0
+fstat(3, {st_mode=S_IFREG|0644, st_size=528, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01fe000
+read(3, "TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\2\0\0\0\2\0\0\0\0"..., 4096) = 528
+lseek(3, -330, SEEK_CUR)                = 198
+read(3, "TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\3\0\0\0\3\0\0\0\0"..., 4096) = 330
+close(3)                                = 0
+munmap(0x7f08a01fe000, 4096)            = 0
+lstat("/usr/local/php73/bin/php", {st_mode=S_IFREG|0755, st_size=41907656, ...}) = 0
+lstat("/usr/local/php73/bin", {st_mode=S_IFDIR|0755, st_size=107, ...}) = 0
+lstat("/usr/local/php73", {st_mode=S_IFDIR|0755, st_size=88, ...}) = 0
+lstat("/usr/local", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+lstat("/usr", {st_mode=S_IFDIR|0755, st_size=155, ...}) = 0
+access("/usr/local/php73/bin/php", X_OK) = 0
+brk(NULL)                               = 0x2737000
+brk(0x2758000)                          = 0x2758000
+open("/usr/local/php73/bin/php-cli.ini", O_RDONLY) = -1 ENOENT (No such file or directory)
+open("/usr/local/php7/lib/php-cli.ini", O_RDONLY) = -1 ENOENT (No such file or directory)
+open("/usr/local/php73/bin/php.ini", O_RDONLY) = -1 ENOENT (No such file or directory)
+open("/usr/local/php7/lib/php.ini", O_RDONLY) = -1 ENOENT (No such file or directory)
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+mmap(NULL, 135168, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01c1000
+brk(NULL)                               = 0x2758000
+brk(0x2785000)                          = 0x2785000
+brk(NULL)                               = 0x2785000
+brk(0x27a8000)                          = 0x27a8000
+futex(0x7f089f04ed48, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+open("/etc/pki/tls/openssl.cnf", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=10923, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a01fe000
+read(3, "#\n# OpenSSL example configuratio"..., 4096) = 4096
+read(3, "ancient versions of Netscape cra"..., 4096) = 4096
+read(3, "gainst PKIX guidelines but some "..., 4096) = 2731
+read(3, "", 4096)                       = 0
+close(3)                                = 0
+munmap(0x7f08a01fe000, 4096)            = 0
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+brk(NULL)                               = 0x27a8000
+brk(0x27ca000)                          = 0x27ca000
+mmap(NULL, 196608, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a0191000
+mmap(NULL, 167936, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a0168000
+access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
+futex(0x7f089f46d0d0, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+gettid()                                = 87033
+rt_sigaction(SIGPIPE, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+brk(NULL)                               = 0x27ca000
+brk(0x27eb000)                          = 0x27eb000
+brk(NULL)                               = 0x27eb000
+brk(0x280c000)                          = 0x280c000
+brk(NULL)                               = 0x280c000
+brk(0x282d000)                          = 0x282d000
+brk(NULL)                               = 0x282d000
+brk(0x2851000)                          = 0x2851000
+brk(NULL)                               = 0x2851000
+brk(0x2876000)                          = 0x2876000
+mmap(NULL, 331776, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f08a0117000
+munmap(0x7f08a0168000, 167936)          = 0
+getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+clock_getres(CLOCK_MONOTONIC, {tv_sec=0, tv_nsec=1}) = 0
+brk(NULL)                               = 0x2876000
+brk(0x2897000)                          = 0x2897000
+rt_sigaction(SIGPROF, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGPROF, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGHUP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGHUP, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGINT, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTERM, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGUSR1, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGUSR1, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGUSR2, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGUSR2, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigaction(SIGPROF, {sa_handler=0x814120, sa_mask=~[ILL TRAP ABRT BUS FPE KILL SEGV CONT STOP TSTP TTIN TTOU SYS RTMIN RT_1], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f089dd2a400}, NULL, 8) = 0
+rt_sigprocmask(SIG_UNBLOCK, [PROF], NULL, 8) = 0
+write(1, "phpinfo()\n", 10)             = 10
+uname({sysname="Linux", nodename="localhost.localdomain", ...}) = 0
+write(1, "PHP Version", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "7.3.9", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "System", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "Linux localhost.localdomain 3.10"..., 92) = 92
+write(1, "\n", 1)                       = 1
+write(1, "Build Date", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "Oct 15 2023 19:27:19", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "Configure Command", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, " './configure'  '--prefix=/usr/l"..., 511) = 511
+write(1, "\n", 1)                       = 1
+write(1, "Server API", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "Command Line Interface", 22)  = 22
+write(1, "\n", 1)                       = 1
+write(1, "Virtual Directory Support", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "disabled", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "Configuration File (php.ini) Pat"..., 33) = 33
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/php73/etc", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "Loaded Configuration File", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "(none)", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "Scan this dir for additional .in"..., 39) = 39
+write(1, " => ", 4)                     = 4
+write(1, "(none)", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "Additional .ini files parsed", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "(none)", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "PHP API", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "20180731", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "PHP Extension", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "20180731", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "Zend Extension", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "320180731", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "Zend Extension Build", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "API320180731,NTS", 16)        = 16
+write(1, "\n", 1)                       = 1
+write(1, "PHP Extension Build", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "API20180731,NTS", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "Debug Build", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "no", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Thread Safety", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "disabled", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "Zend Signal Handling", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Zend Memory Manager", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Zend Multibyte Support", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "provided by mbstring", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "IPv6 Support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "DTrace Support", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "disabled", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\nRegistered PHP Streams => ", 27) = 27
+write(1, "https", 5)                    = 5
+write(1, ", ", 2)                       = 2
+write(1, "ftps", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "compress.zlib", 13)           = 13
+write(1, ", ", 2)                       = 2
+write(1, "php", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "file", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "glob", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "data", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "http", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "ftp", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "phar", 4)                     = 4
+write(1, "\nRegistered Stream Socket Transp"..., 40) = 40
+write(1, "tcp", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "udp", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "unix", 4)                     = 4
+write(1, ", ", 2)                       = 2
+write(1, "udg", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "ssl", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "sslv3", 5)                    = 5
+write(1, ", ", 2)                       = 2
+write(1, "tls", 3)                      = 3
+write(1, ", ", 2)                       = 2
+write(1, "tlsv1.0", 7)                  = 7
+write(1, ", ", 2)                       = 2
+write(1, "tlsv1.1", 7)                  = 7
+write(1, ", ", 2)                       = 2
+write(1, "tlsv1.2", 7)                  = 7
+write(1, "\nRegistered Stream Filters => ", 30) = 30
+write(1, "zlib.*", 6)                   = 6
+write(1, ", ", 2)                       = 2
+write(1, "convert.iconv.*", 15)         = 15
+write(1, ", ", 2)                       = 2
+write(1, "string.rot13", 12)            = 12
+write(1, ", ", 2)                       = 2
+write(1, "string.toupper", 14)          = 14
+write(1, ", ", 2)                       = 2
+write(1, "string.tolower", 14)          = 14
+write(1, ", ", 2)                       = 2
+write(1, "string.strip_tags", 17)       = 17
+write(1, ", ", 2)                       = 2
+write(1, "convert.*", 9)                = 9
+write(1, ", ", 2)                       = 2
+write(1, "consumed", 8)                 = 8
+write(1, ", ", 2)                       = 2
+write(1, "dechunk", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "This program makes use of the Ze"..., 61) = 61
+write(1, "\n", 1)                       = 1
+write(1, "Zend Engine v3.3.9, Copyright (c"..., 62) = 62
+write(1, "\n\n _____________________________"..., 76) = 76
+write(1, "\n", 1)                       = 1
+write(1, "Configuration", 13)           = 13
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "bcmath", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "BCMath support", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "bcmath.scale", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Core", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PHP Version", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "7.3.9", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "allow_url_fopen", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "allow_url_include", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "arg_separator.input", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "&", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "&", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "arg_separator.output", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "&", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "&", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "auto_append_file", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "auto_globals_jit", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "auto_prepend_file", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "browscap", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "default_charset", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "UTF-8", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "UTF-8", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "default_mimetype", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "text/html", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "text/html", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "disable_classes", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "disable_functions", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "display_errors", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "STDOUT", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "STDOUT", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "display_startup_errors", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "doc_root", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "docref_ext", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "docref_root", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "enable_dl", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "enable_post_data_reading", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "error_append_string", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "error_log", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "error_prepend_string", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "error_reporting", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "expose_php", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "extension_dir", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/php7/lib/php/extensio"..., 60) = 60
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/php7/lib/php/extensio"..., 60) = 60
+write(1, "\n", 1)                       = 1
+write(1, "file_uploads", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "hard_timeout", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "2", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "2", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "highlight.comment", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #FF8000\">#FF"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #FF8000\">#FF"..., 43) = 43
+write(1, "\n", 1)                       = 1
+write(1, "highlight.default", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #0000BB\">#00"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #0000BB\">#00"..., 43) = 43
+write(1, "\n", 1)                       = 1
+write(1, "highlight.html", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #000000\">#00"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #000000\">#00"..., 43) = 43
+write(1, "\n", 1)                       = 1
+write(1, "highlight.keyword", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #007700\">#00"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #007700\">#00"..., 43) = 43
+write(1, "\n", 1)                       = 1
+write(1, "highlight.string", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #DD0000\">#DD"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "<font style=\"color: #DD0000\">#DD"..., 43) = 43
+write(1, "\n", 1)                       = 1
+write(1, "html_errors", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "ignore_repeated_errors", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "ignore_repeated_source", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "ignore_user_abort", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "implicit_flush", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "include_path", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, ".:/usr/local/php7/lib/php", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, ".:/usr/local/php7/lib/php", 25) = 25
+write(1, "\n", 1)                       = 1
+write(1, "input_encoding", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "internal_encoding", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "log_errors", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "log_errors_max_len", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "1024", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "1024", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "mail.add_x_header", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "mail.force_extra_parameters", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "mail.log", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "max_execution_time", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "max_file_uploads", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "20", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "20", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "max_input_nesting_level", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "64", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "64", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "max_input_time", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "max_input_vars", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "1000", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "1000", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "memory_limit", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "128M", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "128M", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "open_basedir", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "output_buffering", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "output_encoding", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "output_handler", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "post_max_size", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "8M", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "8M", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "precision", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "14", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "14", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "realpath_cache_size", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "4096K", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "4096K", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "realpath_cache_ttl", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "120", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "120", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "register_argc_argv", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "report_memleaks", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "report_zend_debug", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "request_order", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "sendmail_from", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "sendmail_path", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, " -t -i ", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, " -t -i ", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "serialize_precision", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "short_open_tag", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "SMTP", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "localhost", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "localhost", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "smtp_port", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "25", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "25", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "sys_temp_dir", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "syslog.facility", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "LOG_USER", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "LOG_USER", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "syslog.filter", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "no-ctrl", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "no-ctrl", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "syslog.ident", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "php", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "php", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "track_errors", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "unserialize_callback_func", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "upload_max_filesize", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "2M", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "2M", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "upload_tmp_dir", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "user_dir", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "user_ini.cache_ttl", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "300", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "300", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "user_ini.filename", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, ".user.ini", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, ".user.ini", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "variables_order", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "EGPCS", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "EGPCS", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "xmlrpc_error_number", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "xmlrpc_errors", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "zend.assertions", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "zend.detect_unicode", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "zend.enable_gc", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "zend.multibyte", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "zend.script_encoding", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "zend.signal_check", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "ctype", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "ctype functions", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "curl", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "cURL support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "cURL Information", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "7.29.0", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "Age", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "3", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "Features", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "AsynchDNS", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "CharConv", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Debug", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "GSS-Negotiate", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "IDN", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "IPv6", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "krb4", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Largefile", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "libz", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "NTLM", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "NTLMWB", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "SPNEGO", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "SSL", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "SSPI", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "TLS-SRP", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Protocols", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "dict, file, ftp, ftps, gopher, h"..., 125) = 125
+write(1, "\n", 1)                       = 1
+write(1, "Host", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "x86_64-redhat-linux-gnu", 23) = 23
+write(1, "\n", 1)                       = 1
+write(1, "SSL Version", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "NSS/3.53.1", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "ZLib Version", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "1.2.7", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "libSSH Version", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "libssh2/1.8.0", 13)           = 13
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "curl.cainfo", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "date", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "date/time support", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "timelib version", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "2018.02", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\"Olson\" Timezone Database Versio"..., 33) = 33
+write(1, " => ", 4)                     = 4
+write(1, "2019.2", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "Timezone Database", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "internal", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "Default timezone", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "UTC", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "date.default_latitude", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "31.7667", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "31.7667", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "date.default_longitude", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "35.2333", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "35.2333", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "date.sunrise_zenith", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "90.583333", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "90.583333", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "date.sunset_zenith", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "90.583333", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "90.583333", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "date.timezone", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "dom", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "DOM/XML", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "DOM/XML API Version", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "20031129", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "libxml Version", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "2.9.1", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "HTML Support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "XPath Support", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "XPointer Support", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Schema Support", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "RelaxNG Support", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "fileinfo", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "fileinfo support", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "libmagic", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "533", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "filter", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Input Validation and Filtering", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "filter.default", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "unsafe_raw", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "unsafe_raw", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "filter.default_flags", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "ftp", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "FTP support", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "FTPS support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "hash", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "hash support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Hashing Engines", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "md2 md4 md5 sha1 sha224 sha256 s"..., 475) = 475
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "iconv", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "iconv support", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "iconv implementation", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "glibc", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "iconv library version", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "2.17", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "iconv.input_encoding", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "iconv.internal_encoding", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "iconv.output_encoding", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "json", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "json support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "json version", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "1.7.0", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "libxml", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "libXML support", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "active", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "libXML Compiled Version", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "2.9.1", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "libXML Loaded Version", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "20901", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "libXML streams", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "mbstring", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Multibyte Support", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Multibyte string engine", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "libmbfl", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "HTTP input encoding translation", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "disabled", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "libmbfl version", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "1.3.2", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "oniguruma version", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "6.9.0", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "mbstring extension makes use of "..., 155) = 155
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Multibyte (japanese) regex suppo"..., 34) = 34
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Multibyte regex (oniguruma) back"..., 43) = 43
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Multibyte regex (oniguruma) vers"..., 35) = 35
+write(1, " => ", 4)                     = 4
+write(1, "6.9.0", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.detect_order", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.encoding_translation", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.func_overload", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.http_input", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.http_output", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.http_output_conv_mimety"..., 35) = 35
+write(1, " => ", 4)                     = 4
+write(1, "^(text/|application/xhtml\\+xml)", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "^(text/|application/xhtml\\+xml)", 31) = 31
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.internal_encoding", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.language", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "neutral", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "neutral", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.regex_stack_limit", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "100000", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "100000", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.strict_detection", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "mbstring.substitute_character", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "mysqlnd", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "mysqlnd", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Version", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "mysqlnd 5.0.12-dev - 20150407 - "..., 79) = 79
+write(1, "\n", 1)                       = 1
+write(1, "Compression", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "supported", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "core SSL", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "supported", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "extended SSL", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "supported", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "Command buffer size", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "4096", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "Read buffer size", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "32768", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "Read timeout", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "86400", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "Collecting statistics", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "Yes", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "Collecting memory statistics", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "No", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "Tracing", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "n/a", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "Loaded plugins", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "mysqlnd,debug_trace,auth_plugin_"..., 114) = 114
+write(1, "\n", 1)                       = 1
+write(1, "API Extensions", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "pdo_mysql", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "mysqlnd statistics", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, " ", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_sent", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_sent", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "protocol_overhead_in", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "protocol_overhead_out", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_ok_packet", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_eof_packet", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_rset_header_packe"..., 33) = 33
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_rset_field_meta_p"..., 37) = 37
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_rset_row_packet", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_prepare_response_"..., 38) = 38
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_change_user_packe"..., 33) = 33
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_sent_command", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_ok", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_eof", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_rset_header", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_rset_field_meta", 32) = 32
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_rset_row", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_prepare_respons"..., 33) = 33
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "packets_received_change_user", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "result_set_queries", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "non_result_set_queries", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "no_index_used", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bad_index_used", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "slow_queries", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "buffered_sets", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "unbuffered_sets", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "ps_buffered_sets", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "ps_unbuffered_sets", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "flushed_normal_sets", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "flushed_ps_sets", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "ps_prepared_never_executed", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "ps_prepared_once_executed", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_server_normal", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_server_ps", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_buffered_from_client_normal", 32) = 32
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_buffered_from_client_ps", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_client_normal_"..., 40) = 40
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_client_normal_"..., 42) = 42
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_client_ps_buff"..., 36) = 36
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_client_ps_unbu"..., 38) = 38
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_fetched_from_client_ps_curs"..., 34) = 34
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_affected_normal", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_affected_ps", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_skipped_normal", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "rows_skipped_ps", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "copy_on_write_saved", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "copy_on_write_performed", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "command_buffer_too_small", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "connect_success", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "connect_failure", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "connection_reused", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "reconnect", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "pconnect_success", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "active_connections", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "active_persistent_connections", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "explicit_close", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "implicit_close", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "disconnect_close", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "in_middle_of_command_close", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "explicit_free_result", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "implicit_free_result", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "explicit_stmt_close", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "implicit_stmt_close", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_emalloc_count", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_emalloc_amount", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_ecalloc_count", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_ecalloc_amount", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_erealloc_count", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_erealloc_amount", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_efree_count", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_efree_amount", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_malloc_count", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_malloc_amount", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_calloc_count", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_calloc_amount", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_realloc_count", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_realloc_amount", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_free_count", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_free_amount", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_estrndup_count", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_strndup_count", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_estrdup_count", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_strdup_count", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_edupl_count", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "mem_dupl_count", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_null", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_bit", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_tinyint", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_short", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_int24", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_int", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_bigint", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_decimal", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_float", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_double", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_date", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_year", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_time", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_datetime", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_timestamp", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_string", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_blob", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_enum", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_set", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_geometry", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_text_fetched_other", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_null", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_bit", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_tinyint", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_short", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_int24", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_int", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_bigint", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_decimal", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_float", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_double", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_date", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_year", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_time", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_datetime", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_timestamp", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_string", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_json", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_blob", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_enum", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_set", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_geometry", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "proto_binary_fetched_other", 26) = 26
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "init_command_executed_count", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "init_command_failed_count", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_quit", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_init_db", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_query", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_field_list", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_create_db", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_drop_db", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_refresh", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_shutdown", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_statistics", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_process_info", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_connect", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_process_kill", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_debug", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_ping", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_time", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_delayed_insert", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_change_user", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_binlog_dump", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_table_dump", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_connect_out", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_register_slave", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_prepare", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_execute", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_send_long_data", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_close", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_reset", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_set_option", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_stmt_fetch", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "com_deamon", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_real_data_normal", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "bytes_received_real_data_ps", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "openssl", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "OpenSSL support", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "OpenSSL Library Version", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "OpenSSL 1.0.2k-fips  26 Jan 2017", 32) = 32
+write(1, "\n", 1)                       = 1
+write(1, "OpenSSL Header Version", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "OpenSSL 1.0.2k  26 Jan 2017", 27) = 27
+write(1, "\n", 1)                       = 1
+write(1, "Openssl default config", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "/etc/pki/tls/openssl.cnf", 24) = 24
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "openssl.cafile", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "openssl.capath", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "pcntl", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "pcntl support", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "pcre", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PCRE (Perl Compatible Regular Ex"..., 50) = 50
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "PCRE Library Version", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "10.32 2018-09-10", 16)        = 16
+write(1, "\n", 1)                       = 1
+write(1, "PCRE Unicode Version", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "11.0.0", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "PCRE JIT Support", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "PCRE JIT Target", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "x86 64bit (little endian + unali"..., 37) = 37
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "pcre.backtrack_limit", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "1000000", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "1000000", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "pcre.jit", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "pcre.recursion_limit", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "100000", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "100000", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PDO", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PDO support", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "PDO drivers", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "sqlite, mysql", 13)           = 13
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "pdo_mysql", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PDO Driver for MySQL", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Client API version", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "mysqlnd 5.0.12-dev - 20150407 - "..., 79) = 79
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "pdo_mysql.default_socket", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "/tmp/mysql.sock", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "/tmp/mysql.sock", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "pdo_sqlite", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PDO Driver for SQLite 3.x", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "SQLite Library", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "3.28.0", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Phar", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Phar: PHP Archive support", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Phar API version", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "1.1.1", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "Phar-based phar archives", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Tar-based phar archives", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "ZIP-based phar archives", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "gzip compression", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "bzip2 compression", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "disabled (install ext/bz2)", 26) = 26
+write(1, "\n", 1)                       = 1
+write(1, "Native OpenSSL support", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Phar based on pear/PHP_Archive, "..., 65) = 65
+write(1, "\n", 1)                       = 1
+write(1, "Phar fully realized by Gregory B"..., 57) = 57
+write(1, "\n", 1)                       = 1
+write(1, "Portions of tar implementation C"..., 68) = 68
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "phar.cache_list", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "phar.readonly", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "phar.require_hash", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "posix", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "POSIX support", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Reflection", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Reflection", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "session", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Session Support", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Registered save handlers", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "files user ", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "Registered serializer handlers", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "php_serialize php php_binary ", 29) = 29
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "session.auto_start", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "session.cache_expire", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "180", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "180", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "session.cache_limiter", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "nocache", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "nocache", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_domain", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_httponly", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_lifetime", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_path", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "/", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "/", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_samesite", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.cookie_secure", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.gc_divisor", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "100", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "100", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "session.gc_maxlifetime", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "1440", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "1440", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "session.gc_probability", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.lazy_write", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "session.name", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "PHPSESSID", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "PHPSESSID", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "session.referer_check", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.save_handler", 20)    = 20
+write(1, " => ", 4)                     = 4
+write(1, "files", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "files", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "session.save_path", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.serialize_handler", 25) = 25
+write(1, " => ", 4)                     = 4
+write(1, "php", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "php", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "session.sid_bits_per_character", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "4", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "4", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.sid_length", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "32", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "32", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.cleanup", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.enabled", 31) = 31
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "On", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.freq", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "1%", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1%", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.min_freq", 32) = 32
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.name", 28) = 28
+write(1, " => ", 4)                     = 4
+write(1, "PHP_SESSION_UPLOAD_PROGRESS", 27) = 27
+write(1, " => ", 4)                     = 4
+write(1, "PHP_SESSION_UPLOAD_PROGRESS", 27) = 27
+write(1, "\n", 1)                       = 1
+write(1, "session.upload_progress.prefix", 30) = 30
+write(1, " => ", 4)                     = 4
+write(1, "upload_progress_", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "upload_progress_", 16)        = 16
+write(1, "\n", 1)                       = 1
+write(1, "session.use_cookies", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.use_only_cookies", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.use_strict_mode", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "session.use_trans_sid", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "SimpleXML", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "SimpleXML support", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Schema support", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "sockets", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Sockets Support", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "SPL", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "SPL support", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Interfaces", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "OuterIterator, RecursiveIterator"..., 75) = 75
+write(1, "\n", 1)                       = 1
+write(1, "Classes", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "AppendIterator, ArrayIterator, A"..., 935) = 935
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "sqlite3", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "SQLite3 support", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "SQLite Library", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "3.28.0", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "sqlite3.defensive", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "sqlite3.extension_dir", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "standard", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Dynamic Library Support", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Path to sendmail", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, " -t -i ", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "assert.active", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "assert.bail", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "assert.callback", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "assert.exception", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "assert.quiet_eval", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "assert.warning", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "auto_detect_line_endings", 24) = 24
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "default_socket_timeout", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "60", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "60", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "from", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.trans_sid_hosts", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "session.trans_sid_tags", 22)  = 22
+write(1, " => ", 4)                     = 4
+write(1, "a=href,area=href,frame=src,form=", 32) = 32
+write(1, " => ", 4)                     = 4
+write(1, "a=href,area=href,frame=src,form=", 32) = 32
+write(1, "\n", 1)                       = 1
+write(1, "url_rewriter.hosts", 18)      = 18
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "url_rewriter.tags", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "form=", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "form=", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "user_agent", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "tokenizer", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Tokenizer Support", 17)       = 17
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "xml", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "XML Support", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "active", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "XML Namespace Support", 21)   = 21
+write(1, " => ", 4)                     = 4
+write(1, "active", 6)                   = 6
+write(1, "\n", 1)                       = 1
+write(1, "libxml2 Version", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "2.9.1", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "xmlreader", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "XMLReader", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "xmlwriter", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "XMLWriter", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "zlib", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "ZLib Support", 12)            = 12
+write(1, " => ", 4)                     = 4
+write(1, "enabled", 7)                  = 7
+write(1, "\n", 1)                       = 1
+write(1, "Stream Wrapper", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "compress.zlib://", 16)        = 16
+write(1, "\n", 1)                       = 1
+write(1, "Stream Filter", 13)           = 13
+write(1, " => ", 4)                     = 4
+write(1, "zlib.inflate, zlib.deflate", 26) = 26
+write(1, "\n", 1)                       = 1
+write(1, "Compiled Version", 16)        = 16
+write(1, " => ", 4)                     = 4
+write(1, "1.2.7", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "Linked Version", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "1.2.7", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Directive", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "Local Value", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "Master Value", 12)            = 12
+write(1, "\n", 1)                       = 1
+write(1, "zlib.output_compression", 23) = 23
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "Off", 3)                      = 3
+write(1, "\n", 1)                       = 1
+write(1, "zlib.output_compression_level", 29) = 29
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "-1", 2)                       = 2
+write(1, "\n", 1)                       = 1
+write(1, "zlib.output_handler", 19)     = 19
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "no value", 8)                 = 8
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Additional Modules", 18)      = 18
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Module Name", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Environment", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Variable", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "Value", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "XDG_SESSION_ID", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "HOSTNAME", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "localhost.localdomain", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "TERM", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "xterm", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "SHELL", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "/bin/bash", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "HISTSIZE", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "1000", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "SSH_CLIENT", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 22", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "LUAJIT_LIB", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/lib", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "SSH_TTY", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "/dev/pts/0", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "USER", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "LS_COLORS", 9)                = 9
+write(1, " => ", 4)                     = 4
+write(1, "rs=0:di=01;34:ln=01;36:mh=00:pi="..., 1425) = 1425
+write(1, "\n", 1)                       = 1
+write(1, "MAIL", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "/var/spool/mail/root", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "PATH", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/sbin:/usr/local/bin:/"..., 59) = 59
+write(1, "\n", 1)                       = 1
+write(1, "LUAJIT_INC", 10)              = 10
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/include/luajit"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "PWD", 3)                      = 3
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole/tinyswoole-"..., 38) = 38
+write(1, "\n", 1)                       = 1
+write(1, "LANG", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "en_US.UTF-8", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "HISTCONTROL", 11)             = 11
+write(1, " => ", 4)                     = 4
+write(1, "ignoredups", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "SHLVL", 5)                    = 5
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "HOME", 4)                     = 4
+write(1, " => ", 4)                     = 4
+write(1, "/root", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "LOGNAME", 7)                  = 7
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "SSH_CONNECTION", 14)          = 14
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 192.168.75.12"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "LESSOPEN", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "||/usr/bin/lesspipe.sh %s", 25) = 25
+write(1, "\n", 1)                       = 1
+write(1, "XDG_RUNTIME_DIR", 15)         = 15
+write(1, " => ", 4)                     = 4
+write(1, "/run/user/0", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "_", 1)                        = 1
+write(1, " => ", 4)                     = 4
+write(1, "/usr/bin/strace", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "OLDPWD", 6)                   = 6
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "PHP Variables", 13)           = 13
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, "Variable", 8)                 = 8
+write(1, " => ", 4)                     = 4
+write(1, "Value", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "XDG_SESSION_ID", 14)          = 14
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "HOSTNAME", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "localhost.localdomain", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "TERM", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "xterm", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SHELL", 5)                    = 5
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/bin/bash", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "HISTSIZE", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1000", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SSH_CLIENT", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 22", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LUAJIT_LIB", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/lib", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SSH_TTY", 7)                  = 7
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/dev/pts/0", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "USER", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LS_COLORS", 9)                = 9
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "rs=0:di=01;34:ln=01;36:mh=00:pi="..., 1425) = 1425
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "MAIL", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/var/spool/mail/root", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "PATH", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/sbin:/usr/local/bin:/"..., 59) = 59
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LUAJIT_INC", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/include/luajit"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "PWD", 3)                      = 3
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole/tinyswoole-"..., 38) = 38
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LANG", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "en_US.UTF-8", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "HISTCONTROL", 11)             = 11
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "ignoredups", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SHLVL", 5)                    = 5
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "HOME", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/root", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LOGNAME", 7)                  = 7
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SSH_CONNECTION", 14)          = 14
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 192.168.75.12"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "LESSOPEN", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "||/usr/bin/lesspipe.sh %s", 25) = 25
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "XDG_RUNTIME_DIR", 15)         = 15
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/run/user/0", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "_", 1)                        = 1
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/bin/strace", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "OLDPWD", 6)                   = 6
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "PHP_SELF", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SCRIPT_NAME", 11)             = 11
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "SCRIPT_FILENAME", 15)         = 15
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "PATH_TRANSLATED", 15)         = 15
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "DOCUMENT_ROOT", 13)           = 13
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "REQUEST_TIME_FLOAT", 18)      = 18
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1697395673.7968", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "REQUEST_TIME", 12)            = 12
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1697395673", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "argv", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "Array\n(\n)\n", 10)           = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_SERVER", 7)                  = 7
+write(1, "['", 2)                       = 2
+write(1, "argc", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "0", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "XDG_SESSION_ID", 14)          = 14
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "HOSTNAME", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "localhost.localdomain", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "TERM", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "xterm", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "SHELL", 5)                    = 5
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/bin/bash", 9)                = 9
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "HISTSIZE", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1000", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "SSH_CLIENT", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 22", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LUAJIT_LIB", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/lib", 21)   = 21
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "SSH_TTY", 7)                  = 7
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/dev/pts/0", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "USER", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LS_COLORS", 9)                = 9
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "rs=0:di=01;34:ln=01;36:mh=00:pi="..., 1425) = 1425
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "MAIL", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/var/spool/mail/root", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "PATH", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/sbin:/usr/local/bin:/"..., 59) = 59
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LUAJIT_INC", 10)              = 10
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/local/luajit/include/luajit"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "PWD", 3)                      = 3
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole/tinyswoole-"..., 38) = 38
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LANG", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "en_US.UTF-8", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "HISTCONTROL", 11)             = 11
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "ignoredups", 10)              = 10
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "SHLVL", 5)                    = 5
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "1", 1)                        = 1
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "HOME", 4)                     = 4
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/root", 5)                    = 5
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LOGNAME", 7)                  = 7
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "root", 4)                     = 4
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "SSH_CONNECTION", 14)          = 14
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "192.168.75.1 50160 192.168.75.12"..., 36) = 36
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "LESSOPEN", 8)                 = 8
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "||/usr/bin/lesspipe.sh %s", 25) = 25
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "XDG_RUNTIME_DIR", 15)         = 15
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/run/user/0", 11)             = 11
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "_", 1)                        = 1
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/usr/bin/strace", 15)         = 15
+write(1, "\n", 1)                       = 1
+write(1, "$", 1)                        = 1
+write(1, "_ENV", 4)                     = 4
+write(1, "['", 2)                       = 2
+write(1, "OLDPWD", 6)                   = 6
+write(1, "']", 2)                       = 2
+write(1, " => ", 4)                     = 4
+write(1, "/data/C_study/swoole", 20)    = 20
+write(1, "\n", 1)                       = 1
+write(1, "\nPHP License\n", 13)         = 13
+write(1, "This program is free software; y"..., 69) = 69
+write(1, "it under the terms of the PHP Li"..., 68) = 68
+write(1, "and included in the distribution"..., 55) = 55
+write(1, "\n", 1)                       = 1
+write(1, "This program is distributed in t"..., 64) = 64
+write(1, "but WITHOUT ANY WARRANTY; withou"..., 63) = 63
+write(1, "MERCHANTABILITY or FITNESS FOR A"..., 53) = 53
+write(1, "\n", 1)                       = 1
+write(1, "If you did not receive a copy of"..., 62) = 62
+write(1, "questions about PHP licensing, p"..., 63) = 63
+munmap(0x7f08a0191000, 196608)          = 0
+munmap(0x7f089a600000, 2097152)         = 0
+munmap(0x7f08a0117000, 331776)          = 0
+munmap(0x7f08a01c1000, 135168)          = 0
+exit_group(0)                           = ?
++++ exited with 0 +++

@@ -18,7 +18,7 @@ struct _tswServer {
     void (*onClose)(void);
 
     void (*onMasterStart)(void);
-
+   
     int reactor_num;
     tswReactorThread *reactor_threads;
     void (*onReactorStart)(int reactor_id);
