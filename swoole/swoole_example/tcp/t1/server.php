@@ -1,6 +1,6 @@
 <?php
 
-$serv = new swoole_server("127.0.0.1", 9501);
+$serv = new Swoole\Http\Server("0.0.0.0", 9501);
 
 //设置异步任务的工作进程数量
 
@@ -25,14 +25,9 @@ $serv->on('start', function (){
 
 //监听数据接收事件
 
-$serv->on('receive', function($serv, $fd, $from_id, $data) {
+$serv->on('request', function(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 
-    //投递异步任务
-
-    //$task_id = $serv->task($data);//非阻塞
-
-    echo "同步代码执行完成\n";
-
+     $response->end("hello swoole");
 });
 
  

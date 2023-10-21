@@ -798,7 +798,7 @@ int zend_call_function(zend_fcall_info *fci, zend_fcall_info_cache *fci_cache) /
 		} else {
 			zend_throw_error(NULL, "Cannot call overloaded function for non-object");
 		}
-
+        //释放变量  
 		zend_vm_stack_free_args(call);
 
 		if (func->type == ZEND_OVERLOADED_FUNCTION_TEMPORARY) {
