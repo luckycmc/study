@@ -1,4 +1,8 @@
 <?php
+/**
+ * 这个主要讲解 request 的案例
+ */
+<?php
 //创建http server
 $http = new Swoole\Http\Server('0.0.0.0', 9501);
 
@@ -7,7 +11,7 @@ $http->on('start', function ($server) {
 });
 $request = new Request();
 //绑定类中的函数  注意 绑定的函数必须是 public 属性 否则会用权限的问题
-$http->on('request', [$request,'http']);
+$http->on('request', [$request,'request']);
 //banding 函数的处理
 //$http->on('request','request');
 $http->start();
