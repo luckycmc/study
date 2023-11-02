@@ -15,7 +15,7 @@ $http->on('start', function ($server) {
 
 $http->on('request', function(Swoole\Http\Request $request, Swoole\Http\Response $response){
     
-    static $a[] = 'a'; //切记静态数组 不释放可能会让数组无线扩大
+    //static $a[] = 'a'; //切记静态数组 不释放可能会让数组无线扩大
  
     var_dump($a);
     $response->header('Content-Type', 'text/plain');
