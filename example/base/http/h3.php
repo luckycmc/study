@@ -10,15 +10,18 @@ $http->set([
     'worker_num' => 1,
 ]);
 $http->on('start', function ($server) {
+    //
     echo "Swoole http server is started at http://127.0.0.1:9501\n";
 });
 
 $http->on('request', function(Swoole\Http\Request $request, Swoole\Http\Response $response){
     
     //static $a[] = 'a'; //切记静态数组 不释放可能会让数组无线扩大
- 
-    var_dump($a);
+    //var_dump($a);
+    //设置 header 头
     $response->header('Content-Type', 'text/plain');
+    //设置json的方式
+    //输出数据给客户端 也就是浏览器
     $response->end('Hello World request');
 });
 //开启http 服务
