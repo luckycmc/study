@@ -7,11 +7,32 @@ use Family\Core\Route;
 class Family
 {    
     
+
+    /**
+    * @var 根目录
+     */
+    public static $rootPath;
+    /**
+     * @var 框架目录
+     */
+    public static $frameworkPath;
+    /**
+     * @var 程序目录
+     */
+    public static $applicationPath;
     /**
      * 启动服务
      */
      final public static function run()
-     {    
+     {  
+         if (!defined('DS')) {
+            define('DS', DIRECTORY_SEPARATOR);
+         }
+         /****定义相应的目录 start***/
+         self::$rootPath = dirname(dirname(__DIR__));
+         self::$frameworkPath = self::$rootPath . DS . 'framework';
+         self::$applicationPath = self::$rootPath . DS . 'application';    
+         /****定义相应的目录 end***/
           //1.注册自动加载函数
           \spl_autoload_register(__CLASS__.'::autoLoader');
           //2.获取配置文件
@@ -21,10 +42,17 @@ class Family
             "worker_num" =>Config::get('worker_num'),
           ]);
           $http->on('request',function(\Swoole\Http\Request $request, \Swoole\Http\Response $response){
-            //启动路由加载：
-            $result = Route::dispatch($request->server['path_info']);
-            //响应数据
-            $response->end($result);
+            try{
+                 //启动路由加载：
+                $result = Route::dispatch($request->server['path_info']);
+                 //响应数据
+                 $response->end($result);
+            }catch(\Exception $e){
+                $response->end($e->getMessage());
+            }catch(\Error $e){
+                $response->end($e->getMessage());  
+            }
+           
           });
           //启动服务
           $http->start();

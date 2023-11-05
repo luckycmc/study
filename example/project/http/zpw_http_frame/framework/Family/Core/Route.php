@@ -15,7 +15,7 @@ class Route
         } else {
             $maps = explode('/', $path);
             $controller = ucfirst($maps[1]);
-            $method = $maps[2];
+            $method = isset($maps[2])?$maps[2]:'';
         }
         $controllerClass = "controller\\{$controller}";
         $class = new $controllerClass;
