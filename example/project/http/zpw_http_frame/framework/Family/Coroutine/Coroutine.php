@@ -19,6 +19,7 @@ class Coroutine
      */
     public static function getId()
     {
+        //获取当前协程的唯一 ID, 它的别名为 getuid, 是一个进程内唯一的正整数。
         return SwCo::getuid();
     }
 

@@ -39,10 +39,13 @@ class Family
           \spl_autoload_register(__CLASS__.'::autoLoader');
           //2.获取配置文件
           Config::load();
+          //启动http 服务
           $http = new \Swoole\Http\Server(Config::get('host'), Config::get('port'));
+          //设置server的配置项
           $http->set([
             "worker_num" =>Config::get('worker_num'),
           ]);
+          //设置 request 事件
           $http->on('request',function(\Swoole\Http\Request $request, \Swoole\Http\Response $response){
             //初始化根协程ID
             $coId = Coroutine::setBaseId();
@@ -52,6 +55,7 @@ class Family
             PoolContext::set($context);
              //协程退出，自动清空
             defer(function() use($coId){
+                //清理当前协程对应的 $context
                  PoolContext::clear($coId);
              });
             try{
@@ -60,8 +64,10 @@ class Family
                  //响应数据
                  $response->end($result);
             }catch(\Exception $e){
+                //异常数据
                 $response->end($e->getMessage());
             }catch(\Error $e){
+                //错误相应
                 $response->end($e->getMessage());  
             }
            
