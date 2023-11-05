@@ -3,11 +3,13 @@ namespace Family;
 
 use Family\Core\Config;
 use Family\Core\Route;
+use Family\Coroutine\Context;
+use Family\Coroutine\Coroutine;
+use Family\Pool\Context as PoolContext;
 
 class Family
 {    
     
-
     /**
     * @var 根目录
      */
@@ -42,6 +44,16 @@ class Family
             "worker_num" =>Config::get('worker_num'),
           ]);
           $http->on('request',function(\Swoole\Http\Request $request, \Swoole\Http\Response $response){
+            //初始化根协程ID
+            $coId = Coroutine::setBaseId();
+            //初始化上下文
+            $context = new Context($request,$response);
+             //存放容器pool
+            PoolContext::set($context);
+             //协程退出，自动清空
+            defer(function() use($coId){
+                 PoolContext::clear($coId);
+             });
             try{
                  //启动路由加载：
                 $result = Route::dispatch($request->server['path_info']);
