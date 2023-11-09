@@ -50,6 +50,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\study\example\project\http\zpw_http_frame\bin" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="js.build_tools.gulp">
       <node-interpreter>project</node-interpreter>
@@ -73,7 +78,7 @@
       <updated>1698462820828</updated>
       <workItem from="1698462822350" duration="2138000" />
       <workItem from="1699185893863" duration="915000" />
-      <workItem from="1699186822578" duration="2438000" />
+      <workItem from="1699186822578" duration="8642000" />
     </task>
     <servers />
   </component>
@@ -105,10 +110,14 @@
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state x="137" y="15" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.720@0.0.1366.720" timestamp="1699186706588" />
-    <state x="463" y="115" key="FileChooserDialogImpl" timestamp="1699186852648">
+    <state x="463" y="115" key="FileChooserDialogImpl" timestamp="1699194548242">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="463" y="115" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1699186852648" />
+    <state x="463" y="115" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1699194548242" />
+    <state x="357" y="173" key="NewPhpClassDialog" timestamp="1699190617549">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="357" y="173" key="NewPhpClassDialog/0.0.1366.720@0.0.1366.720" timestamp="1699190617549" />
     <state x="499" y="283" key="NewPhpFileDialog" timestamp="1699188939912">
       <screen x="0" y="0" width="1366" height="720" />
     </state>

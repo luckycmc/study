@@ -8,7 +8,7 @@ class Route
      */
     public static function  dispatch($path)
     {
-         //默认访问 controller/index.php 的 index方法
+         //默认访问 controller/start.php 的 index方法
          if (empty($path) || '/' == $path) {
             $controller = 'Index';
             $method = 'Index';
