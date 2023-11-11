@@ -1,7 +1,5 @@
 <?php
-
-
-namespace controller;
+namespace app\controller;
 
 
 use Family\Pool\Context;
@@ -30,4 +28,5 @@ class Base
         //获取当前的请求对象
         $this->request =$context->getRequest();
     }
-}
+
+}// class end

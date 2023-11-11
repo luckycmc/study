@@ -17,9 +17,9 @@ class Route
             $controller = ucfirst($maps[1]);
             $method = isset($maps[2])?$maps[2]:'';
         }
-        $controllerClass = "controller\\{$controller}";
+        $controllerClass = "app\\controller\\{$controller}";
         $class = new $controllerClass;
         return $class->$method();
     }
 
-}
+}// class end

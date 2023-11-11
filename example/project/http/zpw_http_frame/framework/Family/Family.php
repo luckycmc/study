@@ -75,33 +75,35 @@ class Family
           //启动服务
           $http->start();
      }
-     /**
- * @param $class
- * @desc 自动加载类
- */
-final public static function autoLoader($class)
-{
+         /**
+     * @param $class
+     * @desc 自动加载类
+     */
+    final public static function autoLoader($class)
+    {
+        $explodePath = explode('\\',$class);
+        $prefix_class = $explodePath[0]; //获取前缀匹配
         //定义rootPath
         $rootPath = dirname(dirname(__DIR__));
-
         //把类转为目录，eg \a\b\c => /a/b/c.php
-        $classPath = \str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-
+        $classPath = \str_replace('\\', DIRECTORY_SEPARATOR,  $class) . '.php';
+        // app  单独处理
+        if (strpos($classPath,'app')!==false){
+            $classPath = \str_replace('app/', '',  $classPath);
+        }
+        //根据前缀匹配目录
         //约定框架类都在framework目录下, 业务类都在application下
         $findPath = [
-            $rootPath . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR,
-            $rootPath . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR,
+          'Family'=>  $rootPath . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR,
+           'app'=> $rootPath . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR,
         ];
-
-        //遍历目录，查找文件
-        foreach ($findPath as $path) {
-            //如果找到文件，则require进来
-            $realPath = $path . $classPath;
-            if (is_file($realPath)) {
+        //获取文件的真是路径
+        $realPath = $findPath[$prefix_class].$classPath;
+        if (is_file($realPath) && file_exists($realPath)) {
                 require "{$realPath}";
                 return;
-            }
         }
+
 
    }
 

@@ -1,6 +1,5 @@
 <?php
-namespace controller;
-use Family\Pool\Context;
+namespace app\controller;
 
 /**
  * Class Index
