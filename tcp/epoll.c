@@ -103,11 +103,18 @@ int main()
         printf("注册epoll 事件失败\n");
         return -1;
     }
+
     while (1)   //进入事件循环 
     {       
         
+        printf("epoll wait is block"); 
         //阻塞等待事件的发生  epoll_fd 对应的epoll_create  创建的 句柄
         //  wait_event_list 对应的事件   CLIENT_MAX_SIZE 每一次去多少个事件   
+        /**
+          epoll_wait 会阻塞进程 进入到内核态
+          监控两种文件描述符 链接的 描述符 和数据 可读的描述符
+          半连接队列
+        */
         result = epoll_wait(epoll_fd, wait_event_list, CLIENT_MAX_SIZE, -1);//阻塞
        //没有对应的事件发生,继续下一轮事件循环
         if (result <= 0) {
@@ -175,7 +182,7 @@ int main()
                     write(wait_event_list[j].data.fd, buffer, str_length);//执行回声服务  即echo
                 }
             }
-        }
+        }             
     }
 
     return 0;
