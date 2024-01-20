@@ -16,7 +16,6 @@ void *task(void *arg)
         //sleep(1);
         //当前线程退出 只退出当前线程
         //pthread_exit(NULL);
-       
     }
 }
 
