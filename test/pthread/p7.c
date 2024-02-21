@@ -36,7 +36,7 @@ int main(){
     //回收线程
     for(i=0; i<5; ++i)
         rc = pthread_join(threads[i], NULL);
-    //释放互斥锁
+    //销毁互斥锁
     pthread_mutex_destroy(&mute);
    
     return 0;

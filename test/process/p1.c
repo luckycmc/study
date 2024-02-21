@@ -43,7 +43,7 @@ int main()
         }
         else if (pid == 0)
         {
-            //创建子进程
+            //创建子进程 之进程的空间
             process_children(); 
         }
         
