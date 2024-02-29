@@ -170,7 +170,7 @@ func webRouer() *gin.Engine{
     return r;
 }
 func main(){
-	
+	 //启动路由 
 	 r := webRouer()
     //启动服务
 	 r.Run()
