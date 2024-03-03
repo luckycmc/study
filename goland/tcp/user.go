@@ -121,7 +121,7 @@ func(this *User) DoMesssage(msg string){
 //监听当前 user channel的方法,一旦有消息就发送给 客户端
 func (this *User) ListenMessage(){
 	 for{
-	 	msg:=<-this.C
+	 	msg:=<-this.CP
 	 	this.conn.Write([]byte(msg+"\r\n"))
 	 }
 }

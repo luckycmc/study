@@ -8,7 +8,7 @@ import (
 
 func main() {
     r := gin.Default()
-    //加载静态页面
+    //加载静态页面 的跟目录
     r.LoadHTMLGlob("gin_html/*")
     //引入路由
     router.ApiRouterInit(r)

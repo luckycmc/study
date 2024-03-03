@@ -16,7 +16,7 @@ func main(){
 	for i:=0; i<2;i++{
 
 		 //切换一下再次分配任务
-		 runtime.Gosched()
+		 runtime.Gosched()  //让出主协主协程 让子携程先执行
 		 fmt.Println("hello")
 	}
 }

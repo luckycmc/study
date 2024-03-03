@@ -6,7 +6,7 @@ import(
 // 相当于 php 的 关联数组
 func main(){
      //语法格式map[keyType][value] 
-     //1.基本的使用
+     //1.基本的使用 相当与 $data = array();
      scoreMap := make(map[string]int,8)
      scoreMap["张三"] = 90
      scoreMap["李四"] = 100
@@ -36,7 +36,7 @@ func main(){
      fmt.Println("-------------------------------4")
      //便利数组
      scoreMap["王五"] = 60
-     delete(scoreMap,"李四") //删除对应的数据
+     delete(scoreMap,"李四") //删除对应的数据 李四 key 对应的数据
      for k,v := range scoreMap{
      	fmt.Println(k,v)
      }
