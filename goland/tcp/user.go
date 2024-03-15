@@ -10,7 +10,7 @@ import (
 type User struct {
 	Name string
 	Addr string
-	C    chan string
+	C    chan string // 主要用于发送给 用户的消息
 	conn net.Conn
 	//当前用户的server
 	server *Server

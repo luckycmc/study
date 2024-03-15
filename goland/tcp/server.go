@@ -35,13 +35,13 @@ func NewServer(ip string, port int) *Server {
 func (this *Server) ListenMessage() {
 	//监听消息
 	for {
-		msg := <-this.Message
+		msg := <-this.Message //当前协程 会阻塞者这里 直到 this.Message管道有数据
 
 		//将所有message 发送给在线User
 		this.MapLock.Lock()
 		//发送给每一个在线用户
 		for _, cli := range this.Onlinemap {
-			cli.C <- msg // cli.C是当前用户的管道
+			cli.C <- msg // cli  是 Use的对象 把数据发送给 user监听的管道
 		}
 		this.MapLock.Unlock()
 	}
@@ -51,7 +51,7 @@ func (this *Server) ListenMessage() {
 func (this *Server) BroadCast(user *User, msg string) {
 
 	sendMsg := "[" + user.Addr + "]" + user.Name + ":" + msg
-	// 用于通知用户上线
+	// 用于通知用户上线 把数据放到 message 中
 	this.Message <- sendMsg
 }
 
@@ -60,9 +60,11 @@ func (this *Server) Handler(conn net.Conn) {
 	fmt.Println("连接成功...")
 	user := NewUser(conn, this)
 
-	//用户上线
+	/****用户上线 start*****/
+	// 1.在user中会吧当前 用户加入到map 中 2.出发server中的 BroadCast
+	// 3.会触发 server中的 ListenMessage  4.user.C <- msg 触发 发送数据
 	user.Online()
-
+	/****用户上线 end*****/
 	//监听用户是否活跃channel
 	isLive := make(chan bool)
 	//接受客户端的消息
@@ -89,6 +91,7 @@ func (this *Server) Handler(conn net.Conn) {
 	}()
 	//当前handle阻塞
 	for {
+		// 主要用于 用户是否还活跃
 		select {
 		case <-isLive:
 		//当前用户活跃重置制定时器
@@ -123,13 +126,13 @@ func (this *Server) Start() {
 	go this.ListenMessage()
 
 	for {
-		// accept
+		// accept 获取一个新的链接
 		conn, err := listener.Accept()
 		if err != nil {
 			fmt.Println("listener Accept error", err)
 			continue
 		}
-		// do handler
+		// do handler  主要用于  客户端的处理 每一个链接启动一个协程
 		go this.Handler(conn)
 	}
 
