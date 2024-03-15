@@ -1,5 +1,7 @@
 package router
-
+/**
+  gin 框架实现 cms  api接口
+*/
 import (
 	"github.com/gin-gonic/gin"
 	"gormlearn/api"

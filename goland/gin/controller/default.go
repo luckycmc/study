@@ -3,21 +3,31 @@ package controller
 import (
        "github.com/gin-gonic/gin"
        "net/http"
+       _"strings"
+       "fmt"
 )
 //绑定相应的 方法  空结构体
 type Default struct {
+       Base
 }
 
 // 前台首页
 func (this *Default) DefaultIndex(r *gin.Context) {
        
+       name := r.Query("name") //query  接受 ？a=1这样的参数  param 接受的是路由参数 /a/b/name
+       fmt.Println(name)
+       if name == "18" {
+              this.Base.Success(r,name)
+              return
+       }
+       //this.Base.Success(r,name)
        //json字符串
-       r.JSON(http.StatusOK, gin.H{
+      /* r.JSON(http.StatusOK, gin.H{
               "title": "zpw",
-              "ce":    "cc",
+              "ce":    name,
               "score": 80,
               "hobby": []string{"吃饭", "睡觉", "写代码"},
-       })
+       })*/
        //字符串
        //r.String(http.StatusOK, "index page")
        //页面
