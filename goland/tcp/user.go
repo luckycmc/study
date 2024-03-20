@@ -5,8 +5,7 @@ import (
 	"strings"
 )
 
-//user 类
-
+// user 结构体
 type User struct {
 	Name string
 	Addr string
@@ -24,7 +23,7 @@ func NewUser(conn net.Conn, server *Server) *User {
 	user := &User{
 		Name:   userAddr,
 		Addr:   userAddr,
-		C:      make(chan string),
+		C:      make(chan string), // 初始化
 		conn:   conn,
 		server: server,
 	}
@@ -60,7 +59,7 @@ func (this *User) SendMsg(msg string) {
 	this.conn.Write([]byte(msg))
 }
 
-// 用户处理消息的业务
+// 用户处理消息的业务 这一块业务也可以继续拆分
 func (this *User) DoMesssage(msg string) {
 	//查询在线用户
 	if msg == "who" {

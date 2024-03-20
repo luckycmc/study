@@ -71,6 +71,7 @@ func (this *Server) Handler(conn net.Conn) {
 	go func() {
 		buf := make([]byte, 4096)
 		for {
+			//
 			n, err := conn.Read(buf)
 			//客户下线
 			if n == 0 {
@@ -95,7 +96,7 @@ func (this *Server) Handler(conn net.Conn) {
 		select {
 		case <-isLive:
 		//当前用户活跃重置制定时器
-		//不需要做任何操作
+		/***不需要做任何操作 主要用于下线相应的用户 start**/
 		case <-time.After(time.Second * 10):
 			//已经超时当前用户被剔除
 			user.SendMsg("你被强制下线")
@@ -105,6 +106,7 @@ func (this *Server) Handler(conn net.Conn) {
 			conn.Close()
 			//退出当前handler
 			return // 或者runtime.Goexit()
+			/***不需要做任何操作 主要用于下线相应的用户 end**/
 		}
 	}
 
