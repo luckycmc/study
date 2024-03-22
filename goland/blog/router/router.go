@@ -1,31 +1,41 @@
 package router
 
 import (
+	"blog/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func sayHello(c *gin.Context) {
-
+	//fmt.Println("hello")
+	username, _ := c.Cookie("usrename")
 	c.JSON(200, gin.H{
-		"message": "hello golang",
+		"message":  "hello golang",
+		"today":    models.GetDay(),
+		"unix":     models.GetUnix(),
+		"username": username,
 	})
 }
 
 // 首页
 func index(c *gin.Context) {
 	//获取get 参数
-	aid := c.Query("aid")
+	//aid := c.Query("aid")
 	/*c.JSON(200, gin.H{
 		"index":   "index page",
 		"titles":  "这是一个好网站",
 		"aid is ": aid,
 	})*/
-	c.HTML(http.StatusOK, "index.html", gin.H{
+	//fmt.Println("middle is end")
+	//c.SetCookie("usrename", "张三", 3600, "cookie", "localhost", false, true)
+	//session := session.Default(c)
+	//session.Set("username", "张三")
+	c.String(200, "session")
+	/*c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "this is first page",
 		"aid":   aid,
-	})
+	})*/
 }
 
 // 获取路由参数
@@ -60,6 +70,14 @@ func doAddUser(c *gin.Context) {
 		"age":      age,
 	})
 }
+
+// 中间件
+/*func initMiddleware(ctx *gin.Context) {
+	//fmt.Println("我是一个中间件")
+	//路由函数执行后的操作
+	//ctx.Next()
+
+}*/
 func Start() {
 
 	r := gin.Default() //返回默认的路由引擎
@@ -72,8 +90,9 @@ func Start() {
 	DefaultRoutesInit(r)
 	//注册admin 模块
 	AdminRoutesInit(r)
-	//r.GET("/", index)
-	//r.GET("/hello", sayHello)
+	r.GET("/cookie", index)
+	//中间件 先执行  后执行回调方法
+	r.GET("/hello", sayHello)
 	//r.GET("/getForm", getForm)
 	//获取动态路由
 	//r.GET("/getParams/:uid", getParams)
