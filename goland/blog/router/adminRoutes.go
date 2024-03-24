@@ -12,6 +12,12 @@ func AdminRoutesInit(r *gin.Engine) {
 	{
 		//用户
 		adminRoute.GET("/user", admin.UserController{}.Index)
+		//用户名称查找
+		adminRoute.GET("/find", admin.UserController{}.Find)
+		//修改用户
+		adminRoute.GET("/save", admin.UserController{}.Update)
+		//删除用户
+		adminRoute.GET("/del", admin.UserController{}.Delete)
 		//添加用户
 		adminRoute.GET("/user/add", admin.UserController{}.Add)
 		//新闻首页
