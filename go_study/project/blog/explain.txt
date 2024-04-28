@@ -1,0 +1,8 @@
+# 进入你的项目目录
+cd /your_project
+# 使用go install 拉取fresh
+go install github.com/pilu/fresh@latest  //一定要执行
+# 如果你没有go mod ，执行命令初始化
+go mod init <你的项目名称>
+# 将依赖添加到你的项目中   go mod tidy
+go get github.com/pilu/fresh
