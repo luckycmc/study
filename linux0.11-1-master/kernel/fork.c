@@ -87,9 +87,9 @@ int copy_process (int nr, long ebp, long edi, long esi, long gs, long none,
 				  long fs, long es, long ds,
 				  long eip, long cs, long eflags, long esp, long ss)
 {
-	struct task_struct *p; //实例化一个 结构体的 指针
+	struct task_struct *p;
 	int i;
-	struct file *f;  // 进程对应的文件结构
+	struct file *f;
 	struct i387_struct *p_i387;
 
 	p = (struct task_struct *) get_free_page ();	// 为新任务数据结构分配内存。
