@@ -151,7 +151,7 @@ void main_rename(void)		/* 这里确实是void，并没错。 */
 // 以下是内核进行所有方面的初始化工作。阅读时最好跟着调用的程序深入进去看，实在看
 // 不下去了，就先放一放，看下一个初始化调用-- 这是经验之谈:)
 	mem_init(main_memory_start,memory_end);
-	trap_init();	// 陷阱门（硬件中断向量）初始化。（kernel/traps.c）
+	trap_init();	//  主要是中断的注册（例如键盘）（硬件中断向量）初始化。（kernel/traps.c）
 	blk_dev_init();	// 块设备初始化。（kernel/blk_dev/ll_rw_blk.c）
 	chr_dev_init();	// 字符设备初始化。（kernel/chr_dev/tty_io.c）空，为以后扩展做准备。
 	tty_init();		// tty 初始化。（kernel/chr_dev/tty_io.c）
