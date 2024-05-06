@@ -110,7 +110,7 @@ int copy_process (int nr, long ebp, long edi, long esi, long gs, long none,
 	p->utime = p->stime = 0;	// 初始化用户态时间和核心态时间。
 	p->cutime = p->cstime = 0;	// 初始化子进程用户态和核心态时间。
 	p->start_time = jiffies;	// 当前滴答数时间。
-// 以下设置任务状态段TSS 所需的数据（参见列表后说明）。
+// 以下设置任务状态段TSS 所需的数据（参见列表后说明）。 tss主要保存cpu寄存器的上下文
 	p->tss.back_link = 0;
 	p->tss.esp0 = PAGE_SIZE + (long) p;	// 堆栈指针（由于是给任务结构p 分配了1 页
 // 新内存，所以此时esp0 正好指向该页顶端）。

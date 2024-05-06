@@ -160,9 +160,9 @@ struct task_struct
 	unsigned long close_on_exec;
 	struct file *filp[NR_OPEN];
 /* ldt for this task 0 - zero 1 - cs 2 - ds&ss */
-	struct desc_struct ldt[3];
+	struct desc_struct ldt[3]; //局部描述符
 /* tss for this task */
-	struct tss_struct tss;
+	struct tss_struct tss; // 存放cpu寄存器的值
 };
 
 /*
