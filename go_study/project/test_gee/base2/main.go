@@ -8,12 +8,12 @@ import (
 /*
 *
 
-	主要实现 gin web的简单路由 和相应的参数的一个简单的框架
+	主要实现 gin web的简单路�? 和相应的参数的一个简单的框架
 
 *
 */
 func main() {
-	//初始化
+	//初始�?
 	r := gee.New()
 	//第一版的数据请求
 
@@ -27,7 +27,7 @@ func main() {
 			  }
 		})
 	   r.GET("/login",func(w http.ResponseWriter, r *http.Request) {})*/
-	//  context 包含 res he response 的数据信息
+	//  context 包含 res he response 的数据信�?
 	//注册路由
 	/* r.GET("/",func(c *gee.Context) {
 		   c.HTML(http.StatusOK,"<h1>Hello Gee</h1>")
@@ -42,15 +42,15 @@ func main() {
 				"password": c.Query("password"),
 		   })
 	})*/
-	//测试带 :号的参数
+	//带参数
 	r.GET("/hello/:name", func(ctx *gee.Context) {
 
 		ctx.String(http.StatusOK, "hello %s, you're at %s\n", ctx.Param("name"), ctx.Path)
 	})
-	//带 *的路由
-	/*r.GET("/assets/*filepath", func(c *gee.Context) {
+	//全路径
+	r.GET("/assets/*filepath", func(c *gee.Context) {
 		c.Json(http.StatusOK, gee.H{"filepath": c.Param("filepath")})
-	})*/
+	})
 
 	r.Run(":9999")
 

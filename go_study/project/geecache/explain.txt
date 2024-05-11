@@ -1,1 +1,1 @@
-geecache 是一个分布式缓存项目
+geecache 是一个分布式缓存项目 目前支持 key vaue 以及 缓存淘汰
