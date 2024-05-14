@@ -17,7 +17,7 @@ if (($result)){
 }else{
     echo "当前数量还剩".$result.PHP_EOL;
 }
-
+?>
 
 //方案2
 <?php
@@ -30,7 +30,7 @@ $product_id = 1;// 商品ID
 $buy_num = 1;// 购买数量
  
 //step2 下单前判断redis队列库存量
-$redis = new Redis();
+$redis = new \Redis();
 $result = $redis->connect('127.0.0.1',6379);
 $count = $redis->lpop('goods_store_' . $product_id);
 if (!$count) {
