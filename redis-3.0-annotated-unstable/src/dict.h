@@ -69,7 +69,9 @@ typedef struct dictEntry {
     // 值
     union {
         void *val;
+        //无符号整型值
         uint64_t u64;
+        //有符号整型值
         int64_t s64;
     } v;
 
