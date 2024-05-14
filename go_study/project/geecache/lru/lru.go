@@ -3,11 +3,11 @@ package lru
 import "container/list"
 
 type Cache struct {
-	maxBytes int64  //×î´óÄÚ´æ
-	nbytes   int64  // ÒÑ¾­Ê¹ÓÃÁË¶àÉÙ
+	maxBytes int64   //æœ€å¤§å†…å­˜
+	nbytes   int64   // å·²ç»ä½¿ç”¨äº†å¤šå°‘
 	ll       *list.List
-	cache    map[string]*list.Element    //listÊÇÒ»¸öË«ÏòÁ´±í
-	//»Øµ÷º¯Êı
+	cache    map[string]*list.Element    //listæ˜¯ä¸€ä¸ªåŒå‘é“¾è¡¨
+	//å›è°ƒå‡½æ•°
 	OnEvicted func(key string,value Value)
 }
 
@@ -31,21 +31,21 @@ func New(maxBytes int64,OnEvicted func(string,Value)) *Cache{
 	  }
 }
 
- //²éÕÒ¹¦ÄÜ
+ //æŸ¥æ‰¾åŠŸèƒ½
  func(c *Cache) Get(key string)(value Value,ok bool){
         
-	    //²éÕÒÊı¾İÊÇ·ñ´æÔÚ
+	    //æŸ¥æ‰¾æ•°æ®æ˜¯å¦å­˜åœ¨
 		if ele,ok := c.cache[key];ok{
-			c.ll.MoveToFront(ele)   //Èç¹û¼ü¶ÔÓ¦µÄÁ´±í½Úµã´æÔÚ£¬Ôò½«¶ÔÓ¦½ÚµãÒÆ¶¯µ½¶ÓÎ²£¬²¢·µ»Ø²éÕÒµ½µÄÖµ
+			c.ll.MoveToFront(ele)   //å¦‚æœé”®å¯¹åº”çš„é“¾è¡¨èŠ‚ç‚¹å­˜åœ¨ï¼Œåˆ™å°†å¯¹åº”èŠ‚ç‚¹ç§»åŠ¨åˆ°é˜Ÿå°¾ï¼Œå¹¶è¿”å›æŸ¥æ‰¾åˆ°çš„å€¼
 			kv :=ele.Value.(*entry) 
 			return kv.value,true
 		}
 	    return
  }
 
- //ÒÆ³ı¾ÉµÄ Êµ¼ÊÉÏ¾ÍÊÇ»º´æÌÔÌ­
+ //ç§»é™¤æ—§çš„ å®é™…ä¸Šå°±æ˜¯ç¼“å­˜æ·˜æ±°
  func(c *Cache) RemoveOldest(){
-	  ele  := c.ll.Back()   //È¡³ö¶ÓÁĞµÄÊ×½Úµã
+	  ele  := c.ll.Back()   //å–å‡ºé˜Ÿåˆ—çš„é¦–èŠ‚ç‚¹
 	  if ele != nil {
 		   
 		    c.ll.Remove(ele)
@@ -57,14 +57,14 @@ func New(maxBytes int64,OnEvicted func(string,Value)) *Cache{
 			}
 	  }
  }
- //Ôö¼Ó»òÕß¸üĞÂ
+ //å¢åŠ æˆ–è€…æ›´æ–°
  func(c *Cache) Add(key string,value Value){
        
-	    //ÅĞ¶ÏÊÇ·ñ´æÔÚ  ´æÔÚÔñ ¸üĞÂ ²»´æÔÚÔñÌí¼Ó
+	    //åˆ¤æ–­æ˜¯å¦å­˜åœ¨  å­˜åœ¨æ‹© æ›´æ–° ä¸å­˜åœ¨æ‹©æ·»åŠ 
 	    if ele,ok := c.cache[key];ok{
-              //°ÑÊı¾İ½ÚµãÍùºóÒÆ¶¯
+              //æŠŠæ•°æ®èŠ‚ç‚¹å¾€åç§»åŠ¨
 			  c.ll.MoveToFront(ele)
-			  //»ñÈ¡Êı¾İ
+			  //è·å–æ•°æ®
 			  kv:= ele.Value.(*entry)
 			  c.nbytes += int64(value.Len()) - int64(kv.value.Len())
 		      kv.value = value
@@ -73,7 +73,7 @@ func New(maxBytes int64,OnEvicted func(string,Value)) *Cache{
 			c.cache[key] = ele
 			c.nbytes += int64(len(key)) + int64(value.Len())
 		}	
-        //Ö´ĞĞÄÚ´æÌÔÌ­²ßÂÔ
+        //æ‰§è¡Œå†…å­˜æ·˜æ±°ç­–ç•¥
 		for c.maxBytes != 0 && c.maxBytes < c.nbytes {
 			c.RemoveOldest()
 		}
