@@ -37,16 +37,16 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		panic("HTTPPool serving unexpected path: " + r.URL.Path)
 	}
 	p.Log("%s %s", r.Method, r.URL.Path)
-	// /<basepath>/<groupname>/<key> required
+	// /<basepath>/<groupname>/<key> required 把字符串分割成数组
 	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/", 2)
 	if len(parts) != 2 {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
-
+    //获取名称
 	groupName := parts[0]
-	key := parts[1]
-
+	key := parts[1] // 获取 key
+    //通过 group  获取数据
 	group := GetGroup(groupName)
 	if group == nil {
 		http.Error(w, "no such group: "+groupName, http.StatusNotFound)
