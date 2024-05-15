@@ -1,7 +1,7 @@
 package geecache
 
 import (
-	"geecache/lru"
+	"geecacheProject/geecache/lru"
 	"sync"
 )
 
@@ -19,6 +19,7 @@ func(c *cache) add(key string,value ByteView){
 	   if c.lru == nil{
 		  c.lru = lru.New(c.cacheBytes,nil)
 	   }
+	   
 	   c.lru.Add(key,value)
 }
 //获取 value
