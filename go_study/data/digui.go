@@ -7,7 +7,7 @@ func Digui(n int) int {
 	if n == 0 {
 		return 1
 	}
-	return n * Digui(n-1)
+	return n + Digui(n-1)
 }
 func main() {
 	fmt.Println(Digui(5))
