@@ -50,7 +50,7 @@ func (this *User) Offline() {
 	this.server.MapLock.Lock()
 	delete(this.server.Onlinemap, this.Name)
 	this.server.MapLock.Unlock()
-	//广播用户上线
+	//广播用户下线
 	this.server.BroadCast(this, "下线")
 }
 
@@ -123,10 +123,12 @@ func (this *User) DoMesssage(msg string) {
 
 }
 
-// 监听当前 user channel的方法,一旦有消息就发送给 客户端
+// 主要用于 通知 某个用户上线 start
+// 监听当前 user channel的方法,一旦有消息就发送给 客户端 
 func (this *User) ListenMessage() {
 	for {
 		msg := <-this.C
 		this.conn.Write([]byte(msg + "\r\n"))
 	}
 }
+// 主要用于 通知 某个用户上线 end

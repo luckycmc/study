@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+/********server 数据结构 start***********/
 type Server struct {
 	Ip   string
 	Port int
@@ -18,7 +19,7 @@ type Server struct {
 	//消息广播的channel
 	Message chan string
 }
-
+/********server 数据结构 endt***********/
 // 创建server 接口
 func NewServer(ip string, port int) *Server {
 
@@ -90,7 +91,8 @@ func (this *Server) Handler(conn net.Conn) {
 			isLive <- true
 		}
 	}()
-	//当前handle阻塞
+	//当前handle阻塞 
+	/************主要功能是剔除不在线的用户 start**************/
 	for {
 		// 主要用于 用户是否还活跃
 		select {
@@ -109,6 +111,7 @@ func (this *Server) Handler(conn net.Conn) {
 			/***不需要做任何操作 主要用于下线相应的用户 end**/
 		}
 	}
+	/************主要功能是剔除不在线的用户 end**************/
 
 }
 
