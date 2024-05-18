@@ -1,1 +1,4 @@
 Plese check https://github.com/antirez/redis/issues
+
+make MALLOC=libc
+编译有问题的时候

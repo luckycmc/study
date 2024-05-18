@@ -50,6 +50,7 @@ typedef char *sds;
 struct sdshdr {
     
     // buf 中已占用空间的长度
+    // 等于 SDS 所保存字符串的长度
     int len;
 
     // buf 中剩余可用空间的长度
