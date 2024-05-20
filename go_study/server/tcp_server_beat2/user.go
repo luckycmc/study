@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"strings"
 )
@@ -9,10 +10,11 @@ import (
 type User struct {
 	Name string
 	Addr string
-	C    chan string // 主要用于发送给 用户的消息
+	C    chan string // 主要用于发送给 用户的消息 消息的承载
 	conn net.Conn
-	//当前用户的server
+	//当前用户的server 也就是对用的fd
 	server *Server
+	Count int  //当前用户在线的个数
 }
 
 //创建一个用户API
@@ -38,23 +40,30 @@ func (this *User) Online() {
 	//用户上线将用户加入到maplock中
 	this.server.MapLock.Lock()
 	this.server.Onlinemap[this.Name] = this
+	this.Count++  //人数加 1
 	this.server.MapLock.Unlock()
 	//广播用户上线 在server 文件中
 	this.server.BroadCast(this, "已上线")
+	str := fmt.Sprintf("%s%d%s","当前用户有:",len(this.server.Onlinemap),"人")
+	fmt.Println(str)
 }
 
 // 用户下线业务
 func (this *User) Offline() {
-
 	//删除对应的用户
-	this.server.MapLock.Lock()
-	delete(this.server.Onlinemap, this.Name)
-	this.server.MapLock.Unlock()
+	this.DeleteUser()
 	//广播用户下线
 	this.server.BroadCast(this, "下线")
 }
 
-
+//删除当前 用户
+func(this *User) DeleteUser(){
+    //删除对应的用户
+	this.server.MapLock.Lock()
+	delete(this.server.Onlinemap, this.Name)  //更具名字删除
+	this.Count--  //人数加 1
+	this.server.MapLock.Unlock()
+}
 // 用户处理消息的业务 这一块业务也可以继续拆分
 func (this *User) DoMesssage(msg string) {
 	//查询在线用户

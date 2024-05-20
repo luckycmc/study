@@ -1,11 +1,11 @@
 package main
- 
+
 import (
-    "flag"
-    "fmt"
-    "io"
-    "net"
-    "os"
+	"flag"
+	"fmt"
+	"io"
+	"net"
+	"os"
 )
  
 type Client struct {

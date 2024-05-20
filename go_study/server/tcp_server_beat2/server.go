@@ -42,8 +42,8 @@ func (this *Server) ListenMessage() {
 		//将所有message 发送给在线User
 		this.MapLock.Lock()
 		//发送给每一个在线用户
-		for _, cli := range this.Onlinemap {
-			cli.C <- msg // cli  是 Use的对象 把数据发送给 user监听的管道
+		for _, user := range this.Onlinemap {
+				user.C <- msg // cli  是 Use的对象 把数据发送给 user监听的管道
 		}
 		this.MapLock.Unlock()
 	}
@@ -55,6 +55,7 @@ func (this *Server) BroadCast(user *User, msg string) {
 	sendMsg := "[" + user.Addr + "]" + user.Name + ":" + msg
 	// 用于通知用户上线 把数据放到 message 中
 	this.Message <- sendMsg
+	
 }
 
 // handler
@@ -101,11 +102,14 @@ func (this *Server) Handler(conn net.Conn) {
 		case <-isLive:
 		//当前用户活跃重置制定时器
 		/***不需要做任何操作 主要用于下线相应的用户 start**/
-		case <-time.After(time.Second * 10):
+		case <-time.After(time.Second * 30):
 			//已经超时当前用户被剔除   也需要吧当前用户从 map  中国删除
 			user.SendMsg("你被强制下线")  
-			//销毁当前资源
+			//销毁当前用户的 监听管道
 			close(user.C)
+            /*********当前用户删除从map中 start***********/
+			user.DeleteUser()
+			/*********当前用户删除从map中 end***********/
 			//关闭当前客户端
 			conn.Close()
 			//退出当前handler
