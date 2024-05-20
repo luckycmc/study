@@ -54,10 +54,6 @@ func (this *User) Offline() {
 	this.server.BroadCast(this, "下线")
 }
 
-// 给当前用户发送消息
-func (this *User) SendMsg(msg string) {
-	this.conn.Write([]byte(msg))
-}
 
 // 用户处理消息的业务 这一块业务也可以继续拆分
 func (this *User) DoMesssage(msg string) {
@@ -122,7 +118,7 @@ func (this *User) DoMesssage(msg string) {
 	}
 
 }
-
+// 发送消息一共有两种 一个是 广播消息 另外一个是 发送给用户的消息
 // 主要用于 通知 某个用户上线 start
 // 监听当前 user channel的方法,一旦有消息就发送给 客户端 
 func (this *User) ListenMessage() {
@@ -132,3 +128,10 @@ func (this *User) ListenMessage() {
 	}
 }
 // 主要用于 通知 某个用户上线 end
+
+
+/************ 给当前用户发送消息 start**************/
+func (this *User) SendMsg(msg string) {
+	this.conn.Write([]byte(msg))
+}
+/************ 给当前用户发送消息 end**************/

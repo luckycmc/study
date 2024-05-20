@@ -49,7 +49,7 @@ func (this *Server) ListenMessage() {
 	}
 }
 
-// 广播消息
+// 广播消息 主要 用于监听广播消息
 func (this *Server) BroadCast(user *User, msg string) {
 
 	sendMsg := "[" + user.Addr + "]" + user.Name + ":" + msg
