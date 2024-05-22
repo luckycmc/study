@@ -38,9 +38,10 @@ func handleRequest(conn net.Conn){
 		return
 	}
 	//获取用户的消息  //处理相应的业务逻辑
-	msg := string(buffer[:n])
+	msg := string(buffer[:n-1])  // n-1最后是 \n
 	//解析数据 处理业务逻辑
-	message.ParseMessage(msg)
+	userMsg := message.ParseMessage(msg)
+	fmt.Println(userMsg.PassWord)
     conn.Write([]byte("hello use QQ"))
 }
 // 启动server
