@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"tcp_server_beat3/server"
 )
 
 func main() {
     
-	fmt.Println("create tcp server....")
+	server := server.NewServer("0.0.0.0",9000)
+	server.RunServer()
 }
