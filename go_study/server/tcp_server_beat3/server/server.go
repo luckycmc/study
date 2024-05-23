@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"tcp_server_beat3/message"
+	"tcp_server_beat3/user"
 )
 
 type Server struct {
@@ -41,8 +42,23 @@ func handleRequest(conn net.Conn){
 	msg := string(buffer[:n-1])  // n-1最后是 \n
 	//解析数据 处理业务逻辑
 	userMsg := message.ParseMessage(msg)
-	fmt.Println(userMsg.PassWord)
-    conn.Write([]byte("hello use QQ"))
+	//fmt.Println(userMsg.PassWord)
+	resultData := ""
+	switch userMsg.Type {
+		case "1":
+			res:=user.User{}.Register(&userMsg.User)
+			resultData = "注册失败"
+			if res {
+				resultData = "注册成功"
+			}
+			fmt.Println("用户注册")
+		case "2":
+			fmt.Println("用户登录")
+		case "3":
+			fmt.Println("添加好友")
+	}
+    //conn.Write([]byte("hello use QQ"))
+	conn.Write([]byte(resultData))
 }
 // 启动server
 func (this *Server) RunServer() {

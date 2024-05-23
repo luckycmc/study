@@ -3,11 +3,11 @@ package message
 import (
 	"fmt"
 	"strings"
-	"tcp_server_beat3/user"
+	"tcp_server_beat3/model"
 )
 
 type Message struct{
-	user.User
+	model.User
 	 Type string
 }
 
@@ -26,7 +26,7 @@ func  ParseMessage(data string) *Message{
 	  fmt.Println(userType)*/
 
 	  return &Message{
-		  User: user.User{
+		  User: model.User{
 			UserName: userName,
 			PassWord: passWord,
 		  },
