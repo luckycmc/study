@@ -68,7 +68,7 @@ func handleRequest(conn net.Conn){
 // 启动server
 func (this *Server) RunServer() {
     
-	 addr := fmt.Sprintf("%s:%d",this.IP,this.Port)
+	 addr := fmt.Sprintf("%s:%d",this.IP,this.Port) //字符串的格式转换
 	listener, err := net.Listen("tcp",addr)
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
@@ -83,7 +83,7 @@ func (this *Server) RunServer() {
 			 fmt.Println("accept is error",err.Error())
 			 continue
 		 }
-		 //处理业务
+		 //处理业务 单独气动泵一个协成
 		 go handleRequest(conn)
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tcp_server_beat3/model"
+	"time"
 )
 
 type User struct{}
@@ -25,7 +26,7 @@ func(this User) Login(data *model.User) bool{
 		   s:= model.Login(data)
 		   if s {
 			//设置数据到 redis中
-			    err:=model.RedisDb.Set(ctx,userLoginKey,data.PassWord+data.UserName,0)
+			    err:=model.RedisDb.Set(ctx,userLoginKey,data.PassWord+data.UserName,time.Second *10).Err()
 				if err != nil {
 					 fmt.Println("redis set is error",err)
 				}
