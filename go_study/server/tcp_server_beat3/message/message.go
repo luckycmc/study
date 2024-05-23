@@ -6,6 +6,9 @@ import (
 	"tcp_server_beat3/model"
 )
 
+/***
+  主要实现协议的解析
+**/
 type Message struct{
 	model.User
 	 Type string

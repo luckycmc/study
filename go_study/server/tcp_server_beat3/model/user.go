@@ -2,6 +2,9 @@ package model
 
 import "fmt"
 
+/**
+  主要实现用户的功能
+**/
 type User struct {
 	UserName string `db:"username"`
 	PassWord string `db:"password"`
@@ -21,4 +24,9 @@ func SaveUser(data *User) bool {
         return false
 	}
 	return true
+}
+
+func Login(data *User) bool{
+   
+	 return true
 }

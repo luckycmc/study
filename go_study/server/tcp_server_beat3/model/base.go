@@ -7,6 +7,9 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+/**
+  数据初始化的基类
+**/
 var Db *sqlx.DB
 //Db  初始化
 func InItDb() {
@@ -15,4 +18,8 @@ func InItDb() {
 		fmt.Println("open mysql failed",err)
 	}
 	Db = database
+}
+//redis的初始化
+func InitRedis(){
+	  
 }
