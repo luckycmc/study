@@ -53,6 +53,11 @@ func handleRequest(conn net.Conn){
 			}
 			fmt.Println("用户注册")
 		case "2":
+			res:=user.User{}.Login(&userMsg.User)
+			resultData = "登录失败"
+			if res {
+				resultData = "登录成功"
+			}
 			fmt.Println("用户登录")
 		case "3":
 			fmt.Println("添加好友")

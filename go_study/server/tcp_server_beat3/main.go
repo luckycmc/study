@@ -8,6 +8,8 @@ import (
 func init(){
 	//初始化 mysql  链接
 	model.InItDb()
+	//初始化 redis  链接
+	model.InitRedis()
 }
 func main() {
     

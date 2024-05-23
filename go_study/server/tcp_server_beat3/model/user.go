@@ -27,6 +27,12 @@ func SaveUser(data *User) bool {
 }
 
 func Login(data *User) bool{
-   
+     sql := "select username,password from person where username =? and password=?"
+	 var stu User
+	 Db.Get(&stu,sql,data.UserName,data.PassWord)
+	 if stu.PassWord == "" {
+		 return false
+	 }
+	 fmt.Println("select succ:",stu)
 	 return true
 }

@@ -18,7 +18,7 @@ func main() {
     defer conn.Close() // 确保连接在结束时关闭
     
     // 发送数据到服务器
-    _, err = conn.Write([]byte("user:zpw1|pass:123456|type:1\n"))
+    _, err = conn.Write([]byte("user:zpw|pass:123456|type:2\n"))
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error writing to socket: %s\n", err)
         os.Exit(1)
