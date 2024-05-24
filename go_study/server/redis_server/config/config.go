@@ -1,13 +1,13 @@
 package config
 
 import (
-    "bufio"
-    "go-redis/lib/logger"
-    "io"
-    "os"
-    "reflect"
-    "strconv"
-    "strings"
+	"bufio"
+	"io"
+	"os"
+	"redis-server/lib/logger"
+	"reflect"
+	"strconv"
+	"strings"
 )
 
 // ServerProperties defines global config properties
@@ -31,7 +31,7 @@ func init() {
     // default config
     Properties = &ServerProperties{
         Bind:       "127.0.0.1",
-        Port:       6379,
+        Port:       6380,
         AppendOnly: false,
     }
 }
