@@ -96,6 +96,7 @@ func parse(src io.Reader) *ServerProperties {
 	return config
 }
 
+// 重新设置 配置文件
 // SetupConfig read config file and store properties into Properties
 func SetupConfig(configFilename string) {
 	file, err := os.Open(configFilename)
