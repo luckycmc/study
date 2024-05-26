@@ -54,7 +54,7 @@ func(handler *EchoHandler) Handle(ctx context.Context,conn net.Conn){
 				 
 				   if err == io.EOF {
 					    logger.Info("connect close")
-						//删除相应的客户端
+						//删除相应的客户端 在map  中删除
 						handler.activeConn.Delete(client)
 				   }else{
 					 logger.Warn(err)
