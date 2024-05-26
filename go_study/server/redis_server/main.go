@@ -42,6 +42,7 @@ func main() {
 				config.Properties.Port),
 		},
 		EchoHandler.MakeHandler())
+	//服务器启动有误
 	if err != nil {
 		logger.Error(err)
 	}
