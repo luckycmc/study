@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// 日志结构的设置
 // Settings stores config for logger
 type Settings struct {
 	Path       string `yaml:"path"`
@@ -29,6 +30,7 @@ var (
 	levelFlags         = []string{"DEBUG", "INFO", "WARN", "ERROR", "FATAL"}
 )
 
+// 日志级别
 type logLevel int
 
 // log levels
@@ -46,6 +48,7 @@ func init() {
 	logger = log.New(os.Stdout, defaultPrefix, flags)
 }
 
+// 初始化 logger
 // Setup initializes logger
 func Setup(settings *Settings) {
 	var err error
@@ -64,6 +67,7 @@ func Setup(settings *Settings) {
 	logger = log.New(mw, defaultPrefix, flags)
 }
 
+// 设置日志前缀
 func setPrefix(level logLevel) {
 	_, file, line, ok := runtime.Caller(defaultCallerDepth)
 	if ok {
