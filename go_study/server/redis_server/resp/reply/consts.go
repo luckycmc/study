@@ -69,7 +69,7 @@ type EmptyMultiBulkReply struct{}
 func (r *EmptyMultiBulkReply) ToBytes() []byte {
 	return emptyMultiBulkBytes
 }
-//  不想赢回复
+//  空回复
 // NoReply respond nothing, for commands like subscribe
 type NoReply struct{}
 
