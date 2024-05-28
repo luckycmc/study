@@ -10,6 +10,7 @@ import (
 	"sync"
 )
 
+// resp  handler的定义
 type RespHandler struct {
 	activeConn sync.Map
 	db  databaseface.Database
@@ -30,7 +31,7 @@ func(r *RespHandler) Close() error{
 	r.activeConn.Range(func(key, value any) bool {
         
 		client := key.(*connection.Connection)
-		//关闭客户端
+		//关闭客户端 
 		_=client.Close()
 		return true
 	})
