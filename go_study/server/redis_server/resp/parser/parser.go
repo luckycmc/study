@@ -220,6 +220,7 @@ func parseMultiBulkHeader(msg []byte,state *readState) error{
 	  }
 
 }
+//解析单行头
 func parseBulkHeader(msg []byte, state *readState) error {
 	var err error
 	state.bulkLen, err = strconv.ParseInt(string(msg[1:len(msg)-2]), 10, 64)
