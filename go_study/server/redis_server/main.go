@@ -5,8 +5,8 @@ import (
 	"os"
 	"redis-server/config"
 	"redis-server/lib/logger"
+	"redis-server/resp/handler"
 	"redis-server/tcp"
-	EchoHandler "redis-server/tcp"
 )
 
 // 配置文件的名称
@@ -47,7 +47,8 @@ func main() {
 				config.Properties.Port),
 		},
 		//处理的handler
-		EchoHandler.MakeHandler())
+		handler.MakeHandler())
+		//handler.MakeHandler()
 	//服务器启动有误
 	if err != nil {
 		logger.Error(err)

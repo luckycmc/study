@@ -7,13 +7,19 @@ import (
 	"time"
 )
 
+//链接层
 type Connection struct {
 	conn net.Conn
 	waittingReply wait.Wait
 	mu sync.Mutex
 	selectedDB int
 }
-
+//获取conn
+func NewConn(conn net.Conn) *Connection{
+	  return &Connection{
+           conn: conn,
+	  }  
+}
 // 获取远程地址
 func(c *Connection) RemoteAddr() net.Addr{
 	return c.conn.RemoteAddr()

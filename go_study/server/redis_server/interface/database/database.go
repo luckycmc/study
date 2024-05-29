@@ -9,7 +9,7 @@ type Database interface {
 	Close()
 	AfterClientClose(c resp.Connection)
 }
+//数据类型
 type DataEntity struct{
 	Data interface{}
-	
 }
