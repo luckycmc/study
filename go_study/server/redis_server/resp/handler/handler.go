@@ -42,7 +42,7 @@ func (h *RespHandler) closeClient(client *connection.Connection) {
 }
 //实现接口的方法
 
-func(r *RespHandler) handler(ctx context.Context,conn net.Conn){
+func(r *RespHandler) Handle(ctx context.Context,conn net.Conn){
         
 	   //正在关闭中
 	   if r.closing.Get(){

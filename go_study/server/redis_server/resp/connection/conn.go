@@ -52,6 +52,7 @@ func(c *Connection) GetDBIndex() int{
      return c.selectedDB
 }
 //选择数据库
-func(c *Connection) SelectedDB(dbNum int){
+func(c *Connection) SelectDB(dbNum int){
       c.selectedDB = dbNum
 }
+
