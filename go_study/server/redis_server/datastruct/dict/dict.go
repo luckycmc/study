@@ -1,5 +1,8 @@
 package dict
 
+/**
+@字典相关的处理
+**/
 type Consumer func(key string, val interface{}) bool
 
 type Dict interface {
