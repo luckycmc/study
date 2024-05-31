@@ -6,20 +6,21 @@ type SyncDict struct {
 	m sync.Map
 }
 
-func MakeSyncDict() *SyncDict{
-    
-	  return &SyncDict{}
+func MakeSyncDict() *SyncDict {
+
+	return &SyncDict{}
 }
 
-//获取key 的值
-func(dict *SyncDict) Get(key string) (val interface{},exists bool){
-     
-	 val,ok := dict.m.Load(key)
-	 return val,ok
-	  
+// 获取key 的值
+func (dict *SyncDict) Get(key string) (val interface{}, exists bool) {
+
+	val, ok := dict.m.Load(key)
+	return val, ok
+
 }
-//获取当前数据库下有几个key
-func(dict *SyncDict) Len() int{
+
+// 获取当前数据库下有几个key
+func (dict *SyncDict) Len() int {
 	length := 0
 	dict.m.Range(func(key, value any) bool {
 		length++
@@ -27,16 +28,18 @@ func(dict *SyncDict) Len() int{
 	})
 	return length
 }
-//设置key val
-func(dict *SyncDict) Put(key string,val interface{})(result int){
-	_,exists := dict.m.Load(key)
-	dict.m.Store(key,val)
+
+// 设置key val
+func (dict *SyncDict) Put(key string, val interface{}) (result int) {
+	_, exists := dict.m.Load(key)
+	dict.m.Store(key, val)
 	if exists {
-		 return 0
+		return 0
 	}
 	return 1
 }
-//不存在设置
+
+// 不存在设置
 func (dict *SyncDict) PutIfAbsent(key string, val interface{}) (result int) {
 	_, existed := dict.m.Load(key)
 	if existed {
@@ -45,7 +48,8 @@ func (dict *SyncDict) PutIfAbsent(key string, val interface{}) (result int) {
 	dict.m.Store(key, val)
 	return 1
 }
-//判断key 是否存在
+
+// 判断key 是否存在
 func (dict *SyncDict) PutIfExists(key string, val interface{}) (result int) {
 	_, existed := dict.m.Load(key)
 	if existed {
@@ -54,19 +58,21 @@ func (dict *SyncDict) PutIfExists(key string, val interface{}) (result int) {
 	}
 	return 0
 }
-//移除key
-func(dict *SyncDict) Remove(key string)(result int){
-	_,existed := dict.m.Load(key)
+
+// 移除key
+func (dict *SyncDict) Remove(key string) (result int) {
+	_, existed := dict.m.Load(key)
 	dict.m.Delete(key)
 	if existed {
 		return 1
 	}
 	return 0
 }
-//获取当前字典下的所有key
-func(dict *SyncDict) Keys() [] string{
+
+// 获取当前字典下的所有key
+func (dict *SyncDict) Keys() []string {
 	result := make([]string, dict.Len())
-	i :=0 
+	i := 0
 	dict.m.Range(func(key, value any) bool {
 		result[i] = key.(string)
 		i++
@@ -74,14 +80,16 @@ func(dict *SyncDict) Keys() [] string{
 	})
 	return result
 }
-//遍历字典的所有key
+
+// 遍历字典的所有key
 func (dict *SyncDict) ForEach(consumer Consumer) {
 	dict.m.Range(func(key, value interface{}) bool {
 		consumer(key.(string), value)
 		return true
 	})
 }
-//随机获取几个key
+
+// 随机获取几个key
 func (dict *SyncDict) RandomKeys(limit int) []string {
 	result := make([]string, limit)
 	for i := 0; i < limit; i++ {
@@ -92,8 +100,9 @@ func (dict *SyncDict) RandomKeys(limit int) []string {
 	}
 	return result
 }
-//随机获取不重复的key
-func (dict *SyncDict) RandomDistinctKeys(limit int) []string {
+
+// 随机获取不重复的key
+func (dict *SyncDict) RandomDistinckKeys(limit int) []string {
 	result := make([]string, limit)
 	i := 0
 	dict.m.Range(func(key, value interface{}) bool {
@@ -111,4 +120,3 @@ func (dict *SyncDict) RandomDistinctKeys(limit int) []string {
 func (dict *SyncDict) Clear() {
 	*dict = *MakeSyncDict()
 }
-

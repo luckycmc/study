@@ -1,8 +1,10 @@
 package dict
 
-/**
+/*
+*
 @字典相关的处理
-**/
+*
+*/
 type Consumer func(key string, val interface{}) bool
 
 type Dict interface {
@@ -12,9 +14,9 @@ type Dict interface {
 	PutIfAbsent(key string, val interface{}) (result int)
 	PutIfExists(key string, val interface{}) (result int)
 	Remove(key string) (result int)
-	Foreach(consumer Consumer)
+	ForEach(consumer Consumer)
 	Keys() []string
 	RandomKeys(limit int) []string
 	RandomDistinckKeys(limit int) []string
-	clear()
+	Clear()
 }
