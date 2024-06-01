@@ -27,6 +27,9 @@ var pongBytes = []byte("+PONG\r\n")
 func (r *PongReply) ToBytes() []byte {
 	return pongBytes
 }
+func MakePongReply() *PongReply {
+	return &PongReply{}
+}
 
 // OkReply is +OK
 type OkReply struct{}
@@ -59,7 +62,8 @@ func (r *NullBulkReply) ToBytes() []byte {
 func MakeNullBulkReply() *NullBulkReply {
 	return &NullBulkReply{}
 }
-//  空回复
+
+// 空回复
 var emptyMultiBulkBytes = []byte("*0\r\n")
 
 // EmptyMultiBulkReply is a empty list
@@ -69,7 +73,9 @@ type EmptyMultiBulkReply struct{}
 func (r *EmptyMultiBulkReply) ToBytes() []byte {
 	return emptyMultiBulkBytes
 }
-//  空回复
+
+//	空回复
+//
 // NoReply respond nothing, for commands like subscribe
 type NoReply struct{}
 
