@@ -1,0 +1,6 @@
+[INFO][server.go:38] 2024/06/02 21:00:31 start listen...
+[INFO][server.go:50] 2024/06/02 21:00:35 shutting down
+[INFO][handler.go:102] 2024/06/02 21:00:35 handler shutting down
+[INFO][echo_database.go:26] 2024/06/02 21:00:35 EchoDatabase Close
+[INFO][handler.go:102] 2024/06/02 21:00:35 handler shutting down
+[INFO][echo_database.go:26] 2024/06/02 21:00:35 EchoDatabase Close
