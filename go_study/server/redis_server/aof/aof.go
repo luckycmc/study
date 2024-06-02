@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 	"redis-server/config"
-	databaseface "redis-server/database"
+	databaseface "redis-server/interface/database"
 	"redis-server/lib/logger"
 	"redis-server/lib/utils"
 	"redis-server/resp/connection"
