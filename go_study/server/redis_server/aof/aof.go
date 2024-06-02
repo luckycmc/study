@@ -62,7 +62,7 @@ func (handler *AofHandler) AddAof(dbIndex int, cmdLine CmdLine) {
 	}
 }
 
-// 数据写入到 aof文件中去
+// 数据写入到 aof的channel中
 func (handler *AofHandler) handleAof() {
 	// serialized execution
 	handler.currentDB = 0
@@ -85,7 +85,7 @@ func (handler *AofHandler) handleAof() {
 	}
 }
 
-// 记载aof  文件
+// 从aof的channel中 吧数据写入到文件
 func (handler *AofHandler) LoadAof() {
 
 	file, err := os.Open(handler.aofFilename)
