@@ -18,6 +18,7 @@ func execDel(db *DB, args [][]byte) resp.Reply {
 	return reply.MakeIntReply(int64(deleted))
 }
 
+// 初始化注册相应的命令
 func init() {
 	//命令注册
 	RegisterCommand("del", execDel, -2)
