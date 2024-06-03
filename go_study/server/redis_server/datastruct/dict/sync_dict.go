@@ -2,6 +2,9 @@ package dict
 
 import "sync"
 
+/**
+@底层 用的是 aync.map 的数据类型
+**/
 type SyncDict struct {
 	m sync.Map
 }
@@ -16,7 +19,6 @@ func (dict *SyncDict) Get(key string) (val interface{}, exists bool) {
 
 	val, ok := dict.m.Load(key)
 	return val, ok
-
 }
 
 // 获取当前数据库下有几个key
