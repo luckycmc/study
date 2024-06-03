@@ -29,7 +29,7 @@ func (dict *SyncDict) Len() int {
 	return length
 }
 
-// 设置key val
+// 设置key val  底层用的是 map
 func (dict *SyncDict) Put(key string, val interface{}) (result int) {
 	_, exists := dict.m.Load(key)
 	dict.m.Store(key, val)
@@ -49,7 +49,7 @@ func (dict *SyncDict) PutIfAbsent(key string, val interface{}) (result int) {
 	return 1
 }
 
-// 判断key 是否存在
+// 判断key 是否存在 不存在则设置
 func (dict *SyncDict) PutIfExists(key string, val interface{}) (result int) {
 	_, existed := dict.m.Load(key)
 	if existed {
