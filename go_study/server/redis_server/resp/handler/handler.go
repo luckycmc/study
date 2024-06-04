@@ -31,9 +31,9 @@ type RespHandler struct {
 func MakeHandler() *RespHandler {
 
 	var db databaseface.Database
-
+	// 输出处理
 	//db = database.NewEchoDatabase()
-
+	//解析处理
 	db = database.NewDatabase()
 	return &RespHandler{
 		db: db,
