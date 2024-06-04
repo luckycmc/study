@@ -14,7 +14,7 @@ type DB struct {
 	addAof func(CmdLine)
 }
 
-// 执行函数
+//命令对应的执行函数
 type ExecFunc func(db *DB, args [][]byte) resp.Reply
 
 type CmdLine = [][]byte
@@ -82,12 +82,12 @@ func (db *DB) PutIfAbsent(key string, entity *database.DataEntity) int {
 	return db.data.PutIfAbsent(key, entity)
 }
 
-// Remove the given key from db
+// Remove the given key from db 把key  移除 掉
 func (db *DB) Remove(key string) {
 	db.data.Remove(key)
 }
 
-// Removes the given keys from db
+// Removes the given keys from db 移除所有的key
 func (db *DB) Removes(keys ...string) (deleted int) {
 	deleted = 0
 	for _, key := range keys {
@@ -100,7 +100,7 @@ func (db *DB) Removes(keys ...string) (deleted int) {
 	return deleted
 }
 
-// Flush clean database
+// Flush clean database 清空数据
 func (db *DB) Flush() {
 	db.data.Clear()
 }

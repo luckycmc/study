@@ -4,3 +4,18 @@
 [INFO][echo_database.go:26] 2024/06/03 09:38:29 EchoDatabase Close
 [INFO][handler.go:102] 2024/06/03 09:38:29 handler shutting down
 [INFO][echo_database.go:26] 2024/06/03 09:38:29 EchoDatabase Close
+[INFO][server.go:38] 2024/06/03 13:49:34 start listen...
+[INFO][server.go:50] 2024/06/03 13:51:06 shutting down
+[INFO][handler.go:102] 2024/06/03 13:51:06 handler shutting down
+[INFO][echo_database.go:26] 2024/06/03 13:51:06 EchoDatabase Close
+[INFO][handler.go:102] 2024/06/03 13:51:06 handler shutting down
+[INFO][echo_database.go:26] 2024/06/03 13:51:06 EchoDatabase Close
+[INFO][server.go:38] 2024/06/03 13:51:20 start listen...
+[INFO][server.go:68] 2024/06/03 13:51:27 accept link...
+[INFO][server.go:50] 2024/06/03 13:52:42 shutting down
+[INFO][handler.go:102] 2024/06/03 13:52:42 handler shutting down
+[INFO][echo_database.go:26] 2024/06/03 13:52:42 EchoDatabase Close
+[INFO][echo_database.go:22] 2024/06/03 13:52:42 EchoDatabase AfterClientClose
+[INFO][handler.go:63] 2024/06/03 13:52:42 connection closed 127.0.0.1:54116
+[INFO][handler.go:102] 2024/06/03 13:52:42 handler shutting down
+[INFO][echo_database.go:26] 2024/06/03 13:52:42 EchoDatabase Close

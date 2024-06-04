@@ -6,8 +6,8 @@ import "strings"
 var cmdTable = make(map[string]*command)
 
 type command struct {
-	exector ExecFunc
-	arity   int
+	exector ExecFunc   // 对应执行的函数
+	arity   int        // 参数的个数
 }
 
 // 注册指令的方法
