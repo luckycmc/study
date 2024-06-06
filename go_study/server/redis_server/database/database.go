@@ -31,6 +31,7 @@ func NewDatabase() *Database {
 		singleDB.index = i
 		mdb.dbSet[i] = singleDB
 	}
+	//aof 是否启动
 	if config.Properties.AppendOnly {
 		aofHandler, err := aof.NewAOFHandler(mdb)
 		if err != nil {
@@ -48,7 +49,7 @@ func NewDatabase() *Database {
 	return mdb
 }
 
-// Exec executes command
+// Exec executes command  执行redis  命令
 // parameter `cmdLine` contains command and its arguments, for example: "set key value"
 func (mdb *Database) Exec(c resp.Connection, cmdLine [][]byte) (result resp.Reply) {
 
@@ -73,6 +74,7 @@ func (mdb *Database) Exec(c resp.Connection, cmdLine [][]byte) (result resp.Repl
 		return reply.MakeErrReply("ERR DB index is out of range")
 	}
 	selectedDB := mdb.dbSet[dbIndex]
+	// 对应库的执行
 	return selectedDB.Exec(c, cmdLine)
 }
 
@@ -83,7 +85,7 @@ func (mdb *Database) Close() {
 
 func (mdb *Database) AfterClientClose(c resp.Connection) {
 }
-
+//执行选择数据库
 func execSelect(c resp.Connection, mdb *Database, args [][]byte) resp.Reply {
 	dbIndex, err := strconv.Atoi(string(args[0]))
 	if err != nil {
