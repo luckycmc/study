@@ -1,0 +1,65 @@
+[INFO][server.go:38] 2024/06/05 09:33:55 start listen...
+[INFO][server.go:50] 2024/06/05 09:33:57 shutting down
+[INFO][handler.go:109] 2024/06/05 09:33:57 handler shutting down
+[INFO][handler.go:109] 2024/06/05 09:33:57 handler shutting down
+[INFO][server.go:38] 2024/06/05 09:34:00 start listen...
+[INFO][server.go:50] 2024/06/05 09:34:01 shutting down
+[INFO][handler.go:109] 2024/06/05 09:34:01 handler shutting down
+[INFO][handler.go:109] 2024/06/05 09:34:01 handler shutting down
+[INFO][server.go:38] 2024/06/05 09:34:05 start listen...
+[INFO][server.go:50] 2024/06/05 09:38:10 shutting down
+[INFO][handler.go:109] 2024/06/05 09:38:10 handler shutting down
+[INFO][server.go:38] 2024/06/05 09:38:13 start listen...
+[INFO][server.go:68] 2024/06/05 09:38:24 accept link...
+[WARN][database.go:57] 2024/06/05 09:38:24 error occurs: runtime error: invalid memory address or nil pointer dereference
+goroutine 9 [running]:
+runtime/debug.Stack()
+	C:/Program Files/Go/src/runtime/debug/stack.go:24 +0x5e
+redis-server/database.(*Database).Exec.func1()
+	D:/study/go_study/server/redis_server/database/database.go:57 +0x45
+panic({0x343600?, 0x44b900?})
+	C:/Program Files/Go/src/runtime/panic.go:770 +0x132
+redis-server/database.execGet(0xc00007a5c0, {0xc00008e078?, 0xc00000a838?, 0x3?})
+	D:/study/go_study/server/redis_server/database/string.go:16 +0x57
+redis-server/database.(*DB).Exec(0xc00007a5c0, {0xc00009e010?, 0x3?}, {0xc00008e060, 0x2, 0x2})
+	D:/study/go_study/server/redis_server/database/db.go:45 +0x133
+redis-server/database.(*Database).Exec(0xc00007a580, {0x3953a0, 0xc00008e000}, {0xc00008e060, 0x2, 0x2})
+	D:/study/go_study/server/redis_server/database/database.go:75 +0x210
+redis-server/resp/handler.(*RespHandler).Handle(0xc00007c0c0, {0x0?, 0x0?}, {0x395f70, 0xc000076060})
+	D:/study/go_study/server/redis_server/resp/handler/handler.go:97 +0x183
+redis-server/tcp.ListenAndServe.func3()
+	D:/study/go_study/server/redis_server/tcp/server.go:76 +0x62
+created by redis-server/tcp.ListenAndServe in goroutine 1
+	D:/study/go_study/server/redis_server/tcp/server.go:71 +0x14e
+
+[INFO][server.go:50] 2024/06/05 09:38:55 shutting down
+[INFO][handler.go:109] 2024/06/05 09:38:55 handler shutting down
+[INFO][handler.go:70] 2024/06/05 09:38:55 connection closed 127.0.0.1:55905
+[INFO][handler.go:109] 2024/06/05 09:38:55 handler shutting down
+[INFO][server.go:38] 2024/06/05 09:38:57 start listen...
+[INFO][server.go:68] 2024/06/05 09:39:06 accept link...
+[WARN][database.go:57] 2024/06/05 09:39:10 error occurs: runtime error: invalid memory address or nil pointer dereference
+goroutine 18 [running]:
+runtime/debug.Stack()
+	C:/Program Files/Go/src/runtime/debug/stack.go:24 +0x5e
+redis-server/database.(*Database).Exec.func1()
+	D:/study/go_study/server/redis_server/database/database.go:57 +0x45
+panic({0x563600?, 0x66b900?})
+	C:/Program Files/Go/src/runtime/panic.go:770 +0x132
+redis-server/database.execGet(0xc00007a5c0, {0xc000022678?, 0xc00000a846?, 0x3?})
+	D:/study/go_study/server/redis_server/database/string.go:16 +0x57
+redis-server/database.(*DB).Exec(0xc00007a5c0, {0xc00000a830?, 0x3?}, {0xc000022660, 0x2, 0x2})
+	D:/study/go_study/server/redis_server/database/db.go:45 +0x133
+redis-server/database.(*Database).Exec(0xc00007a580, {0x5b53a0, 0xc000022600}, {0xc000022660, 0x2, 0x2})
+	D:/study/go_study/server/redis_server/database/database.go:75 +0x210
+redis-server/resp/handler.(*RespHandler).Handle(0xc00007c0c0, {0x0?, 0x0?}, {0x5b5f70, 0xc00009a000})
+	D:/study/go_study/server/redis_server/resp/handler/handler.go:97 +0x183
+redis-server/tcp.ListenAndServe.func3()
+	D:/study/go_study/server/redis_server/tcp/server.go:76 +0x62
+created by redis-server/tcp.ListenAndServe in goroutine 1
+	D:/study/go_study/server/redis_server/tcp/server.go:71 +0x14e
+
+[INFO][server.go:50] 2024/06/05 09:40:12 shutting down
+[INFO][handler.go:109] 2024/06/05 09:40:12 handler shutting down
+[INFO][handler.go:70] 2024/06/05 09:40:12 connection closed 127.0.0.1:55927
+[INFO][handler.go:109] 2024/06/05 09:40:12 handler shutting down

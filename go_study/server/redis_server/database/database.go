@@ -58,8 +58,9 @@ func (mdb *Database) Exec(c resp.Connection, cmdLine [][]byte) (result resp.Repl
 			result = &reply.UnknownErrReply{}
 		}
 	}()
-
+    // 命令的名称
 	cmdName := strings.ToLower(string(cmdLine[0]))
+	// select 的操作
 	if cmdName == "select" {
 		if len(cmdLine) != 2 {
 			return reply.MakeArgNumErrReply("select")
