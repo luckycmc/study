@@ -1,0 +1,9 @@
+[INFO][server.go:38] 2024/06/07 10:10:33 start listen...
+[INFO][server.go:50] 2024/06/07 10:10:38 shutting down
+[INFO][handler.go:109] 2024/06/07 10:10:38 handler shutting down
+[INFO][server.go:38] 2024/06/07 10:10:46 start listen...
+[INFO][server.go:68] 2024/06/07 10:11:05 accept link...
+[INFO][server.go:50] 2024/06/07 10:14:25 shutting down
+[INFO][handler.go:109] 2024/06/07 10:14:25 handler shutting down
+[INFO][handler.go:70] 2024/06/07 10:14:25 connection closed 127.0.0.1:53092
+[INFO][handler.go:109] 2024/06/07 10:14:25 handler shutting down

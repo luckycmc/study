@@ -5,6 +5,7 @@ import (
 	"redis-server/resp/reply"
 )
 
+// ping  pong的响应
 func Ping(db *DB, args [][]byte) resp.Reply {
 	return reply.MakePongReply()
 }

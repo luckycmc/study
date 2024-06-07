@@ -17,8 +17,9 @@ type DB struct {
 //命令对应的执行函数
 type ExecFunc func(db *DB, args [][]byte) resp.Reply
 
+// 命令集
 type CmdLine = [][]byte
-
+// 创建一个DB
 func makeDB() *DB {
 
 	db := &DB{
@@ -40,6 +41,7 @@ func (db *DB) Exec(c resp.Connection, cmdLine CmdLine) resp.Reply {
 	if !validateArity(cmd.arity, cmdLine) {
 		return reply.MakeArgNumErrReply(cmdName)
 	}
+	//获取对应的执行命令
 	fun := cmd.exector
 	//set K V ->K V
 	return fun(db, cmdLine[1:])

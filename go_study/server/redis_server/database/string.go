@@ -67,7 +67,7 @@ func execGetSet(db *DB, args [][]byte) resp.Reply {
 	old := entity.Data.([]byte)
 	return reply.MakeBulkReply(old)
 }
-
+// 获取当前字符串的长度
 // execStrLen returns len of string value bound to the given key
 func execStrLen(db *DB, args [][]byte) resp.Reply {
 	key := string(args[0])
