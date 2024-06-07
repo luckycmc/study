@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"redis-server/interface/database"
 	"redis-server/interface/resp"
 	"redis-server/resp/reply"
@@ -39,6 +40,7 @@ func execSet(db *DB, args [][]byte) resp.Reply {
 		Data: value,
 	}
 	db.PutEntity(key, entity)
+	fmt.Println("set..."+key)
 	return &reply.OkReply{}
 }
 

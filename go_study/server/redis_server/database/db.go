@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"redis-server/datastruct/dict"
 	"redis-server/interface/database"
 	"redis-server/interface/resp"
@@ -33,6 +34,8 @@ func (db *DB) Exec(c resp.Connection, cmdLine CmdLine) resp.Reply {
 
 	//PING SET SETNEX
 	cmdName := strings.ToLower(string(cmdLine[0]))
+	//打印出书 命令
+	fmt.Println(cmdName)
 	cmd, ok := cmdTable[cmdName]
 	if !ok {
 		return reply.MakeErrReply("ERR unkown command " + cmdName)
