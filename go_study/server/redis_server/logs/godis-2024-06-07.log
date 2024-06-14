@@ -39,3 +39,6 @@
 [INFO][handler.go:112] 2024/06/07 11:07:38 handler shutting down
 [INFO][handler.go:70] 2024/06/07 11:07:38 connection closed 127.0.0.1:53510
 [INFO][handler.go:112] 2024/06/07 11:07:38 handler shutting down
+[INFO][server.go:38] 2024/06/07 11:07:39 start listen...
+[INFO][server.go:68] 2024/06/07 11:07:53 accept link...
+[INFO][handler.go:80] 2024/06/07 11:33:36 connection closed 127.0.0.1:54164
