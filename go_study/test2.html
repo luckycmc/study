@@ -1,0 +1,35 @@
+<html>
+    <input type="file" id="fileInput" />
+<progress id="uploadProgress" value="0" max="100"></progress>
+</html>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  var xhr = new XMLHttpRequest();
+ 
+  xhr.open('POST', 'http://119.45.8.91:9000/api/admin/qiniu/upload-sv', true);
+ 
+  if (xhr.upload) {
+    xhr.upload.onprogress = function(e) {
+      if (e.lengthComputable) {
+        var percentComplete = (e.loaded / e.total) * 100;
+        var progressBar = document.getElementById('uploadProgress');
+        progressBar.value = percentComplete;
+      }
+    };
+ 
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        alert('File uploaded successfully');
+      } else {
+        alert('Error during file upload');
+      }
+    };
+ 
+    var formData = new FormData();
+    formData.append('file', file);
+    xhr.send(formData);
+  }
+});
+</script>
