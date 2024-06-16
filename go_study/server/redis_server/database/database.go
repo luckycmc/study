@@ -59,7 +59,7 @@ func (mdb *Database) Exec(c resp.Connection, cmdLine [][]byte) (result resp.Repl
 			result = &reply.UnknownErrReply{}
 		}
 	}()
-    // 命令的名称
+	// 命令的名称
 	cmdName := strings.ToLower(string(cmdLine[0]))
 	// select 的操作
 	if cmdName == "select" {
@@ -85,7 +85,8 @@ func (mdb *Database) Close() {
 
 func (mdb *Database) AfterClientClose(c resp.Connection) {
 }
-//执行选择数据库
+
+// 执行选择数据库
 func execSelect(c resp.Connection, mdb *Database, args [][]byte) resp.Reply {
 	dbIndex, err := strconv.Atoi(string(args[0]))
 	if err != nil {
