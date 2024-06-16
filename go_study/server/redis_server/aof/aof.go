@@ -20,17 +20,17 @@ const (
 )
 
 type payload struct {
-	cmdLine CmdLine
-	dbIndex int
+	cmdLine CmdLine //命令
+	dbIndex int     // 哪个db
 }
 
 // aof handler的描述
 type AofHandler struct {
 	db          databaseface.Database
 	aofChan     chan *payload
-	aofFile     *os.File
-	aofFilename string
-	currentDB   int
+	aofFile     *os.File //对应的文件
+	aofFilename string   //文件名称
+	currentDB   int      //当前的DB
 }
 
 // 创建一个aof handler
@@ -52,7 +52,7 @@ func NewAOFHandler(db databaseface.Database) (*AofHandler, error) {
 	return handler, nil
 }
 
-// 把数据写入到aof 中
+// 把数据写入到aof 缓冲区中
 func (handler *AofHandler) AddAof(dbIndex int, cmdLine CmdLine) {
 	if config.Properties.AppendOnly && handler.aofChan != nil {
 		handler.aofChan <- &payload{
