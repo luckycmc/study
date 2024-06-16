@@ -86,6 +86,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 		//exec  执行用户的请求
 		// 用户发送的数据 是 空
 		if payload.Data == nil {
+			logger.Error("empty payload")
 			continue
 		}
 
@@ -94,7 +95,9 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			logger.Error("require multi bulk replt")
 			continue
 		}
+	
 		result := r.db.Exec(client, reply.Args)
+	
 		if result != nil {
 			_ = client.Write(reply.ToBytes())
 		} else {

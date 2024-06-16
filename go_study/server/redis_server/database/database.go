@@ -85,8 +85,12 @@ func (mdb *Database) Close() {
 
 func (mdb *Database) AfterClientClose(c resp.Connection) {
 }
+<<<<<<< HEAD
 
 // 执行选择数据库
+=======
+//执行选择数据库 0 -15 16个数据库
+>>>>>>> bb2611aebe66cb3d18b6d65c741b6b45fa120bae
 func execSelect(c resp.Connection, mdb *Database, args [][]byte) resp.Reply {
 	dbIndex, err := strconv.Atoi(string(args[0]))
 	if err != nil {

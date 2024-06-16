@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"redis-server/interface/database"
 	"redis-server/interface/resp"
 	"redis-server/resp/reply"
@@ -39,6 +40,7 @@ func execSet(db *DB, args [][]byte) resp.Reply {
 		Data: value,
 	}
 	db.PutEntity(key, entity)
+	fmt.Println("set..."+key)
 	return &reply.OkReply{}
 }
 
@@ -67,7 +69,7 @@ func execGetSet(db *DB, args [][]byte) resp.Reply {
 	old := entity.Data.([]byte)
 	return reply.MakeBulkReply(old)
 }
-
+// 获取当前字符串的长度
 // execStrLen returns len of string value bound to the given key
 func execStrLen(db *DB, args [][]byte) resp.Reply {
 	key := string(args[0])
