@@ -1,0 +1,15 @@
+[INFO][server.go:38] 2024/06/21 21:41:55 start listen...
+[INFO][server.go:50] 2024/06/21 21:51:06 shutting down
+[INFO][handler.go:112] 2024/06/21 21:51:06 handler shutting down
+[INFO][handler.go:112] 2024/06/21 21:51:06 handler shutting down
+[INFO][server.go:38] 2024/06/21 22:07:28 start listen...
+[INFO][server.go:50] 2024/06/21 22:08:03 shutting down
+[INFO][handler.go:112] 2024/06/21 22:08:03 handler shutting down
+[INFO][server.go:38] 2024/06/21 22:08:13 start listen...
+[INFO][server.go:50] 2024/06/21 22:08:28 shutting down
+[INFO][handler.go:112] 2024/06/21 22:08:28 handler shutting down
+[WARN][aof.go:93] 2024/06/21 22:12:20 open appendonly.aof: The system cannot find the file specified.
+[INFO][server.go:38] 2024/06/21 22:12:20 start listen...
+[INFO][server.go:50] 2024/06/21 22:12:55 shutting down
+[INFO][handler.go:112] 2024/06/21 22:12:55 handler shutting down
+[INFO][handler.go:112] 2024/06/21 22:12:55 handler shutting down

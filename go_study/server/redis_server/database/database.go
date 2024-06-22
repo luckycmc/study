@@ -33,6 +33,7 @@ func NewDatabase() *Database {
 	}
 	//aof 是否启动
 	if config.Properties.AppendOnly {
+		fmt.Println("start aof....")
 		aofHandler, err := aof.NewAOFHandler(mdb)
 		if err != nil {
 			panic(err)
@@ -84,13 +85,10 @@ func (mdb *Database) Close() {
 }
 
 func (mdb *Database) AfterClientClose(c resp.Connection) {
-}
-<<<<<<< HEAD
 
-// 执行选择数据库
-=======
-//执行选择数据库 0 -15 16个数据库
->>>>>>> bb2611aebe66cb3d18b6d65c741b6b45fa120bae
+}
+
+// select 选择数据库
 func execSelect(c resp.Connection, mdb *Database, args [][]byte) resp.Reply {
 	dbIndex, err := strconv.Atoi(string(args[0]))
 	if err != nil {
