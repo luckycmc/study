@@ -15,11 +15,12 @@ type DB struct {
 	addAof func(CmdLine)
 }
 
-//命令对应的执行函数
+// 命令对应的执行函数
 type ExecFunc func(db *DB, args [][]byte) resp.Reply
 
 // 命令集
 type CmdLine = [][]byte
+
 // 创建一个DB
 func makeDB() *DB {
 
@@ -35,10 +36,12 @@ func (db *DB) Exec(c resp.Connection, cmdLine CmdLine) resp.Reply {
 	//PING SET SETNEX
 	cmdName := strings.ToLower(string(cmdLine[0]))
 	//打印出书 命令
-	fmt.Println(cmdName)
+	//fmt.Println(cmdName)
 	cmd, ok := cmdTable[cmdName]
+	//fmt.Println(cmd, ok)
 	if !ok {
-		return reply.MakeErrReply("ERR unkown command " + cmdName)
+		fmt.Println("not commend")
+		return reply.MakeErrReply("ERR unknown command '" + cmdName + "'")
 	}
 	//SET k
 	if !validateArity(cmd.arity, cmdLine) {

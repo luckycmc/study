@@ -32,12 +32,12 @@ func init() {
 	// default config
 	Properties = &ServerProperties{
 		Bind:       "127.0.0.1",
-		Port:       6380,
+		Port:       6379,
 		AppendOnly: false,
 	}
 }
 
-// 解析配置文件
+// 解析配置文件 获取相应的属性
 func parse(src io.Reader) *ServerProperties {
 	config := &ServerProperties{}
 
@@ -96,7 +96,7 @@ func parse(src io.Reader) *ServerProperties {
 	return config
 }
 
-// 重新设置 配置文件
+// 重新设置 配置文件 读取文件配置
 // SetupConfig read config file and store properties into Properties
 func SetupConfig(configFilename string) {
 	file, err := os.Open(configFilename)

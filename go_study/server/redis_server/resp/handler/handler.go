@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"net"
-	"redis-server/database"
+	database2 "redis-server/database"
 	databaseface "redis-server/interface/database"
 	"redis-server/lib/logger"
 	"redis-server/lib/sync/atomic"
@@ -34,7 +34,7 @@ func MakeHandler() *RespHandler {
 	// 输出处理
 	//db = database.NewEchoDatabase()
 	//解析处理
-	db = database.NewDatabase()
+	db = database2.NewDatabase()
 	return &RespHandler{
 		db: db,
 	}
@@ -95,11 +95,11 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			logger.Error("require multi bulk replt")
 			continue
 		}
-	
+		//执行解析的命令 调用对应的函数处理
 		result := r.db.Exec(client, reply.Args)
-	
+		//fmt.Println(result)
 		if result != nil {
-			_ = client.Write(reply.ToBytes())
+			_ = client.Write(result.ToBytes())
 		} else {
 			_ = client.Write(unknownErrReplyBytes)
 		}
