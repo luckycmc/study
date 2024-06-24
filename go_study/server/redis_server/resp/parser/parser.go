@@ -25,11 +25,11 @@ type Payload struct {
 }
 
 type readState struct {
-	readingMutiLine  bool
-	expectedArgCount int
+	readingMutiLine  bool //是否是读取多行
+	expectedArgCount int  // 期望参数的个数
 	msgType          byte
 	args             [][]byte
-	bulkLen          int64
+	bulkLen          int64  // 数据的长度
 }
 
 // 判断解析器是否完成
@@ -54,13 +54,16 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			logger.Error(string(debug.Stack()))
 		}
 	}()
+	//读取缓冲区的数据
 	bufReader := bufio.NewReader(reader)
+	
 	var state readState
 	var err error
 	var msg []byte
 	for {
 		var ioErr bool
 		msg, ioErr, err = readLine(bufReader, &state)
+		
 		// 错误处理
 		if err != nil {
 			//IO有问题
@@ -78,8 +81,9 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			state = readState{}
 			continue
 		}
-		//判断是不是多行解析模式
+		//判断是不是多行解析模式 例如数据  *3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n
 		if !state.readingMutiLine { //不是多行模式
+			//fmt.Println("msg:  "+string(msg))
 			//还没有开启多行解析模式
 			if msg[0] == '*' {
 				err = parseMultiBulkHeader(msg, &state)
@@ -120,6 +124,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 					continue
 				}
 			} else {
+				//单行数据
 				result, err := parseseSingLineReply(msg)
 				ch <- &Payload{
 					Data: result,
@@ -129,7 +134,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				continue
 			}
 		} else { // 多行模式
-
+            
 			err := readBody(msg, &state)
 			if err != nil {
 				ch <- &Payload{
@@ -197,12 +202,12 @@ func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 
 }
 
-// 解析头
+// 解析头 例如 *3
 func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 	var err error
 	var expectedLine uint64
-	expectedLine, err = strconv.ParseUint(string(msg[1:len(msg)-2]), 10, 32)
+	expectedLine, err = strconv.ParseUint(string(msg[1:len(msg)-2]), 10, 32)  // 获取几个参数
 	if err != nil {
 		return errors.New("protpcol error:" + string(msg))
 	}
@@ -211,10 +216,10 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 		state.expectedArgCount = 0
 		return nil
 	} else if expectedLine > 0 {
-		state.msgType = msg[0]
-		state.readingMutiLine = true
-		state.expectedArgCount = int(expectedLine)
-		state.args = make([][]byte, 0, expectedLine)
+		state.msgType = msg[0]         // 消息的类型
+		state.readingMutiLine = true   // 多行模式
+		state.expectedArgCount = int(expectedLine)   // 几个参数
+		state.args = make([][]byte, 0, expectedLine) // 参数数据
 		return nil
 	} else {
 		//协议错误
@@ -223,7 +228,7 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 }
 
-// 解析单行头
+// 解析单行头 $3
 func parseBulkHeader(msg []byte, state *readState) error {
 	var err error
 	state.bulkLen, err = strconv.ParseInt(string(msg[1:len(msg)-2]), 10, 64)
@@ -243,7 +248,7 @@ func parseBulkHeader(msg []byte, state *readState) error {
 	}
 }
 
-// +ok-err
+// +ok-err 单行单个数据类型
 func parseseSingLineReply(msg []byte) (resp.Reply, error) {
 
 	str := strings.TrimSuffix(string(msg), "\r\n")

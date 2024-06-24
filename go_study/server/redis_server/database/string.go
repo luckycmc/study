@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"redis-server/interface/database"
 	"redis-server/interface/resp"
 	"redis-server/resp/reply"
@@ -11,7 +10,7 @@ import (
 func execGet(db *DB, args [][]byte) resp.Reply {
 	key := string(args[0])
 	entity, exists := db.GetEntity(key)
-	if exists {
+	if !exists {
 		return reply.MakeNullBulkReply()
 	}
 	bytes := entity.Data.([]byte)
@@ -31,7 +30,7 @@ func (db *DB) getAsString(key string) ([]byte, reply.ErrorReply) {
 	return bytes, nil
 }
 
-// 设置字符串
+// 设置字符串 k => v
 // execSet sets string value and time to live to the given key
 func execSet(db *DB, args [][]byte) resp.Reply {
 	key := string(args[0])
@@ -40,7 +39,7 @@ func execSet(db *DB, args [][]byte) resp.Reply {
 		Data: value,
 	}
 	db.PutEntity(key, entity)
-	fmt.Println("set..."+key)
+	//fmt.Println("set..."+key)
 	return &reply.OkReply{}
 }
 

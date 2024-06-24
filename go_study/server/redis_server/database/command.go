@@ -4,7 +4,7 @@ import "strings"
 
 // 记录指令和command直接的关系
 var cmdTable = make(map[string]*command)
-
+// 命令 结构体
 type command struct {
 	exector ExecFunc   // 对应执行的函数
 	arity   int        // 参数的个数
