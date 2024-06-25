@@ -58,7 +58,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 	client := connection.NewConn(conn)
 	//存放客户端的数据信息
 	r.activeConn.Store(client, struct{}{})
-	//解析数据
+	//解析数据 redis-client 发送过来的数据
 	ch := parser.ParseStream(conn)
 	//处理协议解析后的数据
 	for payload := range ch {
@@ -89,7 +89,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			logger.Error("empty payload")
 			continue
 		}
-
+        // 解析 服务器
 		reply, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
 			logger.Error("require multi bulk replt")
