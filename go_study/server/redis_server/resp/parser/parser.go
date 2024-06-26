@@ -275,6 +275,7 @@ func readBody(msg []byte, state *readState) error {
 
 	line := msg[0 : len(msg)-2]
 	var err error
+	//$3
 	if line[0] == '$' {
 		state.bulkLen, err = strconv.ParseInt(string(line[1:]), 10, 64)
 		if err != nil {
