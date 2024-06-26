@@ -3,6 +3,7 @@ package parser
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"redis-server/interface/resp"
 	"redis-server/lib/logger"
@@ -25,11 +26,11 @@ type Payload struct {
 }
 
 type readState struct {
-	readingMutiLine  bool //是否是读取多行
-	expectedArgCount int  // 期望参数的个数
-	msgType          byte
-	args             [][]byte
-	bulkLen          int64  // 数据的长度
+	readingMutiLine  bool //是否是读取多行 // 解析单行还是多行数据
+	expectedArgCount int  // 期望参数的个数   // 应该读取的参数个数
+	msgType          byte  //数据的类型        // 应该读取的参数个数
+	args             [][]byte  // 解析后的参数  // 消息内容
+	bulkLen          int64  // 数据的长度   // 数据长度
 }
 
 // 判断解析器是否完成
@@ -42,6 +43,7 @@ func (s *readState) finished() bool {
 func ParseStream(reader io.Reader) <-chan *Payload {
 
 	ch := make(chan *Payload)
+	//启动一个协成进行协议解析
 	go parse0(reader, ch)
 	return ch
 }
@@ -145,7 +147,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			}
 			//读取完成
 			if state.finished() {
-
+               fmt.Println(state.args)
 				var result resp.Reply
 				if state.msgType == '*' {
 
@@ -166,15 +168,15 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 	}
 }
 
-// 读取一行数据
+// 读取一行数据 // 一行一行的读取。读正常的行，以\n分隔。读正文中包含\r\n字符的行时，state.bulkLen加上换行符\r\n（state.bulkLen+2）
 func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 
 	//1.没有读到预设置的指令长度 直接切就行
 
 	var msg []byte
 	var err error
-
-	if state.bulkLen == 0 { //1.按照 \r\n 切分
+    //有两种情况 第一种是 
+	if state.bulkLen == 0 { //1.按照 \r\n 切分 其实就是没有预设的长度
 
 		msg, err = bufReader.ReadBytes('\n')
 		if err != nil {
@@ -195,14 +197,14 @@ func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 		if len(msg) == 0 || msg[len(msg)-2] != '\r' || msg[len(msg)-1] != '\n' {
 			return nil, false, errors.New("protpcol error:" + string(msg))
 		}
+		//重置预设长度
 		state.bulkLen = 0
 	}
-
 	return msg, false, nil
 
 }
 
-// 解析头 例如 *3
+// 解析头 例如 *3\r\n  *3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n
 func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 	var err error
@@ -215,7 +217,7 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 		state.expectedArgCount = 0
 		return nil
-	} else if expectedLine > 0 {
+	} else if expectedLine > 0 {  //有几个参数 协议解析器不要停 一直取出来
 		state.msgType = msg[0]         // 消息的类型
 		state.readingMutiLine = true   // 多行模式
 		state.expectedArgCount = int(expectedLine)   // 几个参数

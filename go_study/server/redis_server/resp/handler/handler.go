@@ -97,7 +97,6 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 		}
 		//执行解析的命令 调用对应的函数处理
 		result := r.db.Exec(client, reply.Args)
-		//fmt.Println(result)
 		if result != nil {
 			_ = client.Write(result.ToBytes())
 		} else {
