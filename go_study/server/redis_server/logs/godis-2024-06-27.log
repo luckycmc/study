@@ -47,3 +47,35 @@ main.main()
 [INFO][handler.go:111] 2024/06/27 15:05:43 handler shutting down
 [INFO][handler.go:70] 2024/06/27 15:05:43 connection closed 127.0.0.1:52512
 [INFO][handler.go:111] 2024/06/27 15:05:43 handler shutting down
+[WARN][database.go:59] 2024/06/27 15:05:44 error occurs: runtime error: invalid memory address or nil pointer dereference
+goroutine 1 [running]:
+runtime/debug.Stack()
+	C:/Program Files/Go/src/runtime/debug/stack.go:24 +0x5e
+redis-server/database.(*Database).Exec.func1()
+	D:/study/go_study/server/redis_server/database/database.go:59 +0x45
+panic({0x5b3600?, 0x6bb900?})
+	C:/Program Files/Go/src/runtime/panic.go:770 +0x132
+redis-server/database.execSet(0xc00009c5a0, {0xc0000e4018, 0x2, 0x3?})
+	D:/study/go_study/server/redis_server/database/string.go:45 +0x1f1
+redis-server/database.(*DB).Exec(0xc00009c5a0, {0xc0000a2754?, 0x3?}, {0xc0000e4000, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/db.go:53 +0x137
+redis-server/database.(*Database).Exec(0xc00009c560, {0x605420, 0xc000090420}, {0xc0000e4000, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/database.go:79 +0x210
+redis-server/aof.(*AofHandler).LoadAof(0xc0000a4080)
+	D:/study/go_study/server/redis_server/aof/aof.go:116 +0x213
+redis-server/aof.NewAOFHandler({0x6053f0, 0xc00009c560})
+	D:/study/go_study/server/redis_server/aof/aof.go:42 +0x76
+redis-server/database.NewDatabase()
+	D:/study/go_study/server/redis_server/database/database.go:37 +0x178
+redis-server/resp/handler.MakeHandler(...)
+	D:/study/go_study/server/redis_server/resp/handler/handler.go:37
+main.main()
+	D:/study/go_study/server/redis_server/main.go:50 +0x18c
+
+[ERROR][aof.go:118] 2024/06/27 15:05:44 exec err <nil>
+[INFO][server.go:38] 2024/06/27 15:05:44 start listen...
+[INFO][server.go:68] 2024/06/27 15:09:13 accept link...
+[INFO][handler.go:80] 2024/06/27 15:09:49 connection closed 127.0.0.1:52635
+[INFO][server.go:50] 2024/06/27 15:09:53 shutting down
+[INFO][handler.go:111] 2024/06/27 15:09:53 handler shutting down
+[INFO][handler.go:111] 2024/06/27 15:09:53 handler shutting down

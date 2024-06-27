@@ -39,6 +39,7 @@ func NewAOFHandler(db databaseface.Database) (*AofHandler, error) {
 	//需要写入的文件
 	handler.aofFilename = config.Properties.AppendFilename
 	handler.db = db // db 哪个数据库
+	// 加载数据
 	handler.LoadAof()
 	aofFile, err := os.OpenFile(handler.aofFilename, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0600)
 	if err != nil {
