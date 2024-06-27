@@ -3,7 +3,6 @@ package parser
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"io"
 	"redis-server/interface/resp"
 	"redis-server/lib/logger"
@@ -83,6 +82,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			state = readState{}
 			continue
 		}
+		//fmt.Println("state.readingMutiLine,",state.readingMutiLine)
 		//判断是不是多行解析模式 例如数据  *3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n
 		if !state.readingMutiLine { //不是多行模式
 			//fmt.Println("msg:  "+string(msg))
@@ -147,12 +147,11 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			}
 			//读取完成
 			if state.finished() {
-               fmt.Println(state.args)
+              
 				var result resp.Reply
-				if state.msgType == '*' {
-
+				if state.msgType == '*' {  //多行字符串
 					result = reply.MakeMultiBulkReply(state.args)
-				} else if state.msgType == '$' {
+				} else if state.msgType == '$' { // 单个字符串
 					result = reply.MakeBulkReply(state.args[0])
 				}
 
@@ -200,6 +199,7 @@ func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 		//重置预设长度
 		state.bulkLen = 0
 	}
+	//fmt.Println("every line msg:",string(msg))
 	return msg, false, nil
 
 }
@@ -217,11 +217,11 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 		state.expectedArgCount = 0
 		return nil
-	} else if expectedLine > 0 {  //有几个参数 协议解析器不要停 一直取出来
-		state.msgType = msg[0]         // 消息的类型
+	} else if expectedLine > 0 {  //有几个参数 协议解析器不要停 一直取出来 3
+		state.msgType = msg[0]         // 消息的类型 *
 		state.readingMutiLine = true   // 多行模式
-		state.expectedArgCount = int(expectedLine)   // 几个参数
-		state.args = make([][]byte, 0, expectedLine) // 参数数据
+		state.expectedArgCount = int(expectedLine)   // 几个参数 3
+		state.args = make([][]byte, 0, expectedLine) // 参数数据 3
 		return nil
 	} else {
 		//协议错误
@@ -230,20 +230,20 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 }
 
-// 解析单行头 $3
+// 解析单行头 $3 set
 func parseBulkHeader(msg []byte, state *readState) error {
 	var err error
-	state.bulkLen, err = strconv.ParseInt(string(msg[1:len(msg)-2]), 10, 64)
+	state.bulkLen, err = strconv.ParseInt(string(msg[1:len(msg)-2]), 10, 64) //取出$3 的3
 	if err != nil {
 		return errors.New("protocol error: " + string(msg))
 	}
 	if state.bulkLen == -1 { // null bulk
 		return nil
 	} else if state.bulkLen > 0 {
-		state.msgType = msg[0]
+		state.msgType = msg[0]            // $
 		state.readingMutiLine = true
-		state.expectedArgCount = 1
-		state.args = make([][]byte, 0, 1)
+		state.expectedArgCount = 1       // 1个
+		state.args = make([][]byte, 0, 1) // 1
 		return nil
 	} else {
 		return errors.New("protocol error: " + string(msg))
