@@ -24,11 +24,12 @@ type Payload struct {
 	Err  error
 }
 
+// 解析器的状态
 type readState struct {
-	readingMutiLine  bool
+	readingMutiLine  bool //是否是多行读取
 	expectedArgCount int
 	msgType          byte
-	args             [][]byte
+	args             [][]byte //指令的参数
 	bulkLen          int64
 }
 
@@ -161,7 +162,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 	}
 }
 
-// 读取一行数据
+// 读取一行数据 $3 \r\n
 func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 
 	//1.没有读到预设置的指令长度 直接切就行
