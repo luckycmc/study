@@ -117,7 +117,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				}
 			} else if msg[0] == '$' { //$3 \r\n  $4\r\nPing\r\n
 
-				err := parseBulkHeader(msg, &state)
+				err := parseBulkHeader(msg, &state) 
 				if err != nil {
 					ch <- &Payload{
 						Err: errors.New("protocol error :" + string(msg)),
