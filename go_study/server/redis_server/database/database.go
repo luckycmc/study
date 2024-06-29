@@ -33,7 +33,7 @@ func NewDatabase() *Database {
 	}
 	//aof 是否启动
 	if config.Properties.AppendOnly {
-		fmt.Println("start aof....")
+		
 		aofHandler, err := aof.NewAOFHandler(mdb)
 		if err != nil {
 			panic(err)
