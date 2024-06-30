@@ -2,19 +2,20 @@ package controllers
 
 import (
 	"fmt"
-	"imooc.com/lottery/services"
 	"log"
+	"lottery/services"
 
-	"imooc.com/lottery/comm"
-	"imooc.com/lottery/conf"
-	"imooc.com/lottery/models"
-	"imooc.com/lottery/web/utils"
+	"lottery/comm"
+
+	"lottery/conf"
+	"lottery/models"
+	"lottery/web/utils"
 )
 
 type LuckyApi struct {
 }
 
-func (api *LuckyApi)luckyDo(uid int, username, ip string) (int, string, *models.ObjGiftPrize) {
+func (api *LuckyApi) luckyDo(uid int, username, ip string) (int, string, *models.ObjGiftPrize) {
 
 	// 2 用户抽奖分布式锁定
 	ok := utils.LockLucky(uid)
