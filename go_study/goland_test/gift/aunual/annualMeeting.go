@@ -60,6 +60,7 @@ func GetLucky(ctx *gin.Context) {
 	ctx.String(http.StatusOK, result)
 }
 
+// 在导入的地方和抽奖的地方添加互斥锁 否则线程不安全 因为 userList是共享数据
 func StartAnnual() {
 
 	userList = []string{}
