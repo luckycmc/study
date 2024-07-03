@@ -22,5 +22,5 @@ func (c *IndexController) GetLucky() map[string]interface{} {
 	rs["code"] = code
 	rs["msg"] = msg
 	rs["gift"] = gift
-	return rs
+	return rs      
 }
