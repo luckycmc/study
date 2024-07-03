@@ -12,7 +12,7 @@ func InitRouter() *gin.Engine{
 	//加载静态资源
 	r.Static("public","web/public")
 	//加载模板文件
-	r.LoadHTMLGlob("templates/**/*")
+	r.LoadHTMLGlob("web/templates/**/*")
 	//处理路由请求
 	dealRouter(r)
 	return r

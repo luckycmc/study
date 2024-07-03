@@ -17,7 +17,7 @@ type RegisterController struct {
 func (con RegisterController) RegisterGet(c *gin.Context) {
 
 	//返回html
-	c.HTML(http.StatusOK, "register.html", gin.H{
+	c.HTML(http.StatusOK, "default/register.html", gin.H{
 		"title": "注册页",
 	})
 }

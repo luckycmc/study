@@ -10,7 +10,7 @@ func InitRouter() *gin.Engine {
 	//创建默认的引擎
 	router := gin.Default()
 	//注册静态文件
-	router.LoadHTMLGlob("views/*")
+	router.LoadHTMLGlob("views/**/*")
 	//注册路由
 	registerRouter(router)
 	return router

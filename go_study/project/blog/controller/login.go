@@ -16,7 +16,7 @@ type LoginController struct{
 //登录页面
 func(con LoginController) LoginGet(c *gin.Context) {
       
-	   c.HTML(http.StatusOK,"login.html",gin.H{
+	   c.HTML(http.StatusOK,"default/login.html",gin.H{
 		   "title": "登录页",
 	   })
 }

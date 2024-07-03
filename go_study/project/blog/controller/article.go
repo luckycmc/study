@@ -16,7 +16,7 @@ type ArticleController struct{
 //文章显示页面
 func(con ArticleController) AddArticleGet(c *gin.Context) {
      
-	    c.HTML(http.StatusOK,"write_article.html",gin.H{})
+	    c.HTML(http.StatusOK,"default/write_article.html",gin.H{})
 }
 //处理form  数据交互
 func(con ArticleController) AddArticlePost(c *gin.Context) {
