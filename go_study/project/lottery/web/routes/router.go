@@ -21,6 +21,14 @@ func InitRouter() *gin.Engine{
 处理路由请求
 **/
 func dealRouter(r *gin.Engine){
-     
+       
+	  //首页
 	  r.GET("/",controller.Index{}.Index)
+	  //抽奖页面
+	  r.GET("/startLucky",controller.Index{}.StartLucky)
+	  //处理抽奖的数据逻辑
+	  r.GET("/lucky",controller.Lucky{}.Lucky)
+     
+	  //实现 抽奖的后台
+	  
 }

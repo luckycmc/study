@@ -71,9 +71,9 @@ DomeWebController = {
     build: function () {
         var that = DomeWebController;
         that.getEle("$wheelContainer").wheelOfFortune({
-            'wheelImg': "static/img/wheel_1/wheel.png",//转轮图片
-            'pointerImg': "static/img/wheel_1/pointer.png",//指针图片
-            'buttonImg': "static/img/wheel_1/button.png",//开始按钮图片
+            'wheelImg': "/public/static/img/wheel_1/wheel.png",//转轮图片
+            'pointerImg': "/public/static/img/wheel_1/pointer.png",//指针图片
+            'buttonImg': "/public/static/img/wheel_1/button.png",//开始按钮图片
             //'wSide': 400,//转轮边长(默认使用图片宽度)
             //'pSide': 191,//指针边长(默认使用图片宽度)
             //'bSide': 87,//按钮边长(默认使用图片宽度)
@@ -95,9 +95,9 @@ DomeWebController = {
         });
 
         that.getEle("$wheelContainer2").wheelOfFortune({
-            'wheelImg': "static/img/wheel_1/wheel.png",//转轮图片
-            'pointerImg': "static/img/wheel_1/pointer.png",//指针图片
-            'buttonImg': "static/img/wheel_1/button.png",//开始按钮图片
+            'wheelImg': "/public/static/img/wheel_1/wheel.png",//转轮图片
+            'pointerImg': "/public/static/img/wheel_1/pointer.png",//指针图片
+            'buttonImg': "/public/static/img/wheel_1/button.png",//开始按钮图片
             //'wSide': 400,//转轮边长(默认使用图片宽度)
             //'pSide': 191,//指针边长(默认使用图片宽度)
             //'bSide': 87,//按钮边长(默认使用图片宽度)
