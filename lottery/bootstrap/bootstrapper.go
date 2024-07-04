@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/kataras/iris"
-	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/middleware/logger"
+	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/sessions"
 
 	"imooc.com/lottery/conf"

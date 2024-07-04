@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"lottery/web/controller"
+	"lottery/web/default/controller"
+	kocp "lottery/web/kocp/controller"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +22,7 @@ func InitRouter() *gin.Engine{
 处理路由请求
 **/
 func dealRouter(r *gin.Engine){
-       
+      
 	  //首页
 	  r.GET("/",controller.Index{}.Index)
 	  //抽奖页面
@@ -30,5 +31,14 @@ func dealRouter(r *gin.Engine){
 	  r.GET("/lucky",controller.Lucky{}.Lucky)
      
 	  //实现 抽奖的后台
+	  admin := r.Group("/admin")
+	  {
+          admin.GET("/",kocp.User{}.Index)
+		  //admin.GET("/user")
+		  //admin.GET("/gift")
+		  //admin.GET("/code")
+		  //admin.GET("/result")
+		  //admin.GET("/blackip")
+	  }
 	  
 }
