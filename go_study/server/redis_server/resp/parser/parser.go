@@ -26,19 +26,11 @@ type Payload struct {
 
 // 解析器的状态
 type readState struct {
-<<<<<<< HEAD
-	readingMutiLine  bool //是否是多行读取
-	expectedArgCount int
-	msgType          byte
-	args             [][]byte //指令的参数
-	bulkLen          int64
-=======
 	readingMutiLine  bool //是否是读取多行 // 解析单行还是多行数据
 	expectedArgCount int  // 期望参数的个数   // 应该读取的参数个数
 	msgType          byte  //数据的类型        // 应该读取的参数个数
 	args             [][]byte  // 解析后的参数  // 消息内容
 	bulkLen          int64  // 数据的长度   // 数据长度
->>>>>>> bed6a7a504e5c463f6c960bd2e09a7709df810cb
 }
 
 // 判断解析器是否完成
