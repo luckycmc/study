@@ -37,7 +37,7 @@ func init() {
 	}
 }
 
-// 解析配置文件 获取相应的属性
+// 解析配置文件 获取相应的配置属性
 func parse(src io.Reader) *ServerProperties {
 	config := &ServerProperties{}
 

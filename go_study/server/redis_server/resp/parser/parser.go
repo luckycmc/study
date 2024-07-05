@@ -168,11 +168,8 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 	}
 }
 
-<<<<<<< HEAD
 // 读取一行数据 $3 \r\n
-=======
 // 读取一行数据 // 一行一行的读取。读正常的行，以\n分隔。读正文中包含\r\n字符的行时，state.bulkLen加上换行符\r\n（state.bulkLen+2）
->>>>>>> bed6a7a504e5c463f6c960bd2e09a7709df810cb
 func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 
 	//1.没有读到预设置的指令长度 直接切就行
@@ -235,7 +232,7 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 }
 
-// 解析单行头 $3 set
+// 解析单行头 $3 set  主要是解析 $后面的数据
 func parseBulkHeader(msg []byte, state *readState) error {
 	var err error
 	state.bulkLen, err = strconv.ParseInt(string(msg[1:len(msg)-2]), 10, 64) //取出$3 的3
