@@ -48,7 +48,7 @@ func ParseStream(reader io.Reader) <-chan *Payload {
 	return ch
 }
 
-// 解析数据
+// 解析数据 这一块主要处理redis的协议
 func parse0(reader io.Reader, ch chan<- *Payload) {
 
 	defer func() {

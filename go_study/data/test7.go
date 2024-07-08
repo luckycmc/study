@@ -7,7 +7,6 @@ type Student struct {
 	Age  int
 }
 
-
 var list map[string]*Student
 var info map[string]string
 
@@ -16,7 +15,7 @@ func main() {
 	list = make(map[string]*Student)
 	student := &Student{
 		Name: "zpw",
-		Age: 18,
+		Age:  18,
 	}
 	student.Name = "12306"
 	list["zpw"] = student
@@ -24,8 +23,8 @@ func main() {
 	fmt.Println(list["zpw"].Age)
 
 	//map 中的字符串是否可以改变
-    info = make(map[string]string)
+	info = make(map[string]string)
 	info["adress"] = "江苏"
-	info["adress"] = "河南"
+	info["adress"] = "河南1"
 	fmt.Println(info)
 }
