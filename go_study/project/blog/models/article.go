@@ -8,13 +8,13 @@ import (
 )
 
 type Article struct {
-	Id         int
-	Title      string
-	Tags       string
-	Short      string
-	Content    string
-	Author     string
-	Createtime int64
+	Id         int      `json:"id"`
+	Title      string   `json:"title"`
+	Tags       string   `json:"tags"`
+	Short      string   `json:"short"`
+	Content    string   `json:"content"`
+	Author     string   `json:"author"`
+	Createtime int64    `json:"createtime"`
 }
 
 /****数据处理***/

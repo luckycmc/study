@@ -2,6 +2,7 @@ package router
 
 import (
 	"blog/controller"
+	"blog/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,4 +37,13 @@ func registerRouter(r *gin.Engine) {
 	r.POST("/article/add", controller.ArticleController{}.AddArticlePost)
 	r.GET("/article/show/:id", controller.ArticleController{}.ArticleDetails)
 	/***文章相关的路由 end**/
+
+
+	/***评论相关的 路由 start***/
+     comment := r.Group("/comment",middleware.CheckToken)
+	 {
+         comment.POST("/add",controller.CommentController{}.AddComment)
+	 }
+	/***评论相关的 路由 start***/
+
 }
