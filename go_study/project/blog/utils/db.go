@@ -13,6 +13,9 @@ var DB *sql.DB
 //初始化连接
 func init(){
 	db,err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/blogweb_gin")
+	//执行完释放连接
+	defer db.Close()
+
 	if err != nil {
 		 fmt.Println("mysql connect is error:",err)
 		 return
