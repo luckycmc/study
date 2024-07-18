@@ -53,7 +53,7 @@ limit分页查询语句，
  */
 func QueryArticleWithPage(page, num int) ([]Article, error) {
 	// 拼接相应的sql 语句
-    sql := fmt.Sprintf("limit %d,%d", page*num, num)
+    sql := fmt.Sprintf("limit %d,%d", page, num)
 	//fmt.Println(sql)
     return QueryArticlesWithCon(sql)
 }
@@ -63,6 +63,7 @@ func QueryArticlesWithCon(sql string) ([]Article, error) {
 	//执行sql 语句
     rows, err := utils.DB.Query(sql)
     if err != nil {
+		fmt.Println(err)
         return nil, err
     }
 	

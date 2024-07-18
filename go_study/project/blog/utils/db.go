@@ -14,7 +14,7 @@ var DB *sql.DB
 func init(){
 	db,err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/blogweb_gin")
 	//执行完释放连接
-	defer db.Close()
+	//defer db.Close()
 
 	if err != nil {
 		 fmt.Println("mysql connect is error:",err)
@@ -28,7 +28,6 @@ func ModifyDB(sql string,args ...interface{})(int64,error){
      
 	   result,err := DB.Exec(sql,args...)
 	   if err != nil {
-		    
 		     log.Panicln(err)
 			 return 0,err
 	   }

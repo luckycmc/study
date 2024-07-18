@@ -21,7 +21,8 @@ func (c CommentController) AddComment(r *gin.Context) {
 		article_id_str := r.PostForm("article_id")
 		article_id ,_ := strconv.Atoi(article_id_str)
 		content := r.PostForm("content")
-		add_time :=time.Now().UnixNano() / int64(time.Millisecond)
+		//获取当前时间戳
+		add_time :=time.Now().Unix()
 		parent_id_str := r.PostForm("parent_id")
 		parent_id ,_ := strconv.Atoi(parent_id_str)
 		comment := models.Comment{
@@ -42,7 +43,7 @@ func (c CommentController) AddComment(r *gin.Context) {
 		if num > 0 {
 			r.JSON(http.StatusOK,gin.H{
 				"code":200,
-				"msg":"操作失败",
+				"msg":"操作成功",
 				"data":num,
 		  })
 		}else{
@@ -52,4 +53,45 @@ func (c CommentController) AddComment(r *gin.Context) {
 				"data":"",
 		  })
 		}
+
+}
+
+/**
+  @根据文章的id 获取相应的评论
+**/
+func(c CommentController) GetCommentList(r *gin.Context){
+        
+	     article_id_param := r.Query("article_id")
+		 if article_id_param =="" {
+			 r.JSON(http.StatusOK,gin.H{
+                    "code":200,
+					"msg":"article_id 参数不能为空",
+					"data":"",
+			 })
+			 return
+		 }
+		 article_id,_ := strconv.Atoi(article_id_param)
+		 var page int
+		 page_param := r.Query("page")
+		 // page 默认为 1
+		 if page_param == "" {
+			   page = 1
+		 }else{
+			page,_ = strconv.Atoi(page_param)
+		 }
+		 data,err := models.GetCommentByArticleId(article_id,page)
+		 if err != nil {
+				r.JSON(http.StatusOK,gin.H{
+					"code":200,
+					"msg":"操作失败",
+					"data":"",
+			})
+			return
+		 }
+		 //返回相应的处理结果
+		 r.JSON(http.StatusOK,gin.H{
+				"code":200,
+				"msg":"success",
+				"data":data,
+	     })
 }

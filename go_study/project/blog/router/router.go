@@ -41,8 +41,11 @@ func registerRouter(r *gin.Engine) {
 
 	/***评论相关的 路由 start***/
      comment := r.Group("/comment",middleware.CheckToken)
-	 {
+	 {    
+		 //添加评论
          comment.POST("/add",controller.CommentController{}.AddComment)
+		 //获取 评论列表
+		 comment.GET("/list",controller.CommentController{}.GetCommentList)
 	 }
 	/***评论相关的 路由 start***/
 
