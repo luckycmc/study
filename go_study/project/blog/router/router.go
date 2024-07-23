@@ -46,6 +46,8 @@ func registerRouter(r *gin.Engine) {
          comment.POST("/add",controller.CommentController{}.AddComment)
 		 //获取 评论列表
 		 comment.GET("/list",controller.CommentController{}.GetCommentList)
+		  //获取 评论列表带二级评论
+		  comment.GET("/all_list",controller.CommentController{}.GetCommentAllList)
 	 }
 	/***评论相关的 路由 start***/
 

@@ -95,3 +95,44 @@ func(c CommentController) GetCommentList(r *gin.Context){
 				"data":data,
 	     })
 }
+
+//获取当前文章下的所有分类
+
+func(c CommentController) GetCommentAllList(r *gin.Context){
+	   
+	   article_id_form := r.Query("article_id")
+	   if article_id_form == "" {
+		     
+		    r.JSON(http.StatusOK,gin.H{
+				"code":200,
+				"msg":"",
+				"data":nil,
+			})
+	   }
+	   // MA201013000
+	   //转换整形
+	   article_id,_:= strconv.Atoi(article_id_form)
+	   //获取分页
+	   page_form := r.Query("page")
+	   var page int
+	   if page_form =="" {
+		  page =1
+	   }else{
+		page,_ = strconv.Atoi(page_form)
+	   }
+	   data,err := models.GetAllCommentByArticleId(article_id,page)
+	   if err != nil {
+		   r.JSON(http.StatusOK,gin.H{
+			    "code":200,
+				"msg":"操作有误!",
+				"data":nil,
+		   })
+		   return
+	   }
+       // 返回相应的数据
+	   r.JSON(http.StatusOK,gin.H{
+		"code":200,
+		"msg":"success!",
+		"data":data,
+       })
+}
