@@ -21,6 +21,7 @@ func CheckToken(r *gin.Context) {
 			r.Abort()
 			return 
 	   }
+	   //如果token 存在校验 token 是否正确
 	  
 	   //查询数据库 检验token是否存在
 	   r.Next()

@@ -103,7 +103,7 @@ func getAllCommentByArticleIdData(article_id int,sqlParams string) ([]Comment,er
 	 }
 	 parent_ids = strings.TrimSuffix(parent_ids, ",")
 	 sql2:= "select * from comment where article_id = "+  strconv.Itoa(article_id) +" and parent_id in ("+parent_ids+")";
-	 fmt.Println(sql2)
+	 //fmt.Println(sql2)
 	 result,err =utils.DB.Query(sql2)
 	 if err != nil {
 		fmt.Println("mysql children :",err)

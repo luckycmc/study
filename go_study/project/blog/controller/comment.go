@@ -100,6 +100,7 @@ func(c CommentController) GetCommentList(r *gin.Context){
 
 func(c CommentController) GetCommentAllList(r *gin.Context){
 	   
+	   // 获取过数据
 	   article_id_form := r.Query("article_id")
 	   if article_id_form == "" {
 		     
@@ -131,8 +132,8 @@ func(c CommentController) GetCommentAllList(r *gin.Context){
 	   }
        // 返回相应的数据
 	   r.JSON(http.StatusOK,gin.H{
-		"code":200,
-		"msg":"success!",
-		"data":data,
+			"code":200,
+			"msg":"success!",
+			"data":data,
        })
 }
