@@ -18,7 +18,7 @@ var defaultProperties = &config.ServerProperties{
 	Port: 6379,
 }
 
-// 文件是否存在
+//配置文件是否存在
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	return err == nil && !info.IsDir()

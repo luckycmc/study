@@ -104,5 +104,6 @@ func SetupConfig(configFilename string) {
 		panic(err)
 	}
 	defer file.Close()
+	//解析文件属性
 	Properties = parse(file)
 }
