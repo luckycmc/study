@@ -1,0 +1,2 @@
+1.sql_safe_updates 避免死锁或者对数据的大量更新
+一定要使用 limit 和where(必须走索引) 或者 force（index）

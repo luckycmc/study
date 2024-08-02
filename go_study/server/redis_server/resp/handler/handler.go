@@ -55,6 +55,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 	if r.closing.Get() {
 		_ = conn.Close()
 	}
+	//获取到客户端的属性
 	client := connection.NewConn(conn)
 	//存放客户端的数据信息
 	r.activeConn.Store(client, struct{}{})

@@ -45,7 +45,7 @@ func ListenAndServe(listenner net.Listener, handler tcp.Handler, closeChan <-cha
 
 	//启动一个协成做相应的业务处理
 	go func() {
-		//监听信号
+		//监听信号  发生信号的产生的话 关闭相应的服务
 		<-closeChan
 		logger.Info("shutting down")
 		_ = listenner.Close()
