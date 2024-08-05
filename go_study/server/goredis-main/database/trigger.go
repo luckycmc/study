@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/xiaoxuxiansheng/goredis/handler"
+	"goredis-main/handler"
 )
 
 type DBTrigger struct {

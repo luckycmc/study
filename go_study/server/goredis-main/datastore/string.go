@@ -1,8 +1,8 @@
 package datastore
 
 import (
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/handler"
+	"goredis-main/database"
+	"goredis-main/handler"
 )
 
 func (k *KVStore) getAsString(key string) (String, error) {

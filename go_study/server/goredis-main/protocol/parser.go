@@ -6,9 +6,9 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/lib/pool"
-	"github.com/xiaoxuxiansheng/goredis/log"
+	"goredis-main/handler"
+	"goredis-main/lib/pool"
+	"goredis-main/log"
 )
 
 type lineParser func(header []byte, reader *bufio.Reader) *handler.Droplet

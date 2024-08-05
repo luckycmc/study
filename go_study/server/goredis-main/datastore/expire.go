@@ -3,7 +3,7 @@ package datastore
 import (
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/lib"
+	"goredis-main/lib"
 )
 
 func (k *KVStore) GC() {

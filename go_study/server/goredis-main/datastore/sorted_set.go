@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"strconv"
 
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/lib"
+	"goredis-main/database"
+	"goredis-main/handler"
+	"goredis-main/lib"
 )
 
 func (k *KVStore) getAsSortedSet(key string) (SortedSet, error) {

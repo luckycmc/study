@@ -5,12 +5,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/datastore"
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/lib"
-	"github.com/xiaoxuxiansheng/goredis/log"
-	"github.com/xiaoxuxiansheng/goredis/protocol"
+	"goredis-main/database"
+	"goredis-main/datastore"
+	"goredis-main/handler"
+	"goredis-main/lib"
+	"goredis-main/log"
+	"goredis-main/protocol"
 )
 
 // 重写 aof 文件

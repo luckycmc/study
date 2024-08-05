@@ -1,6 +1,6 @@
 package main
 
-import "github.com/xiaoxuxiansheng/goredis/app"
+import "goredis-main/app"
 
 func main() {
 	server, err := app.ConstructServer()

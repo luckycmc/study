@@ -1,6 +1,6 @@
 package app
 
-import "github.com/xiaoxuxiansheng/goredis/server"
+import "goredis-main/server"
 
 type Application struct {
 	server *server.Server

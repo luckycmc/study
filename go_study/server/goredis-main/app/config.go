@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/xiaoxuxiansheng/goredis/persist"
+	"goredis-main/persist"
 )
 
 type Config struct {

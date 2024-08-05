@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/lib/pool"
-	"github.com/xiaoxuxiansheng/goredis/log"
+	"goredis-main/lib/pool"
+	"goredis-main/log"
 )
 
 // 处理器

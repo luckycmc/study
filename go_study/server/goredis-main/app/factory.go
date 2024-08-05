@@ -1,13 +1,13 @@
 package app
 
 import (
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/datastore"
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/log"
-	"github.com/xiaoxuxiansheng/goredis/persist"
-	"github.com/xiaoxuxiansheng/goredis/protocol"
-	"github.com/xiaoxuxiansheng/goredis/server"
+	"goredis-main/database"
+	"goredis-main/datastore"
+	"goredis-main/handler"
+	"goredis-main/log"
+	"goredis-main/persist"
+	"goredis-main/protocol"
+	"goredis-main/server"
 
 	"go.uber.org/dig"
 )

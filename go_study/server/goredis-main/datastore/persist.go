@@ -3,8 +3,8 @@ package datastore
 import (
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/lib"
+	"goredis-main/database"
+	"goredis-main/lib"
 )
 
 func (k *KVStore) ForEach(f func(key string, adapter database.CmdAdapter, expireAt *time.Time)) {

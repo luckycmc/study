@@ -7,10 +7,11 @@ import (
 	"strings"
 	"testing"
 
+	"goredis-main/database"
+	"goredis-main/lib"
+
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/assert"
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/lib"
 )
 
 func Test_skiplist_add_rem_range(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/xiaoxuxiansheng/goredis/log"
-	"github.com/xiaoxuxiansheng/goredis/server"
+	"goredis-main/log"
+	"goredis-main/server"
 )
 
 type Handler struct {

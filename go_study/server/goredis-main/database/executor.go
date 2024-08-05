@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/lib/pool"
+	"goredis-main/handler"
+	"goredis-main/lib/pool"
 )
 
 type DBExecutor struct {

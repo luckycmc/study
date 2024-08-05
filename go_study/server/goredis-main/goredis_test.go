@@ -11,11 +11,12 @@ import (
 	"testing"
 	"time"
 
+	"goredis-main/app"
+	"goredis-main/lib"
+	"goredis-main/lib/pool"
+
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/assert"
-	"github.com/xiaoxuxiansheng/goredis/app"
-	"github.com/xiaoxuxiansheng/goredis/lib"
-	"github.com/xiaoxuxiansheng/goredis/lib/pool"
 )
 
 // goredis 质检员

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/xiaoxuxiansheng/goredis/database"
-	"github.com/xiaoxuxiansheng/goredis/handler"
-	"github.com/xiaoxuxiansheng/goredis/lib"
+	"goredis-main/database"
+	"goredis-main/handler"
+	"goredis-main/lib"
 )
 
 type KVStore struct {
