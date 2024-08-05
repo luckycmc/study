@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"os"
 	"os/signal"
@@ -72,7 +73,7 @@ func (s *Server) Serve(address string) error {
 			_err = err
 			return
 		}
-
+        fmt.Println("redis server is listenning....")
 		s.listenAndServe(listener, closec)
 	})
 
