@@ -17,7 +17,9 @@ type Parser struct {
 	lineParsers map[byte]lineParser
 	logger      log.Logger
 }
-
+/**
+ 实例化 parser解析器
+**/
 func NewParser(logger log.Logger) handler.Parser {
 	p := Parser{
 		logger: logger,
@@ -31,7 +33,9 @@ func NewParser(logger log.Logger) handler.Parser {
 	}
 	return &p
 }
-
+/**
+ 解析 协议的接口 对外使用
+**/
 func (p *Parser) ParseStream(reader io.Reader) <-chan *handler.Droplet {
 	ch := make(chan *handler.Droplet)
 	pool.Submit(
@@ -40,7 +44,9 @@ func (p *Parser) ParseStream(reader io.Reader) <-chan *handler.Droplet {
 		})
 	return ch
 }
-
+/**
+@解析Io中的数据
+**/
 func (p *Parser) parse(rawReader io.Reader, ch chan<- *handler.Droplet) {
 	reader := bufio.NewReader(rawReader)
 	for {
@@ -132,7 +138,7 @@ func (p *Parser) parseBulkBody(header []byte, reader *bufio.Reader) ([]byte, err
 	return body[:len(body)-2], nil
 }
 
-// 解析
+// 解析 数组
 func (p *Parser) parseMultiBulk(header []byte, reader *bufio.Reader) (droplet *handler.Droplet) {
 	var _err error
 	defer func() {
