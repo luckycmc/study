@@ -66,3 +66,4 @@ func ConstructServer() (*server.Server, error) {
 	}
 	return server.NewServer(h, l), nil
 }
+
