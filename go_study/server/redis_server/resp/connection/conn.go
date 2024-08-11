@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-// 链接层
+// 链接层 客户端 客户端对应 的相依的属性
 type Connection struct {
-	conn          net.Conn
+	conn          net.Conn // 客户端的信息
 	waittingReply wait.Wait
-	mu            sync.Mutex
-	selectedDB    int
+	mu            sync.Mutex // 锁
+	selectedDB    int        //绑定到相应的数据库上
 }
 
 // 获取conn
@@ -48,6 +48,7 @@ func (c *Connection) Write(bytes []byte) error {
 		c.waittingReply.Done()
 		c.mu.Unlock()
 	}()
+	//数据返回给相应的客户端
 	_, err := c.conn.Write(bytes)
 	return err
 }

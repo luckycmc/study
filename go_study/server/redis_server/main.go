@@ -18,7 +18,7 @@ var defaultProperties = &config.ServerProperties{
 	Port: 6379,
 }
 
-//配置文件是否存在
+// 配置文件是否存在
 func fileExists(filename string) bool {
 	info, err := os.Stat(filename)
 	return err == nil && !info.IsDir()
@@ -48,7 +48,7 @@ func main() {
 		},
 		//处理的handler
 		handler.MakeHandler())
-		//handler.MakeHandler()
+	//handler.MakeHandler()
 	//服务器启动有误
 	if err != nil {
 		logger.Error(err)

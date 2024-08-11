@@ -33,6 +33,7 @@ type String interface {
 	database.CmdAdapter
 }
 
+// string 结构体
 type stringEntity struct {
 	key, str string
 }

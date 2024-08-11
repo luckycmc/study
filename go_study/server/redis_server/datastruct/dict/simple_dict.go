@@ -1,8 +1,14 @@
 package dict
 
+import "time"
+
+/**
+@简单的字典处理
+**/
 // SimpleDict wraps a map, it is not thread safe
 type SimpleDict struct {
-	m map[string]interface{}
+	m         map[string]interface{}
+	expiredAt map[string]time.Time //当前数据的时间
 }
 
 // MakeSimple makes a new map
