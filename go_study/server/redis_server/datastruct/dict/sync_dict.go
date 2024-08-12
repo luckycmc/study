@@ -2,9 +2,11 @@ package dict
 
 import "sync"
 
-/**
+/*
+*
 @底层 用的是 aync.map 的数据类型
-**/
+*
+*/
 type SyncDict struct {
 	m sync.Map
 }
