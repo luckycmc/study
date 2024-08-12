@@ -69,7 +69,7 @@ func SetUpConfig() *Config {
 
 	return globalConf
 }
-
+//解析文件的配置项
 func setUpConfig(src io.Reader) *Config {
 	tmpkv := make(map[string]string)
 	scanner := bufio.NewScanner(src)
@@ -124,7 +124,7 @@ func setUpConfig(src io.Reader) *Config {
 
 	return conf
 }
-
+// 默认的配置项
 func defaultConf() *Config {
 	return &Config{
 		Bind:        "0.0.0.0",

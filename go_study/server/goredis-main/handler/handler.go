@@ -45,7 +45,7 @@ func (h *Handler) Start() error {
 	h.handle(SetLoadingPattern(context.Background()), newFakeReaderWriter(reloader))
 	return nil
 }
-
+// 实现handler 层面的处理器:
 func (h *Handler) Handle(ctx context.Context, conn net.Conn) {
 	h.mu.Lock()
 	// 判断 db 是否已经关闭

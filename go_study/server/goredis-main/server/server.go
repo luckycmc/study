@@ -38,7 +38,7 @@ func NewServer(handler Handler, logger log.Logger) *Server {
 		stopc:   make(chan struct{}),
 	}
 }
-
+// 启动服务器
 func (s *Server) Serve(address string) error {
 	if err := s.handler.Start(); err != nil {
 		return err
