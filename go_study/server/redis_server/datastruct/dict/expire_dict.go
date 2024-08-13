@@ -22,7 +22,7 @@ func MakeExpireDict() *ExpireDict {
 }
 
 // 获取key
-func (d ExpireDict) Get(key string) (val interface{}, exists bool) {
+func (d *ExpireDict) Get(key string) (val interface{}, exists bool) {
 
 	d.mu.Lock()
 	val, ok := d.m[key]
@@ -35,6 +35,23 @@ func (d ExpireDict) Get(key string) (val interface{}, exists bool) {
 
 //设置key
 
-func (d ExpireDict) Put(key string, val interface{}) (result int) {
+func (d *ExpireDict) Put(key string, val interface{}) (result int) {
 
+	_, ok := d.m[key]
+	if ok {
+		return 0
+	}
+	//确保数据的安全性
+	d.mu.Lock()
+	d.m[key] = val
+	d.mu.Lock()
+	return 1
+}
+
+// 获取当前字典的个数
+func (d *ExpireDict) Len() int {
+	if d.m == nil {
+		return 0
+	}
+	return len(d.m)
 }
