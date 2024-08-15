@@ -1,7 +1,7 @@
 du -a | sort -n -r | head -n 10 //查看磁盘占用空间
 zip -r xxx.zip ./*    打包命令
 
-awk '{print $1}' /home/wwwlogs/access.log | sort | uniq -c | sort -nr -k1 | head -n 10  查看日子排名前10 的东西
+awk '{print $1}' dev01.51zhuanmi.com.log  | sort | uniq -c | sort -nr -k1 | head -n 10  查看日子排名前10 的东西
 
 awk '{print $1}' www.360qikan.com_access.log |sort|uniq|wc -l    查看nginx日志UV
 
