@@ -27,10 +27,13 @@ var pongBytes = []byte("+PONG\r\n")
 func (r *PongReply) ToBytes() []byte {
 	return pongBytes
 }
+
+// ping  pong  reply
 func MakePongReply() *PongReply {
 	return &PongReply{}
 }
 
+/**************OK replay start********************/
 // OkReply is +OK
 type OkReply struct{}
 
@@ -47,6 +50,8 @@ var theOkReply = new(OkReply)
 func MakeOkReply() *OkReply {
 	return theOkReply
 }
+
+/**************OK replay end********************/
 
 var nullBulkBytes = []byte("$-1\r\n")
 
