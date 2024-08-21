@@ -13,6 +13,7 @@ import (
 	"goredis-main/persist"
 )
 
+// 与 redis.conf 一一对应的各项配置参数
 type Config struct {
 	Bind                    string `cfg:"bind"`                        // ip 地址
 	Port                    int    `cfg:"port"`                        // 启动端口号
@@ -50,7 +51,7 @@ var (
 func PersistThinker() persist.Thinker {
 	return SetUpConfig()
 }
-
+// 设置配置文件
 func SetUpConfig() *Config {
 	confOnce.Do(func() {
 		defer func() {
@@ -58,12 +59,13 @@ func SetUpConfig() *Config {
 				globalConf = defaultConf()
 			}
 		}()
-
+         // 打开根目录下的 redis.conf 文件
 		file, err := os.Open("./redis.conf")
 		if err != nil {
 			return
 		}
 		defer file.Close()
+		//加载全局配置文件
 		globalConf = setUpConfig(file)
 	})
 
@@ -100,6 +102,7 @@ func setUpConfig(src io.Reader) *Config {
 	// 通过反射设置 conf 属性值
 	t := reflect.TypeOf(conf)
 	v := reflect.ValueOf(conf)
+	
 	for i := 0; i < t.Elem().NumField(); i++ {
 		field := t.Elem().Field(i)
 		fieldVal := v.Elem().Field(i)
@@ -121,7 +124,7 @@ func setUpConfig(src io.Reader) *Config {
 			fieldVal.SetBool(value == "yes")
 		}
 	}
-
+    //返回解析好的配置信息
 	return conf
 }
 // 默认的配置项

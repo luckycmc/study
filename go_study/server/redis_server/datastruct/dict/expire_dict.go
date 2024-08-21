@@ -47,7 +47,31 @@ func (d *ExpireDict) Put(key string, val interface{}) (result int) {
 	d.mu.Lock()
 	return 1
 }
+//当一个key 存在时不进行 设置设置返回失败 要设置枷锁
+func(d *ExpireDict) PutIfAbsent(key string,val interface{}) int{
 
+	  defer  d.mu.Unlock()
+	  d.mu.Lock()
+	  _,ok:=d.m[key]
+	  if ok {
+		 return 0;
+	  }
+      d.m[key] = val
+	  return 1
+}
+// PutIfExists puts value if the key is exist and returns the number of inserted key-value
+// 对存在的值进行更新
+func(d *ExpireDict) PutIfExists(key string,val interface{}) int{
+	
+	 d.mu.Lock()
+     _,ok:= d.m[key]
+	 d.mu.Unlock()
+	 if ok {
+		 d.m[key] = val
+		 return 1
+	 }
+	 return 0
+}
 // 获取当前字典的个数
 func (d *ExpireDict) Len() int {
 	if d.m == nil {

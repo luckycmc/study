@@ -13,13 +13,13 @@ type Executor interface {
 	ValidCommand(cmd CmdType) bool
 	Close()
 }
-
+// cmdType的别名
 type CmdType string
 
 func (c CmdType) String() string {
 	return strings.ToLower(string(c))
 }
-
+// cmd 命令赋值
 const (
 	CmdTypeExpire   CmdType = "expire"
 	CmdTypeExpireAt CmdType = "expireat"
@@ -52,11 +52,11 @@ const (
 	CmdTypeZRangeByScore CmdType = "zrangebyscore"
 	CmdTypeZRem          CmdType = "zrem"
 )
-
+// ToCmd 执行命令的接口
 type CmdAdapter interface {
 	ToCmd() [][]byte
 }
-
+// DataStore 的所有的接口
 type DataStore interface {
 	ForEach(task func(key string, adapter CmdAdapter, expireAt *time.Time))
 
@@ -94,16 +94,16 @@ type DataStore interface {
 	ZRangeByScore(*Command) handler.Reply
 	ZRem(*Command) handler.Reply
 }
-
+// cmd Hander 执行函数
 type CmdHandler func(*Command) handler.Reply
-
+// 命令的结构体
 type Command struct {
 	ctx      context.Context
 	cmd      CmdType
 	args     [][]byte
 	receiver CmdReceiver
 }
-
+// 初始化命令执行器
 func NewCommand(cmd CmdType, args [][]byte) *Command {
 	return &Command{
 		cmd:  cmd,

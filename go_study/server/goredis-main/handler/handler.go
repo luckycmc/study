@@ -34,7 +34,7 @@ func NewHandler(db DB, persister Persister, parser Parser, logger log.Logger) (s
 
 	return &h, nil
 }
-
+// server 启动
 func (h *Handler) Start() error {
 	// 加载持久化文件，还原内容
 	reloader, err := h.persister.Reloader()
@@ -42,6 +42,7 @@ func (h *Handler) Start() error {
 		return err
 	}
 	defer reloader.Close()
+	//执行 handler 回复数据 
 	h.handle(SetLoadingPattern(context.Background()), newFakeReaderWriter(reloader))
 	return nil
 }
@@ -60,7 +61,7 @@ func (h *Handler) Handle(ctx context.Context, conn net.Conn) {
 
 	h.handle(ctx, conn)
 }
-
+//协议处理
 func (h *Handler) handle(ctx context.Context, conn io.ReadWriter) {
 	// 持续处理
 	stream := h.parser.ParseStream(conn)
@@ -69,7 +70,7 @@ func (h *Handler) handle(ctx context.Context, conn io.ReadWriter) {
 		case <-ctx.Done():
 			h.logger.Warnf("[handler]handle ctx err: %s", ctx.Err().Error())
 			return
-
+        // 处理解析后的数据
 		case droplet := <-stream:
 			if err := h.handleDroplet(ctx, conn, droplet); err != nil {
 				h.logger.Errorf("[handler]conn terminated, err: %s", droplet.Err.Error())
@@ -78,7 +79,7 @@ func (h *Handler) handle(ctx context.Context, conn io.ReadWriter) {
 		}
 	}
 }
-
+//处理用户返回的信息
 func (h *Handler) handleDroplet(ctx context.Context, conn io.ReadWriter, droplet *Droplet) error {
 	if droplet.Terminated() {
 		return droplet.Err

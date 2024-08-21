@@ -76,7 +76,7 @@ func (r *WrongTypeErrReply) Error() string {
 }
 
 // ProtocolErr
-
+/******* 协议错误 start***************/
 // ProtocolErrReply represents meeting unexpected byte during parse requests
 type ProtocolErrReply struct {
 	Msg string
@@ -90,3 +90,4 @@ func (r *ProtocolErrReply) ToBytes() []byte {
 func (r *ProtocolErrReply) Error() string {
 	return "ERR Protocol error: '" + r.Msg
 }
+/******* 协议错误 end***************/

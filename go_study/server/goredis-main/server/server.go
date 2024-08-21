@@ -22,9 +22,9 @@ type Handler interface {
 	// 关闭处理器
 	Close()
 }
-
+// 有关服务端 server 的类定
 type Server struct {
-	runOnce  sync.Once
+	runOnce  sync.Once   // 通过 runOnce、stopOnce 两个单例工具，规避单 server 实例下启动和停止动作的重复执行
 	stopOnce sync.Once
 	handler  Handler
 	logger   log.Logger
@@ -51,6 +51,7 @@ func (s *Server) Serve(address string) error {
 		sigc := make(chan os.Signal, 1)
 		signal.Notify(sigc, exitWords...)
 		closec := make(chan struct{}, 4)
+		//启动一个协成监控操作系统的情况
 		pool.Submit(func() {
 			for {
 				select {
@@ -85,7 +86,7 @@ func (s *Server) Stop() {
 		close(s.stopc)
 	})
 }
-
+// 对server的监听
 func (s *Server) listenAndServe(listener net.Listener, closec chan struct{}) {
 	errc := make(chan error, 1)
 	defer close(errc)

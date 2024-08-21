@@ -10,7 +10,7 @@ import (
 // 链接层 客户端 客户端对应 的相依的属性
 type Connection struct {
 	conn          net.Conn // 客户端的信息
-	waittingReply wait.Wait
+	waittingReply wait.Wait  // 绑定相应的waitgroup
 	mu            sync.Mutex // 锁
 	selectedDB    int        //绑定到相应的数据库上
 }
@@ -53,7 +53,7 @@ func (c *Connection) Write(bytes []byte) error {
 	return err
 }
 
-// 得到数据库
+// 得到数据库 获取当前链接的数据库
 func (c *Connection) GetDBIndex() int {
 	return c.selectedDB
 }

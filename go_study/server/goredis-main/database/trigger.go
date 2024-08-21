@@ -8,6 +8,9 @@ import (
 	"goredis-main/handler"
 )
 
+/**
+@触发器的实现
+**/
 type DBTrigger struct {
 	once     sync.Once
 	executor Executor
