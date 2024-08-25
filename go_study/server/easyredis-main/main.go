@@ -13,6 +13,11 @@ import (
 	"github.com/gofish2020/easyredis/utils"
 )
 
+/*
+*
+@ redis的多元化实现方式
+*
+*/
 func main() {
 	//1. 打印logo
 	println(utils.Logo())
