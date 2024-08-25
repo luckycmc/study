@@ -28,12 +28,13 @@ type RespHandler struct {
 }
 
 // 实例化handler
+
 func MakeHandler() *RespHandler {
 
 	var db databaseface.Database
 	// 输出处理
 	//db = database.NewEchoDatabase()
-	//解析处理
+	//解析处理 的相应接口
 	db = database2.NewDatabase()
 	return &RespHandler{
 		db: db,
@@ -90,7 +91,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			logger.Error("empty payload")
 			continue
 		}
-        // 解析 服务器
+		// 解析 服务器
 		reply, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
 			logger.Error("require multi bulk replt")

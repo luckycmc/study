@@ -15,7 +15,8 @@ import (
 /*
 *
 
-	@redis 解析器
+	@redis 解析器 解析后的数据怎么存放返回给 tcp 服务器处理
+	这里返回的是是一个指针函数 调用相应的指针函数就可以 获取相应的 客户端发来的参数
 
 *
 */
@@ -26,11 +27,11 @@ type Payload struct {
 
 // 解析器的状态
 type readState struct {
-	readingMutiLine  bool //是否是读取多行 // 解析单行还是多行数据
-	expectedArgCount int  // 期望参数的个数   // 应该读取的参数个数
-	msgType          byte  //数据的类型        // 应该读取的参数个数
-	args             [][]byte  // 解析后的参数  // 消息内容
-	bulkLen          int64  // 数据的长度   // 数据长度
+	readingMutiLine  bool     //是否是读取多行 // 解析单行还是多行数据
+	expectedArgCount int      // 期望参数的个数   // 应该读取的参数个数
+	msgType          byte     //数据的类型        // 应该读取的参数个数
+	args             [][]byte // 解析后的参数  // 消息内容
+	bulkLen          int64    // 数据的长度   // 数据长度
 }
 
 // 判断解析器是否完成
@@ -58,14 +59,14 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 	}()
 	//读取缓冲区的数据
 	bufReader := bufio.NewReader(reader)
-	
+
 	var state readState
 	var err error
 	var msg []byte
 	for {
 		var ioErr bool
 		msg, ioErr, err = readLine(bufReader, &state)
-		
+
 		// 错误处理
 		if err != nil {
 			//IO有问题
@@ -109,7 +110,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				}
 			} else if msg[0] == '$' { //$3 \r\n  $4\r\nPing\r\n
 
-				err := parseBulkHeader(msg, &state) 
+				err := parseBulkHeader(msg, &state)
 				if err != nil {
 					ch <- &Payload{
 						Err: errors.New("protocol error :" + string(msg)),
@@ -137,7 +138,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				continue
 			}
 		} else { // 多行模式
-            
+
 			err := readBody(msg, &state)
 			if err != nil {
 				ch <- &Payload{
@@ -148,14 +149,14 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 			}
 			//读取完成
 			if state.finished() {
-              
+
 				var result resp.Reply
-				if state.msgType == '*' {  //多行字符串
+				if state.msgType == '*' { //多行字符串
 					result = reply.MakeMultiBulkReply(state.args)
 				} else if state.msgType == '$' { // 单个字符串
 					result = reply.MakeBulkReply(state.args[0])
 				}
-
+				//最后解析出来的数据
 				ch <- &Payload{
 					Data: result,
 					Err:  err,
@@ -176,7 +177,7 @@ func readLine(bufReader *bufio.Reader, state *readState) ([]byte, bool, error) {
 
 	var msg []byte
 	var err error
-    //有两种情况 第一种是 
+	//有两种情况 第一种是
 	if state.bulkLen == 0 { //1.按照 \r\n 切分 其实就是没有预设的长度
 
 		msg, err = bufReader.ReadBytes('\n')
@@ -211,7 +212,7 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 	var err error
 	var expectedLine uint64
-	expectedLine, err = strconv.ParseUint(string(msg[1:len(msg)-2]), 10, 32)  // 获取几个参数
+	expectedLine, err = strconv.ParseUint(string(msg[1:len(msg)-2]), 10, 32) // 获取几个参数
 	if err != nil {
 		return errors.New("protpcol error:" + string(msg))
 	}
@@ -219,9 +220,9 @@ func parseMultiBulkHeader(msg []byte, state *readState) error {
 
 		state.expectedArgCount = 0
 		return nil
-	} else if expectedLine > 0 {  //有几个参数 协议解析器不要停 一直取出来 3
-		state.msgType = msg[0]         // 消息的类型 *
-		state.readingMutiLine = true   // 多行模式
+	} else if expectedLine > 0 { //有几个参数 协议解析器不要停 一直取出来 3
+		state.msgType = msg[0]                       // 消息的类型 *
+		state.readingMutiLine = true                 // 多行模式
 		state.expectedArgCount = int(expectedLine)   // 几个参数 3
 		state.args = make([][]byte, 0, expectedLine) // 参数数据 3
 		return nil
@@ -242,9 +243,9 @@ func parseBulkHeader(msg []byte, state *readState) error {
 	if state.bulkLen == -1 { // null bulk
 		return nil
 	} else if state.bulkLen > 0 {
-		state.msgType = msg[0]            // $
+		state.msgType = msg[0] // $
 		state.readingMutiLine = true
-		state.expectedArgCount = 1       // 1个
+		state.expectedArgCount = 1        // 1个
 		state.args = make([][]byte, 0, 1) // 1
 		return nil
 	} else {

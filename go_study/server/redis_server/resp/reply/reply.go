@@ -27,6 +27,7 @@ func MakeBulkReply(arg []byte) *BulkReply {
 	}
 }
 
+// 转换成redis协议的东西
 // ToBytes marshal redis.Reply
 func (r *BulkReply) ToBytes() []byte {
 	if len(r.Arg) == 0 {
