@@ -91,7 +91,7 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			logger.Error("empty payload")
 			continue
 		}
-		// 解析 服务器
+		// 解析 服务器 什么意思？
 		reply, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
 			logger.Error("require multi bulk replt")
