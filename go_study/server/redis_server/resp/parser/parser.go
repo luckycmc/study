@@ -15,9 +15,10 @@ import (
 /*
 *
 
-	@redis 解析器 解析后的数据怎么存放返回给 tcp 服务器处理
-	这里返回的是是一个指针函数 调用相应的指针函数就可以 获取相应的 客户端发来的参数
-    返回的是 实现 ToBytes()的实例
+		@redis 解析器 解析后的数据怎么存放返回给 tcp 服务器处理
+		这里返回的是是一个指针函数 调用相应的指针函数就可以 获取相应的 客户端发来的参数
+	    返回的是 实现 ToBytes()的实例
+
 *
 */
 type Payload struct {
@@ -156,7 +157,7 @@ func parse0(reader io.Reader, ch chan<- *Payload) {
 				} else if state.msgType == '$' { // 单个字符串
 					result = reply.MakeBulkReply(state.args[0])
 				}
-				//最后解析出来的数据
+				//最后解析出来的数据 返回的是回复的对象 也就是说是实现 ToBytes() 接口的对象
 				ch <- &Payload{
 					Data: result,
 					Err:  err,
