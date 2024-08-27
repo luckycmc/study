@@ -92,6 +92,8 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			continue
 		}
 		// 解析 服务器 什么意思？
+		// 类型断言 判断是都是 二位的 byte 类型
+		// https://www.bilibili.com/video/av330409643/?vd_source=d5bdbf7b72f24c50670432a46f350cb0
 		reply, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
 			logger.Error("require multi bulk replt")
