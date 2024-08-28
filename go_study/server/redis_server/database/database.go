@@ -31,7 +31,7 @@ func NewDatabase() *Database {
 		singleDB.index = i
 		mdb.dbSet[i] = singleDB
 	}
-	//aof 是否启动
+	//aof 是否启动 启动的话就需要
 	if config.Properties.AppendOnly {
 		
 		aofHandler, err := aof.NewAOFHandler(mdb)

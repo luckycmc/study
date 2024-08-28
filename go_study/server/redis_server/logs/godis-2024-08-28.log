@@ -1,0 +1,62 @@
+[WARN][database.go:59] 2024/08/28 16:54:57 error occurs: runtime error: invalid memory address or nil pointer dereference
+goroutine 1 [running]:
+runtime/debug.Stack()
+	C:/Program Files/Go/src/runtime/debug/stack.go:24 +0x5e
+redis-server/database.(*Database).Exec.func1()
+	D:/study/go_study/server/redis_server/database/database.go:59 +0x45
+panic({0x213600?, 0x31b900?})
+	C:/Program Files/Go/src/runtime/panic.go:770 +0x132
+redis-server/database.execSet(0xc00009c5a0, {0xc000100068, 0x2, 0x3?})
+	D:/study/go_study/server/redis_server/database/string.go:45 +0x1f1
+redis-server/database.(*DB).Exec(0xc00009c5a0, {0xc00000a040?, 0x3?}, {0xc000100050, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/db.go:53 +0x137
+redis-server/database.(*Database).Exec(0xc00009c560, {0x265420, 0xc000022030}, {0xc000100050, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/database.go:79 +0x210
+redis-server/aof.(*AofHandler).LoadAof(0xc0000a4080)
+	D:/study/go_study/server/redis_server/aof/aof.go:117 +0x213
+redis-server/aof.NewAOFHandler({0x2653f0, 0xc00009c560})
+	D:/study/go_study/server/redis_server/aof/aof.go:43 +0x76
+redis-server/database.NewDatabase()
+	D:/study/go_study/server/redis_server/database/database.go:37 +0x178
+redis-server/resp/handler.MakeHandler(...)
+	D:/study/go_study/server/redis_server/resp/handler/handler.go:38
+main.main()
+	D:/study/go_study/server/redis_server/main.go:50 +0x18c
+
+[ERROR][aof.go:119] 2024/08/28 16:54:57 exec err <nil>
+[INFO][server.go:38] 2024/08/28 16:54:57 start listen...
+[INFO][server.go:50] 2024/08/28 16:55:07 shutting down
+[INFO][handler.go:120] 2024/08/28 16:55:07 handler shutting down
+[INFO][handler.go:120] 2024/08/28 16:55:07 handler shutting down
+[WARN][database.go:59] 2024/08/28 16:55:33 error occurs: runtime error: invalid memory address or nil pointer dereference
+goroutine 1 [running]:
+runtime/debug.Stack()
+	C:/Program Files/Go/src/runtime/debug/stack.go:24 +0x5e
+redis-server/database.(*Database).Exec.func1()
+	D:/study/go_study/server/redis_server/database/database.go:59 +0x45
+panic({0x1f3600?, 0x2fb900?})
+	C:/Program Files/Go/src/runtime/panic.go:770 +0x132
+redis-server/database.execSet(0xc00009c5a0, {0xc0000e4018, 0x2, 0x3?})
+	D:/study/go_study/server/redis_server/database/string.go:45 +0x1f1
+redis-server/database.(*DB).Exec(0xc00009c5a0, {0xc0000a2754?, 0x3?}, {0xc0000e4000, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/db.go:53 +0x137
+redis-server/database.(*Database).Exec(0xc00009c560, {0x245420, 0xc000090420}, {0xc0000e4000, 0x3, 0x3})
+	D:/study/go_study/server/redis_server/database/database.go:79 +0x210
+redis-server/aof.(*AofHandler).LoadAof(0xc0000a4080)
+	D:/study/go_study/server/redis_server/aof/aof.go:117 +0x213
+redis-server/aof.NewAOFHandler({0x2453f0, 0xc00009c560})
+	D:/study/go_study/server/redis_server/aof/aof.go:43 +0x76
+redis-server/database.NewDatabase()
+	D:/study/go_study/server/redis_server/database/database.go:37 +0x178
+redis-server/resp/handler.MakeHandler(...)
+	D:/study/go_study/server/redis_server/resp/handler/handler.go:38
+main.main()
+	D:/study/go_study/server/redis_server/main.go:50 +0x18c
+
+[ERROR][aof.go:119] 2024/08/28 16:55:33 exec err <nil>
+[INFO][server.go:38] 2024/08/28 16:55:33 start listen...
+[INFO][server.go:50] 2024/08/28 16:56:01 shutting down
+[INFO][handler.go:120] 2024/08/28 16:56:01 handler shutting down
+[INFO][server.go:38] 2024/08/28 16:56:04 start listen...
+[INFO][server.go:50] 2024/08/28 17:25:04 shutting down
+[INFO][handler.go:120] 2024/08/28 17:25:04 handler shutting down
