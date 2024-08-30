@@ -120,7 +120,7 @@ func (r *RespHandler) Close() error {
 	logger.Info("handler shutting down")
 	r.closing.Set(true)
 	r.activeConn.Range(func(key, value any) bool {
-
+        // 也是类型断言 key.()大多数都是类型断言
 		client := key.(*connection.Connection)
 		//关闭客户端
 		_ = client.Close()

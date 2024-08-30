@@ -74,8 +74,9 @@ func (mdb *Database) Exec(c resp.Connection, cmdLine [][]byte) (result resp.Repl
 	if dbIndex >= len(mdb.dbSet) {
 		return reply.MakeErrReply("ERR DB index is out of range")
 	}
-	selectedDB := mdb.dbSet[dbIndex]
 	// 对应库的执行
+	selectedDB := mdb.dbSet[dbIndex]
+	//执行相应的redis 指令
 	return selectedDB.Exec(c, cmdLine)
 }
 
